@@ -5,6 +5,7 @@ import { api } from "@/lib/hono-rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
 import { useParams } from "next/navigation";
+import React from "react";
 
 type ResponseType = InferResponseType<
   (typeof api.document.update)[":documentId"]["$patch"]
@@ -16,7 +17,6 @@ type RequestType = InferRequestType<
 const useUpdateDocument = () => {
   const param = useParams();
   const queryClient = useQueryClient();
-
   const documentId = param.documentId as string;
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
@@ -42,7 +42,6 @@ const useUpdateDocument = () => {
       });
     },
   });
-
   return mutation;
 };
 

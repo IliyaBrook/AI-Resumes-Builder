@@ -1,11 +1,10 @@
 import React, { useCallback, useState } from "react";
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
 import { DownloadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { formatFileName } from "@/lib/helper";
 import { StatusType } from "@/types/resume.type";
+import dynamic from "next/dynamic";
 
 const Download = (props: {
   title: string;
@@ -26,34 +25,24 @@ const Download = (props: {
       return;
     }
     setLoading(true);
-
     const fileName = formatFileName(title);
     try {
-      const canvas = await html2canvas(resumeElement, { scale: 2 });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF();
-      const imgWidth = 210; //A4 size in mm
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-
-      let position = 0;
-      9;
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-      pdf.save(fileName);
+      const html2pdf = (await import("html2pdf.js")).default;
+      await html2pdf()
+        .set({
+          margin: 0,
+          filename: fileName,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+        })
+        .from(resumeElement)
+        .save();
     } catch (error) {
-      console.error("Error generating PDF:", error);
       toast({
         title: "Error",
-        description: "Error generating PDF:",
+        description: "Error generating PDF",
         variant: "destructive",
       });
     } finally {
@@ -65,9 +54,7 @@ const Download = (props: {
     <Button
       disabled={isLoading || loading || status === "archived" ? true : false}
       variant="secondary"
-      className="bg-white border gap-1
-                   dark:bg-gray-800 !p-2
-                    min-w-9 lg:min-w-auto lg:p-4"
+      className="bg-white border gap-1 dark:bg-gray-800 !p-1 min-w-9 lg:min-w-auto lg:p-4"
       onClick={handleDownload}
     >
       <div className="flex items-center gap-1">
@@ -80,4 +67,6 @@ const Download = (props: {
   );
 };
 
-export default Download;
+export default dynamic(() => Promise.resolve(Download), {
+  ssr: false
+});

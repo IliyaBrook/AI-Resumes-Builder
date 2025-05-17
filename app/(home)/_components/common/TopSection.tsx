@@ -1,35 +1,28 @@
 "use client";
-import { useResumeContext } from "@/context/resume-info-provider";
 import { AlertCircle } from "lucide-react";
 import React, { useCallback } from "react";
 import ResumeTitle from "./ResumeTitle";
 import useUpdateDocument from "@/features/document/use-update-document";
+import useGetDocument from "@/features/document/use-get-document-by-id";
+import { useParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import ThemeColor from "./ThemeColor";
 import PreviewModal from "../PreviewModal";
 import Download from "./Download";
-import Share from "./Share";
 import MoreOption from "./MoreOption";
 
 const TopSection = () => {
-  const { resumeInfo, isLoading, onUpdate } = useResumeContext();
-  const { mutateAsync, isPending } = useUpdateDocument();
+  const param = useParams();
+  const documentId = param.documentId as string;
+  const { data, isLoading } = useGetDocument(documentId);
+  const resumeInfo = data?.data;
+  const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 
   const handleTitle = useCallback(
     (title: string) => {
       if (title === "Untitled Resume" && !title) return;
-
-      if (resumeInfo) {
-        onUpdate({
-          ...resumeInfo,
-          title: title,
-        });
-      }
-
-      mutateAsync(
-        {
-          title: title,
-        },
+      setResumeInfo(
+        { title },
         {
           onSuccess: () => {
             toast({
@@ -47,7 +40,7 @@ const TopSection = () => {
         }
       );
     },
-    [resumeInfo, onUpdate]
+    [setResumeInfo]
   );
   return (
     <>
@@ -59,7 +52,6 @@ const TopSection = () => {
             text-base p-2 text-white
             flex items-center gap-x-2 
             justify-center font-medium
-
             "
         >
           <AlertCircle size="16px" />
@@ -93,11 +85,6 @@ const TopSection = () => {
             status={resumeInfo?.status}
             isLoading={isLoading}
           />
-
-          {/* Share Resume */}
-          <Share />
-
-          {/* More Option */}
           <MoreOption />
         </div>
       </div>

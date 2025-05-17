@@ -1,6 +1,12 @@
+# Forked Repository for Personal Use
+
+This repository is a personal fork of the original [AI Resume Builder repository](https://github.com/TechWithEmmaYT/AI-Resumes-Builder). I have modified the code for my personal learning and portfolio purposes.
+
+Please note that the original **[Techwithemma License Terms](TECHWITHEMMA-LICENSE.md)** still apply to this code. This fork is not for commercial use or redistribution.
+
 # AI Resume Builder
 
-### ❤️ Support
+## ❤️ Support
 
 If you find this project helpful, please consider giving this repository a ⭐️ on GitHub, and don't forget to **like**, **share**, and **subscribe** to support our journey!
 

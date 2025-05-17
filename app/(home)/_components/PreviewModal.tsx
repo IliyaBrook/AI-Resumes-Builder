@@ -6,13 +6,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useResumeContext } from "@/context/resume-info-provider";
 import { Eye, FileText } from "lucide-react";
 import React from "react";
 import ResumePreview from "./ResumePreview";
+import useGetDocument from "@/features/document/use-get-document-by-id";
+import { useParams } from "next/navigation";
 
 const PreviewModal = () => {
-  const { resumeInfo, isLoading } = useResumeContext();
+  const param = useParams();
+  const documentId = param.documentId as string;
+  const { data, isLoading } = useGetDocument(documentId);
+  const resumeInfo = data?.data;
 
   return (
     <>

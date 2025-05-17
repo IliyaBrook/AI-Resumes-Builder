@@ -38,3 +38,8 @@ next-env.d.ts
 
 .vercel
 .env*.local
+.idea
+.cursor
+.cursorignore
+.history
+cheatsheet

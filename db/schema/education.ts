@@ -5,6 +5,7 @@ import {
   serial,
   text,
   varchar,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { documentTable } from "./document";
 import { relations } from "drizzle-orm";
@@ -13,8 +14,8 @@ import { z } from "zod";
 
 export const educationTable = pgTable("education", {
   id: serial("id").primaryKey(),
-  docId: integer("document_id")
-    .references(() => documentTable.id, {
+  docId: varchar("document_id", { length: 255 })
+    .references(() => documentTable.documentId, {
       onDelete: "cascade",
     })
     .notNull(),
@@ -24,12 +25,14 @@ export const educationTable = pgTable("education", {
   description: text("description"),
   startDate: date("start_date"),
   endDate: date("end_date"),
+  currentlyStudying: boolean("currently_studying").notNull().default(false),
+  skipDates: boolean("skip_dates").notNull().default(false),
 });
 
 export const educationRelations = relations(educationTable, ({ one }) => ({
   document: one(documentTable, {
     fields: [educationTable.docId],
-    references: [documentTable.id],
+    references: [documentTable.documentId],
   }),
 }));
 
@@ -43,6 +46,8 @@ export const educationTableSchema = createInsertSchema(educationTable, {
   description: true,
   startDate: true,
   endDate: true,
+  currentlyStudying: true,
+  skipDates: true,
 });
 
 export type EducationSchema = z.infer<typeof educationTableSchema>;

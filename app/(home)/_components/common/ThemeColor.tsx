@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useResumeContext } from "@/context/resume-info-provider";
 import useUpdateDocument from "@/features/document/use-update-document";
+import useGetDocument from "@/features/document/use-get-document-by-id";
+import { useParams } from "next/navigation";
 import { INITIAL_THEME_COLOR } from "@/constant/colors";
 import {
   Popover,
@@ -37,48 +38,39 @@ const ThemeColor = () => {
     "#2980B9", // Cobalt Blue
   ];
 
-  const { resumeInfo, onUpdate } = useResumeContext();
-  const { mutateAsync } = useUpdateDocument();
-
-  const [selectedColor, setSelectedColor] = useState(INITIAL_THEME_COLOR);
-
+  const param = useParams();
+  const documentId = param.documentId as string;
+  const { data } = useGetDocument(documentId);
+  const resumeInfo = data?.data;
+  const { mutate: setResumeInfo } = useUpdateDocument();
+  const [selectedColor, setSelectedColor] = useState(resumeInfo?.themeColor || INITIAL_THEME_COLOR);
   const debouncedColor = useDebounce<string>(selectedColor, 1000);
 
   useEffect(() => {
+    setSelectedColor(resumeInfo?.themeColor || INITIAL_THEME_COLOR);
+  }, [resumeInfo?.themeColor]);
+
+  useEffect(() => {
     if (debouncedColor) onSave();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedColor]);
 
   const onColorSelect = useCallback(
     (color: string) => {
       setSelectedColor(color);
-
-      if (!resumeInfo) return;
-      onUpdate({
-        ...resumeInfo,
-        themeColor: color,
-      });
     },
-    [resumeInfo, onUpdate]
+    []
   );
 
   const onSave = useCallback(async () => {
     if (!selectedColor) return;
     if (selectedColor === INITIAL_THEME_COLOR) return;
     const thumbnail = await generateThumbnail();
-
-    await mutateAsync(
+    setResumeInfo(
       {
         themeColor: selectedColor,
         thumbnail: thumbnail,
       },
       {
-        onSuccess: () => {
-          toast({
-            title: "Success",
-            description: "Theme updated successfully",
-          });
-        },
         onError() {
           toast({
             title: "Error",
@@ -88,7 +80,7 @@ const ThemeColor = () => {
         },
       }
     );
-  }, [selectedColor]);
+  }, [selectedColor, setResumeInfo]);
 
   return (
     <Popover>

@@ -14,9 +14,10 @@ import { z } from "zod";
 
 export const experienceTable = pgTable("experience", {
   id: serial("id").notNull().primaryKey(),
-  docId: integer("document_id").references(() => documentTable.id, {
-    onDelete: "cascade",
-  }),
+  docId: varchar("document_id", { length: 255 })
+    .references(() => documentTable.documentId, {
+      onDelete: "cascade",
+    }),
   title: varchar("title", { length: 255 }),
   companyName: varchar("company_name", { length: 255 }),
   city: varchar("city", { length: 255 }),
@@ -25,12 +26,13 @@ export const experienceTable = pgTable("experience", {
   workSummary: text("work_summary"),
   startDate: date("start_date"),
   endDate: date("end_date"),
+  order: integer("order").notNull().default(0),
 });
 
 export const experienceRelations = relations(experienceTable, ({ one }) => ({
   document: one(documentTable, {
     fields: [experienceTable.docId],
-    references: [documentTable.id],
+    references: [documentTable.documentId],
   }),
 }));
 
@@ -46,6 +48,7 @@ export const experienceTableSchema = createInsertSchema(experienceTable, {
   workSummary: true,
   startDate: true,
   endDate: true,
+  order: true,
 });
 
 export type ExperienceSchema = z.infer<typeof experienceTableSchema>;

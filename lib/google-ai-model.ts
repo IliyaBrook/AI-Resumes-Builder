@@ -3,10 +3,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY!;
 const genAI = new GoogleGenerativeAI(apiKey);
 
-const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
-});
-
 const generationConfig = {
   temperature: 1,
   topP: 0.95,
@@ -15,7 +11,17 @@ const generationConfig = {
   responseMimeType: "application/json",
 };
 
-export const AIChatSession = model.startChat({
-  generationConfig,
-  history: [],
-});
+export function getAIChatSession(modelName: string) {
+  const model = genAI.getGenerativeModel({ model: modelName });
+  return model.startChat({ generationConfig, history: [] });
+}
+
+export async function getCurrentModel(): Promise<string> {
+  try {
+    const res = await fetch('/api/llm-model');
+    const data = await res.json();
+    return data.modelName || 'gemini-1.5-flash';
+  } catch {
+    return 'gemini-1.5-flash';
+  }
+}

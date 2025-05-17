@@ -50,10 +50,8 @@ const PublicResume = () => {
               "
         >
           <PreviewResume
-            {...{
-              resumeInfo,
-              isLoading,
-            }}
+            resumeInfo={resumeInfo as ResumeDataType}
+            isLoading={isLoading}
           />
         </div>
       </div>

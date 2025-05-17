@@ -1,24 +1,59 @@
 "use client";
-import React, { Fragment } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Loader, Moon, Sun } from "lucide-react";
-import {
-  LogoutLink,
-  useKindeBrowserClient,
-} from "@kinde-oss/kinde-auth-nextjs";
+import { ChevronDown, Loader, Moon, Sun, Home } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
+
+const MODELS = [
+  { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" },
+  { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" },
+  { label: "Gemini 2.0 Flash-Lite", value: "gemini-2.0-flash-lite" }
+];
+
+const THEMES = [
+  { label: "Light", value: "light" },
+  { label: "Dark", value: "dark" },
+  { label: "System", value: "system" },
+];
 
 const Header = () => {
-  const { setTheme } = useTheme();
-  const { user, isAuthenticated, isLoading, error } = useKindeBrowserClient();
+  const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
+  const { setTheme, resolvedTheme = 'light' } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+    fetch("/api/llm-model")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.modelName) setSelectedModel(data.modelName);
+      });
+  }, []);
+
+  const handleSelect = (value: string) => {
+    setSelectedModel(value);
+    fetch("/api/llm-model", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ modelName: value }),
+    });
+  };
+
+  const handleThemeSelect = (value: string) => {
+    setTheme(value);
+    fetch("/api/theme", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ theme: value }),
+    });
+  };
+
   return (
     <div
       className="shadow-sm w-full sticky
@@ -35,91 +70,66 @@ const Header = () => {
             flex-1 gap-9
             "
         >
-          <div>
+          <div className="flex items-center gap-2">
+            <Home className="w-5 h-5 text-primary" />
             <Link
               href="/dashboard"
               className="font-black text-[20px]
                       text-primary
                           "
             >
-              CVbuild.ai
+              Home
             </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="ml-4 px-3 py-1 border rounded text-sm flex items-center gap-2"
+                  type="button"
+                >
+                  {MODELS.find((m) => m.value === selectedModel)?.label}
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {MODELS.map((model) => (
+                  <DropdownMenuItem
+                    key={model.value}
+                    onClick={() => handleSelect(model.value)}
+                  >
+                    {model.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-
-          {isAuthenticated && user ? (
-            <div className="flex items-center gap-2">
-              <span
-                className="font-normal
-               text-black/50
-               dark:text-primary-foreground"
-              >
-                Hi,
-              </span>
-              <h5
-                className="font-bold text-black 
-              dark:text-primary-foreground"
-              >
-                {user?.given_name} {user?.family_name}
-              </h5>
-            </div>
-          ) : null}
         </div>
 
         <div className="flex items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <button
+                type="button"
+                className={`relative flex items-center justify-center h-8 w-8 rounded border transition-colors ${resolvedTheme === "dark" ? "border-white" : "border-gray-300"}`}
+              >
+                {isMounted && (resolvedTheme === "dark" ? (
+                  <Moon className="h-[1.2rem] w-[1.2rem] text-white" />
+                ) : (
+                  <Sun className="h-[1.2rem] w-[1.2rem] text-yellow-500" />
+                ))}
                 <span className="sr-only">Toggle theme</span>
-              </Button>
+              </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setTheme("light")}>
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")}>
-                Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")}>
-                System
-              </DropdownMenuItem>
+              {THEMES.map((t) => (
+                <DropdownMenuItem
+                  key={t.value}
+                  onClick={() => handleThemeSelect(t.value)}
+                >
+                  {t.label}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          {isLoading || error ? (
-            <Loader
-              className="animate-spin !size-6 text-black
-          dark:text-white
-                      "
-            />
-          ) : (
-            <Fragment>
-              {isAuthenticated && user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger role="button">
-                    <div className="flex items-center gap-1">
-                      <Avatar role="button" className="!cursor-pointer">
-                        <AvatarImage src={user?.picture || ""} />
-                        <AvatarFallback className="!cursor-pointer">
-                          {user?.given_name?.[0]}
-                          {user?.family_name?.[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <ChevronDown size="17px" />
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="my-3">
-                    <DropdownMenuItem
-                      asChild
-                      className="!text-red-500 !cursor-pointer font-medium"
-                    >
-                      <LogoutLink>Log out</LogoutLink>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : null}
-            </Fragment>
-          )}
         </div>
       </div>
     </div>

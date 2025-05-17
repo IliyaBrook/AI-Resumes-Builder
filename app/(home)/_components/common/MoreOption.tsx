@@ -7,31 +7,30 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useResumeContext } from "@/context/resume-info-provider";
 import useUpdateDocument from "@/features/document/use-update-document";
+import useGetDocument from "@/features/document/use-get-document-by-id";
+import { useParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { Loader, MoreHorizontal, Redo, Trash2 } from "lucide-react";
 import { StatusType } from "@/types/resume.type";
 
 const MoreOption = () => {
   const router = useRouter();
-  const { resumeInfo, isLoading, onUpdate } = useResumeContext();
-
-  const { mutateAsync, isPending } = useUpdateDocument();
+  const param = useParams();
+  const documentId = param.documentId as string;
+  const { data, isLoading } = useGetDocument(documentId);
+  const resumeInfo = data?.data;
+  const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 
   const handleClick = useCallback(
     async (status: StatusType) => {
       if (!resumeInfo) return;
-      await mutateAsync(
+      setResumeInfo(
         {
           status: status,
         },
         {
           onSuccess: () => {
-            onUpdate({
-              ...resumeInfo,
-              status: status,
-            });
             router.replace(`/dashboard/`);
             toast({
               title: "Success",
@@ -48,7 +47,7 @@ const MoreOption = () => {
         }
       );
     },
-    [mutateAsync, onUpdate, resumeInfo, router]
+    [setResumeInfo, resumeInfo, router]
   );
 
   return (
@@ -58,8 +57,7 @@ const MoreOption = () => {
           <Button
             variant="secondary"
             size="icon"
-            className="bg-white border
-             dark:bg-gray-800"
+            className="bg-white border dark:bg-gray-800"
           >
             <MoreHorizontal />
           </Button>

@@ -1,16 +1,16 @@
 "use client";
+import RichTextEditor, { parseAIResult, RichTextEditorRef } from "@/components/editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useResumeContext } from "@/context/resume-info-provider";
+import useGetDocument from "@/features/document/use-get-document-by-id";
 import useUpdateDocument from "@/features/document/use-update-document";
+import useDebounce from "@/hooks/use-debounce";
 import { toast } from "@/hooks/use-toast";
-import { AIChatSession } from "@/lib/google-ai-model";
-import { generateThumbnail } from "@/lib/helper";
+import { getAIChatSession, getCurrentModel } from "@/lib/google-ai-model";
 import { ResumeDataType } from "@/types/resume.type";
-import { Loader, Sparkles } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import { Sparkles } from "lucide-react";
+import { useParams } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 
 interface GeneratesSummaryType {
   fresher: string;
@@ -18,80 +18,146 @@ interface GeneratesSummaryType {
   experienced: string;
 }
 
-const prompt = `Job Title: {jobTitle}. Based on the job title, please generate concise 
-and complete summaries for my resume in JSON format, incorporating the following experience
-levels: fresher, mid, and experienced. Each summary should be limited to 3 to 4 lines,
-reflecting a personal tone and showcasing specific relevant programming languages, technologies,
-frameworks, and methodologies without any placeholders or gaps. Ensure that the summaries are
-engaging and tailored to highlight unique strengths, aspirations, and contributions to collaborative
-projects, demonstrating a clear understanding of the role and industry standards.`;
+const buildPrompt = (
+  resumeInfo: ResumeDataType,
+  summarySize: string = "default"
+) => {
+  const jobTitle = resumeInfo?.personalInfo?.jobTitle || "";
+  let promptParts = [];
+  promptParts.push(`Job Title: ${jobTitle}`);
 
-const SummaryForm = (props: { handleNext: () => void }) => {
-  const { handleNext } = props;
-  const { resumeInfo, onUpdate } = useResumeContext();
+  if (resumeInfo.summary && resumeInfo.summary.trim().length > 0) {
+    promptParts.push(`Current Summary: ${resumeInfo.summary}`);
+  }
 
-  const { mutateAsync, isPending } = useUpdateDocument();
+  if (Array.isArray(resumeInfo.skills) && resumeInfo.skills.length > 0) {
+    const skillMap = new Map<string, number>();
+    resumeInfo.skills.forEach((skill) => {
+      const name = skill.name ? String(skill.name) : "";
+      const rating = typeof skill.rating === "number" ? skill.rating : 0;
+      if (!skillMap.has(name) || rating > (skillMap.get(name) || 0)) {
+        skillMap.set(name, rating);
+      }
+    });
+    const sortedSkills = Array.from(skillMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([name]) => name);
+    promptParts.push(`Key Skills: ${sortedSkills.join(", ")}`);
+  }
 
+  if (
+    Array.isArray(resumeInfo.experiences) &&
+    resumeInfo.experiences.length > 0
+  ) {
+    const sortedExp = [...resumeInfo.experiences].sort((a, b) =>
+      (b.endDate || "")?.localeCompare(a.endDate || "")
+    );
+    const expShort = sortedExp.slice(0, 3).map((exp) => {
+      return `Title: ${exp.title}, Company: ${exp.companyName}, Summary: ${
+        exp.workSummary
+          ? exp.workSummary
+              .replace(/<[^>]+>/g, " ")
+              .replace(/\s+/g, " ")
+              .trim()
+              .slice(0, 200)
+          : ""
+      }`;
+    });
+    promptParts.push(`Key Experiences: ${expShort.join(" | ")}`);
+  }
+
+  if (summarySize === "large") {
+    promptParts.push(
+      "Make each summary more detailed and longer, up to 6-8 lines."
+    );
+  } else if (summarySize === "extra_large") {
+    promptParts.push(
+      "Make each summary very detailed and as long as possible, up to 10-12 lines."
+    );
+  } else if (summarySize === "short") {
+    promptParts.push("Make each summary concise and short, 2-3 lines.");
+  }
+
+  promptParts.push(
+    `Based on the provided information, generate three resume summaries for the following experience levels: fresher, mid, and experienced. Return the result as a JSON object with keys 'fresher', 'mid', and 'experienced', where each value is a summary in HTML format. Use any suitable HTML tags (such as <b>, <strong>, <i>, <em>, <u>, <span style>, <p>, etc.) to make the text visually attractive, highlight key skills, technologies, and achievements, and structure the summary. Do not use <ul> or <li> tags and do not use lists. Use only the information provided by the user, do not invent or assume any data, and do not use any hardcoded examples. Each summary should be 3-4 lines (or according to the selected size), personal, engaging, and easy to read. Do not use placeholders. Do not use lists. Each summary should be visually structured, personal, and engaging.`
+  );
+
+  return promptParts.join(". ");
+};
+
+const SummaryForm = () => {
+  const param = useParams();
+  const documentId = param.documentId as string;
+  const { data, isLoading } = useGetDocument(documentId);
+  const resumeInfo = data?.data as ResumeDataType | undefined;
+  const { mutate: setResumeInfo } = useUpdateDocument();
   const [loading, setLoading] = useState(false);
   const [aiGeneratedSummary, setAiGeneratedSummary] =
     useState<GeneratesSummaryType | null>(null);
+  const [summary, setSummary] = useState("");
+  const [summarySize, setSummarySize] = useState("default");
+  const [selectedSummary, setSelectedSummary] = useState<string>("");
+  const editorRef = React.useRef<RichTextEditorRef>(null);
 
-  const handleChange = (e: { target: { value: string } }) => {
-    const { value } = e.target;
-    const resumeDataInfo = resumeInfo as ResumeDataType;
-    const updatedInfo = {
-      ...resumeDataInfo,
-      summary: value,
-    };
-    onUpdate(updatedInfo);
+  useEffect(() => {
+    if (resumeInfo?.summary !== undefined) {
+      setSummary(resumeInfo.summary ?? "");
+    }
+  }, [resumeInfo?.summary]);
+
+  useEffect(() => {
+    if (selectedSummary !== "") {
+      setSummary(selectedSummary);
+    }
+  }, [selectedSummary]);
+
+  const debouncedSummary = useDebounce(summary, 600);
+
+  useEffect(() => {
+    if (!resumeInfo) return;
+    setResumeInfo({ summary: debouncedSummary });
+  }, [debouncedSummary]);
+
+  const handleChange = (value: string) => {
+    setSummary(value);
+    setSelectedSummary(value);
+    if (resumeInfo) setResumeInfo({ summary: value });
   };
-
-  const handleSubmit = useCallback(
-    async (e: { preventDefault: () => void }) => {
-      e.preventDefault();
-      if (!resumeInfo) return;
-      const thumbnail = await generateThumbnail();
-      const currentNo = resumeInfo?.currentPosition
-        ? resumeInfo?.currentPosition + 1
-        : 1;
-
-      await mutateAsync(
-        {
-          currentPosition: currentNo,
-          thumbnail: thumbnail,
-          summary: resumeInfo?.summary,
-        },
-        {
-          onSuccess: () => {
-            toast({
-              title: "Success",
-              description: "Summary updated successfully",
-            });
-            handleNext();
-          },
-          onError() {
-            toast({
-              title: "Error",
-              description: "Failed to update summary",
-              variant: "destructive",
-            });
-          },
-        }
-      );
-    },
-    [resumeInfo]
-  );
 
   const GenerateSummaryFromAI = async () => {
     try {
-      const jobTitle = resumeInfo?.personalInfo?.jobTitle;
-      if (!jobTitle) return;
+      if (!data?.data) return;
       setLoading(true);
-      const PROMPT = prompt.replace("{jobTitle}", jobTitle);
-      const result = await AIChatSession.sendMessage(PROMPT);
-      const responseText = await result.response.text();
-      console.log(responseText);
-      setAiGeneratedSummary(JSON?.parse(responseText));
+      const { projectsSectionTitle, ...rest } = data.data;
+      const resumeData = projectsSectionTitle === null
+        ? { ...rest, skills: rest.skills.map(skill => ({ ...skill, hideRating: !!skill.hideRating })) }
+        : { ...rest, projectsSectionTitle, skills: rest.skills.map(skill => ({ ...skill, hideRating: !!skill.hideRating })) };
+      const promptText = buildPrompt(resumeData, summarySize);
+      const modelName = await getCurrentModel();
+      const chat = getAIChatSession(modelName);
+      const result = await chat.sendMessage(promptText);
+      let responseText = "";
+      if (
+        result.response.candidates &&
+        result.response.candidates[0]?.content?.parts[0]?.text
+      ) {
+        responseText = result.response.candidates[0].content.parts[0].text;
+      } else if (typeof result.response.text === "function") {
+        responseText = await result.response.text();
+      } else if (typeof result.response.text === "string") {
+        responseText = result.response.text;
+      }
+      let parsed: any = parseAIResult(responseText);
+      if (parsed && typeof parsed === 'object' && (parsed.fresher || parsed.mid || parsed.experienced)) {
+        setAiGeneratedSummary({
+          fresher: parsed.fresher || "",
+          mid: parsed.mid || "",
+          experienced: parsed.experienced || "",
+        });
+      } else {
+        setAiGeneratedSummary(null);
+      }
     } catch (error) {
       toast({
         title: "Failed to generate summary",
@@ -104,17 +170,14 @@ const SummaryForm = (props: { handleNext: () => void }) => {
 
   const handleSelect = useCallback(
     (summary: string) => {
-      if (!resumeInfo) return;
-      const resumeDataInfo = resumeInfo as ResumeDataType;
-      const updatedInfo = {
-        ...resumeDataInfo,
-        summary: summary,
-      };
-      onUpdate(updatedInfo);
-      setAiGeneratedSummary(null);
+      if (editorRef.current) {
+        editorRef.current.setValue(summary);
+      }
+      if (resumeInfo) setResumeInfo({ summary });
     },
-    [onUpdate, resumeInfo]
+    [setResumeInfo, resumeInfo]
   );
+  
 
   return (
     <div>
@@ -122,68 +185,71 @@ const SummaryForm = (props: { handleNext: () => void }) => {
         <h2 className="font-bold text-lg">Summary</h2>
         <p className="text-sm">Add summary for your resume</p>
       </div>
+      <div className="mb-2 flex gap-2 items-center">
+        <span className="text-sm">Summary size:</span>
+        <select
+          className="border rounded px-2 py-1 text-sm"
+          value={summarySize}
+          onChange={(e) => setSummarySize(e.target.value)}
+        >
+          <option value="default">Default</option>
+          <option value="short">Short</option>
+          <option value="large">Large</option>
+          <option value="extra_large">Extra Large</option>
+        </select>
+      </div>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form>
           <div className="flex items-end justify-between">
-            <Label>Add Summary</Label>
+            <div />
             <Button
               variant="outline"
               type="button"
               className="gap-1"
-              disabled={loading || isPending}
+              disabled={loading || isLoading}
               onClick={() => GenerateSummaryFromAI()}
             >
               <Sparkles size="15px" className="text-purple-500" />
               Generate with AI
             </Button>
           </div>
-          <Textarea
-            className="mt-5 min-h-36"
-            required
-            value={resumeInfo?.summary || ""}
-            onChange={handleChange}
-          />
-
+          <div className="mt-5 min-h-36">
+            <RichTextEditor
+              ref={editorRef}
+              jobTitle={resumeInfo?.personalInfo?.jobTitle || null}
+              initialValue={summary}
+              value={summary}
+              onEditorChange={handleChange}
+              showBullets={false}
+              disabled={false}
+              showLineLengthSelector={false}
+            />
+          </div>
           {aiGeneratedSummary && (
             <div>
               <h5 className="font-semibold text-[15px] my-4">Suggestions</h5>
-              {Object?.entries(aiGeneratedSummary)?.map(
-                ([experienceType, summary], index) => (
+              {Object.entries(aiGeneratedSummary)
+                .filter(([, summary]) => summary && summary.trim() !== "")
+                .map(([experienceType, summary], index) => (
                   <Card
                     role="button"
                     key={index}
-                    className="my-4 bg-primary/5 shadow-none
-                            border-primary/30
-                          "
+                    className="my-4 bg-primary/5 shadow-none border-primary/30"
                     onClick={() => handleSelect(summary)}
                   >
                     <CardHeader className="py-2">
                       <CardTitle className="font-semibold text-md">
-                        {experienceType?.charAt(0)?.toUpperCase() +
-                          experienceType?.slice(1)}
+                        {experienceType.charAt(0).toUpperCase() +
+                          experienceType.slice(1)}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="text-sm">
-                      <p>{summary}</p>
+                      <div dangerouslySetInnerHTML={{ __html: summary }} />
                     </CardContent>
                   </Card>
-                )
-              )}
+                ))}
             </div>
           )}
-
-          <Button
-            className="mt-4"
-            type="submit"
-            disabled={
-              isPending || loading || resumeInfo?.status === "archived"
-                ? true
-                : false
-            }
-          >
-            {isPending && <Loader size="15px" className="animate-spin" />}
-            Save Changes
-          </Button>
         </form>
       </div>
     </div>

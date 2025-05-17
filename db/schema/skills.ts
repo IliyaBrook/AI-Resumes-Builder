@@ -6,19 +6,21 @@ import { relations } from "drizzle-orm";
 
 export const skillsTable = pgTable("skills", {
   id: serial("id").primaryKey(),
-  docId: integer("document_id")
-    .references(() => documentTable.id, {
+  docId: varchar("document_id", { length: 255 })
+    .references(() => documentTable.documentId, {
       onDelete: "cascade",
     })
     .notNull(),
   name: varchar("name", { length: 255 }),
   rating: integer("rating").notNull().default(0),
+  hideRating: integer("hide_rating").notNull().default(0),
+  order: integer("order").notNull().default(0),
 });
 
 export const skillsRelations = relations(skillsTable, ({ one }) => ({
   document: one(documentTable, {
     fields: [skillsTable.docId],
-    references: [documentTable.id],
+    references: [documentTable.documentId],
   }),
 }));
 
@@ -28,6 +30,8 @@ export const skillsTableSchema = createInsertSchema(skillsTable, {
   id: true,
   name: true,
   rating: true,
+  hideRating: true,
+  order: true,
 });
 
 export type SkillsSchema = z.infer<typeof skillsTableSchema>;

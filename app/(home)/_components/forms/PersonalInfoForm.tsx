@@ -1,96 +1,75 @@
-import React, { useCallback, useEffect } from "react";
-import { Loader } from "lucide-react";
-import { useResumeContext } from "@/context/resume-info-provider";
-import { PersonalInfoType } from "@/types/resume.type";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import PersonalInfoSkeletonLoader from "@/components/skeleton-loader/personal-info-loader";
-import { generateThumbnail } from "@/lib/helper";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import useGetDocument from "@/features/document/use-get-document-by-id";
 import useUpdateDocument from "@/features/document/use-update-document";
-import { toast } from "@/hooks/use-toast";
+import useDebounce from "@/hooks/use-debounce";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { Mail, Phone, MapPin, Github, Linkedin } from "lucide-react";
 
-const initialState = {
-  id: undefined,
-  firstName: "",
-  lastName: "",
-  jobTitle: "",
-  address: "",
-  phone: "",
-  email: "",
-};
+const PersonalInfoForm = () => {
+  const param = useParams();
+  const documentId = param.documentId as string;
+  const { data, isLoading } = useGetDocument(documentId);
+  const resumeInfo = data?.data;
+  const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 
-const PersonalInfoForm = (props: { handleNext: () => void }) => {
-  const { handleNext } = props;
-  const { resumeInfo, isLoading, onUpdate } = useResumeContext();
-  const { mutateAsync, isPending } = useUpdateDocument();
-
-  const [personalInfo, setPersonalInfo] =
-    React.useState<PersonalInfoType>(initialState);
+  const [personalInfo, setPersonalInfo] = useState<{
+    id?: number;
+    firstName: string;
+    lastName: string;
+    jobTitle: string;
+    address: string;
+    phone: string;
+    email: string;
+    github?: string;
+    linkedin?: string;
+  }>(
+    {
+      id: undefined,
+      firstName: "",
+      lastName: "",
+      jobTitle: "",
+      address: "",
+      phone: "",
+      email: "",
+      github: "",
+      linkedin: "",
+    }
+  );
 
   useEffect(() => {
-    if (!resumeInfo) {
-      return;
-    }
     if (resumeInfo?.personalInfo) {
       setPersonalInfo({
-        ...(resumeInfo?.personalInfo || initialState),
+        id: resumeInfo.personalInfo.id ?? undefined,
+        firstName: resumeInfo.personalInfo.firstName || "",
+        lastName: resumeInfo.personalInfo.lastName || "",
+        jobTitle: resumeInfo.personalInfo.jobTitle || "",
+        address: resumeInfo.personalInfo.address || "",
+        phone: resumeInfo.personalInfo.phone || "",
+        email: resumeInfo.personalInfo.email || "",
+        github: resumeInfo.personalInfo.github || "",
+        linkedin: resumeInfo.personalInfo.linkedin || "",
       });
     }
   }, [resumeInfo?.personalInfo]);
 
+  const debouncedPersonalInfo = useDebounce(personalInfo, 600);
+
+  useEffect(() => {
+    if (!resumeInfo) return;
+    setResumeInfo({
+      personalInfo: debouncedPersonalInfo,
+    });
+  }, [debouncedPersonalInfo]);
+
   const handleChange = useCallback(
     (e: { target: { name: string; value: string } }) => {
       const { name, value } = e.target;
-
-      setPersonalInfo({ ...personalInfo, [name]: value });
-
-      if (!resumeInfo) return;
-
-      onUpdate({
-        ...resumeInfo,
-        personalInfo: {
-          ...resumeInfo.personalInfo,
-          [name]: value,
-        },
-      });
+      setPersonalInfo((prev) => ({ ...prev, [name]: value }));
     },
-    [resumeInfo, onUpdate]
-  );
-
-  const handleSubmit = useCallback(
-    async (e: { preventDefault: () => void }) => {
-      e.preventDefault();
-
-      const thumbnail = await generateThumbnail();
-      const currentNo = resumeInfo?.currentPosition
-        ? resumeInfo?.currentPosition + 1
-        : 1;
-      await mutateAsync(
-        {
-          currentPosition: currentNo,
-          thumbnail: thumbnail,
-          personalInfo: personalInfo,
-        },
-        {
-          onSuccess: () => {
-            toast({
-              title: "Success",
-              description: "PersonalInfo updated successfully",
-            });
-            handleNext();
-          },
-          onError: () => {
-            toast({
-              title: "Error",
-              description: "Failed to update personal information",
-              variant: "destructive",
-            });
-          },
-        }
-      );
-    },
-    [resumeInfo, personalInfo]
+    []
   );
 
   if (isLoading) {
@@ -104,89 +83,133 @@ const PersonalInfoForm = (props: { handleNext: () => void }) => {
         <p className="text-sm">Get Started with the personal information</p>
       </div>
       <div>
-        <form onSubmit={handleSubmit}>
-          <div
-            className="grid grid-cols-2 
-          mt-5 gap-3"
-          >
-            <div>
-              <Label className="text-sm">First Name</Label>
-              <Input
-                name="firstName"
-                required
-                autoComplete="off"
-                placeholder=""
-                value={personalInfo?.firstName || ""}
-                onChange={handleChange}
-              />
+        <form>
+          <div className="space-y-4">
+            {/* Name Section */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="text-sm">First Name</Label>
+                <Input
+                  name="firstName"
+                  required
+                  autoComplete="off"
+                  placeholder=""
+                  value={personalInfo.firstName}
+                  onChange={handleChange}
+                  className="h-9"
+                />
+              </div>
+              <div>
+                <Label className="text-sm">Last Name</Label>
+                <Input
+                  name="lastName"
+                  required
+                  autoComplete="off"
+                  placeholder=""
+                  value={personalInfo.lastName}
+                  onChange={handleChange}
+                  className="h-9"
+                />
+              </div>
             </div>
+
+            {/* Job Title */}
             <div>
-              <Label className="text-sm">Last Name</Label>
-              <Input
-                name="lastName"
-                required
-                autoComplete="off"
-                placeholder=""
-                value={personalInfo?.lastName || ""}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-span-2">
               <Label className="text-sm">Job Title</Label>
               <Input
                 name="jobTitle"
                 required
                 autoComplete="off"
                 placeholder=""
-                value={personalInfo?.jobTitle || ""}
+                value={personalInfo.jobTitle}
                 onChange={handleChange}
+                className="h-9"
               />
             </div>
-            <div className="col-span-2">
+
+            {/* Contact Info */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="relative">
+                <Label className="text-sm">Phone</Label>
+                <div className="relative">
+                  <Phone className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input
+                    name="phone"
+                    required
+                    autoComplete="off"
+                    placeholder=""
+                    value={personalInfo.phone}
+                    onChange={handleChange}
+                    className="pl-8 h-9"
+                  />
+                </div>
+              </div>
+              <div className="relative">
+                <Label className="text-sm">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input
+                    name="email"
+                    required
+                    autoComplete="off"
+                    placeholder=""
+                    value={personalInfo.email}
+                    onChange={handleChange}
+                    className="pl-8 h-9"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Social Links */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="relative">
+                <Label className="text-sm">Github</Label>
+                <div className="relative">
+                  <Github className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input
+                    name="github"
+                    autoComplete="off"
+                    placeholder="username"
+                    value={personalInfo.github}
+                    onChange={handleChange}
+                    className="pl-8 h-9"
+                  />
+                </div>
+              </div>
+              <div className="relative">
+                <Label className="text-sm">LinkedIn</Label>
+                <div className="relative">
+                  <Linkedin className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input
+                    name="linkedin"
+                    autoComplete="off"
+                    placeholder="username"
+                    value={personalInfo.linkedin}
+                    onChange={handleChange}
+                    className="pl-8 h-9"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="relative">
               <Label className="text-sm">Address</Label>
-              <Input
-                name="address"
-                required
-                autoComplete="off"
-                placeholder=""
-                value={personalInfo?.address || ""}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-span-2">
-              <Label className="text-sm">Phone number</Label>
-              <Input
-                name="phone"
-                required
-                autoComplete="off"
-                placeholder=""
-                value={personalInfo?.phone || ""}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-span-2">
-              <Label className="text-sm">Email</Label>
-              <Input
-                name="email"
-                required
-                autoComplete="off"
-                placeholder=""
-                value={personalInfo?.email || ""}
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <MapPin className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                <Input
+                  name="address"
+                  required
+                  autoComplete="off"
+                  placeholder=""
+                  value={personalInfo.address}
+                  onChange={handleChange}
+                  className="pl-8 h-9"
+                />
+              </div>
             </div>
           </div>
-
-          <Button
-            className="mt-4"
-            type="submit"
-            disabled={
-              isPending || resumeInfo?.status === "archived" ? true : false
-            }
-          >
-            {isPending && <Loader size="15px" className="animate-spin" />}
-            Save Changes
-          </Button>
         </form>
       </div>
     </div>

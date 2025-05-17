@@ -1,11 +1,6 @@
 import React from "react";
 import { ExternalLink } from "lucide-react";
-import {
-  LoginLink,
-  RegisterLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 const NavBar = () => {
   return (
@@ -42,14 +37,7 @@ const NavBar = () => {
             </ul>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <LoginLink>
-            <Button variant="outline">Sign In</Button>
-          </LoginLink>
-          <RegisterLink>
-            <Button>Get Started</Button>
-          </RegisterLink>
-        </div>
+        <div className="flex items-center gap-4"></div>
       </div>
     </div>
   );

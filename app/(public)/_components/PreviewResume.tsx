@@ -7,6 +7,7 @@ import SummaryPreview from "@/components/preview/SummaryPreview";
 import EducationPreview from "@/components/preview/EducationPreview";
 import ExperiencePreview from "@/components/preview/ExperiencePreview";
 import SkillPreview from "@/components/preview/SkillPreview";
+import ProjectPreview from "@/components/preview/ProjectPreview";
 
 const PreviewResume = (props: {
   isLoading: boolean;
@@ -14,7 +15,7 @@ const PreviewResume = (props: {
 }) => {
   const { isLoading, resumeInfo } = props;
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
-
+  
   return (
     <div
       className={cn(`
@@ -26,19 +27,11 @@ const PreviewResume = (props: {
         borderTop: `13px solid ${resumeInfo?.themeColor}`,
       }}
     >
-      {/* {Personnal Info} */}
       <PersonalInfo isLoading={isLoading} resumeInfo={resumeInfo} />
-
-      {/* {Summary} */}
       <SummaryPreview isLoading={isLoading} resumeInfo={resumeInfo} />
-
-      {/* {Professional Exp} */}
       <ExperiencePreview isLoading={isLoading} resumeInfo={resumeInfo} />
-
-      {/* {Educational Info} */}
       <EducationPreview isLoading={isLoading} resumeInfo={resumeInfo} />
-
-      {/* {Skills} */}
+      <ProjectPreview isLoading={isLoading} resumeInfo={resumeInfo} />
       <SkillPreview isLoading={isLoading} resumeInfo={resumeInfo} />
     </div>
   );

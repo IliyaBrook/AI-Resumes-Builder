@@ -1,12 +1,23 @@
 "use client";
 import useGetDocuments from "@/features/document/use-get-document";
 import { Loader, RotateCw } from "lucide-react";
-import React, { Fragment } from "react";
+import React, { Fragment, useCallback } from "react";
 import ResumeItem from "./common/ResumeItem";
 
 const ResumeList = () => {
   const { data, isLoading, isError, refetch } = useGetDocuments();
   const resumes = data?.data ?? [];
+
+  const onDuplicate = useCallback(
+    async (documentId: string) => {
+      await fetch(`/api/document/${documentId}/duplicate`, {
+        method: "POST",
+      });
+      refetch();
+    },
+    [refetch]
+  );
+  console.log("resumes", resumes);
   return (
     <Fragment>
       {isLoading ? (
@@ -35,10 +46,10 @@ const ResumeList = () => {
               key={resume.documentId}
               documentId={resume.documentId}
               title={resume.title}
-              status={resume.status}
               updatedAt={resume.updatedAt}
               themeColor={resume.themeColor}
               thumbnail={resume.thumbnail}
+              onDuplicate={onDuplicate}
             />
           ))}
         </>

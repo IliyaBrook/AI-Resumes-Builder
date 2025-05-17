@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import SkeletonLoader from "@/components/skeleton-loader";
 import { INITIAL_THEME_COLOR } from "@/lib/helper";
 import { ResumeDataType } from "@/types/resume.type";
+import { formatDateByLocale } from "@/lib/utils";
 
 interface PropsType {
   resumeInfo: ResumeDataType | undefined;
@@ -45,11 +46,13 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 {education?.degree && education?.major && " in "}
                 {education?.major}
               </h5>
-              <span className="text-[13px]">
-                {education?.startDate}
-                {education?.startDate && " - "}
-                {education?.endDate}
-              </span>
+              {education?.skipDates === true || (!education?.startDate && !education?.endDate) ? null : (
+                <span className="text-[13px] font-bold">
+                  {formatDateByLocale(education?.startDate ?? undefined)}
+                  {education?.startDate && " - "}
+                  {education?.currentlyStudying ? "Present" : formatDateByLocale(education?.endDate ?? undefined)}
+                </span>
+              )}
             </div>
             <p className="text-[13px] my-2">{education?.description}</p>
           </div>

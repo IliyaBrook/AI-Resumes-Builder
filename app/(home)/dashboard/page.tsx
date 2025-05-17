@@ -9,10 +9,7 @@ const Page = () => {
       <div className="w-full mx-auto max-w-7xl py-5 px-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Resume Builder</h1>
-            <p className="text-base dark:text-inherit">
-              Create your own custom resume with AI & Subscribe to the channel
-            </p>
+            <h1 className="text-2xl">Resume Builder</h1>
           </div>
           <div className="shrink-0 flex items-center gap-3">
             {/* {Trash List} */}

@@ -55,7 +55,7 @@ const TrashListBox = () => {
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button
           className="text-[15px] gap-[2px]
            items-center"

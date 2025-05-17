@@ -2,6 +2,7 @@ import SkeletonLoader from "@/components/skeleton-loader";
 import { INITIAL_THEME_COLOR } from "@/lib/helper";
 import { ResumeDataType } from "@/types/resume.type";
 import React, { FC } from "react";
+import { formatDateByLocale } from "@/lib/utils";
 
 interface PropsType {
   resumeInfo: ResumeDataType | undefined;
@@ -43,17 +44,21 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               className="flex items-start 
             justify-between mb-2"
             >
-              <h5 className="text-[13px]">
-                {experience?.companyName}
-                {experience?.companyName && experience?.city && ", "}
-                {experience?.city}
-                {experience?.city && experience?.state && ", "}
-                {experience?.state}
+              <h5 className="text-[13px] whitespace-nowrap">
+                <span className="font-bold">{experience?.companyName}</span>
+                <span>
+                  {experience?.companyName && experience?.city && ", "}
+                  {experience?.city}
+                </span>
+                <span>
+                  {experience?.city && experience?.state && ", "}
+                  {experience?.state}
+                </span>
               </h5>
-              <span className="text-[13px]">
-                {experience?.startDate}
+              <span className="text-[13px] font-bold">
+                {formatDateByLocale(experience?.startDate ?? undefined)}
                 {experience?.startDate && " - "}
-                {experience?.currentlyWorking ? "Present" : experience?.endDate}
+                {experience?.currentlyWorking ? "Present" : formatDateByLocale(experience?.endDate ?? undefined)}
               </span>
             </div>
             <div

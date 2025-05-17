@@ -24,12 +24,12 @@ const AddResume = () => {
     <>
       <div
         role="button"
-        className="p-[2px] w-full cursor-pointer max-w-[164px]"
+        className="p-[2px] w-full cursor-pointer max-w-[218.4px]"
         onClick={onCreate}
       >
         <div
           className="
-        py-24 h-[183px] flex flex-col
+        py-24 h-[218.4px] flex flex-col
         rounded-lg gap-2 w-full max-w-full
         items-center justify-center
         border

@@ -67,9 +67,9 @@ const ResumeItem: FC<PropType> = ({
     <>
       <div
         className="
-        cursor-pointer max-w-[164px] w-full
+        cursor-pointer max-w-[220px] w-full
         border 
-        rounded-lg transition-all h-[197px]
+        rounded-lg transition-all h-[220px]
         hover:border-primary
         hover:shadow-md
         shadow-primary
@@ -120,45 +120,27 @@ const ResumeItem: FC<PropType> = ({
 
           {/* {Body Content} */}
           <div
-            className="shrink w-full border-t pt-2 
-              pb-[9px]
-              px-[9px]
-        "
+            className="shrink w-full border-t pt-2 pb-[9px] px-[9px]"
           >
-            <div
-              className="flex items-center 
-          justify-between"
+            <h5
+              className="font-bold text-lg mb-1 truncate block max-w-full text-center"
             >
-              <h5
-                className="
-                      font-semibold text-sm mb-[2px]
-                      truncate block
-                      "
+              {title}
+            </h5>
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap">{docDate}</span>
+              <button
+                className="text-muted-foreground rounded hover:shadow-[0_0_0_1px_#6b7280] p-1"
+                onClick={handleDelete}
               >
-                {title}
-              </h5>
-              <div className="flex items-center gap-1">
-                <button
-                  className="text-muted-foreground rounded hover:shadow-[0_0_0_1px_#6b7280] p-1"
-                  onClick={handleDelete}
-                >
-                  <Trash2 size="20px" />
-                </button>
-                <button
-                  className="text-muted-foreground rounded hover:shadow-[0_0_0_1px_#6b7280] p-1"
-                  onClick={e => { e.stopPropagation(); onDuplicate && onDuplicate(documentId); }}
-                >
-                  <Copy size="20px" />
-                </button>
-              </div>
-            </div>
-            <div
-              className="flex items-center
-          !text-[12px] font-medium 
-          text-muted-foreground
-          "
-            >
-              <span>{docDate}</span>
+                <Trash2 size="20px" />
+              </button>
+              <button
+                className="text-muted-foreground rounded hover:shadow-[0_0_0_1px_#6b7280] p-1"
+                onClick={e => { e.stopPropagation(); onDuplicate && onDuplicate(documentId); }}
+              >
+                <Copy size="20px" />
+              </button>
             </div>
           </div>
         </div>

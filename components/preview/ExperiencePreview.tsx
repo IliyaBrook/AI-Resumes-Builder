@@ -16,7 +16,7 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     return <SkeletonLoader />;
   }
   return (
-    <div className="w-full my-5">
+    <div className="w-full my-5 pdf-export">
       <h5
         className="text-center font-bold text-[18px]"
         style={{ color: themeColor }}
@@ -42,7 +42,7 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           .exp-preview li {
             margin-bottom: 0.2em;
             text-indent: 0;
-            list-style-type: disc!important;
+            // list-style-type: disc!important;
           }
         `}</style>
         {resumeInfo?.experiences?.map((experience, index) => (

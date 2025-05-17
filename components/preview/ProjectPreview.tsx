@@ -50,13 +50,13 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               <div dangerouslySetInnerHTML={{ __html: project.description || "" }} />
             </div>
             {project.git && (
-              <div className="text-[13px] mb-2 flex items-center gap-1">
+              <div className="text-[13px] mb-2 flex items-center gap-1 pdf-margin-bottom-0">
                 <LinkIcon size={15} className="opacity-60" />
                 <a
                   href={project.git}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline"
+                  className="underline pdf-position-fix"
                   style={{ color: themeColor }}
                 >
                   {project.git}

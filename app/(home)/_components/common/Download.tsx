@@ -27,6 +27,7 @@ const Download = (props: {
     setLoading(true);
     const fileName = formatFileName(title);
     try {
+      resumeElement.classList.add("pdf-export");
       const html2pdf = (await import("html2pdf.js")).default;
       await html2pdf()
         .set({
@@ -46,6 +47,7 @@ const Download = (props: {
         variant: "destructive",
       });
     } finally {
+      resumeElement.classList.remove("pdf-export");
       setLoading(false);
     }
   }, [title]);

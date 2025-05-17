@@ -39,7 +39,7 @@ const RESUME_STYLES = `
       margin-left: 0;
     }
     #resume-preview-id li {
-      list-style-type: disc;
+      // list-style-type: disc;
       margin-left: 0;
       padding-left: 0;
     }

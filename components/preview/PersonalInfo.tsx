@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { INITIAL_THEME_COLOR } from "@/lib/helper";
 import { ResumeDataType } from "@/types/resume.type";
 import React, { FC } from "react";
-import { Mail, Phone, MapPin, Github, Linkedin } from 'lucide-react';
+import { Mail, Phone, MapPin, Github, Linkedin } from "lucide-react";
 
 interface PropsType {
   resumeInfo: ResumeDataType | undefined;
@@ -31,43 +31,69 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       </h2>
       <div className="text-center text-base font-medium mb-2 text-gray-600 w-full">
         <div className="flex justify-center">
-          <span className="font-bold">{resumeInfo?.personalInfo?.jobTitle || "Job Title"}</span>
+          <span className="font-bold">
+            {resumeInfo?.personalInfo?.jobTitle || "Job Title"}
+          </span>
           <span>
             {resumeInfo?.personalInfo?.address && (
               <span className="ml-2 flex items-center hover:text-gray-900 transition-colors !text-[14px]">
                 <MapPin size={14} className="opacity-70 shrink-0" />
-                <span>{resumeInfo.personalInfo.address}</span>
+                <span className="pdf-position-fix">{resumeInfo.personalInfo.address}</span>
               </span>
             )}
           </span>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center gap-y-1 max-w-[600px] mx-auto pb-3 !text-[13px] text-gray-600">
+      <div className="flex flex-col items-center justify-center gap-y-1 max-w-[600px] mx-auto pb-3 !text-[13px] text-gray-600 pdf-padding-bottom-0">
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           {resumeInfo?.personalInfo?.phone && (
             <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
-              <Phone size={14} className="opacity-70 shrink-0" />
-              <a href={`tel:${resumeInfo.personalInfo.phone}`} className="hover:underline">{resumeInfo.personalInfo.phone}</a>
+              <Phone size={15} className="opacity-70 shrink-0" />
+              <a
+                href={`tel:${resumeInfo.personalInfo.phone}`}
+                className="hover:underline pdf-position-fix"
+              >
+                {resumeInfo.personalInfo.phone}
+              </a>
             </span>
           )}
           {resumeInfo?.personalInfo?.email && (
             <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
-              <Mail size={14} className="opacity-70 shrink-0" />
-              <a href={`mailto:${resumeInfo.personalInfo.email}`} className="hover:underline">{resumeInfo.personalInfo.email}</a>
+              <Mail size={15} className="opacity-70 shrink-0" />
+              <a
+                href={`mailto:${resumeInfo.personalInfo.email}`}
+                className="hover:underline pdf-position-fix"
+              >
+                {resumeInfo.personalInfo.email}
+              </a>
             </span>
           )}
         </div>
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           {resumeInfo?.personalInfo?.github && (
             <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
-              <Github  size={14} className="opacity-70 shrink-0" />
-              <a href={resumeInfo.personalInfo.github} target="_blank" rel="noopener noreferrer text-[13px]" className="hover:underline">{resumeInfo.personalInfo.github.replace(/^https?:\/\//, "")}</a>
+              <Github size={15} className="opacity-70 shrink-0" />
+              <a
+                href={resumeInfo.personalInfo.github}
+                target="_blank"
+                rel="noopener noreferrer text-[13px]"
+                className="hover:underline pdf-position-fix"
+              >
+                {resumeInfo.personalInfo.github.replace(/^https?:\/\//, "")}
+              </a>
             </span>
           )}
           {resumeInfo?.personalInfo?.linkedin && (
             <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
-              <Linkedin size={14} className="opacity-70 shrink-0" />
-              <a href={resumeInfo.personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline">{resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, "")}</a>
+              <Linkedin size={15} className="opacity-70 shrink-0" />
+              <a
+                href={resumeInfo.personalInfo.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline pdf-position-fix"
+              >
+                {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, "")}
+              </a>
             </span>
           )}
         </div>

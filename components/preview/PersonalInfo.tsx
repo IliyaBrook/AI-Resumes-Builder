@@ -20,7 +20,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     <div className="w-full min-h-14">
       <h2
         className="
-        font-bold text-2xl text-center mb-1
+        font-bold text-2xl text-center
       "
         style={{
           color: themeColor,
@@ -60,7 +60,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           {resumeInfo?.personalInfo?.github && (
             <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
-              <Github size={14} className="opacity-70 shrink-0" />
+              <Github  size={14} className="opacity-70 shrink-0" />
               <a href={resumeInfo.personalInfo.github} target="_blank" rel="noopener noreferrer text-[13px]" className="hover:underline">{resumeInfo.personalInfo.github.replace(/^https?:\/\//, "")}</a>
             </span>
           )}
@@ -74,7 +74,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       </div>
 
       <hr
-        className="border-[1px] mb-4"
+        className="border-[1px] mt-2 mb-4"
         style={{
           borderColor: themeColor,
         }}

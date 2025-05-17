@@ -25,7 +25,7 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         {resumeInfo?.projectsSectionTitle?.trim() || "Projects"}
       </h5>
       <hr
-        className="border-[1.5px] mb-2"
+        className="border-[1.5px] mt-2 mb-2"
         style={{ borderColor: themeColor }}
       />
       <div className="flex flex-col gap-2 min-h-9">

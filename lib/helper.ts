@@ -28,5 +28,9 @@ export const generateThumbnail = async () => {
 
 export const formatFileName = (title: string, useHyphen: boolean = true) => {
   const delimiter = useHyphen ? "-" : "_";
-  return title.trim().replace(/\s+/g, delimiter) + "pdf";
+  let name = title.trim().replace(/\s+/g, delimiter);
+  if (!name.toLowerCase().endsWith(".pdf")) {
+    name += ".pdf";
+  }
+  return name;
 };

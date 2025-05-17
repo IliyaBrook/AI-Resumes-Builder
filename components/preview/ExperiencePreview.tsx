@@ -25,7 +25,7 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       </h5>
       <hr
         className="
-          border-[1.5px] mb-2
+          border-[1.5px] mt-2 mb-2
           "
         style={{
           borderColor: themeColor,

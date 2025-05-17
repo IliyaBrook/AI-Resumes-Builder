@@ -11,7 +11,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:init": "psql -U postgres -d postgres -f ./db/init-db.sql",
-    "db:init:unix": "psql \"$POSTGRES_URL\" -f ./db/init-db.sql"
+    "db:run": "docker-compose up -d postgres"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",

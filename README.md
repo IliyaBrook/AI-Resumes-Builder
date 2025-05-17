@@ -21,13 +21,46 @@ This version includes several changes to enhance local usability and AI capabili
 
 ## Local Database Setup (PostgreSQL)
 
-To run this application locally with a database, follow these steps:
+You can run the database either locally or using Docker.
 
-1. Ensure you have a local PostgreSQL database installed and running. You can download it from [https://www.postgresql.org/download/](https://www.postgresql.org/download/).
-2. Make sure the path to your PostgreSQL `bin` directory is added to your system's environment variables (`PATH`). For Windows, this is typically `C:\Program Files\PostgreSQL\16\bin`. Open a new terminal and run `psql --version` to verify.
-3. Rename the `.env.example` file to `.env`. Update the database connection details in the `POSTGRES_URL` variable if they differ from your setup.
-4. Run the command `npm run db:init` in your terminal. Enter your PostgreSQL password when prompted. This will create the `ai-resumes-builder` database.
-5. Run the command `npm run db:push`. Select "Yes, I want to execute all statements." when prompted to apply the database schema.
+### Option 1: Run PostgreSQL via Docker
+
+1. Copy .env.example to .env and set the variables:
+
+```shell
+POSTGRES_DB=ai-resumes-builder
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=yourpassword
+```
+
+2.Start the database with:
+
+```shell
+npm run db:run
+```
+
+3.After the database is running, apply migrations:
+
+```shell
+npm run db:push
+```
+
+### Option 2: Run PostgreSQL Locally
+
+1. Install PostgreSQL locally. Add the bin path to your PATH. Check with `psql --version`.
+2. Copy .env.example to .env and set your connection parameters.
+3. Initialize the database:
+
+```shell
+npm run db:init
+```
+
+4. Apply migrations:
+
+```shell
+npm run db:push
+```
+
 6. Install project dependencies with `npm install`.
 7. To start the application in development mode, run `npm run dev`. For a production build, run `npm run build` followed by `npm run start`.
 

@@ -35,7 +35,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           {columns.map((col, colIdx) => (
             <div key={colIdx} className="flex flex-col gap-2">
               {col.map((name, idx) => (
-                <span key={idx} className="text-[13px] min-w-[60px] truncate">{name}</span>
+                <span key={idx} className="text-[12px] break-words max-w-full" style={{ wordBreak: 'break-word' }}>{name}</span>
               ))}
             </div>
           ))}

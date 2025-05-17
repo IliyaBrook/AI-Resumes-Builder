@@ -17,7 +17,6 @@ const ResumeList = () => {
     },
     [refetch]
   );
-  console.log("resumes", resumes);
   return (
     <Fragment>
       {isLoading ? (

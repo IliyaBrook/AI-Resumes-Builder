@@ -35,6 +35,18 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       />
 
       <div className="flex flex-col gap-2 min-h-9">
+        <style>{`
+          .exp-preview ul {
+            list-style-position: outside;
+            margin-left: .85em!important;
+            padding-left: .85em!important;
+          }
+          .exp-preview li {
+            margin-bottom: 0.2em;
+            text-indent: 0;
+            list-style-type: disc!important;
+          }
+        `}</style>
         {resumeInfo?.experiences?.map((experience, index) => (
           <div key={index}>
             <h5 className="text-[15px] font-bold" style={{ color: themeColor }}>

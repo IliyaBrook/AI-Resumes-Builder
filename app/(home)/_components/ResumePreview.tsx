@@ -19,12 +19,7 @@ const RESUME_STYLES = `
   #resume-preview-id ul li {
     list-style-type: none;
   }
-  #resume-preview-id ul li::before {
-    content: "• ";
-    font-size: 1.1em;
-    margin-right: 6px;
-    color: #333;
-  }
+ 
   #resume-preview-id ol li {
     counter-increment: item;
   }

@@ -18,16 +18,14 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   return (
     <div className="w-full my-5">
       <h5
-        className="text-center font-bold
-      mb-2
-      "
+        className="text-center font-bold text-[18px]"
         style={{ color: themeColor }}
       >
         Professional Experience
       </h5>
       <hr
         className="
-          border-[1.5px] my-2
+          border-[1.5px] mb-2
           "
         style={{
           borderColor: themeColor,

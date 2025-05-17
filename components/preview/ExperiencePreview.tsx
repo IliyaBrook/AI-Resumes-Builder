@@ -16,7 +16,7 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     return <SkeletonLoader />;
   }
   return (
-    <div className="w-full my-5 pdf-export">
+    <div className="w-full my-5">
       <h5
         className="text-center font-bold text-[18px]"
         style={{ color: themeColor }}

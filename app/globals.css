@@ -142,6 +142,6 @@ ol li::before {
   display: inline-block;
 }
 
-.pdf-export ol li::before {
+.pdf-export li::before {
   top: 1.1em !important;
 }

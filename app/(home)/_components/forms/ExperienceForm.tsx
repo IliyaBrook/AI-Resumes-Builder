@@ -18,6 +18,8 @@ const ExperienceForm = () => {
   const documentId = param.documentId as string;
   const { data } = useGetDocument(documentId);
   const resumeInfo = data?.data;
+  const allSkills = data?.data?.skills ? resumeInfo?.skills.map(skill => skill.name).join(", ") : "";
+ 
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteExperience, isPending: isDeleting } =
     useDeleteExperience();
@@ -81,7 +83,11 @@ const ExperienceForm = () => {
     deleteExperience({ experienceId: id });
   };
 
-  const handEditor = (value: string, name: string, index: number) => {
+  const handEditor = (
+    value: string,
+    name: string,
+    index: number
+  ) => {
     setLocalExperiences((prev) =>
       prev.map((item, idx) =>
         idx === index ? { ...item, [name]: value } : item
@@ -106,13 +112,16 @@ const ExperienceForm = () => {
 
   const experiences = localExperiences;
 
-  const buildExperiencePrompt = (item: ExperienceType) => {
+  const buildExperiencePrompt = (item: ExperienceType, skills: string) => {
     let prompt = `Based on the following experience: Position title: ${
       item.title || ""
-    }. Company: ${item.companyName || ""}. City: ${item.city || ""}. State: ${
-      item.state || ""
-    }. Summary: ${item.workSummary || ""}.`;
-    prompt += ` Generate and return ONLY a single HTML string (not JSON, not array, not object, not wrapped in quotes) with a <ul> list and <li> items describing key achievements and responsibilities for this experience. The list must contain exactly {bulletCount} items. Do not return an array or object, only a single HTML string. Do not include job title, company name, city, state, dates, or any headings, divs, borders, or extra wrappers. Do not repeat information already provided. Inside each <li> you MUST highlight key skills, technologies, and achievements using <b> or <strong> tags. You may also use <i>, <u>, <span style> for emphasis. Do not use placeholders. Use only the provided information, do not invent or assume any data. The list should be personal, engaging, and easy to read. Your response must be a valid HTML string only. Each <li> must not exceed {maxLineLength} characters. Each <li> should be as close as possible to {maxLineLength} characters, but not exceed it. Make each bullet point detailed and use the maximum allowed length.`;
+    }. Company: ${item.companyName || ""}. Summary: ${item.workSummary || ""}.`;
+    
+    if (skills) {
+      prompt += ` Available skills: ${skills}.`;
+    }
+    
+    prompt += ` Generate a <ul> HTML list with {bulletCount} <li> items of achievements relevant ONLY to the Position title mentioned above. Return ONLY HTML string, no JSON/arrays/quotes. Inside <li> highlight key skills with <b> or <strong> tags. Each <li> MUST use at least 90% of the allowed {maxLineLength} characters but never exceed it. IMPORTANT: Each bullet point MUST be about a DIFFERENT project/achievement - avoid repeating the same technologies or projects in multiple bullets. Make each bullet detailed with specific metrics and accomplishments. No job titles, dates, or headings in output. CRITICAL: ONLY mention technologies, frameworks, languages and tools that are EXPLICITLY mentioned in the Position title, Summary, or Available skills - DO NOT invent or add any technologies that aren't mentioned. Make bullets detailed, diverse and engaging.`;
     return prompt;
   };
 
@@ -284,7 +293,7 @@ const ExperienceForm = () => {
                         index
                       )
                     }
-                    prompt={buildExperiencePrompt(item)}
+                    prompt={buildExperiencePrompt(item, allSkills || "")}
                     title={undefined}
                     showBullets={true}
                     showLineLengthSelector={true}

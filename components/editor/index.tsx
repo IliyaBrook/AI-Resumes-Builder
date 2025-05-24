@@ -232,7 +232,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({
               onChange={e => setLineLength(Number(e.target.value))}
               disabled={disabled}
             >
-              {[60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200].map(n => (
+              {[60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300].map(n => (
                 <option key={n} value={n}>{n} chars/line</option>
               ))}
             </select>

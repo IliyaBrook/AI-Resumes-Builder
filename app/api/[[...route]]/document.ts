@@ -663,6 +663,9 @@ const documentRoute = new Hono()
         docId: z.string(),
         name: z.string().optional(),
         rating: z.number().optional(),
+        category: z.string().optional(),
+        hideRating: z.number().optional(),
+        order: z.number().optional(),
       })
     ),
     async (c) => {

@@ -24,6 +24,7 @@ const SkillsForm = () => {
 
   const [format, setFormat] = React.useState<'default' | 'byCategory'>('default');
   const [hasMigrated, setHasMigrated] = React.useState(false);
+  const [isInitialLoad, setIsInitialLoad] = React.useState(true);
 
   
   const [skillsList, setSkillsList] = React.useState<SkillType[]>(() => (resumeInfo?.skills || []).map(skill => ({ ...skill, hideRating: !!skill.hideRating, category: skill.category || "" })));
@@ -31,11 +32,14 @@ const SkillsForm = () => {
   const debouncedSkillsList = useDebounce(skillsList, 600);
   const sortedSkillsList = [...skillsList].sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  // byCategory mode state
   type CategoryType = { id: string; name: string; skills: { id: string; name: string }[] };
   const [categories, setCategories] = React.useState<CategoryType[]>([]);
   const [categoryNameInput, setCategoryNameInput] = React.useState<string>("");
-
+  console.log("skillsList: ", skillsList);
+  console.log("sortedSkillsList: ", sortedSkillsList);
+  console.log("data: ", data);
+  console.log("categories: ", categories);
+  
   useEffect(() => {
     if (format === 'default') {
       const sorted = (resumeInfo?.skills || [])
@@ -50,19 +54,35 @@ const SkillsForm = () => {
         .sort((a, b) => (a.order || 0) - (b.order || 0));
       setSkillsList(sorted);
       setHideRating(!!(resumeInfo?.skills?.[0]?.hideRating));
+      setIsInitialLoad(false);
     } else if (format === 'byCategory' && !hasMigrated) {
       if (resumeInfo?.skills && Array.isArray(resumeInfo.skills) && resumeInfo.skills.length > 0) {
-        setCategories([
-          {
-            id: Math.random().toString(36).slice(2),
-            name: "General",
-            skills: resumeInfo.skills.map(s => ({ id: Math.random().toString(36).slice(2), name: s.name || "" }))
+        const categoriesMap = new Map<string, { id: string; name: string; skills: { id: string; name: string }[] }>();
+        
+        resumeInfo.skills.forEach(skill => {
+          const categoryName = skill.category || "General";
+          if (!categoriesMap.has(categoryName)) {
+            categoriesMap.set(categoryName, {
+              id: Math.random().toString(36).slice(2),
+              name: categoryName,
+              skills: []
+            });
           }
-        ]);
+          if (skill.name) {
+            categoriesMap.get(categoryName)!.skills.push({
+              id: Math.random().toString(36).slice(2),
+              name: skill.name
+            });
+          }
+        });
+        
+        setCategories(Array.from(categoriesMap.values()));
         setHasMigrated(true);
+        setTimeout(() => setIsInitialLoad(false), 100);
       }
     }
   }, [resumeInfo?.skills, format, hasMigrated]);
+  
   useEffect(() => {
     if (format === 'default') {
       if (!resumeInfo) return;
@@ -75,12 +95,25 @@ const SkillsForm = () => {
     }
   }, [debouncedSkillsList, hideRating, format]);
 
-  useEffect(() => {
-    if (format === 'byCategory' && categories.length > 0 && categories.some(cat => cat.skills.length > 0)) {
-      setResumeInfo({ skills: categories.flatMap(cat => cat.skills.map(skill => ({ name: skill.name, category: cat.name })))});
-    }
-  }, [categories, format]);
+  const debouncedCategories = useDebounce(categories, 600);
 
+  useEffect(() => {
+    if (!isInitialLoad && format === 'byCategory' && debouncedCategories.length > 0) {
+      const skillsToSave = debouncedCategories.flatMap(cat => 
+        cat.skills
+          .filter(skill => skill.name.trim() !== "")
+          .map(skill => ({ name: skill.name, category: cat.name }))
+      );
+      setResumeInfo({ skills: skillsToSave });
+    }
+  }, [debouncedCategories, format, isInitialLoad, setResumeInfo]);
+
+  const handleUserInteraction = () => {
+    if (isInitialLoad) {
+      setIsInitialLoad(false);
+    }
+  };
+  
   useEffect(() => {
     if (resumeInfo?.skillsDisplayFormat && (resumeInfo.skillsDisplayFormat === 'default' || resumeInfo.skillsDisplayFormat === 'byCategory')) {
       setFormat(resumeInfo.skillsDisplayFormat);
@@ -89,6 +122,8 @@ const SkillsForm = () => {
 
   const handleFormatChange = (newFormat: 'default' | 'byCategory') => {
     setFormat(newFormat);
+    setHasMigrated(false);
+    setIsInitialLoad(true);
     console.log('PATCH skillsDisplayFormat:', newFormat);
     setResumeInfo({ skillsDisplayFormat: newFormat });
   };
@@ -141,6 +176,7 @@ const SkillsForm = () => {
   // byCategory logic
   const handleAddCategory = () => {
     if (!categoryNameInput.trim()) return;
+    handleUserInteraction();
     setCategories(prev => [...prev, { id: Math.random().toString(36).slice(2), name: categoryNameInput.trim(), skills: [] }]);
     setCategoryNameInput("");
   };
@@ -148,15 +184,18 @@ const SkillsForm = () => {
     setCategories(prev => prev.filter(cat => cat.id !== catId));
   };
   const handleCategoryNameChange = (catId: string, name: string) => {
+    handleUserInteraction();
     setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, name } : cat));
   };
   const handleAddSkillToCategory = (catId: string) => {
+    handleUserInteraction();
     setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, skills: [...cat.skills, { id: Math.random().toString(36).slice(2), name: "" }] } : cat));
   };
   const handleRemoveSkillFromCategory = (catId: string, skillId: string) => {
     setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, skills: cat.skills.filter(s => s.id !== skillId) } : cat));
   };
   const handleSkillNameChange = (catId: string, skillId: string, name: string) => {
+    handleUserInteraction();
     setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, skills: cat.skills.map(s => s.id === skillId ? { ...s, name } : s) } : cat));
   };
   const handleMoveSkillToCategory = (fromCatId: string, skillId: string, toCatId: string) => {

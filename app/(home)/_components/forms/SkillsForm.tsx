@@ -25,9 +25,6 @@ const SkillsForm = () => {
   const { mutate: updateSkill } = useUpdateSkill();
 
   const [format, setFormat] = React.useState<'default' | 'byCategory'>('default');
-  const [isInitialLoad, setIsInitialLoad] = React.useState(true);
-
-  
   const [skillsList, setSkillsList] = React.useState<SkillType[]>(() => (resumeInfo?.skills || []).map(skill => ({ ...skill, hideRating: !!skill.hideRating, category: skill.category || "" })));
   const [hideRating, setHideRating] = React.useState<boolean>(!!(resumeInfo?.skills?.[0]?.hideRating));
   const debouncedSkillsList = useDebounce(skillsList, 600);
@@ -36,6 +33,9 @@ const SkillsForm = () => {
   const [newCategoryName, setNewCategoryName] = React.useState("");
   const [editingCategory, setEditingCategory] = React.useState<string | null>(null);
   const [editCategoryName, setEditCategoryName] = React.useState("");
+  
+  const [pendingUpdates, setPendingUpdates] = React.useState<Map<number, Partial<SkillType>>>(new Map());
+  const debouncedPendingUpdates = useDebounce(pendingUpdates, 600);
 
   const skillsByCategory = React.useMemo(() => {
     if (format !== 'byCategory') return {};
@@ -66,9 +66,6 @@ const SkillsForm = () => {
         .sort((a, b) => (a.order || 0) - (b.order || 0));
       setSkillsList(sorted);
       setHideRating(!!(resumeInfo?.skills?.[0]?.hideRating));
-      setIsInitialLoad(false);
-    } else if (format === 'byCategory') {
-      setIsInitialLoad(false);
     }
   }, [resumeInfo?.skills, format]);
   
@@ -90,9 +87,17 @@ const SkillsForm = () => {
     }
   }, [resumeInfo?.skillsDisplayFormat]);
 
+  useEffect(() => {
+    if (debouncedPendingUpdates.size > 0) {
+      debouncedPendingUpdates.forEach((data, skillId) => {
+        updateSkill({ skillId, data });
+      });
+      setPendingUpdates(new Map());
+    }
+  }, [debouncedPendingUpdates, updateSkill]);
+
   const handleFormatChange = (newFormat: 'default' | 'byCategory') => {
     setFormat(newFormat);
-    setIsInitialLoad(true);
     setResumeInfo({ skillsDisplayFormat: newFormat });
   };
 
@@ -157,11 +162,21 @@ const SkillsForm = () => {
   };
 
   const handleSkillNameChange = (skillId: number, name: string) => {
-    updateSkill({ skillId, data: { name } });
+    setPendingUpdates(prev => {
+      const newMap = new Map(prev);
+      const existing = newMap.get(skillId) || {};
+      newMap.set(skillId, { ...existing, name });
+      return newMap;
+    });
   };
 
   const handleSkillCategoryChange = (skillId: number, category: string) => {
-    updateSkill({ skillId, data: { category } });
+    setPendingUpdates(prev => {
+      const newMap = new Map(prev);
+      const existing = newMap.get(skillId) || {};
+      newMap.set(skillId, { ...existing, category });
+      return newMap;
+    });
   };
 
   const handleRemoveCategory = (categoryName: string) => {
@@ -202,6 +217,16 @@ const SkillsForm = () => {
   const handleCancelEditCategory = () => {
     setEditingCategory(null);
     setEditCategoryName("");
+  };
+
+  const getSkillValue = (skill: SkillType, field: keyof SkillType) => {
+    if (skill.id && pendingUpdates.has(skill.id)) {
+      const pending = pendingUpdates.get(skill.id);
+      if (pending && field in pending) {
+        return pending[field];
+      }
+    }
+    return skill[field];
   };
 
   return (
@@ -418,13 +443,13 @@ const SkillsForm = () => {
                   {skills.map(skill => (
                     <div key={skill.id} className="flex items-center gap-2">
                       <Input
-                        value={skill.name || ""}
+                        value={(getSkillValue(skill, 'name') as string) || ""}
                         onChange={e => skill.id && handleSkillNameChange(skill.id, e.target.value)}
                         placeholder="Skill name"
                         className="w-64"
                       />
                       <select
-                        value={skill.category || categoryName}
+                        value={(getSkillValue(skill, 'category') as string) || categoryName}
                         onChange={e => skill.id && handleSkillCategoryChange(skill.id, e.target.value)}
                         className="border rounded px-1 py-0.5 text-xs"
                       >

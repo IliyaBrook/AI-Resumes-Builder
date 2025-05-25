@@ -31,13 +31,6 @@ const ExperienceForm = () => {
   const debouncedExperiences = useDebounce(localExperiences, 500);
 
   React.useEffect(() => {
-    const sorted = (resumeInfo?.experiences || [])
-      .slice()
-      .sort((a, b) => (a.order || 0) - (b.order || 0));
-    setLocalExperiences(sorted);
-  }, [resumeInfo?.experiences]);
-
-  React.useEffect(() => {
     if (
       debouncedExperiences &&
       debouncedExperiences !== resumeInfo?.experiences
@@ -45,6 +38,7 @@ const ExperienceForm = () => {
       const sanitized = debouncedExperiences.map((exp) => ({
         ...exp,
         endDate: exp.currentlyWorking ? null : exp.endDate,
+        yearsOnly: exp.yearsOnly ?? false,
       }));
       setResumeInfo({ experience: sanitized });
     }
@@ -72,6 +66,7 @@ const ExperienceForm = () => {
       endDate: "",
       workSummary: "",
       currentlyWorking: false,
+      yearsOnly: false,
       order: localExperiences.length,
     };
     const created = await createExperience(newExp);
@@ -81,6 +76,7 @@ const ExperienceForm = () => {
   const removeExperience = (id?: number) => {
     if (!id) return;
     deleteExperience({ experienceId: id });
+    setLocalExperiences((prev) => prev.filter((exp) => exp.id !== id));
   };
 
   const handEditor = (
@@ -254,32 +250,60 @@ const ExperienceForm = () => {
                       disabled={item?.currentlyWorking}
                     />
                   </div>
-                  <div className="flex items-center h-full mt-6">
-                    <input
-                      type="checkbox"
-                      id={`present-checkbox-${index}`}
-                      checked={item?.currentlyWorking || false}
-                      onChange={(e) => {
-                        setLocalExperiences((prev) =>
-                          prev.map((exp, idx) =>
-                            idx === index
-                              ? {
-                                  ...exp,
-                                  currentlyWorking: e.target.checked,
-                                  endDate: e.target.checked ? "" : exp.endDate,
-                                }
-                              : exp
-                          )
-                        );
-                      }}
-                      className="mr-1"
-                    />
-                    <Label
-                      htmlFor={`present-checkbox-${index}`}
-                      className="text-xs select-none cursor-pointer"
-                    >
-                      Present
-                    </Label>
+                  <div className="flex flex-col justify-start h-full mt-6 ml-2 gap-2">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`present-checkbox-${index}`}
+                        checked={item?.currentlyWorking || false}
+                        onChange={(e) => {
+                          setLocalExperiences((prev) =>
+                            prev.map((exp, idx) =>
+                              idx === index
+                                ? {
+                                    ...exp,
+                                    currentlyWorking: e.target.checked,
+                                    endDate: e.target.checked ? "" : exp.endDate,
+                                  }
+                                : exp
+                            )
+                          );
+                        }}
+                        className="mr-1"
+                      />
+                      <Label
+                        htmlFor={`present-checkbox-${index}`}
+                        className="text-xs select-none cursor-pointer"
+                      >
+                        Present
+                      </Label>
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`years-only-checkbox-${index}`}
+                        checked={item?.yearsOnly || false}
+                        onChange={(e) => {
+                          setLocalExperiences((prev) =>
+                            prev.map((exp, idx) =>
+                              idx === index
+                                ? {
+                                    ...exp,
+                                    yearsOnly: e.target.checked,
+                                  }
+                                : exp
+                            )
+                          );
+                        }}
+                        className="mr-1"
+                      />
+                      <Label
+                        htmlFor={`years-only-checkbox-${index}`}
+                        className="text-xs select-none cursor-pointer"
+                      >
+                        Years Only
+                      </Label>
+                    </div>
                   </div>
                 </div>
                 <div className="col-span-2 mt-1">

@@ -66,9 +66,10 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 </span>
               </h5>
               <span className="text-[13px] font-bold">
-                {formatDateByLocale(experience?.startDate ?? undefined)}
-                {experience?.startDate && " - "}
-                {experience?.currentlyWorking ? "Present" : formatDateByLocale(experience?.endDate ?? undefined)}
+                {experience?.yearsOnly
+                  ? `${experience?.startDate ? new Date(experience.startDate).getFullYear() : ''}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? 'Present' : (experience?.endDate ? new Date(experience.endDate).getFullYear() : '')}`
+                  : `${formatDateByLocale(experience?.startDate ?? undefined)}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? 'Present' : formatDateByLocale(experience?.endDate ?? undefined)}`
+                }
               </span>
             </div>
             <div

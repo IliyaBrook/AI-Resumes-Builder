@@ -9,6 +9,7 @@ export type ExperienceType = {
   endDate?: string | null;
   currentlyWorking: boolean;
   workSummary: string | null;
+  yearsOnly?: boolean;
 };
 
 export type EducationType = {

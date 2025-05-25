@@ -70,13 +70,6 @@ const EducationForm = () => {
       : [{ ...initialState, currentlyStudying: false, skipDates: false }];
   });
 
-  useEffect(() => {
-    const sorted = (resumeInfo?.educations || [])
-      .map(normalizeData)
-      .sort((a, b) => (a.id || 0) - (b.id || 0));
-    setEducationList(sorted.length ? sorted : [{ ...initialState, currentlyStudying: false, skipDates: false }]);
-  }, [resumeInfo?.educations]);
-
   const debouncedEducationList = useDebounce(educationList, 600);
 
   useEffect(() => {
@@ -118,11 +111,9 @@ const EducationForm = () => {
   };
 
   const removeEducation = (id?: number) => {
-    if (id) {
-      deleteEducation({ educationId: id });
-    } else {
-      setEducationList((prev) => prev.filter((item) => item.id !== id));
-    }
+    if (!id) return;
+    deleteEducation({ educationId: id });
+    setEducationList((prev) => prev.filter((item) => item.id !== id));
   };
 
   return (

@@ -613,6 +613,7 @@ const documentRoute = new Hono()
         endDate: z.string().optional(),
         workSummary: z.string().optional(),
         currentlyWorking: z.boolean().optional(),
+        yearsOnly: z.boolean().optional(),
       })
     ),
     async (c) => {

@@ -27,6 +27,7 @@ export const experienceTable = pgTable("experience", {
   startDate: date("start_date"),
   endDate: date("end_date"),
   order: integer("order").notNull().default(0),
+  yearsOnly: boolean("years_only").notNull().default(false),
 });
 
 export const experienceRelations = relations(experienceTable, ({ one }) => ({
@@ -49,6 +50,7 @@ export const experienceTableSchema = createInsertSchema(experienceTable, {
   startDate: true,
   endDate: true,
   order: true,
+  yearsOnly: true,
 });
 
 export type ExperienceSchema = z.infer<typeof experienceTableSchema>;

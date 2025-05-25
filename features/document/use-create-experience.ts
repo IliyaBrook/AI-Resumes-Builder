@@ -16,6 +16,7 @@ const useCreateExperience = () => {
         ...data,
         startDate: !data.startDate ? today : data.startDate,
         endDate: !data.endDate ? today : data.endDate,
+        yearsOnly: data.yearsOnly ?? false,
       };
       const response = await (api.document as any)["experience/create"].$post({
         json: { ...sanitized, docId: documentId },

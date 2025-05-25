@@ -28,9 +28,30 @@ const applyFontSize = (size: string) => {
   if (!selection || selection.rangeCount === 0) return;
   const range = selection.getRangeAt(0);
   if (range.collapsed) return;
-  const span = document.createElement("span");
-  span.style.fontSize = size;
-  range.surroundContents(span);
+
+  // Новый способ: оборачиваем только текстовые узлы в выделении
+  const wrapTextNodes = (node: Node) => {
+    if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
+      const span = document.createElement("span");
+      span.style.fontSize = size;
+      span.textContent = node.textContent;
+      node.parentNode?.replaceChild(span, node);
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      // Рекурсивно обрабатываем дочерние узлы
+      const children = Array.from(node.childNodes);
+      for (const child of children) {
+        wrapTextNodes(child);
+      }
+    }
+  };
+
+  // Клонируем выделение, чтобы не потерять его после изменений
+  const contents = range.cloneContents();
+  wrapTextNodes(contents);
+
+  // Заменяем выделенный контент на обработанный
+  range.deleteContents();
+  range.insertNode(contents);
 };
 
 const applyHeading = (tag: string) => {

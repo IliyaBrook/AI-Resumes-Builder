@@ -27,6 +27,7 @@ export const educationTable = pgTable("education", {
   endDate: date("end_date"),
   currentlyStudying: boolean("currently_studying").notNull().default(false),
   skipDates: boolean("skip_dates").notNull().default(false),
+  yearsOnly: boolean("years_only").notNull().default(false),
 });
 
 export const educationRelations = relations(educationTable, ({ one }) => ({
@@ -48,6 +49,7 @@ export const educationTableSchema = createInsertSchema(educationTable, {
   endDate: true,
   currentlyStudying: true,
   skipDates: true,
+  yearsOnly: true,
 });
 
 export type EducationSchema = z.infer<typeof educationTableSchema>;

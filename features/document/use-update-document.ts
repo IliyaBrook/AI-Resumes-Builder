@@ -5,7 +5,6 @@ import { api } from "@/lib/hono-rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
 import { useParams } from "next/navigation";
-import React from "react";
 
 type ResponseType = InferResponseType<
   (typeof api.document.update)[":documentId"]["$patch"]

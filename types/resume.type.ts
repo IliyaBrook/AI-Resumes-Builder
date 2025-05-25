@@ -23,6 +23,7 @@ export type EducationType = {
   description: string | null;
   currentlyStudying?: boolean;
   skipDates?: boolean;
+  yearsOnly?: boolean;
 };
 
 export type SkillType = {
@@ -88,4 +89,5 @@ export type Education = {
   description: string | null;
   currentlyStudying?: boolean;
   skipDates?: boolean;
+  yearsOnly?: boolean;
 };

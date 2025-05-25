@@ -15,7 +15,6 @@ const PreviewResume = (props: {
 }) => {
   const { isLoading, resumeInfo } = props;
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
-  
   return (
     <div
       className={cn(`

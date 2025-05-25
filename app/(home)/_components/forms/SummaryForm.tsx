@@ -97,7 +97,6 @@ const SummaryForm = () => {
     useState<GeneratesSummaryType | null>(null);
   const [summary, setSummary] = useState("");
   const [summarySize, setSummarySize] = useState("default");
-  const [selectedSummary, setSelectedSummary] = useState<string>("");
   const editorRef = React.useRef<RichTextEditorRef>(null);
 
   useEffect(() => {
@@ -105,12 +104,6 @@ const SummaryForm = () => {
       setSummary(resumeInfo.summary ?? "");
     }
   }, [resumeInfo?.summary]);
-
-  useEffect(() => {
-    if (selectedSummary !== "") {
-      setSummary(selectedSummary);
-    }
-  }, [selectedSummary]);
 
   const debouncedSummary = useDebounce(summary, 600);
 
@@ -121,8 +114,6 @@ const SummaryForm = () => {
 
   const handleChange = (value: string) => {
     setSummary(value);
-    setSelectedSummary(value);
-    if (resumeInfo) setResumeInfo({ summary: value });
   };
 
   const GenerateSummaryFromAI = async () => {
@@ -173,9 +164,9 @@ const SummaryForm = () => {
       if (editorRef.current) {
         editorRef.current.setValue(summary);
       }
-      if (resumeInfo) setResumeInfo({ summary });
+      setSummary(summary);
     },
-    [setResumeInfo, resumeInfo]
+    []
   );
   
 

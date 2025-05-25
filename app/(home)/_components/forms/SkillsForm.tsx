@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useGetDocument from "@/features/document/use-get-document-by-id";
 import useUpdateDocument from "@/features/document/use-update-document";
-import useDebounce from "@/hooks/use-debounce";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { Plus, X, MoveUp, MoveDown } from "lucide-react";
@@ -27,15 +26,12 @@ const SkillsForm = () => {
   const [format, setFormat] = React.useState<'default' | 'byCategory'>('default');
   const [skillsList, setSkillsList] = React.useState<SkillType[]>(() => (resumeInfo?.skills || []).map(skill => ({ ...skill, hideRating: !!skill.hideRating, category: skill.category || "" })));
   const [hideRating, setHideRating] = React.useState<boolean>(!!(resumeInfo?.skills?.[0]?.hideRating));
-  const debouncedSkillsList = useDebounce(skillsList, 600);
-  const sortedSkillsList = [...skillsList].sort((a, b) => (a.order || 0) - (b.order || 0));
 
   const [newCategoryName, setNewCategoryName] = React.useState("");
   const [editingCategory, setEditingCategory] = React.useState<string | null>(null);
   const [editCategoryName, setEditCategoryName] = React.useState("");
   
   const [pendingUpdates, setPendingUpdates] = React.useState<Map<number, Partial<SkillType>>>(new Map());
-  const debouncedPendingUpdates = useDebounce(pendingUpdates, 600);
 
   const skillsByCategory = React.useMemo(() => {
     if (format !== 'byCategory') return {};
@@ -51,50 +47,12 @@ const SkillsForm = () => {
     });
     return grouped;
   }, [resumeInfo?.skills, format]);
-
-  useEffect(() => {
-    if (format === 'default') {
-      const sorted = (resumeInfo?.skills || [])
-        .map(item => ({
-          ...item,
-          name: item.name || "",
-          rating: item.rating || 0,
-          hideRating: !!item.hideRating,
-          order: typeof item.order === "number" ? item.order : 0,
-          category: item.category || "",
-        }))
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
-      setSkillsList(sorted);
-      setHideRating(!!(resumeInfo?.skills?.[0]?.hideRating));
-    }
-  }, [resumeInfo?.skills, format]);
-  
-  useEffect(() => {
-    if (format === 'default') {
-      if (!resumeInfo) return;
-      if (
-        debouncedSkillsList &&
-        (JSON.stringify(debouncedSkillsList) !== JSON.stringify((resumeInfo?.skills || []).map(skill => ({ ...skill, hideRating: !!skill.hideRating }))) || hideRating !== !!(resumeInfo?.skills?.[0]?.hideRating))
-      ) {
-        setResumeInfo({ skills: [...debouncedSkillsList].sort((a, b) => (a.order || 0) - (b.order || 0)).map(skill => ({ ...skill, hideRating: hideRating ? 1 : 0 })) });
-      }
-    }
-  }, [debouncedSkillsList, hideRating, format]);
   
   useEffect(() => {
     if (resumeInfo?.skillsDisplayFormat && (resumeInfo.skillsDisplayFormat === 'default' || resumeInfo.skillsDisplayFormat === 'byCategory')) {
       setFormat(resumeInfo.skillsDisplayFormat);
     }
   }, [resumeInfo?.skillsDisplayFormat]);
-
-  useEffect(() => {
-    if (debouncedPendingUpdates.size > 0) {
-      debouncedPendingUpdates.forEach((data, skillId) => {
-        updateSkill({ skillId, data });
-      });
-      setPendingUpdates(new Map());
-    }
-  }, [debouncedPendingUpdates, updateSkill]);
 
   const handleFormatChange = (newFormat: 'default' | 'byCategory') => {
     setFormat(newFormat);
@@ -168,6 +126,8 @@ const SkillsForm = () => {
       newMap.set(skillId, { ...existing, name });
       return newMap;
     });
+
+    updateSkill({ skillId, data: {name}});
   };
 
   const handleSkillCategoryChange = (skillId: number, category: string) => {
@@ -272,7 +232,7 @@ const SkillsForm = () => {
                   Add More Skills
                 </Button>
               )}
-              {sortedSkillsList.map((item, index) => (
+              {skillsList.map((item, index) => (
                 <div key={item.id || index}>
                   <div
                     className="relative flex 

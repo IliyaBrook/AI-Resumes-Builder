@@ -39,7 +39,7 @@ const SkillsForm = () => {
   console.log("sortedSkillsList: ", sortedSkillsList);
   console.log("data: ", data);
   console.log("categories: ", categories);
-  
+
   useEffect(() => {
     if (format === 'default') {
       const sorted = (resumeInfo?.skills || [])
@@ -69,10 +69,10 @@ const SkillsForm = () => {
             });
           }
           if (skill.name) {
-            categoriesMap.get(categoryName)!.skills.push({
-              id: Math.random().toString(36).slice(2),
-              name: skill.name
-            });
+            // categoriesMap.get(categoryName)!.skills.push({
+            //   id: Math.random().toString(36).slice(2),
+            //   name: skill.name
+            // });
           }
         });
         
@@ -106,7 +106,7 @@ const SkillsForm = () => {
       );
       setResumeInfo({ skills: skillsToSave });
     }
-  }, [debouncedCategories, format, isInitialLoad, setResumeInfo]);
+  }, [debouncedCategories, format, isInitialLoad]);
 
   const handleUserInteraction = () => {
     if (isInitialLoad) {

@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import { SkillType } from "@/types/resume.type";
 import useDeleteSkill from "@/features/document/use-delete-skill";
 import useCreateSkill from "@/features/document/use-create-skill";
+import useUpdateSkill from "@/features/document/use-update-skill";
 
 const SkillsForm = () => {
   const param = useParams();
@@ -21,9 +22,9 @@ const SkillsForm = () => {
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
   const { mutate: deleteSkill, isPending: isDeleting } = useDeleteSkill();
   const { mutateAsync: createSkill } = useCreateSkill();
+  const { mutate: updateSkill } = useUpdateSkill();
 
   const [format, setFormat] = React.useState<'default' | 'byCategory'>('default');
-  const [hasMigrated, setHasMigrated] = React.useState(false);
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
 
   
@@ -32,13 +33,24 @@ const SkillsForm = () => {
   const debouncedSkillsList = useDebounce(skillsList, 600);
   const sortedSkillsList = [...skillsList].sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  type CategoryType = { id: string; name: string; skills: { id: string; name: string }[] };
-  const [categories, setCategories] = React.useState<CategoryType[]>([]);
-  const [categoryNameInput, setCategoryNameInput] = React.useState<string>("");
-  console.log("skillsList: ", skillsList);
-  console.log("sortedSkillsList: ", sortedSkillsList);
-  console.log("data: ", data);
-  console.log("categories: ", categories);
+  const [newCategoryName, setNewCategoryName] = React.useState("");
+  const [editingCategory, setEditingCategory] = React.useState<string | null>(null);
+  const [editCategoryName, setEditCategoryName] = React.useState("");
+
+  const skillsByCategory = React.useMemo(() => {
+    if (format !== 'byCategory') return {};
+    const grouped: Record<string, SkillType[]> = {};
+    (resumeInfo?.skills || []).forEach(skill => {
+      const category = skill.category || "General";
+      if (!grouped[category]) grouped[category] = [];
+      grouped[category].push({
+        ...skill,
+        hideRating: !!skill.hideRating,
+        category: skill.category || undefined
+      });
+    });
+    return grouped;
+  }, [resumeInfo?.skills, format]);
 
   useEffect(() => {
     if (format === 'default') {
@@ -55,33 +67,10 @@ const SkillsForm = () => {
       setSkillsList(sorted);
       setHideRating(!!(resumeInfo?.skills?.[0]?.hideRating));
       setIsInitialLoad(false);
-    } else if (format === 'byCategory' && !hasMigrated) {
-      if (resumeInfo?.skills && Array.isArray(resumeInfo.skills) && resumeInfo.skills.length > 0) {
-        const categoriesMap = new Map<string, { id: string; name: string; skills: { id: string; name: string }[] }>();
-        
-        resumeInfo.skills.forEach(skill => {
-          const categoryName = skill.category || "General";
-          if (!categoriesMap.has(categoryName)) {
-            categoriesMap.set(categoryName, {
-              id: Math.random().toString(36).slice(2),
-              name: categoryName,
-              skills: []
-            });
-          }
-          if (skill.name) {
-            // categoriesMap.get(categoryName)!.skills.push({
-            //   id: Math.random().toString(36).slice(2),
-            //   name: skill.name
-            // });
-          }
-        });
-        
-        setCategories(Array.from(categoriesMap.values()));
-        setHasMigrated(true);
-        setTimeout(() => setIsInitialLoad(false), 100);
-      }
+    } else if (format === 'byCategory') {
+      setIsInitialLoad(false);
     }
-  }, [resumeInfo?.skills, format, hasMigrated]);
+  }, [resumeInfo?.skills, format]);
   
   useEffect(() => {
     if (format === 'default') {
@@ -94,25 +83,6 @@ const SkillsForm = () => {
       }
     }
   }, [debouncedSkillsList, hideRating, format]);
-
-  const debouncedCategories = useDebounce(categories, 600);
-
-  useEffect(() => {
-    if (!isInitialLoad && format === 'byCategory' && debouncedCategories.length > 0) {
-      const skillsToSave = debouncedCategories.flatMap(cat => 
-        cat.skills
-          .filter(skill => skill.name.trim() !== "")
-          .map(skill => ({ name: skill.name, category: cat.name }))
-      );
-      setResumeInfo({ skills: skillsToSave });
-    }
-  }, [debouncedCategories, format, isInitialLoad]);
-
-  const handleUserInteraction = () => {
-    if (isInitialLoad) {
-      setIsInitialLoad(false);
-    }
-  };
   
   useEffect(() => {
     if (resumeInfo?.skillsDisplayFormat && (resumeInfo.skillsDisplayFormat === 'default' || resumeInfo.skillsDisplayFormat === 'byCategory')) {
@@ -122,9 +92,7 @@ const SkillsForm = () => {
 
   const handleFormatChange = (newFormat: 'default' | 'byCategory') => {
     setFormat(newFormat);
-    setHasMigrated(false);
     setIsInitialLoad(true);
-    console.log('PATCH skillsDisplayFormat:', newFormat);
     setResumeInfo({ skillsDisplayFormat: newFormat });
   };
 
@@ -173,49 +141,67 @@ const SkillsForm = () => {
     });
   };
 
-  // byCategory logic
-  const handleAddCategory = () => {
-    if (!categoryNameInput.trim()) return;
-    handleUserInteraction();
-    setCategories(prev => [...prev, { id: Math.random().toString(36).slice(2), name: categoryNameInput.trim(), skills: [] }]);
-    setCategoryNameInput("");
+  const handleAddSkillToCategory = async (category: string) => {
+    const newSkill = {
+      name: "",
+      rating: 0,
+      hideRating: false,
+      order: 0,
+      category: category,
+    };
+    await createSkill(newSkill);
   };
-  const handleRemoveCategory = (catId: string) => {
-    setCategories(prev => prev.filter(cat => cat.id !== catId));
+
+  const handleRemoveSkillFromCategory = (skillId: number) => {
+    deleteSkill({ skillId });
   };
-  const handleCategoryNameChange = (catId: string, name: string) => {
-    handleUserInteraction();
-    setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, name } : cat));
+
+  const handleSkillNameChange = (skillId: number, name: string) => {
+    updateSkill({ skillId, data: { name } });
   };
-  const handleAddSkillToCategory = (catId: string) => {
-    handleUserInteraction();
-    setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, skills: [...cat.skills, { id: Math.random().toString(36).slice(2), name: "" }] } : cat));
+
+  const handleSkillCategoryChange = (skillId: number, category: string) => {
+    updateSkill({ skillId, data: { category } });
   };
-  const handleRemoveSkillFromCategory = (catId: string, skillId: string) => {
-    setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, skills: cat.skills.filter(s => s.id !== skillId) } : cat));
-  };
-  const handleSkillNameChange = (catId: string, skillId: string, name: string) => {
-    handleUserInteraction();
-    setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, skills: cat.skills.map(s => s.id === skillId ? { ...s, name } : s) } : cat));
-  };
-  const handleMoveSkillToCategory = (fromCatId: string, skillId: string, toCatId: string) => {
-    setCategories(prev => {
-      let skillToMove: { id: string; name: string } | undefined;
-      const newCategories = prev.map(cat => {
-        if (cat.id === fromCatId) {
-          const skill = cat.skills.find(s => s.id === skillId);
-          if (skill) skillToMove = skill;
-          return { ...cat, skills: cat.skills.filter(s => s.id !== skillId) };
-        }
-        return cat;
-      });
-      if (skillToMove) {
-        return newCategories.map(cat =>
-          cat.id === toCatId ? { ...cat, skills: [...cat.skills, skillToMove!] } : cat
-        );
+
+  const handleRemoveCategory = (categoryName: string) => {
+    const skillsInCategory = resumeInfo?.skills?.filter(skill => skill.category === categoryName) || [];
+    skillsInCategory.forEach(skill => {
+      if (skill.id) {
+        deleteSkill({ skillId: skill.id });
       }
-      return newCategories;
     });
+  };
+
+  const handleAddNewCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    await handleAddSkillToCategory(newCategoryName.trim());
+    setNewCategoryName("");
+  };
+
+  const handleStartEditCategory = (categoryName: string) => {
+    setEditingCategory(categoryName);
+    setEditCategoryName(categoryName);
+  };
+
+  const handleSaveCategoryName = async () => {
+    if (!editingCategory || !editCategoryName.trim()) return;
+    
+    const skillsInCategory = resumeInfo?.skills?.filter(skill => skill.category === editingCategory) || [];
+    
+    for (const skill of skillsInCategory) {
+      if (skill.id) {
+        updateSkill({ skillId: skill.id, data: { category: editCategoryName.trim() } });
+      }
+    }
+    
+    setEditingCategory(null);
+    setEditCategoryName("");
+  };
+
+  const handleCancelEditCategory = () => {
+    setEditingCategory(null);
+    setEditCategoryName("");
   };
 
   return (
@@ -365,57 +351,118 @@ const SkillsForm = () => {
         <div className="mt-4">
           <div className="flex gap-2 mb-4">
             <Input
-              placeholder="Category name"
-              value={categoryNameInput}
-              onChange={e => setCategoryNameInput(e.target.value)}
+              placeholder="New category name"
+              value={newCategoryName}
+              onChange={e => setNewCategoryName(e.target.value)}
               className="w-48"
             />
-            <Button type="button" onClick={handleAddCategory} variant="outline">
-              <Plus size="15px" /> Add skill category
+            <Button type="button" onClick={handleAddNewCategory} variant="outline">
+              <Plus size="15px" /> Add category
             </Button>
           </div>
           <div className="space-y-6">
-            {categories.map(category => (
-              <div key={category.id} className="border rounded-md p-3">
+            {Object.entries(skillsByCategory).map(([categoryName, skills]) => (
+              <div key={categoryName} className="border rounded-md p-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <Input
-                    value={category.name}
-                    onChange={e => handleCategoryNameChange(category.id, e.target.value)}
-                    className="w-48 font-semibold"
-                  />
-                  <Button type="button" size="icon" variant="ghost" onClick={() => handleRemoveCategory(category.id)}>
-                    <X size="15px" />
-                  </Button>
+                  {editingCategory === categoryName ? (
+                    <>
+                      <Input
+                        value={editCategoryName}
+                        onChange={e => setEditCategoryName(e.target.value)}
+                        className="w-48 font-semibold"
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') handleSaveCategoryName();
+                          if (e.key === 'Escape') handleCancelEditCategory();
+                        }}
+                        autoFocus
+                      />
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={handleSaveCategoryName}
+                        disabled={!editCategoryName.trim()}
+                      >
+                        Save
+                      </Button>
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        variant="outline"
+                        onClick={handleCancelEditCategory}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <h3 
+                        className="font-semibold text-lg cursor-pointer hover:text-blue-600"
+                        onClick={() => handleStartEditCategory(categoryName)}
+                        title="Click to edit category name"
+                      >
+                        {categoryName}
+                      </h3>
+                      <Button 
+                        type="button" 
+                        size="icon" 
+                        variant="ghost" 
+                        onClick={() => handleRemoveCategory(categoryName)}
+                        title="Delete category and all skills"
+                      >
+                        <X size="15px" />
+                      </Button>
+                    </>
+                  )}
                 </div>
                 <div className="space-y-2">
-                  {category.skills.map(skill => (
+                  {skills.map(skill => (
                     <div key={skill.id} className="flex items-center gap-2">
                       <Input
-                        value={skill.name}
-                        onChange={e => handleSkillNameChange(category.id, skill.id, e.target.value)}
+                        value={skill.name || ""}
+                        onChange={e => skill.id && handleSkillNameChange(skill.id, e.target.value)}
                         placeholder="Skill name"
                         className="w-64"
                       />
                       <select
-                        value={category.id}
-                        onChange={e => handleMoveSkillToCategory(category.id, skill.id, e.target.value)}
+                        value={skill.category || categoryName}
+                        onChange={e => skill.id && handleSkillCategoryChange(skill.id, e.target.value)}
                         className="border rounded px-1 py-0.5 text-xs"
                       >
-                        {categories.map(catOpt => (
-                          <option key={catOpt.id} value={catOpt.id}>{catOpt.name}</option>
+                        {Object.keys(skillsByCategory).map(catName => (
+                          <option key={catName} value={catName}>{catName}</option>
                         ))}
                       </select>
-                      <Button type="button" size="icon" variant="ghost" onClick={() => handleRemoveSkillFromCategory(category.id, skill.id)}>
+                      <Button 
+                        type="button" 
+                        size="icon" 
+                        variant="ghost" 
+                        onClick={() => skill.id && handleRemoveSkillFromCategory(skill.id)}
+                      >
                         <X size="13px" />
                       </Button>
                     </div>
                   ))}
-                  <Button type="button" variant="outline" className="gap-1 mt-2" onClick={() => handleAddSkillToCategory(category.id)}>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="gap-1 mt-2" 
+                    onClick={() => handleAddSkillToCategory(categoryName)}
+                  >
                     <Plus size="15px" /> Add skill
                   </Button>
                 </div>
               </div>
             ))}
+            {Object.keys(skillsByCategory).length === 0 && (
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="gap-1" 
+                onClick={() => handleAddSkillToCategory("General")}
+              >
+                <Plus size="15px" /> Add first skill
+              </Button>
+            )}
           </div>
         </div>
       )}

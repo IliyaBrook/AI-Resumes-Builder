@@ -678,6 +678,41 @@ const documentRoute = new Hono()
       }
     }
   )
+  .patch(
+    "/skill/:skillId",
+    zValidator(
+      "param",
+      z.object({
+        skillId: z.string(),
+      })
+    ),
+    zValidator(
+      "json",
+      z.object({
+        name: z.string().optional(),
+        rating: z.number().optional(),
+        category: z.string().optional(),
+        hideRating: z.number().optional(),
+        order: z.number().optional(),
+      })
+    ),
+    async (c) => {
+      try {
+        const { skillId } = c.req.valid("param");
+        const data = c.req.valid("json");
+        if (!skillId) {
+          return c.json({ error: "SkillId is required" }, 400);
+        }
+        const [updated] = await db.update(skillsTable).set(data).where(eq(skillsTable.id, Number(skillId))).returning();
+        if (!updated) {
+          return c.json({ error: "Skill not found" }, 404);
+        }
+        return c.json(updated, 200);
+      } catch (error) {
+        return c.json({ success: false, message: "Failed to update skill", error }, 500);
+      }
+    }
+  )
   .post(
     "/project/create",
     zValidator(

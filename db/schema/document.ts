@@ -32,6 +32,7 @@ export const documentTable = pgTable("document", {
   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
   projectsSectionTitle: varchar("projects_section_title", { length: 255 }).default("Projects"),
+  skillsDisplayFormat: varchar("skills_display_format", { length: 32 }),
 });
 
 export const documentRelations = relations(documentTable, ({ one, many }) => {
@@ -50,6 +51,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   thumbnail: (schema) => schema.thumbnail.optional(),
   currentPosition: (schema) => schema.currentPosition.optional(),
   projectsSectionTitle: (schema) => schema.projectsSectionTitle.optional(),
+  skillsDisplayFormat: (schema) => schema.skillsDisplayFormat.optional(),
 }).pick({
   title: true,
   status: true,
@@ -58,6 +60,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   thumbnail: true,
   currentPosition: true,
   projectsSectionTitle: true,
+  skillsDisplayFormat: true,
 });
 
 export const updateCombinedSchema = z.object({
@@ -68,6 +71,7 @@ export const updateCombinedSchema = z.object({
   themeColor: createDocumentTableSchema.shape.themeColor.optional(),
   currentPosition: createDocumentTableSchema.shape.currentPosition.optional(),
   projectsSectionTitle: createDocumentTableSchema.shape.projectsSectionTitle.optional(),
+  skillsDisplayFormat: createDocumentTableSchema.shape.skillsDisplayFormat.optional(),
   personalInfo: personalInfoTableSchema.optional(),
   education: z.array(educationTableSchema).optional(),
   experience: z.array(experienceTableSchema).optional(),

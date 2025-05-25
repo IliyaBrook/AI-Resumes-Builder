@@ -33,6 +33,7 @@ export type SkillType = {
   rating?: number;
   hideRating?: boolean;
   order?: number;
+  category?: string;
 };
 
 export type PersonalInfoType = {
@@ -76,6 +77,7 @@ export type ResumeDataType = {
   projects?: ProjectType[] | null;
   updatedAt?: string;
   projectsSectionTitle?: string;
+  skillsDisplayFormat?: string;
 };
 
 export type Education = {

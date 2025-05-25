@@ -73,13 +73,13 @@ const TopSection = () => {
           />
         </div>
         <div className="flex items-center gap-2">
-          {/* {ThemeColor} */}
+          {}
           <ThemeColor />
 
-          {/* Preview Modal */}
+          {}
           <PreviewModal />
 
-          {/* Download Resume */}
+          {}
           <Download
             title={resumeInfo?.title || "Unititled Resume"}
             status={resumeInfo?.status}

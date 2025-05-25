@@ -118,7 +118,7 @@ const ResumeItem: FC<PropType> = ({
             </div>
           </div>
 
-          {/* {Body Content} */}
+          {}
           <div
             className="shrink w-full border-t pt-2 pb-[9px] px-[9px]"
           >

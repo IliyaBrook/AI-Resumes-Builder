@@ -12,7 +12,7 @@ const Page = () => {
             <h1 className="text-2xl">Resume Builder</h1>
           </div>
           <div className="shrink-0 flex items-center gap-3">
-            {/* {Trash List} */}
+            {}
             <TrashListBox />
           </div>
         </div>

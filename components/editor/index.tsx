@@ -29,7 +29,7 @@ const applyFontSize = (size: string) => {
   const range = selection.getRangeAt(0);
   if (range.collapsed) return;
 
-  // Новый способ: оборачиваем только текстовые узлы в выделении
+  
   const wrapTextNodes = (node: Node) => {
     if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
       const span = document.createElement("span");
@@ -37,7 +37,7 @@ const applyFontSize = (size: string) => {
       span.textContent = node.textContent;
       node.parentNode?.replaceChild(span, node);
     } else if (node.nodeType === Node.ELEMENT_NODE) {
-      // Рекурсивно обрабатываем дочерние узлы
+      
       const children = Array.from(node.childNodes);
       for (const child of children) {
         wrapTextNodes(child);
@@ -45,11 +45,11 @@ const applyFontSize = (size: string) => {
     }
   };
 
-  // Клонируем выделение, чтобы не потерять его после изменений
+  
   const contents = range.cloneContents();
   wrapTextNodes(contents);
 
-  // Заменяем выделенный контент на обработанный
+  
   range.deleteContents();
   range.insertNode(contents);
 };

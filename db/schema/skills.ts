@@ -12,6 +12,7 @@ export const skillsTable = pgTable("skills", {
     })
     .notNull(),
   name: varchar("name", { length: 255 }),
+  category: varchar("category", { length: 255 }),
   rating: integer("rating").notNull().default(0),
   hideRating: integer("hide_rating").notNull().default(0),
   order: integer("order").notNull().default(0),
@@ -26,12 +27,14 @@ export const skillsRelations = relations(skillsTable, ({ one }) => ({
 
 export const skillsTableSchema = createInsertSchema(skillsTable, {
   id: z.number().optional(),
+  category: z.string().optional(),
 }).pick({
   id: true,
   name: true,
   rating: true,
   hideRating: true,
   order: true,
+  category: true,
 });
 
 export type SkillsSchema = z.infer<typeof skillsTableSchema>;

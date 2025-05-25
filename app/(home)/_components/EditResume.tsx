@@ -18,9 +18,9 @@ const EditResume = () => {
                   
                   "
           >
-            {/* {Form Section} */}
+            {}
             <ResumeForm />
-            {/* {Preview Section} */}
+            {}
             <ResumePreview />
           </div>
         </div>

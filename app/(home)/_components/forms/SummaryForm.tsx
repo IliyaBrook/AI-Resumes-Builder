@@ -124,7 +124,7 @@ const SummaryForm = () => {
       const resumeData = projectsSectionTitle === null
         ? { ...rest, skills: rest.skills.map(skill => ({ ...skill, hideRating: !!skill.hideRating })) }
         : { ...rest, projectsSectionTitle, skills: rest.skills.map(skill => ({ ...skill, hideRating: !!skill.hideRating })) };
-      const promptText = buildPrompt(resumeData, summarySize);
+      const promptText = buildPrompt(resumeData as ResumeDataType, summarySize);
       const modelName = await getCurrentModel();
       const chat = getAIChatSession(modelName);
       const result = await chat.sendMessage(promptText);

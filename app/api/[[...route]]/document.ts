@@ -83,6 +83,7 @@ const documentRoute = new Hono()
           skills,
           projects,
           projectsSectionTitle,
+          skillsDisplayFormat,
         } = c.req.valid("json");
 
         if (!documentId) {
@@ -113,6 +114,8 @@ const documentRoute = new Hono()
             resumeUpdate.currentPosition = currentPosition || 1;
           if (projectsSectionTitle !== undefined)
             resumeUpdate.projectsSectionTitle = projectsSectionTitle;
+          if (skillsDisplayFormat !== undefined)
+            resumeUpdate.skillsDisplayFormat = skillsDisplayFormat;
 
           if (Object.keys(resumeUpdate)?.length > 0) {
             await trx
@@ -752,7 +755,7 @@ const documentRoute = new Hono()
           createdAt: now,
           updatedAt: now,
         }).returning();
-        // personalInfo
+        
         if (original.personalInfo) {
           await db.insert(personalInfoTable).values({
             ...original.personalInfo,
@@ -760,7 +763,7 @@ const documentRoute = new Hono()
             docId: newDocumentId,
           });
         }
-        // experiences
+        
         for (const exp of original.experiences) {
           await db.insert(experienceTable).values({
             ...exp,
@@ -768,7 +771,7 @@ const documentRoute = new Hono()
             docId: newDocumentId,
           });
         }
-        // educations
+        
         for (const edu of original.educations) {
           await db.insert(educationTable).values({
             ...edu,
@@ -776,7 +779,7 @@ const documentRoute = new Hono()
             docId: newDocumentId,
           });
         }
-        // skills
+        
         for (const skill of original.skills) {
           await db.insert(skillsTable).values({
             ...skill,
@@ -784,7 +787,7 @@ const documentRoute = new Hono()
             docId: newDocumentId,
           });
         }
-        // projects
+        
         for (const proj of original.projects) {
           await db.insert(projectTable).values({
             ...proj,

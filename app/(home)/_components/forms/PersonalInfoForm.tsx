@@ -85,7 +85,7 @@ const PersonalInfoForm = () => {
       <div>
         <form>
           <div className="space-y-4">
-            {/* Name Section */}
+            {}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-sm">First Name</Label>
@@ -113,7 +113,7 @@ const PersonalInfoForm = () => {
               </div>
             </div>
 
-            {/* Job Title */}
+            {}
             <div>
               <Label className="text-sm">Job Title</Label>
               <Input
@@ -127,7 +127,7 @@ const PersonalInfoForm = () => {
               />
             </div>
 
-            {/* Contact Info */}
+            {}
             <div className="grid grid-cols-2 gap-3">
               <div className="relative">
                 <Label className="text-sm">Phone</Label>
@@ -161,7 +161,7 @@ const PersonalInfoForm = () => {
               </div>
             </div>
 
-            {/* Social Links */}
+            {}
             <div className="grid grid-cols-2 gap-3">
               <div className="relative">
                 <Label className="text-sm">Github</Label>
@@ -193,7 +193,7 @@ const PersonalInfoForm = () => {
               </div>
             </div>
 
-            {/* Address */}
+            {}
             <div className="relative">
               <Label className="text-sm">Address</Label>
               <div className="relative">

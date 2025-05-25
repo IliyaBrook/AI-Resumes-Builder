@@ -3,7 +3,7 @@ const path = require('path')
 const strip = require('strip-comments')
 
 const exts = ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss', '.json']
-const ignoreDirs = ['node_modules', 'dist', '.git', 'types']
+const ignoreDirs = ['node_modules', 'dist', '.git', 'types', '.next', '.history']
 const preserveKeywords = ['@ts-ignore', '<reference']
 
 function shouldProcess(file) {

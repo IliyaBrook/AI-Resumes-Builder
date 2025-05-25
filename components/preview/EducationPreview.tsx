@@ -11,13 +11,10 @@ interface PropsType {
 
 const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
-  console.log("education preview: ", JSON.stringify(resumeInfo?.educations, null, 2));
 
   const isDoNotShowDates = resumeInfo?.educations?.every(
     (education) => education.skipDates === true || (!education.startDate && !education.endDate)
   );
-
-  console.log("isDoNotShowDates: ", isDoNotShowDates);
 
   if (isLoading) {
     return <SkeletonLoader />;

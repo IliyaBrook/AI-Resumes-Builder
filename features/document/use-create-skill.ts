@@ -10,9 +10,9 @@ const useCreateSkill = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: Omit<SkillType, "id">) => {
+    mutationFn: async (data: Omit<SkillType, "id"> & { category?: string }) => {
       const response = await (api.document as any)["skill/create"].$post({
-        json: { ...data, hideRating: data.hideRating ? 1 : 0, docId: documentId },
+        json: { ...data, hideRating: data.hideRating ? 1 : 0, docId: documentId, category: data.category },
       });
       return await response.json();
     },

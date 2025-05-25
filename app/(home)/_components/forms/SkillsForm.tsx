@@ -22,34 +22,76 @@ const SkillsForm = () => {
   const { mutate: deleteSkill, isPending: isDeleting } = useDeleteSkill();
   const { mutateAsync: createSkill } = useCreateSkill();
 
-  const [skillsList, setSkillsList] = React.useState<SkillType[]>(() => (resumeInfo?.skills || []).map(skill => ({ ...skill, hideRating: !!skill.hideRating })));
+  const [format, setFormat] = React.useState<'default' | 'byCategory'>('default');
+  const [hasMigrated, setHasMigrated] = React.useState(false);
+
+  
+  const [skillsList, setSkillsList] = React.useState<SkillType[]>(() => (resumeInfo?.skills || []).map(skill => ({ ...skill, hideRating: !!skill.hideRating, category: skill.category || "" })));
   const [hideRating, setHideRating] = React.useState<boolean>(!!(resumeInfo?.skills?.[0]?.hideRating));
   const debouncedSkillsList = useDebounce(skillsList, 600);
   const sortedSkillsList = [...skillsList].sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  useEffect(() => {
-    const sorted = (resumeInfo?.skills || [])
-      .map(item => ({
-        ...item,
-        name: item.name || "",
-        rating: item.rating || 0,
-        hideRating: !!item.hideRating,
-        order: typeof item.order === "number" ? item.order : 0,
-      }))
-      .sort((a, b) => (a.order || 0) - (b.order || 0));
-    setSkillsList(sorted);
-    setHideRating(!!(resumeInfo?.skills?.[0]?.hideRating));
-  }, [resumeInfo?.skills]);
+  // byCategory mode state
+  type CategoryType = { id: string; name: string; skills: { id: string; name: string }[] };
+  const [categories, setCategories] = React.useState<CategoryType[]>([]);
+  const [categoryNameInput, setCategoryNameInput] = React.useState<string>("");
 
   useEffect(() => {
-    if (!resumeInfo) return;
-    if (
-      debouncedSkillsList &&
-      (JSON.stringify(debouncedSkillsList) !== JSON.stringify((resumeInfo?.skills || []).map(skill => ({ ...skill, hideRating: !!skill.hideRating }))) || hideRating !== !!(resumeInfo?.skills?.[0]?.hideRating))
-    ) {
-      setResumeInfo({ skills: [...debouncedSkillsList].sort((a, b) => (a.order || 0) - (b.order || 0)).map(skill => ({ ...skill, hideRating: hideRating ? 1 : 0 })) });
+    if (format === 'default') {
+      const sorted = (resumeInfo?.skills || [])
+        .map(item => ({
+          ...item,
+          name: item.name || "",
+          rating: item.rating || 0,
+          hideRating: !!item.hideRating,
+          order: typeof item.order === "number" ? item.order : 0,
+          category: item.category || "",
+        }))
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+      setSkillsList(sorted);
+      setHideRating(!!(resumeInfo?.skills?.[0]?.hideRating));
+    } else if (format === 'byCategory' && !hasMigrated) {
+      if (resumeInfo?.skills && Array.isArray(resumeInfo.skills) && resumeInfo.skills.length > 0) {
+        setCategories([
+          {
+            id: Math.random().toString(36).slice(2),
+            name: "General",
+            skills: resumeInfo.skills.map(s => ({ id: Math.random().toString(36).slice(2), name: s.name || "" }))
+          }
+        ]);
+        setHasMigrated(true);
+      }
     }
-  }, [debouncedSkillsList, hideRating]);
+  }, [resumeInfo?.skills, format, hasMigrated]);
+  useEffect(() => {
+    if (format === 'default') {
+      if (!resumeInfo) return;
+      if (
+        debouncedSkillsList &&
+        (JSON.stringify(debouncedSkillsList) !== JSON.stringify((resumeInfo?.skills || []).map(skill => ({ ...skill, hideRating: !!skill.hideRating }))) || hideRating !== !!(resumeInfo?.skills?.[0]?.hideRating))
+      ) {
+        setResumeInfo({ skills: [...debouncedSkillsList].sort((a, b) => (a.order || 0) - (b.order || 0)).map(skill => ({ ...skill, hideRating: hideRating ? 1 : 0 })) });
+      }
+    }
+  }, [debouncedSkillsList, hideRating, format]);
+
+  useEffect(() => {
+    if (format === 'byCategory' && categories.length > 0 && categories.some(cat => cat.skills.length > 0)) {
+      setResumeInfo({ skills: categories.flatMap(cat => cat.skills.map(skill => ({ name: skill.name, category: cat.name })))});
+    }
+  }, [categories, format]);
+
+  useEffect(() => {
+    if (resumeInfo?.skillsDisplayFormat && (resumeInfo.skillsDisplayFormat === 'default' || resumeInfo.skillsDisplayFormat === 'byCategory')) {
+      setFormat(resumeInfo.skillsDisplayFormat);
+    }
+  }, [resumeInfo?.skillsDisplayFormat]);
+
+  const handleFormatChange = (newFormat: 'default' | 'byCategory') => {
+    setFormat(newFormat);
+    console.log('PATCH skillsDisplayFormat:', newFormat);
+    setResumeInfo({ skillsDisplayFormat: newFormat });
+  };
 
   const handleChange = (
     value: string | number,
@@ -72,6 +114,7 @@ const SkillsForm = () => {
       rating: 0,
       hideRating: hideRating,
       order: skillsList.length,
+      category: "",
     };
     const created = await createSkill(newSkill);
     setSkillsList((prev) => [...prev, { ...created, hideRating: !!created.hideRating }]);
@@ -95,112 +138,79 @@ const SkillsForm = () => {
     });
   };
 
+  // byCategory logic
+  const handleAddCategory = () => {
+    if (!categoryNameInput.trim()) return;
+    setCategories(prev => [...prev, { id: Math.random().toString(36).slice(2), name: categoryNameInput.trim(), skills: [] }]);
+    setCategoryNameInput("");
+  };
+  const handleRemoveCategory = (catId: string) => {
+    setCategories(prev => prev.filter(cat => cat.id !== catId));
+  };
+  const handleCategoryNameChange = (catId: string, name: string) => {
+    setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, name } : cat));
+  };
+  const handleAddSkillToCategory = (catId: string) => {
+    setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, skills: [...cat.skills, { id: Math.random().toString(36).slice(2), name: "" }] } : cat));
+  };
+  const handleRemoveSkillFromCategory = (catId: string, skillId: string) => {
+    setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, skills: cat.skills.filter(s => s.id !== skillId) } : cat));
+  };
+  const handleSkillNameChange = (catId: string, skillId: string, name: string) => {
+    setCategories(prev => prev.map(cat => cat.id === catId ? { ...cat, skills: cat.skills.map(s => s.id === skillId ? { ...s, name } : s) } : cat));
+  };
+  const handleMoveSkillToCategory = (fromCatId: string, skillId: string, toCatId: string) => {
+    setCategories(prev => {
+      let skillToMove: { id: string; name: string } | undefined;
+      const newCategories = prev.map(cat => {
+        if (cat.id === fromCatId) {
+          const skill = cat.skills.find(s => s.id === skillId);
+          if (skill) skillToMove = skill;
+          return { ...cat, skills: cat.skills.filter(s => s.id !== skillId) };
+        }
+        return cat;
+      });
+      if (skillToMove) {
+        return newCategories.map(cat =>
+          cat.id === toCatId ? { ...cat, skills: [...cat.skills, skillToMove!] } : cat
+        );
+      }
+      return newCategories;
+    });
+  };
+
   return (
     <div>
-      <div className="w-full">
+      <div className="w-full flex items-center gap-4 mb-2">
         <h2 className="font-bold text-lg">Skills</h2>
-        <p className="text-sm">Add your skills information</p>
-      </div>
-      <div className="flex items-center gap-2 mb-2 mt-2">
-        <input
-          type="checkbox"
-          id="hideRating"
-          checked={hideRating}
-          onChange={e => setHideRating(e.target.checked)}
-        />
-        <label htmlFor="hideRating" className="text-sm cursor-pointer select-none">Hide rating</label>
-      </div>
-      <form>
-        <div
-          className="border w-full h-auto
-            divide-y-[1px] rounded-md px-3
-            pb-4 my-5"
+        <select
+          className="border rounded px-2 py-1 text-sm"
+          value={format}
+          onChange={e => handleFormatChange(e.target.value as 'default' | 'byCategory')}
         >
-          {skillsList.length === 0 && (
-            <Button
-              className="gap-1 mt-1 text-primary border-primary/50"
-              variant="outline"
-              type="button"
-              disabled={isPending}
-              onClick={addNewSkill}
+          <option value="default">Default</option>
+          <option value="byCategory">By category</option>
+        </select>
+      </div>
+      <p className="text-sm">Add your skills information</p>
+      {format === 'default' && (
+        <>
+          <div className="flex items-center gap-2 mb-2 mt-2">
+            <input
+              type="checkbox"
+              id="hideRating"
+              checked={hideRating}
+              onChange={e => setHideRating(e.target.checked)}
+            />
+            <label htmlFor="hideRating" className="text-sm cursor-pointer select-none">Hide rating</label>
+          </div>
+          <form>
+            <div
+              className="border w-full h-auto
+                divide-y-[1px] rounded-md px-3
+                pb-4 my-5"
             >
-              <Plus size="15px" />
-              Add More Skills
-            </Button>
-          )}
-          {sortedSkillsList.map((item, index) => (
-            <div key={item.id || index}>
-              <div
-                className="relative flex 
-                items-center 
-    justify-between mb-5 pt-4 gap-3"
-              >
-                {skillsList.length > 1 && (
-                  <div className="absolute -left-8 top-4 flex flex-col gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      type="button"
-                      className="size-6"
-                      onClick={() => moveSkill(index, index - 1)}
-                      disabled={index === 0}
-                    >
-                      <MoveUp size={14} />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      type="button"
-                      className="size-6"
-                      onClick={() => moveSkill(index, index + 1)}
-                      disabled={index === skillsList.length - 1}
-                    >
-                      <MoveDown size={14} />
-                    </Button>
-                  </div>
-                )}
-                {skillsList?.length > 1 && (
-                  <Button
-                    variant="secondary"
-                    type="button"
-                    className="size-[20px] text-center rounded-full absolute -top-3 -right-5 !bg-black dark:!bg-gray-600 text-white"
-                    size="icon"
-                    disabled={isPending || isDeleting}
-                    onClick={() => removeSkill(item.id)}
-                  >
-                    <X size="13px" />
-                  </Button>
-                )}
-
-                <div className="flex-1">
-                  <Label className="text-sm">Name</Label>
-                  <Input
-                    name="name"
-                    placeholder=""
-                    required
-                    autoComplete="off"
-                    value={item.name || ""}
-                    onChange={(e) =>
-                      handleChange(e.target.value, "name", index)
-                    }
-                  />
-                </div>
-
-                {!hideRating && (
-                  <div className="shrink-0 pt-5">
-                    <Rating
-                      style={{ maxWidth: 120 }}
-                      isDisabled={!item.name}
-                      value={item?.rating || 0}
-                      onChange={(value: number) =>
-                        handleChange(value, "rating", index)
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-
-              {index === skillsList.length - 1 && skillsList.length < 35 && (
+              {skillsList.length === 0 && (
                 <Button
                   className="gap-1 mt-1 text-primary border-primary/50"
                   variant="outline"
@@ -212,10 +222,164 @@ const SkillsForm = () => {
                   Add More Skills
                 </Button>
               )}
+              {sortedSkillsList.map((item, index) => (
+                <div key={item.id || index}>
+                  <div
+                    className="relative flex 
+                    items-center 
+        justify-between mb-5 pt-4 gap-3"
+                  >
+                    {skillsList.length > 1 && (
+                      <div className="absolute -left-8 top-4 flex flex-col gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          type="button"
+                          className="size-6"
+                          onClick={() => moveSkill(index, index - 1)}
+                          disabled={index === 0}
+                        >
+                          <MoveUp size={14} />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          type="button"
+                          className="size-6"
+                          onClick={() => moveSkill(index, index + 1)}
+                          disabled={index === skillsList.length - 1}
+                        >
+                          <MoveDown size={14} />
+                        </Button>
+                      </div>
+                    )}
+                    {skillsList?.length > 1 && (
+                      <Button
+                        variant="secondary"
+                        type="button"
+                        className="size-[20px] text-center rounded-full absolute -top-3 -right-5 !bg-black dark:!bg-gray-600 text-white"
+                        size="icon"
+                        disabled={isPending || isDeleting}
+                        onClick={() => removeSkill(item.id)}
+                      >
+                        <X size="13px" />
+                      </Button>
+                    )}
+
+                    <div className="flex-1">
+                      <Label className="text-sm">Name</Label>
+                      <Input
+                        name="name"
+                        placeholder=""
+                        required
+                        autoComplete="off"
+                        value={item.name || ""}
+                        onChange={(e) =>
+                          handleChange(e.target.value, "name", index)
+                        }
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <Label className="text-sm">Category</Label>
+                      <Input
+                        name="category"
+                        placeholder="Category"
+                        value={item.category || ""}
+                        onChange={e => handleChange(e.target.value, "category", index)}
+                      />
+                    </div>
+
+                    {!hideRating && (
+                      <div className="shrink-0 pt-5">
+                        <Rating
+                          style={{ maxWidth: 120 }}
+                          isDisabled={!item.name}
+                          value={item?.rating || 0}
+                          onChange={(value: number) =>
+                            handleChange(value, "rating", index)
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {index === skillsList.length - 1 && skillsList.length < 35 && (
+                    <Button
+                      className="gap-1 mt-1 text-primary border-primary/50"
+                      variant="outline"
+                      type="button"
+                      disabled={isPending}
+                      onClick={addNewSkill}
+                    >
+                      <Plus size="15px" />
+                      Add More Skills
+                    </Button>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+          </form>
+        </>
+      )}
+      {format === 'byCategory' && (
+        <div className="mt-4">
+          <div className="flex gap-2 mb-4">
+            <Input
+              placeholder="Category name"
+              value={categoryNameInput}
+              onChange={e => setCategoryNameInput(e.target.value)}
+              className="w-48"
+            />
+            <Button type="button" onClick={handleAddCategory} variant="outline">
+              <Plus size="15px" /> Add skill category
+            </Button>
+          </div>
+          <div className="space-y-6">
+            {categories.map(category => (
+              <div key={category.id} className="border rounded-md p-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <Input
+                    value={category.name}
+                    onChange={e => handleCategoryNameChange(category.id, e.target.value)}
+                    className="w-48 font-semibold"
+                  />
+                  <Button type="button" size="icon" variant="ghost" onClick={() => handleRemoveCategory(category.id)}>
+                    <X size="15px" />
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {category.skills.map(skill => (
+                    <div key={skill.id} className="flex items-center gap-2">
+                      <Input
+                        value={skill.name}
+                        onChange={e => handleSkillNameChange(category.id, skill.id, e.target.value)}
+                        placeholder="Skill name"
+                        className="w-64"
+                      />
+                      <select
+                        value={category.id}
+                        onChange={e => handleMoveSkillToCategory(category.id, skill.id, e.target.value)}
+                        className="border rounded px-1 py-0.5 text-xs"
+                      >
+                        {categories.map(catOpt => (
+                          <option key={catOpt.id} value={catOpt.id}>{catOpt.name}</option>
+                        ))}
+                      </select>
+                      <Button type="button" size="icon" variant="ghost" onClick={() => handleRemoveSkillFromCategory(category.id, skill.id)}>
+                        <X size="13px" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button type="button" variant="outline" className="gap-1 mt-2" onClick={() => handleAddSkillToCategory(category.id)}>
+                    <Plus size="15px" /> Add skill
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </form>
+      )}
     </div>
   );
 };

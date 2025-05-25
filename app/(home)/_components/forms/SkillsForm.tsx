@@ -330,16 +330,6 @@ const SkillsForm = () => {
                       />
                     </div>
 
-                    <div className="flex-1">
-                      <Label className="text-sm">Category</Label>
-                      <Input
-                        name="category"
-                        placeholder="Category"
-                        value={item.category || ""}
-                        onChange={e => handleChange(e.target.value, "category", index)}
-                      />
-                    </div>
-
                     {!hideRating && (
                       <div className="shrink-0 pt-5">
                         <Rating

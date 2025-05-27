@@ -78,6 +78,7 @@ export type ResumeDataType = {
   updatedAt?: string;
   projectsSectionTitle?: string;
   skillsDisplayFormat?: string;
+  personalInfoDisplayFormat?: string;
 };
 
 export type Education = {

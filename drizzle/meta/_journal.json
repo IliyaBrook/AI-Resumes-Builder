@@ -78,6 +78,13 @@
       "when": 1748185970072,
       "tag": "0010_brief_blazing_skull",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1748335355504,
+      "tag": "0011_mature_blade",
+      "breakpoints": true
     }
   ]
 }

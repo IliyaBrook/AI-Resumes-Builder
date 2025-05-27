@@ -1,12 +1,19 @@
 import PersonalInfoSkeletonLoader from "@/components/skeleton-loader/personal-info-loader";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import useGetDocument from "@/features/document/use-get-document-by-id";
 import useUpdateDocument from "@/features/document/use-update-document";
 import useDebounce from "@/hooks/use-debounce";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Mail, Phone, MapPin, Github, Linkedin } from "lucide-react";
+import { Mail, Phone, MapPin, Github, Linkedin, ChevronDown } from "lucide-react";
 
 const PersonalInfoForm = () => {
   const param = useParams();
@@ -16,6 +23,7 @@ const PersonalInfoForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
 
   const [isInitialized, setIsInitialized] = useState(false);
+  const [displayFormat, setDisplayFormat] = useState<"default" | "compact">("default");
   
   useEffect(() => {
     setIsInitialized(false);
@@ -46,28 +54,33 @@ const PersonalInfoForm = () => {
   );
 
   useEffect(() => {
-    if (resumeInfo?.personalInfo && !isInitialized) {
-      setPersonalInfo({
-        id: resumeInfo.personalInfo.id ?? undefined,
-        firstName: resumeInfo.personalInfo.firstName || "",
-        lastName: resumeInfo.personalInfo.lastName || "",
-        jobTitle: resumeInfo.personalInfo.jobTitle || "",
-        address: resumeInfo.personalInfo.address || "",
-        phone: resumeInfo.personalInfo.phone || "",
-        email: resumeInfo.personalInfo.email || "",
-        github: resumeInfo.personalInfo.github || "",
-        linkedin: resumeInfo.personalInfo.linkedin || "",
-      });
+    if (resumeInfo && !isInitialized) {
+      if (resumeInfo.personalInfo) {
+        setPersonalInfo({
+          id: resumeInfo.personalInfo.id ?? undefined,
+          firstName: resumeInfo.personalInfo.firstName || "",
+          lastName: resumeInfo.personalInfo.lastName || "",
+          jobTitle: resumeInfo.personalInfo.jobTitle || "",
+          address: resumeInfo.personalInfo.address || "",
+          phone: resumeInfo.personalInfo.phone || "",
+          email: resumeInfo.personalInfo.email || "",
+          github: resumeInfo.personalInfo.github || "",
+          linkedin: resumeInfo.personalInfo.linkedin || "",
+        });
+      }
+      const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || "default";
+      setDisplayFormat(currentDisplayFormat as "default" | "compact");
       setIsInitialized(true);
     }
-  }, [resumeInfo?.personalInfo, isInitialized]);
+  }, [resumeInfo, isInitialized]);
 
   const debouncedPersonalInfo = useDebounce(personalInfo, 600);
+  const debouncedDisplayFormat = useDebounce(displayFormat, 600);
 
   useEffect(() => {
     if (!resumeInfo || !isInitialized) return;
     
-    const hasChanges = JSON.stringify(debouncedPersonalInfo) !== JSON.stringify({
+    const hasPersonalInfoChanges = JSON.stringify(debouncedPersonalInfo) !== JSON.stringify({
       id: resumeInfo.personalInfo?.id ?? undefined,
       firstName: resumeInfo.personalInfo?.firstName || "",
       lastName: resumeInfo.personalInfo?.lastName || "",
@@ -76,15 +89,26 @@ const PersonalInfoForm = () => {
       phone: resumeInfo.personalInfo?.phone || "",
       email: resumeInfo.personalInfo?.email || "",
       github: resumeInfo.personalInfo?.github || "",
-      linkedin: resumeInfo.personalInfo?.linkedin || "",
+      linkedin: resumeInfo.personalInfo?.linkedin || ""
     });
 
-    if (hasChanges) {
-      setResumeInfo({
-        personalInfo: debouncedPersonalInfo,
-      });
+    const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || "default";
+    const hasDisplayFormatChanges = debouncedDisplayFormat !== currentDisplayFormat;
+
+    if (hasPersonalInfoChanges || hasDisplayFormatChanges) {
+      const updateData: any = {};
+      
+      if (hasPersonalInfoChanges) {
+        updateData.personalInfo = debouncedPersonalInfo;
+      }
+      
+      if (hasDisplayFormatChanges) {
+        updateData.personalInfoDisplayFormat = debouncedDisplayFormat;
+      }
+      
+      setResumeInfo(updateData);
     }
-  }, [debouncedPersonalInfo, resumeInfo, isInitialized, setResumeInfo]);
+  }, [debouncedPersonalInfo, debouncedDisplayFormat, resumeInfo, isInitialized, setResumeInfo]);
 
   const handleChange = useCallback(
     (e: { target: { name: string; value: string } }) => {
@@ -103,6 +127,26 @@ const PersonalInfoForm = () => {
       <div className="w-full">
         <h2 className="font-bold text-lg">Personal Information</h2>
         <p className="text-sm">Get Started with the personal information</p>
+      </div>
+      
+      <div className="mb-4">
+        <Label className="text-sm">Display Format</Label>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-full justify-between h-9">
+              {displayFormat === "default" ? "Default" : "Compact"}
+              <ChevronDown className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-full">
+            <DropdownMenuItem onClick={() => setDisplayFormat("default")}>
+              Default
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setDisplayFormat("compact")}>
+              Compact
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div>
         <form>

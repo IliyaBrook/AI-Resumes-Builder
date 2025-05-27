@@ -12,6 +12,8 @@ interface PropsType {
 
 const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
+  const displayFormat = resumeInfo?.personalInfoDisplayFormat || "default";
+  const isCompact = displayFormat === "compact";
 
   if (isLoading) {
     return <SkeletonLoader />;
@@ -45,58 +47,101 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center gap-y-1 max-w-[600px] mx-auto pb-3 !text-[13px] text-gray-600 pdf-padding-bottom-0">
-        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
-          {resumeInfo?.personalInfo?.phone && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
-              <Phone size={15} className="opacity-70 shrink-0" />
+        {isCompact ? (
+          <div className="flex flex-wrap justify-center gap-x-2 gap-y-1">
+            {resumeInfo?.personalInfo?.phone && (
               <a
                 href={`tel:${resumeInfo.personalInfo.phone}`}
-                className="hover:underline pdf-position-fix"
+                className="hover:underline hover:text-gray-900 transition-colors !text-[13px] pdf-position-fix"
               >
                 {resumeInfo.personalInfo.phone}
               </a>
-            </span>
-          )}
-          {resumeInfo?.personalInfo?.email && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
-              <Mail size={15} className="opacity-70 shrink-0" />
+            )}
+            {resumeInfo?.personalInfo?.email && (
               <a
                 href={`mailto:${resumeInfo.personalInfo.email}`}
-                className="hover:underline pdf-position-fix"
+                className="hover:underline hover:text-gray-900 transition-colors !text-[13px] pdf-position-fix"
               >
                 {resumeInfo.personalInfo.email}
               </a>
-            </span>
-          )}
-        </div>
-        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
-          {resumeInfo?.personalInfo?.github && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
-              <Github size={15} className="opacity-70 shrink-0" />
+            )}
+            {resumeInfo?.personalInfo?.github && (
               <a
                 href={resumeInfo.personalInfo.github}
                 target="_blank"
-                rel="noopener noreferrer text-[13px]"
-                className="hover:underline pdf-position-fix"
+                rel="noopener noreferrer"
+                className="hover:underline hover:text-gray-900 transition-colors !text-[13px] pdf-position-fix"
               >
                 {resumeInfo.personalInfo.github.replace(/^https?:\/\//, "")}
               </a>
-            </span>
-          )}
-          {resumeInfo?.personalInfo?.linkedin && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
-              <Linkedin size={15} className="opacity-70 shrink-0" />
+            )}
+            {resumeInfo?.personalInfo?.linkedin && (
               <a
                 href={resumeInfo.personalInfo.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:underline pdf-position-fix"
+                className="hover:underline hover:text-gray-900 transition-colors !text-[13px] pdf-position-fix"
               >
                 {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </a>
-            </span>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+              {resumeInfo?.personalInfo?.phone && (
+                <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
+                  <Phone size={15} className="opacity-70 shrink-0" />
+                  <a
+                    href={`tel:${resumeInfo.personalInfo.phone}`}
+                    className="hover:underline pdf-position-fix"
+                  >
+                    {resumeInfo.personalInfo.phone}
+                  </a>
+                </span>
+              )}
+              {resumeInfo?.personalInfo?.email && (
+                <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
+                  <Mail size={15} className="opacity-70 shrink-0" />
+                  <a
+                    href={`mailto:${resumeInfo.personalInfo.email}`}
+                    className="hover:underline pdf-position-fix"
+                  >
+                    {resumeInfo.personalInfo.email}
+                  </a>
+                </span>
+              )}
+            </div>
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+              {resumeInfo?.personalInfo?.github && (
+                <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
+                  <Github size={15} className="opacity-70 shrink-0" />
+                  <a
+                    href={resumeInfo.personalInfo.github}
+                    target="_blank"
+                    rel="noopener noreferrer text-[13px]"
+                    className="hover:underline pdf-position-fix"
+                  >
+                    {resumeInfo.personalInfo.github.replace(/^https?:\/\//, "")}
+                  </a>
+                </span>
+              )}
+              {resumeInfo?.personalInfo?.linkedin && (
+                <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
+                  <Linkedin size={15} className="opacity-70 shrink-0" />
+                  <a
+                    href={resumeInfo.personalInfo.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline pdf-position-fix"
+                  >
+                    {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                  </a>
+                </span>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       <hr

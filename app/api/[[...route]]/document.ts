@@ -84,6 +84,7 @@ const documentRoute = new Hono()
           projects,
           projectsSectionTitle,
           skillsDisplayFormat,
+          personalInfoDisplayFormat,
         } = c.req.valid("json");
 
         if (!documentId) {
@@ -116,6 +117,8 @@ const documentRoute = new Hono()
             resumeUpdate.projectsSectionTitle = projectsSectionTitle;
           if (skillsDisplayFormat !== undefined)
             resumeUpdate.skillsDisplayFormat = skillsDisplayFormat;
+          if (personalInfoDisplayFormat !== undefined)
+            resumeUpdate.personalInfoDisplayFormat = personalInfoDisplayFormat;
 
           if (Object.keys(resumeUpdate)?.length > 0) {
             await trx

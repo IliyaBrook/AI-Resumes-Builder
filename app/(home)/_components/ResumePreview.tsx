@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { cn } from "@/lib/utils";
-import PersonalInfo from "@/components/preview/PersonalInfo";
+import PersonalInfo from "@/components/preview/PersonalInfoPreview";
 import SummaryPreview from "@/components/preview/SummaryPreview";
 import ExperiencePreview from "@/components/preview/ExperiencePreview";
 import EducationPreview from "@/components/preview/EducationPreview";

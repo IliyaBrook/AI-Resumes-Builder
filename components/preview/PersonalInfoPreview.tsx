@@ -15,41 +15,85 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const displayFormat = resumeInfo?.personalInfoDisplayFormat || "default";
   const isCompact = displayFormat === "compact";
 
+  const normalizeUrl = (url: string) => {
+    if (!url) return url;
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    return `https://${url}`;
+  };
+
   if (isLoading) {
     return <SkeletonLoader />;
   }
 
   if (isCompact) {
     const compactInfo = [];
-    
+
     if (resumeInfo?.personalInfo?.jobTitle) {
-      compactInfo.push(resumeInfo.personalInfo.jobTitle);
+      compactInfo.push(
+        <span key="jobTitle" className="font-bold">
+          {resumeInfo.personalInfo.jobTitle}
+        </span>
+      );
     }
-    
+
     if (resumeInfo?.personalInfo?.address) {
-      compactInfo.push(resumeInfo.personalInfo.address);
+      compactInfo.push(
+        <span key="address">{resumeInfo.personalInfo.address}</span>
+      );
     }
-    
+
     if (resumeInfo?.personalInfo?.phone) {
-      compactInfo.push(resumeInfo.personalInfo.phone);
+      compactInfo.push(
+        <span key="phone">{resumeInfo.personalInfo.phone}</span>
+      );
     }
-    
+
     if (resumeInfo?.personalInfo?.email) {
-      compactInfo.push(resumeInfo.personalInfo.email);
+      compactInfo.push(
+        <a
+          key="email"
+          href={`mailto:${resumeInfo.personalInfo.email}`}
+          className="hover:underline"
+        >
+          {resumeInfo.personalInfo.email}
+        </a>
+      );
     }
-    
+
     if (resumeInfo?.personalInfo?.github) {
-      compactInfo.push(resumeInfo.personalInfo.github.replace(/^https?:\/\//, ""));
+      compactInfo.push(
+        <a
+          key="github"
+          href={normalizeUrl(resumeInfo.personalInfo.github)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          {resumeInfo.personalInfo.github.replace(/^https?:\/\//, "")}
+        </a>
+      );
     }
-    
+
     if (resumeInfo?.personalInfo?.linkedin) {
-      compactInfo.push(resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, ""));
+      compactInfo.push(
+        <a
+          key="linkedin"
+          href={normalizeUrl(resumeInfo.personalInfo.linkedin)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, "")}
+        </a>
+      );
     }
 
     return (
       <div className="w-full min-h-14">
         <h2
-          className="font-bold text-2xl text-center"
+          className="font-bold text-2xl text-center mb-2"
           style={{
             color: themeColor,
           }}
@@ -58,13 +102,23 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           {resumeInfo?.personalInfo?.lastName || "Last Name"}
         </h2>
         <div className="text-center text-sm font-medium mb-2 text-gray-600 w-full">
-          <span className="pdf-position-fix">
-            {resumeInfo?.personalInfo?.jobTitle && (
-              <span className="font-bold">{resumeInfo.personalInfo.jobTitle}</span>
-            )}
-            {compactInfo.length > 1 && resumeInfo?.personalInfo?.jobTitle && " | "}
-            {compactInfo.slice(1).join(" | ")}
-          </span>
+          <div className="flex flex-wrap justify-center gap-x-1">
+            {compactInfo.map((item, index) => (
+              <span key={index} className="whitespace-nowrap">
+                {item}
+                {index < compactInfo.length - 1 && (
+                  <span
+                    className="mx-[1px] font-bold"
+                    style={{
+                      color: themeColor,
+                    }}
+                  >
+                    |
+                  </span>
+                )}
+              </span>
+            ))}
+          </div>
         </div>
         <hr
           className="border-[1px] mt-2 mb-4"
@@ -80,10 +134,10 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     <div className="w-full min-h-14">
       <h2
         className="
-        font-bold text-2xl text-center
+        font-bold text-2xl text-center mb-2
       "
         style={{
-          color: themeColor,
+          color: themeColor
         }}
       >
         {resumeInfo?.personalInfo?.firstName || "First Name"}{" "}
@@ -98,7 +152,9 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
             {resumeInfo?.personalInfo?.address && (
               <span className="ml-2 flex items-center hover:text-gray-900 transition-colors !text-[14px]">
                 <MapPin size={14} className="opacity-70 shrink-0" />
-                <span className="pdf-position-fix">{resumeInfo.personalInfo.address}</span>
+                <span className="pdf-position-fix">
+                  {resumeInfo.personalInfo.address}
+                </span>
               </span>
             )}
           </span>
@@ -107,7 +163,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       <div className="flex flex-col items-center justify-center gap-y-1 max-w-[600px] mx-auto pb-3 !text-[13px] text-gray-600 pdf-padding-bottom-0">
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           {resumeInfo?.personalInfo?.phone && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
+            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
               <Phone size={15} className="opacity-70 shrink-0" />
               <a
                 href={`tel:${resumeInfo.personalInfo.phone}`}
@@ -118,7 +174,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
             </span>
           )}
           {resumeInfo?.personalInfo?.email && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
+            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
               <Mail size={15} className="opacity-70 shrink-0" />
               <a
                 href={`mailto:${resumeInfo.personalInfo.email}`}
@@ -131,10 +187,10 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         </div>
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           {resumeInfo?.personalInfo?.github && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
+            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
               <Github size={15} className="opacity-70 shrink-0" />
               <a
-                href={resumeInfo.personalInfo.github}
+                href={normalizeUrl(resumeInfo.personalInfo.github)}
                 target="_blank"
                 rel="noopener noreferrer text-[13px]"
                 className="hover:underline pdf-position-fix"
@@ -144,10 +200,10 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
             </span>
           )}
           {resumeInfo?.personalInfo?.linkedin && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px]">
+            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
               <Linkedin size={15} className="opacity-70 shrink-0" />
               <a
-                href={resumeInfo.personalInfo.linkedin}
+                href={normalizeUrl(resumeInfo.personalInfo.linkedin)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:underline pdf-position-fix"

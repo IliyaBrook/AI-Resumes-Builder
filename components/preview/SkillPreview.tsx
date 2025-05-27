@@ -19,9 +19,6 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const hideRating = !!skills[0]?.hideRating;
   const displayFormat = resumeInfo?.skillsDisplayFormat || 'default';
 
-  console.log("skills", skills);
-  console.log("resumeInfo", resumeInfo?.skillsDisplayFormat);
-
   if (displayFormat === 'byCategory') {
     const skillsByCategory = skills.reduce((acc, skill) => {
       const category = skill.category || "General";

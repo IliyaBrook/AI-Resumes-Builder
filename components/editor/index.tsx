@@ -173,7 +173,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({
   };
   const [bulletCount, setBulletCount] = useState(getBulletCount(initialValue));
   const [lineLength, setLineLength] = useState(80);
-  console.log("bulletCount", bulletCount);
+  
   useEffect(() => {
     if (controlledValue !== undefined && controlledValue !== value) {
       setValue(controlledValue);

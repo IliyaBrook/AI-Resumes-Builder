@@ -14,7 +14,7 @@ import useDebounce from "@/hooks/use-debounce";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Mail, Phone, MapPin, Github, Linkedin, ChevronDown } from "lucide-react";
-///
+
 const PersonalInfoForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
@@ -23,10 +23,12 @@ const PersonalInfoForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
 
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [displayFormat, setDisplayFormat] = useState<"default" | "compact">("default");
   
   useEffect(() => {
     setIsInitialized(false);
+    setIsDataLoaded(false);
   }, [documentId]);
 
   const [personalInfo, setPersonalInfo] = useState<{
@@ -71,6 +73,7 @@ const PersonalInfoForm = () => {
       const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || "default";
       setDisplayFormat(currentDisplayFormat as "default" | "compact");
       setIsInitialized(true);
+      setTimeout(() => setIsDataLoaded(true), 100);
     }
   }, [resumeInfo, isInitialized]);
 
@@ -78,9 +81,9 @@ const PersonalInfoForm = () => {
   const debouncedDisplayFormat = useDebounce(displayFormat, 600);
 
   useEffect(() => {
-    if (!resumeInfo || !isInitialized) return;
+    if (!resumeInfo || !isInitialized || !isDataLoaded) return;
     
-    const hasPersonalInfoChanges = JSON.stringify(debouncedPersonalInfo) !== JSON.stringify({
+    const originalPersonalInfo = {
       id: resumeInfo.personalInfo?.id ?? undefined,
       firstName: resumeInfo.personalInfo?.firstName || "",
       lastName: resumeInfo.personalInfo?.lastName || "",
@@ -90,7 +93,9 @@ const PersonalInfoForm = () => {
       email: resumeInfo.personalInfo?.email || "",
       github: resumeInfo.personalInfo?.github || "",
       linkedin: resumeInfo.personalInfo?.linkedin || ""
-    });
+    };
+
+    const hasPersonalInfoChanges = JSON.stringify(debouncedPersonalInfo) !== JSON.stringify(originalPersonalInfo);
 
     const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || "default";
     const hasDisplayFormatChanges = debouncedDisplayFormat !== currentDisplayFormat;
@@ -108,7 +113,7 @@ const PersonalInfoForm = () => {
       
       setResumeInfo(updateData);
     }
-  }, [debouncedPersonalInfo, debouncedDisplayFormat, resumeInfo, isInitialized, setResumeInfo]);
+  }, [debouncedPersonalInfo, debouncedDisplayFormat, resumeInfo, isInitialized, isDataLoaded, setResumeInfo]);
 
   const handleChange = useCallback(
     (e: { target: { name: string; value: string } }) => {

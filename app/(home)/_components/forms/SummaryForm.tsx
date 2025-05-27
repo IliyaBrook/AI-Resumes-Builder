@@ -93,6 +93,7 @@ const SummaryForm = () => {
   const resumeInfo = data?.data as ResumeDataType | undefined;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const [loading, setLoading] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const [aiGeneratedSummary, setAiGeneratedSummary] =
     useState<GeneratesSummaryType | null>(null);
   const [summary, setSummary] = useState("");
@@ -100,17 +101,26 @@ const SummaryForm = () => {
   const editorRef = React.useRef<RichTextEditorRef>(null);
 
   useEffect(() => {
-    if (resumeInfo?.summary !== undefined) {
+    setIsInitialized(false);
+  }, [documentId]);
+
+  useEffect(() => {
+    if (resumeInfo?.summary !== undefined && !isInitialized) {
       setSummary(resumeInfo.summary ?? "");
+      setIsInitialized(true);
     }
-  }, [resumeInfo?.summary]);
+  }, [resumeInfo?.summary, isInitialized]);
 
   const debouncedSummary = useDebounce(summary, 600);
 
   useEffect(() => {
-    if (!resumeInfo) return;
-    setResumeInfo({ summary: debouncedSummary });
-  }, [debouncedSummary]);
+    if (!resumeInfo || !isInitialized) return;
+    
+    const originalSummary = resumeInfo.summary ?? "";
+    if (debouncedSummary !== originalSummary) {
+      setResumeInfo({ summary: debouncedSummary });
+    }
+  }, [debouncedSummary, resumeInfo, isInitialized, setResumeInfo]);
 
   const handleChange = (value: string) => {
     setSummary(value);

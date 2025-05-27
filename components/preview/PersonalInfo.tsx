@@ -59,7 +59,11 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         </h2>
         <div className="text-center text-sm font-medium mb-2 text-gray-600 w-full">
           <span className="pdf-position-fix">
-            {compactInfo.join(" | ")}
+            {resumeInfo?.personalInfo?.jobTitle && (
+              <span className="font-bold">{resumeInfo.personalInfo.jobTitle}</span>
+            )}
+            {compactInfo.length > 1 && resumeInfo?.personalInfo?.jobTitle && " | "}
+            {compactInfo.slice(1).join(" | ")}
           </span>
         </div>
         <hr

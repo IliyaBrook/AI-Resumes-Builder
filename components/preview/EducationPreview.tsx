@@ -16,6 +16,10 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     (education) => education.skipDates === true || (!education.startDate && !education.endDate)
   );
 
+  const isCompactMode = isDoNotShowDates && resumeInfo?.educations?.every(
+    (education) => !education.major?.trim() && education.universityName?.trim() && education.degree?.trim()
+  );
+
   if (isLoading) {
     return <SkeletonLoader />;
   }
@@ -28,9 +32,7 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         Education
       </h5>
       <hr
-        className="
-          border-[1.5px] mt-2 mb-2
-          "
+        className="border-[1.5px] mt-2 mb-2"
         style={{
           borderColor: themeColor,
         }}
@@ -45,8 +47,8 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
             <div className={isDoNotShowDates ? 'block' : 'flex items-start justify-between'}>
               <h5 className="text-[13px]">
                 {education?.degree}
-                {education?.degree && education?.major && " in "}
-                {education?.major}
+                {education?.degree && education?.major?.trim() && " in "}
+                {education?.major?.trim() && education?.major}
               </h5>
               {education?.skipDates === true || (!education?.startDate && !education?.endDate) ? null : (
                 <span className="text-[13px] font-bold">
@@ -57,7 +59,9 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 </span>
               )}
             </div>
-            <p className={`text-[13px] ${isDoNotShowDates ? 'my-1' : 'my-2'}`}>{education?.description}</p>
+            {education?.description?.trim() && (
+              <p className={`text-[13px] ${isDoNotShowDates ? 'my-1' : 'my-2'}`}>{education?.description}</p>
+            )}
           </div>
         ))}
       </div>

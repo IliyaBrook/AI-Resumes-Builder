@@ -28,7 +28,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   }
 
   if (isCompact) {
-    const compactInfo = [];
+    const compactInfo: React.ReactNode[] = [];
 
     if (resumeInfo?.personalInfo?.jobTitle) {
       compactInfo.push(
@@ -102,22 +102,42 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           {resumeInfo?.personalInfo?.lastName || "Last Name"}
         </h2>
         <div className="text-center text-sm font-medium mb-2 text-gray-600 w-full">
-          <div className="flex flex-wrap justify-center gap-x-1">
-            {compactInfo.map((item, index) => (
-              <span key={index} className="whitespace-nowrap">
-                {item}
-                {index < compactInfo.length - 1 && (
-                  <span
-                    className="mx-[1px] font-bold"
-                    style={{
-                      color: themeColor,
-                    }}
-                  >
-                    |
-                  </span>
-                )}
-              </span>
-            ))}
+          <div className="flex flex-col items-center gap-y-1">
+            {(() => {
+              const totalItems = compactInfo.length;
+              const maxItemsPerRow = 3;
+              const rows = Math.ceil(totalItems / maxItemsPerRow);
+              const itemsPerRow = Math.ceil(totalItems / rows);
+              
+              return Array.from({ length: rows }, (_, rowIndex) => {
+                const startIndex = rowIndex * itemsPerRow;
+                const endIndex = Math.min(startIndex + itemsPerRow, totalItems);
+                const rowItems = compactInfo.slice(startIndex, endIndex);
+                
+                return (
+                  <div key={rowIndex} className="flex flex-wrap justify-center gap-x-1">
+                    {rowItems.map((item, index) => {
+                      const isLast = index === rowItems.length - 1;
+                      return (
+                        <span key={startIndex + index} className="whitespace-nowrap">
+                          {item}
+                          {!isLast && (
+                            <span
+                              className="mx-[1px] font-bold"
+                              style={{
+                                color: themeColor,
+                              }}
+                            >
+                              |
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })}
+                  </div>
+                );
+              });
+            })()}
           </div>
         </div>
         <hr
@@ -137,7 +157,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         font-bold text-2xl text-center mb-2
       "
         style={{
-          color: themeColor
+          color: themeColor,
         }}
       >
         {resumeInfo?.personalInfo?.firstName || "First Name"}{" "}

@@ -13,7 +13,7 @@ const PersonalInfoForm = () => {
   const documentId = param.documentId as string;
   const { data, isLoading } = useGetDocument(documentId);
   const resumeInfo = data?.data;
-  const { mutate: setResumeInfo, isPending } = useUpdateDocument();
+  const { mutate: setResumeInfo } = useUpdateDocument();
 
   const [isInitialized, setIsInitialized] = useState(false);
   

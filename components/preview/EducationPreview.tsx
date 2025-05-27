@@ -20,7 +20,7 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     return <SkeletonLoader />;
   }
   return (
-    <div className="w-full my-5">
+    <div className="w-full my-3">
       <h5
         className="text-center font-bold text-[18px]"
         style={{ color: themeColor }}

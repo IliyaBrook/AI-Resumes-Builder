@@ -134,7 +134,7 @@ const EducationForm = () => {
       <form>
         <div
           className="border w-full h-auto
-              divide-y-[1px] rounded-md px-3 pb-4 my-5
+              divide-y-[1px] rounded-md px-3 pb-4 my-3
               "
         >
           {educationList?.map((item, index) => (

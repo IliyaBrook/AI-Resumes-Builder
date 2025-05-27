@@ -15,6 +15,12 @@ const PersonalInfoForm = () => {
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 
+  const [isInitialized, setIsInitialized] = useState(false);
+  
+  useEffect(() => {
+    setIsInitialized(false);
+  }, [documentId]);
+
   const [personalInfo, setPersonalInfo] = useState<{
     id?: number;
     firstName: string;
@@ -40,7 +46,7 @@ const PersonalInfoForm = () => {
   );
 
   useEffect(() => {
-    if (resumeInfo?.personalInfo) {
+    if (resumeInfo?.personalInfo && !isInitialized) {
       setPersonalInfo({
         id: resumeInfo.personalInfo.id ?? undefined,
         firstName: resumeInfo.personalInfo.firstName || "",
@@ -52,17 +58,33 @@ const PersonalInfoForm = () => {
         github: resumeInfo.personalInfo.github || "",
         linkedin: resumeInfo.personalInfo.linkedin || "",
       });
+      setIsInitialized(true);
     }
-  }, [resumeInfo?.personalInfo]);
+  }, [resumeInfo?.personalInfo, isInitialized]);
 
   const debouncedPersonalInfo = useDebounce(personalInfo, 600);
 
   useEffect(() => {
-    if (!resumeInfo) return;
-    setResumeInfo({
-      personalInfo: debouncedPersonalInfo,
+    if (!resumeInfo || !isInitialized) return;
+    
+    const hasChanges = JSON.stringify(debouncedPersonalInfo) !== JSON.stringify({
+      id: resumeInfo.personalInfo?.id ?? undefined,
+      firstName: resumeInfo.personalInfo?.firstName || "",
+      lastName: resumeInfo.personalInfo?.lastName || "",
+      jobTitle: resumeInfo.personalInfo?.jobTitle || "",
+      address: resumeInfo.personalInfo?.address || "",
+      phone: resumeInfo.personalInfo?.phone || "",
+      email: resumeInfo.personalInfo?.email || "",
+      github: resumeInfo.personalInfo?.github || "",
+      linkedin: resumeInfo.personalInfo?.linkedin || "",
     });
-  }, [debouncedPersonalInfo]);
+
+    if (hasChanges) {
+      setResumeInfo({
+        personalInfo: debouncedPersonalInfo,
+      });
+    }
+  }, [debouncedPersonalInfo, resumeInfo, isInitialized, setResumeInfo]);
 
   const handleChange = useCallback(
     (e: { target: { name: string; value: string } }) => {

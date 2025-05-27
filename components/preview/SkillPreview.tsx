@@ -17,9 +17,54 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     .slice()
     .sort((a, b) => (a.order || 0) - (b.order || 0));
   const hideRating = !!skills[0]?.hideRating;
+  const displayFormat = resumeInfo?.skillsDisplayFormat || 'default';
 
   console.log("skills", skills);
   console.log("resumeInfo", resumeInfo?.skillsDisplayFormat);
+
+  if (displayFormat === 'byCategory') {
+    const skillsByCategory = skills.reduce((acc, skill) => {
+      const category = skill.category || "General";
+      if (!acc[category]) acc[category] = [];
+      acc[category].push(skill);
+      return acc;
+    }, {} as Record<string, typeof skills>);
+
+    const sortedCategories = Object.keys(skillsByCategory).sort((a, b) => a.localeCompare(b));
+
+    return (
+      <div className="w-full my-3">
+        <h5
+          className="text-center font-bold text-[18px]"
+          style={{ color: themeColor }}
+        >
+          Skills
+        </h5>
+        <hr
+          className="border-[1.5px] mt-2 mb-2"
+          style={{ borderColor: themeColor }}
+        />
+        <div>
+          {sortedCategories.map((categoryName) => (
+            <div key={categoryName}>
+              <span
+                className="font-bold text-[13px] inline"
+                style={{ color: themeColor }}
+              >
+                {categoryName}:{" "}
+              </span>
+              <span className="text-[12px] text-gray-700">
+                {skillsByCategory[categoryName]
+                  .sort((a, b) => (a.name || "").localeCompare(b.name || ""))
+                  .map((skill) => skill.name)
+                  .join(", ")}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (hideRating) {
     const columns = [[], [], [], []] as string[][];

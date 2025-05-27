@@ -137,7 +137,7 @@ const ExperienceForm = () => {
         </div>
       </div>
       <form>
-        <div className="border w-full h-auto divide-y-[1px] rounded-md px-3 pb-4 my-5">
+        <div className="border w-full h-auto divide-y-[1px] rounded-md px-3 pb-4 my-3">
           {experiences.length === 0 && (
             <Button
               className="gap-1 mt-1 text-primary border-primary/50"

@@ -139,6 +139,14 @@ ol li::before {
   display: inline-block;
 }
 
+[data-radix-toast-viewport] li::before,
+[data-radix-toast-viewport] ul li::before,
+[data-radix-toast-viewport] ol li::before,
+[data-state="open"] li::before,
+[data-state="closed"] li::before {
+  display: none !important;
+}
+
 .pdf-export li::before {
   top: 1.1em !important;
 }

@@ -36,13 +36,11 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         <style>{`
           .exp-preview ul {
             list-style-position: outside;
-            margin-left: .85em!important;
             padding-left: .85em!important;
           }
           .exp-preview li {
             margin-bottom: 0.2em;
             text-indent: 0;
-            // list-style-type: disc!important;
           }
         `}</style>
         {resumeInfo?.experiences?.map((experience, index) => (

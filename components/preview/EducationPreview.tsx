@@ -17,12 +17,43 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   );
 
   const isCompactMode = isDoNotShowDates && resumeInfo?.educations?.every(
-    (education) => !education.major?.trim() && education.universityName?.trim() && education.degree?.trim()
+    (education) => !education.major?.trim() && education.universityName?.trim()
   );
 
   if (isLoading) {
     return <SkeletonLoader />;
   }
+
+  if (isCompactMode) {
+    return (
+      <div className="w-full my-3">
+        <h5
+          className="text-center font-bold text-[18px]"
+          style={{ color: themeColor }}
+        >
+          Education
+        </h5>
+        <hr
+          className="border-[1.5px] mt-2 mb-2"
+          style={{
+            borderColor: themeColor,
+          }}
+        />
+        <div className="text-[13px] leading-relaxed">
+          {resumeInfo?.educations?.map((education, index) => (
+            <div key={index} className="mb-1">
+              <span className="font-bold" style={{ color: themeColor }}>
+                {education?.universityName}
+              </span>
+              <span className="mx-[1px]"> - </span> 
+              <span>{education?.degree}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full my-3">
       <h5

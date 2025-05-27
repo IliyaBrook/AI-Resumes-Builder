@@ -173,7 +173,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({
   };
   const [bulletCount, setBulletCount] = useState(getBulletCount(initialValue));
   const [lineLength, setLineLength] = useState(80);
-
+  console.log("bulletCount", bulletCount);
   useEffect(() => {
     if (controlledValue !== undefined && controlledValue !== value) {
       setValue(controlledValue);
@@ -253,7 +253,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(({
               onChange={e => setLineLength(Number(e.target.value))}
               disabled={disabled}
             >
-              {[60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300].map(n => (
+              {[30 ,40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300].map(n => (
                 <option key={n} value={n}>{n} chars/line</option>
               ))}
             </select>

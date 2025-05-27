@@ -31,7 +31,7 @@ const SkillsForm = () => {
   const [editingCategory, setEditingCategory] = React.useState<string | null>(null);
   const [editCategoryName, setEditCategoryName] = React.useState("");
   
-  const [pendingUpdates, setPendingUpdates] = React.useState<Map<number, Partial<SkillType>>>(new Map());
+
 
   const skillsByCategory = React.useMemo(() => {
     if (format !== 'byCategory') return {};
@@ -120,23 +120,11 @@ const SkillsForm = () => {
   };
 
   const handleSkillNameChange = (skillId: number, name: string) => {
-    setPendingUpdates(prev => {
-      const newMap = new Map(prev);
-      const existing = newMap.get(skillId) || {};
-      newMap.set(skillId, { ...existing, name });
-      return newMap;
-    });
-
-    updateSkill({ skillId, data: {name}});
+    updateSkill({ skillId, data: { name } });
   };
 
   const handleSkillCategoryChange = (skillId: number, category: string) => {
-    setPendingUpdates(prev => {
-      const newMap = new Map(prev);
-      const existing = newMap.get(skillId) || {};
-      newMap.set(skillId, { ...existing, category });
-      return newMap;
-    });
+    updateSkill({ skillId, data: { category } });
   };
 
   const handleRemoveCategory = (categoryName: string) => {
@@ -180,12 +168,6 @@ const SkillsForm = () => {
   };
 
   const getSkillValue = (skill: SkillType, field: keyof SkillType) => {
-    if (skill.id && pendingUpdates.has(skill.id)) {
-      const pending = pendingUpdates.get(skill.id);
-      if (pending && field in pending) {
-        return pending[field];
-      }
-    }
     return skill[field];
   };
 

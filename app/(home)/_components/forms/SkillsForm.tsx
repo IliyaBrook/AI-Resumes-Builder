@@ -12,6 +12,7 @@ import { SkillType } from "@/types/resume.type";
 import useDeleteSkill from "@/features/document/use-delete-skill";
 import useCreateSkill from "@/features/document/use-create-skill";
 import useUpdateSkill from "@/features/document/use-update-skill";
+import useDebounce from "@/hooks/use-debounce";
 
 const SkillsForm = () => {
   const param = useParams();
@@ -24,12 +25,18 @@ const SkillsForm = () => {
   const { mutate: updateSkill } = useUpdateSkill();
 
   const [format, setFormat] = React.useState<'default' | 'byCategory'>('default');
-  const [skillsList, setSkillsList] = React.useState<SkillType[]>(() => (resumeInfo?.skills || []).map(skill => ({ ...skill, hideRating: !!skill.hideRating, category: skill.category || "" })));
-  const [hideRating, setHideRating] = React.useState<boolean>(!!(resumeInfo?.skills?.[0]?.hideRating));
+  const [skillsList, setSkillsList] = React.useState<SkillType[]>([]);
+  const [hideRating, setHideRating] = React.useState<boolean>(false);
 
   const [newCategoryName, setNewCategoryName] = React.useState("");
   const [editingCategory, setEditingCategory] = React.useState<string | null>(null);
   const [editCategoryName, setEditCategoryName] = React.useState("");
+  
+  const [localSkillInputs, setLocalSkillInputs] = React.useState<Record<number, string>>({});
+  const [localCategoryInputs, setLocalCategoryInputs] = React.useState<Record<number, string>>({});
+  
+  const debouncedSkillInputs = useDebounce(localSkillInputs, 500);
+  const debouncedCategoryInputs = useDebounce(localCategoryInputs, 500);
   
 
 
@@ -54,6 +61,58 @@ const SkillsForm = () => {
     }
   }, [resumeInfo?.skillsDisplayFormat]);
 
+  useEffect(() => {
+    if (resumeInfo?.skills) {
+      setSkillsList(resumeInfo.skills.map(skill => ({ 
+        ...skill, 
+        hideRating: !!skill.hideRating, 
+        category: skill.category || "" 
+      })));
+      
+      if (resumeInfo.skills.length > 0) {
+        setHideRating(!!resumeInfo.skills[0].hideRating);
+      }
+      
+      setLocalSkillInputs(prev => {
+        const newInputs: Record<number, string> = {};
+        resumeInfo.skills.forEach(skill => {
+          if (skill.id) {
+            newInputs[skill.id] = prev[skill.id] !== undefined ? prev[skill.id] : skill.name || "";
+          }
+        });
+        return newInputs;
+      });
+      
+      setLocalCategoryInputs(prev => {
+        const newInputs: Record<number, string> = {};
+        resumeInfo.skills.forEach(skill => {
+          if (skill.id) {
+            newInputs[skill.id] = prev[skill.id] !== undefined ? prev[skill.id] : skill.category || "";
+          }
+        });
+        return newInputs;
+      });
+    }
+  }, [resumeInfo?.skills?.length]);
+
+  useEffect(() => {
+    Object.entries(debouncedSkillInputs).forEach(([skillId, name]) => {
+      const currentSkill = resumeInfo?.skills?.find(s => s.id === Number(skillId));
+      if (name !== undefined && currentSkill && currentSkill.name !== name) {
+        updateSkill({ skillId: Number(skillId), data: { name } });
+      }
+    });
+  }, [debouncedSkillInputs]);
+
+  useEffect(() => {
+    Object.entries(debouncedCategoryInputs).forEach(([skillId, category]) => {
+      const currentSkill = resumeInfo?.skills?.find(s => s.id === Number(skillId));
+      if (category !== undefined && currentSkill && currentSkill.category !== category) {
+        updateSkill({ skillId: Number(skillId), data: { category } });
+      }
+    });
+  }, [debouncedCategoryInputs]);
+
   const handleFormatChange = (newFormat: 'default' | 'byCategory') => {
     setFormat(newFormat);
     setResumeInfo({ skillsDisplayFormat: newFormat });
@@ -64,14 +123,23 @@ const SkillsForm = () => {
     name: string,
     index: number
   ) => {
-    setSkillsList((prevState) => {
-      const newSkillList = [...prevState];
-      newSkillList[index] = {
-        ...newSkillList[index],
-        [name]: value,
-      };
-      return newSkillList;
-    });
+    const skill = skillsList[index];
+    if (skill?.id && name === 'name' && typeof value === 'string') {
+      setLocalSkillInputs(prev => ({ ...prev, [skill.id!]: value }));
+    } else {
+      setSkillsList((prevState) => {
+        const newSkillList = [...prevState];
+        newSkillList[index] = {
+          ...newSkillList[index],
+          [name]: value,
+        };
+        return newSkillList;
+      });
+      
+      if (skill?.id && name === 'rating') {
+        updateSkill({ skillId: skill.id, data: { rating: value as number } });
+      }
+    }
   };
 
   const addNewSkill = async () => {
@@ -84,11 +152,26 @@ const SkillsForm = () => {
     };
     const created = await createSkill(newSkill);
     setSkillsList((prev) => [...prev, { ...created, hideRating: !!created.hideRating }]);
+    
+    if (created.id) {
+      setLocalSkillInputs(prev => ({ ...prev, [created.id!]: created.name || "" }));
+      setLocalCategoryInputs(prev => ({ ...prev, [created.id!]: created.category || "" }));
+    }
   };
 
   const removeSkill = (id?: number) => {
     if (id) {
       deleteSkill({ skillId: id });
+      setLocalSkillInputs(prev => {
+        const newInputs = { ...prev };
+        delete newInputs[id];
+        return newInputs;
+      });
+      setLocalCategoryInputs(prev => {
+        const newInputs = { ...prev };
+        delete newInputs[id];
+        return newInputs;
+      });
     } else {
       setSkillsList((prev) => prev.filter((item) => item.id !== id));
     }
@@ -112,19 +195,34 @@ const SkillsForm = () => {
       order: 0,
       category: category,
     };
-    await createSkill(newSkill);
+    const created = await createSkill(newSkill);
+    
+    if (created.id) {
+      setLocalSkillInputs(prev => ({ ...prev, [created.id!]: created.name || "" }));
+      setLocalCategoryInputs(prev => ({ ...prev, [created.id!]: created.category || category }));
+    }
   };
 
   const handleRemoveSkillFromCategory = (skillId: number) => {
     deleteSkill({ skillId });
+    setLocalSkillInputs(prev => {
+      const newInputs = { ...prev };
+      delete newInputs[skillId];
+      return newInputs;
+    });
+    setLocalCategoryInputs(prev => {
+      const newInputs = { ...prev };
+      delete newInputs[skillId];
+      return newInputs;
+    });
   };
 
   const handleSkillNameChange = (skillId: number, name: string) => {
-    updateSkill({ skillId, data: { name } });
+    setLocalSkillInputs(prev => ({ ...prev, [skillId]: name }));
   };
 
   const handleSkillCategoryChange = (skillId: number, category: string) => {
-    updateSkill({ skillId, data: { category } });
+    setLocalCategoryInputs(prev => ({ ...prev, [skillId]: category }));
   };
 
   const handleRemoveCategory = (categoryName: string) => {
@@ -265,7 +363,7 @@ const SkillsForm = () => {
                         placeholder=""
                         required
                         autoComplete="off"
-                        value={item.name || ""}
+                        value={item.id && localSkillInputs[item.id] !== undefined ? localSkillInputs[item.id] : item.name || ""}
                         onChange={(e) =>
                           handleChange(e.target.value, "name", index)
                         }
@@ -375,13 +473,13 @@ const SkillsForm = () => {
                   {skills.map(skill => (
                     <div key={skill.id} className="flex items-center gap-2">
                       <Input
-                        value={(getSkillValue(skill, 'name') as string) || ""}
+                        value={localSkillInputs[skill.id!] !== undefined ? localSkillInputs[skill.id!] : (getSkillValue(skill, 'name') as string) || ""}
                         onChange={e => skill.id && handleSkillNameChange(skill.id, e.target.value)}
                         placeholder="Skill name"
                         className="w-64"
                       />
                       <select
-                        value={(getSkillValue(skill, 'category') as string) || categoryName}
+                        value={localCategoryInputs[skill.id!] !== undefined ? localCategoryInputs[skill.id!] : (getSkillValue(skill, 'category') as string) || categoryName}
                         onChange={e => skill.id && handleSkillCategoryChange(skill.id, e.target.value)}
                         className="border rounded px-1 py-0.5 text-xs"
                       >

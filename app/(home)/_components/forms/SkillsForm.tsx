@@ -52,7 +52,17 @@ const SkillsForm = () => {
         category: skill.category || undefined
       });
     });
-    return grouped;
+    
+    const sortedGrouped: Record<string, SkillType[]> = {};
+    Object.keys(grouped)
+      .sort((a, b) => a.localeCompare(b))
+      .forEach(categoryName => {
+        sortedGrouped[categoryName] = grouped[categoryName].sort((a, b) => 
+          (a.name || "").localeCompare(b.name || "")
+        );
+      });
+    
+    return sortedGrouped;
   }, [resumeInfo?.skills, format]);
   
   useEffect(() => {

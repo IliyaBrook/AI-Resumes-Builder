@@ -7,6 +7,7 @@ import {
   text,
   timestamp,
   varchar,
+  json,
 } from "drizzle-orm/pg-core";
 import { personalInfoTable, personalInfoTableSchema } from "./personal-info";
 import { experienceTable, experienceTableSchema } from "./experience";
@@ -34,6 +35,7 @@ export const documentTable = pgTable("document", {
   projectsSectionTitle: varchar("projects_section_title", { length: 255 }).default("Projects"),
   skillsDisplayFormat: varchar("skills_display_format", { length: 32 }),
   personalInfoDisplayFormat: varchar("personal_info_display_format", { length: 32 }).default("default"),
+  pagesOrder: json("pages_order").$type<string[]>().default(['personal-info', 'summary', 'experience', 'education', 'projects', 'skills']),
 });
 
 export const documentRelations = relations(documentTable, ({ one, many }) => {
@@ -54,6 +56,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   projectsSectionTitle: (schema) => schema.projectsSectionTitle.optional(),
   skillsDisplayFormat: (schema) => schema.skillsDisplayFormat.optional(),
   personalInfoDisplayFormat: (schema) => schema.personalInfoDisplayFormat.optional(),
+  pagesOrder: (schema) => schema.pagesOrder.optional(),
 }).pick({
   title: true,
   status: true,
@@ -64,6 +67,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   projectsSectionTitle: true,
   skillsDisplayFormat: true,
   personalInfoDisplayFormat: true,
+  pagesOrder: true,
 });
 
 export const updateCombinedSchema = z.object({
@@ -76,6 +80,7 @@ export const updateCombinedSchema = z.object({
   projectsSectionTitle: createDocumentTableSchema.shape.projectsSectionTitle.optional(),
   skillsDisplayFormat: createDocumentTableSchema.shape.skillsDisplayFormat.optional(),
   personalInfoDisplayFormat: createDocumentTableSchema.shape.personalInfoDisplayFormat.optional(),
+  pagesOrder: z.array(z.string()).optional(),
   personalInfo: personalInfoTableSchema.optional(),
   education: z.array(educationTableSchema).optional(),
   experience: z.array(experienceTableSchema).optional(),

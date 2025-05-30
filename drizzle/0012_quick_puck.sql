@@ -1,0 +1,1 @@
+ALTER TABLE "document" ADD COLUMN "pages_order" json DEFAULT '["personal-info","summary","experience","education","projects","skills"]'::json;

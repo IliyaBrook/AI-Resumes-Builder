@@ -1,16 +1,15 @@
+import { relations } from "drizzle-orm";
 import {
+  boolean,
   date,
-  integer,
   pgTable,
   serial,
   text,
-  varchar,
-  boolean,
+  varchar
 } from "drizzle-orm/pg-core";
-import { documentTable } from "./document";
-import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { documentTable } from "./document";
 
 export const educationTable = pgTable("education", {
   id: serial("id").primaryKey(),

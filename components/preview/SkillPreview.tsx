@@ -27,7 +27,11 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       return acc;
     }, {} as Record<string, typeof skills>);
 
-    const sortedCategories = Object.keys(skillsByCategory).sort((a, b) => a.localeCompare(b));
+    const sortedCategories = Object.keys(skillsByCategory).sort((a, b) => {
+      const aMinOrder = Math.min(...skillsByCategory[a].map(skill => skill.order || 0));
+      const bMinOrder = Math.min(...skillsByCategory[b].map(skill => skill.order || 0));
+      return aMinOrder - bMinOrder;
+    });
 
     return (
       <div className="w-full my-3">
@@ -52,7 +56,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               </span>
               <span className="text-[12px] text-gray-700">
                 {skillsByCategory[categoryName]
-                  .sort((a, b) => (a.name || "").localeCompare(b.name || ""))
+                  .sort((a, b) => (a.order || 0) - (b.order || 0))
                   .map((skill) => skill.name)
                   .join(", ")}
               </span>

@@ -10,7 +10,9 @@ interface PropsType {
 
 const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
-  const projects = resumeInfo?.projects || [];
+  const projects = (resumeInfo?.projects || [])
+    .slice()
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
 
   if (isLoading || !projects || projects.length === 0) {
     return null;

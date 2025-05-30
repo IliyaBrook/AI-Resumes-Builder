@@ -55,10 +55,14 @@ const SkillsForm = () => {
     
     const sortedGrouped: Record<string, SkillType[]> = {};
     Object.keys(grouped)
-      .sort((a, b) => a.localeCompare(b))
+      .sort((a, b) => {
+        const aMinOrder = Math.min(...grouped[a].map(skill => skill.order || 0));
+        const bMinOrder = Math.min(...grouped[b].map(skill => skill.order || 0));
+        return aMinOrder - bMinOrder;
+      })
       .forEach(categoryName => {
         sortedGrouped[categoryName] = grouped[categoryName].sort((a, b) => 
-          (a.name || "").localeCompare(b.name || "")
+          (a.order || 0) - (b.order || 0)
         );
       });
     
@@ -275,6 +279,54 @@ const SkillsForm = () => {
     setEditCategoryName("");
   };
 
+  const moveCategorySkills = (fromCategoryName: string, toCategoryName: string) => {
+    if (!resumeInfo?.skills) return;
+    
+    const fromSkills = resumeInfo.skills.filter(skill => skill.category === fromCategoryName);
+    const toSkills = resumeInfo.skills.filter(skill => skill.category === toCategoryName);
+    
+    const sortedCategories = Object.keys(skillsByCategory);
+    const fromIndex = sortedCategories.indexOf(fromCategoryName);
+    const toIndex = sortedCategories.indexOf(toCategoryName);
+    
+    if (fromIndex === toIndex) return;
+    
+    const toMinOrder = Math.min(...toSkills.map(skill => skill.order || 0));
+    const toMaxOrder = Math.max(...toSkills.map(skill => skill.order || 0));
+    
+    let newBaseOrder: number;
+    if (fromIndex < toIndex) {
+      newBaseOrder = toMaxOrder + 1;
+    } else {
+      newBaseOrder = toMinOrder - fromSkills.length;
+    }
+    
+    fromSkills.forEach((skill, idx) => {
+      if (skill.id) {
+        updateSkill({ 
+          skillId: skill.id, 
+          data: { order: newBaseOrder + idx } 
+        });
+      }
+    });
+  };
+
+  const handleMoveCategoryUp = (categoryName: string) => {
+    const sortedCategories = Object.keys(skillsByCategory);
+    const currentIndex = sortedCategories.indexOf(categoryName);
+    if (currentIndex > 0) {
+      moveCategorySkills(categoryName, sortedCategories[currentIndex - 1]);
+    }
+  };
+
+  const handleMoveCategoryDown = (categoryName: string) => {
+    const sortedCategories = Object.keys(skillsByCategory);
+    const currentIndex = sortedCategories.indexOf(categoryName);
+    if (currentIndex < sortedCategories.length - 1) {
+      moveCategorySkills(categoryName, sortedCategories[currentIndex + 1]);
+    }
+  };
+
   const getSkillValue = (skill: SkillType, field: keyof SkillType) => {
     return skill[field];
   };
@@ -414,6 +466,11 @@ const SkillsForm = () => {
       )}
       {format === 'byCategory' && (
         <div className="mt-4">
+          {Object.keys(skillsByCategory).length > 1 && (
+            <div className="text-sm text-muted-foreground mb-2">
+              Use arrows to reorder categories
+            </div>
+          )}
           <div className="flex gap-2 mb-4">
             <Input
               placeholder="New category name"
@@ -426,9 +483,33 @@ const SkillsForm = () => {
             </Button>
           </div>
           <div className="space-y-6">
-            {Object.entries(skillsByCategory).map(([categoryName, skills]) => (
+            {Object.entries(skillsByCategory).map(([categoryName, skills], categoryIndex) => (
               <div key={categoryName} className="border rounded-md p-3">
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-2 relative">
+                  {Object.keys(skillsByCategory).length > 1 && (
+                    <div className="absolute -left-8 top-0 flex flex-col gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        type="button"
+                        className="size-6"
+                        onClick={() => handleMoveCategoryUp(categoryName)}
+                        disabled={categoryIndex === 0}
+                      >
+                        <MoveUp size={14} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        type="button"
+                        className="size-6"
+                        onClick={() => handleMoveCategoryDown(categoryName)}
+                        disabled={categoryIndex === Object.keys(skillsByCategory).length - 1}
+                      >
+                        <MoveDown size={14} />
+                      </Button>
+                    </div>
+                  )}
                   {editingCategory === categoryName ? (
                     <>
                       <Input

@@ -156,7 +156,7 @@ const ResumePreview = () => {
           e.stopPropagation();
           setSelectedSection(selectedSection === sectionKey ? null : sectionKey);
         }}
-        title={`Нажмите для выбора секции "${sectionKey}"`}
+        title={`Click to select "${sectionKey}" section`}
       >
         <Component isLoading={isLoading} resumeInfo={fixedResumeInfo} />
         
@@ -175,7 +175,7 @@ const ResumePreview = () => {
                 moveSection('up');
               }}
               disabled={!canMoveUp}
-              title="Переместить секцию вверх"
+              title="Move section up"
             >
               <MoveUp size={14} />
             </Button>
@@ -192,7 +192,7 @@ const ResumePreview = () => {
                 moveSection('down');
               }}
               disabled={!canMoveDown}
-              title="Переместить секцию вниз"
+              title="Move section down"
             >
               <MoveDown size={14} />
             </Button>
@@ -223,7 +223,7 @@ const ResumePreview = () => {
       
       {selectedSection && (
         <div className="absolute top-4 left-4 text-xs text-gray-500 bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm z-10">
-          Выбрана секция: {selectedSection} (ESC для отмены)
+          Selected section: {selectedSection} (ESC to cancel)
         </div>
       )}
       

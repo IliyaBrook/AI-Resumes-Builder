@@ -39,7 +39,6 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                   href={project.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline"
                   style={{ color: themeColor }}
                 >
                   {project.name}
@@ -58,7 +57,7 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                   href={project.git}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline pdf-position-fix"
+                  className="pdf-position-fix"
                   style={{ color: themeColor }}
                 >
                   {project.git}

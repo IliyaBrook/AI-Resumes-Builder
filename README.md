@@ -14,9 +14,11 @@ This version includes several changes to enhance local usability and AI capabili
 * **Duplicate Resume Functionality:** Introduced a button to easily duplicate existing resumes.
 * **Improved AI Context Awareness:** The AI model now considers existing resume data (experience, skills, etc.) when generating new content, providing more personalized suggestions.
 * **Enhanced Personal Information:** Added optional fields for Github and Linkedin profiles.
+* **Personal Information Display Customization:** Implemented options to customize how personal information is displayed on the resume, providing flexibility in presentation format.
 * **Flexible Summary Generation:** The AI summary generation now includes options for selecting size (Short, Large, Extra Large) and outputs styled HTML using tags like `<strong>` for improved readability.
 * **Professional Experience Enhancements:** Added an option to mark the End Date as "Present" and a "Do not show dates" option. The standard textarea for the summary has been replaced with a RichText editor.
 * **Data Reordering:** Implemented reorder functionality with arrow buttons for rearranging entries in sections like Professional Experience, Skills, and the new Projects section.
+* **Resume Sections Reordering:** Added the ability to reorder entire resume sections (Personal Info, Summary, Experience, Education, Projects, Skills) with intuitive click-to-select and arrow controls, allowing complete customization of resume layout and flow.
 * **Optional Projects Section:** Added a new, optional "Projects" page to showcase your projects. The title of this section is customizable (e.g., "Portfolio"). This section supports RichText and includes optional fields for Project Name, Project URL, and Git Repository.
 
 ## Local Database Setup (PostgreSQL)

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import PersonalInfo from "@/components/preview/PersonalInfoPreview";
 import SummaryPreview from "@/components/preview/SummaryPreview";
@@ -75,6 +75,7 @@ const ResumePreview = () => {
   const { data, isLoading } = useGetDocument(documentId);
   const { mutate: updateDocument } = useUpdateDocument();
   const fixedResumeInfo = normalizeResumeData(data?.data);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [currentOrder, setCurrentOrder] = useState<string[]>(
@@ -86,6 +87,28 @@ const ResumePreview = () => {
       setCurrentOrder(fixedResumeInfo.pagesOrder);
     }
   }, [fixedResumeInfo?.pagesOrder]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedSection(null);
+      }
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setSelectedSection(null);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const updatePagesOrder = (newOrder: string[]) => {
     updateDocument({
@@ -120,23 +143,68 @@ const ResumePreview = () => {
     const Component = SECTION_COMPONENTS[sectionKey as keyof typeof SECTION_COMPONENTS];
     if (!Component) return null;
     
+    const isSelected = selectedSection === sectionKey;
+    
     return (
       <div
         key={sectionKey}
         className={cn(
-          "section-wrapper cursor-pointer transition-all duration-200 rounded-md",
-          selectedSection === sectionKey && "ring-2 ring-blue-500 ring-opacity-50 bg-blue-50 dark:bg-blue-950 dark:ring-blue-400 p-2"
+          "section-wrapper cursor-pointer transition-all duration-200 rounded-md relative",
+          isSelected && "ring-2 ring-blue-500 ring-opacity-50 bg-blue-50 dark:bg-blue-950 dark:ring-blue-400 p-2"
         )}
-        onClick={() => setSelectedSection(selectedSection === sectionKey ? null : sectionKey)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelectedSection(selectedSection === sectionKey ? null : sectionKey);
+        }}
         title={`Нажмите для выбора секции "${sectionKey}"`}
       >
         <Component isLoading={isLoading} resumeInfo={fixedResumeInfo} />
+        
+        {isSelected && (
+          <div className="absolute top-2 right-2 flex flex-col gap-1 bg-white dark:bg-gray-800 rounded-md shadow-lg border dark:border-gray-600 p-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              type="button"
+              className={cn(
+                "size-6 hover:bg-gray-100 dark:hover:bg-gray-700",
+                !canMoveUp && "opacity-50 cursor-not-allowed"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                moveSection('up');
+              }}
+              disabled={!canMoveUp}
+              title="Переместить секцию вверх"
+            >
+              <MoveUp size={14} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              type="button"
+              className={cn(
+                "size-6 hover:bg-gray-100 dark:hover:bg-gray-700",
+                !canMoveDown && "opacity-50 cursor-not-allowed"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                moveSection('down');
+              }}
+              disabled={!canMoveDown}
+              title="Переместить секцию вниз"
+            >
+              <MoveDown size={14} />
+            </Button>
+          </div>
+        )}
       </div>
     );
   };
 
   return (
     <div
+      ref={containerRef}
       id="resume-preview-id"
       className={cn(`
         shadow-lg bg-white w-full flex-[1.02]
@@ -149,47 +217,17 @@ const ResumePreview = () => {
       style={{
         borderTop: `13px solid ${fixedResumeInfo?.themeColor}`,
       }}
+      onClick={() => setSelectedSection(null)}
     >
       <style dangerouslySetInnerHTML={{ __html: RESUME_STYLES }} />
       
       {selectedSection && (
-        <div className="absolute top-4 left-4 text-xs text-gray-500 bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm">
-          Выбрана секция: {selectedSection}
+        <div className="absolute top-4 left-4 text-xs text-gray-500 bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm z-10">
+          Выбрана секция: {selectedSection} (ESC для отмены)
         </div>
       )}
       
       {currentOrder.map(renderSection)}
-      
-      <div id="sort-pages" className="absolute top-0 right-0 flex flex-col gap-1 p-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          type="button"
-          className={cn(
-            "size-8 hover:bg-gray-100 dark:hover:bg-gray-700",
-            !canMoveUp && "opacity-50 cursor-not-allowed"
-          )}
-          onClick={() => moveSection('up')}
-          disabled={!canMoveUp}
-          title="Переместить секцию вверх"
-        >
-          <MoveUp size={16} />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          type="button"
-          className={cn(
-            "size-8 hover:bg-gray-100 dark:hover:bg-gray-700",
-            !canMoveDown && "opacity-50 cursor-not-allowed"
-          )}
-          onClick={() => moveSection('down')}
-          disabled={!canMoveDown}
-          title="Переместить секцию вниз"
-        >
-          <MoveDown size={16} />
-        </Button>
-      </div>
     </div>
   );
 };

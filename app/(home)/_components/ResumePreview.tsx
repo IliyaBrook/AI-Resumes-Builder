@@ -7,11 +7,18 @@ import ExperiencePreview from "@/components/preview/ExperiencePreview";
 import EducationPreview from "@/components/preview/EducationPreview";
 import SkillPreview from "@/components/preview/SkillPreview";
 import ProjectPreview from "@/components/preview/ProjectPreview";
+import LanguagePreview from "@/components/preview/LanguagePreview";
 import useGetDocument from "@/features/document/use-get-document-by-id";
 import useUpdateDocument from "@/features/document/use-update-document";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { MoveUp, MoveDown } from "lucide-react";
+import { 
+  DEFAULT_PAGES_ORDER, 
+  SECTION_COMPONENTS, 
+  syncPagesOrder,
+  type SectionKey 
+} from "@/constant/resume-sections";
 
 const RESUME_STYLES = `
   #resume-preview-id ul, #resume-preview-id ol {
@@ -49,17 +56,6 @@ const RESUME_STYLES = `
   }
 `;
 
-const DEFAULT_PAGES_ORDER = ['personal-info', 'summary', 'experience', 'education', 'projects', 'skills'];
-
-const SECTION_COMPONENTS = {
-  'personal-info': PersonalInfo,
-  'summary': SummaryPreview,
-  'experience': ExperiencePreview,
-  'education': EducationPreview,
-  'projects': ProjectPreview,
-  'skills': SkillPreview,
-};
-
 function normalizeResumeData(data: any) {
   if (!data) return data;
   if (data.projectsSectionTitle === null) {
@@ -84,9 +80,19 @@ const ResumePreview = () => {
 
   React.useEffect(() => {
     if (fixedResumeInfo?.pagesOrder) {
-      setCurrentOrder(fixedResumeInfo.pagesOrder);
+      const currentPagesOrder = fixedResumeInfo.pagesOrder;
+      const syncedOrder = syncPagesOrder(currentPagesOrder);
+      
+      if (JSON.stringify(currentPagesOrder) !== JSON.stringify(syncedOrder)) {
+        updateDocument({
+          pagesOrder: syncedOrder,
+        });
+        setCurrentOrder(syncedOrder);
+      } else {
+        setCurrentOrder(currentPagesOrder);
+      }
     }
-  }, [fixedResumeInfo?.pagesOrder]);
+  }, [fixedResumeInfo?.pagesOrder, updateDocument]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -140,7 +146,7 @@ const ResumePreview = () => {
   const canMoveDown = selectedSection && currentOrder.indexOf(selectedSection) < currentOrder.length - 1;
 
   const renderSection = (sectionKey: string) => {
-    const Component = SECTION_COMPONENTS[sectionKey as keyof typeof SECTION_COMPONENTS];
+    const Component = SECTION_COMPONENTS[sectionKey as SectionKey];
     if (!Component) return null;
     
     const isSelected = selectedSection === sectionKey;

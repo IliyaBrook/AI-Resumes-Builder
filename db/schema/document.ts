@@ -17,6 +17,7 @@ import { projectTable, projectTableSchema } from "./project";
 import { languageTable, languageTableSchema } from "./language";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { DEFAULT_PAGES_ORDER } from "@/constant/resume-sections";
 
 export const statusEnum = pgEnum("status", ["archived", "private", "public"]);
 
@@ -37,7 +38,7 @@ export const documentTable = pgTable("document", {
   languagesSectionTitle: varchar("languages_section_title", { length: 255 }).default("Languages"),
   skillsDisplayFormat: varchar("skills_display_format", { length: 32 }),
   personalInfoDisplayFormat: varchar("personal_info_display_format", { length: 32 }).default("default"),
-  pagesOrder: json("pages_order").$type<string[]>().default(['personal-info', 'summary', 'experience', 'education', 'projects', 'skills', 'languages']),
+  pagesOrder: json("pages_order").$type<string[]>().default(DEFAULT_PAGES_ORDER),
 });
 
 export const documentRelations = relations(documentTable, ({ one, many }) => {

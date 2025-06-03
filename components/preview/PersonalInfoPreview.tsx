@@ -170,8 +170,8 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           </span>
           <span>
             {resumeInfo?.personalInfo?.address && (
-              <span className="ml-2 flex items-center hover:text-gray-900 transition-colors !text-[14px]">
-                <MapPin size={14} className="opacity-70 shrink-0" />
+              <span className="ml-2 flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
+                <MapPin size={15} className="opacity-70 shrink-0" />
                 <span className="pdf-position-fix">
                   {resumeInfo.personalInfo.address}
                 </span>

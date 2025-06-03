@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import useDeleteDocument from "@/features/document/use-delete-document";
 
 interface PropType {
@@ -117,16 +118,16 @@ const ResumeItem: FC<PropType> = ({
               )}
             </div>
           </div>
-
-          {}
           <div
             className="shrink w-full border-t pt-2 pb-[9px] px-[9px]"
           >
-            <h5
-              className="font-bold text-lg mb-1 truncate block max-w-full text-center"
-            >
-              {title}
-            </h5>
+            <Tooltip content={title} side="top">
+              <h5
+                className="font-bold text-lg mb-1 truncate block max-w-full text-center cursor-default"
+              >
+                {title}
+              </h5>
+            </Tooltip>
             <div className="flex items-center justify-center gap-2">
               <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap">{docDate}</span>
               <button

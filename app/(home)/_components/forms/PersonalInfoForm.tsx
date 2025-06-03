@@ -13,7 +13,14 @@ import useUpdateDocument from "@/features/document/use-update-document";
 import useDebounce from "@/hooks/use-debounce";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Mail, Phone, MapPin, Github, Linkedin, ChevronDown } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Github,
+  Linkedin,
+  ChevronDown,
+} from "lucide-react";
 
 const PersonalInfoForm = () => {
   const param = useParams();
@@ -24,8 +31,10 @@ const PersonalInfoForm = () => {
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [displayFormat, setDisplayFormat] = useState<"default" | "compact">("default");
-  
+  const [displayFormat, setDisplayFormat] = useState<"default" | "compact">(
+    "default"
+  );
+
   useEffect(() => {
     setIsInitialized(false);
     setIsDataLoaded(false);
@@ -41,19 +50,17 @@ const PersonalInfoForm = () => {
     email: string;
     github?: string;
     linkedin?: string;
-  }>(
-    {
-      id: undefined,
-      firstName: "",
-      lastName: "",
-      jobTitle: "",
-      address: "",
-      phone: "",
-      email: "",
-      github: "",
-      linkedin: "",
-    }
-  );
+  }>({
+    id: undefined,
+    firstName: "",
+    lastName: "",
+    jobTitle: "",
+    address: "",
+    phone: "",
+    email: "",
+    github: "",
+    linkedin: "",
+  });
 
   useEffect(() => {
     if (resumeInfo && !isInitialized) {
@@ -70,7 +77,8 @@ const PersonalInfoForm = () => {
           linkedin: resumeInfo.personalInfo.linkedin || "",
         });
       }
-      const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || "default";
+      const currentDisplayFormat =
+        resumeInfo.personalInfoDisplayFormat || "default";
       setDisplayFormat(currentDisplayFormat as "default" | "compact");
       setIsInitialized(true);
       setTimeout(() => setIsDataLoaded(true), 100);
@@ -82,7 +90,7 @@ const PersonalInfoForm = () => {
 
   useEffect(() => {
     if (!resumeInfo || !isInitialized || !isDataLoaded) return;
-    
+
     const originalPersonalInfo = {
       id: resumeInfo.personalInfo?.id ?? undefined,
       firstName: resumeInfo.personalInfo?.firstName || "",
@@ -92,28 +100,39 @@ const PersonalInfoForm = () => {
       phone: resumeInfo.personalInfo?.phone || "",
       email: resumeInfo.personalInfo?.email || "",
       github: resumeInfo.personalInfo?.github || "",
-      linkedin: resumeInfo.personalInfo?.linkedin || ""
+      linkedin: resumeInfo.personalInfo?.linkedin || "",
     };
 
-    const hasPersonalInfoChanges = JSON.stringify(debouncedPersonalInfo) !== JSON.stringify(originalPersonalInfo);
+    const hasPersonalInfoChanges =
+      JSON.stringify(debouncedPersonalInfo) !==
+      JSON.stringify(originalPersonalInfo);
 
-    const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || "default";
-    const hasDisplayFormatChanges = debouncedDisplayFormat !== currentDisplayFormat;
+    const currentDisplayFormat =
+      resumeInfo.personalInfoDisplayFormat || "default";
+    const hasDisplayFormatChanges =
+      debouncedDisplayFormat !== currentDisplayFormat;
 
     if (hasPersonalInfoChanges || hasDisplayFormatChanges) {
       const updateData: any = {};
-      
+
       if (hasPersonalInfoChanges) {
         updateData.personalInfo = debouncedPersonalInfo;
       }
-      
+
       if (hasDisplayFormatChanges) {
         updateData.personalInfoDisplayFormat = debouncedDisplayFormat;
       }
-      
+
       setResumeInfo(updateData);
     }
-  }, [debouncedPersonalInfo, debouncedDisplayFormat, resumeInfo, isInitialized, isDataLoaded, setResumeInfo]);
+  }, [
+    debouncedPersonalInfo,
+    debouncedDisplayFormat,
+    resumeInfo,
+    isInitialized,
+    isDataLoaded,
+    setResumeInfo,
+  ]);
 
   const handleChange = useCallback(
     (e: { target: { name: string; value: string } }) => {
@@ -133,7 +152,7 @@ const PersonalInfoForm = () => {
         <h2 className="font-bold text-lg">Personal Information</h2>
         <p className="text-sm">Get Started with the personal information</p>
       </div>
-      
+
       <div className="mb-4">
         <Label className="text-sm">Display Format</Label>
         <DropdownMenu>
@@ -156,7 +175,6 @@ const PersonalInfoForm = () => {
       <div>
         <form>
           <div className="space-y-4">
-            {}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-sm">First Name</Label>
@@ -184,7 +202,6 @@ const PersonalInfoForm = () => {
               </div>
             </div>
 
-            {}
             <div>
               <Label className="text-sm">Job Title</Label>
               <Input
@@ -198,7 +215,6 @@ const PersonalInfoForm = () => {
               />
             </div>
 
-            {}
             <div className="grid grid-cols-2 gap-3">
               <div className="relative">
                 <Label className="text-sm">Phone</Label>
@@ -232,7 +248,6 @@ const PersonalInfoForm = () => {
               </div>
             </div>
 
-            {}
             <div className="grid grid-cols-2 gap-3">
               <div className="relative">
                 <Label className="text-sm">Github</Label>
@@ -264,7 +279,6 @@ const PersonalInfoForm = () => {
               </div>
             </div>
 
-            {}
             <div className="relative">
               <Label className="text-sm">Address</Label>
               <div className="relative">

@@ -61,6 +61,14 @@ export type ProjectType = {
   git?: string | null;
 };
 
+export type LanguageType = {
+  id?: number;
+  docId?: string | null;
+  name: string;
+  level?: string | null;
+  order?: number;
+};
+
 export type ResumeDataType = {
   id?: number;
   documentId?: string;
@@ -75,8 +83,10 @@ export type ResumeDataType = {
   educations?: EducationType[] | null;
   skills?: SkillType[] | null;
   projects?: ProjectType[] | null;
+  languages?: LanguageType[] | null;
   updatedAt?: string;
   projectsSectionTitle?: string;
+  languagesSectionTitle?: string;
   skillsDisplayFormat?: string;
   personalInfoDisplayFormat?: string;
 };

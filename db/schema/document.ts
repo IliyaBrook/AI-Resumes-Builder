@@ -14,6 +14,7 @@ import { experienceTable, experienceTableSchema } from "./experience";
 import { educationTable, educationTableSchema } from "./education";
 import { skillsTable, skillsTableSchema } from "./skills";
 import { projectTable, projectTableSchema } from "./project";
+import { languageTable, languageTableSchema } from "./language";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -33,9 +34,10 @@ export const documentTable = pgTable("document", {
   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
   projectsSectionTitle: varchar("projects_section_title", { length: 255 }).default("Projects"),
+  languagesSectionTitle: varchar("languages_section_title", { length: 255 }).default("Languages"),
   skillsDisplayFormat: varchar("skills_display_format", { length: 32 }),
   personalInfoDisplayFormat: varchar("personal_info_display_format", { length: 32 }).default("default"),
-  pagesOrder: json("pages_order").$type<string[]>().default(['personal-info', 'summary', 'experience', 'education', 'projects', 'skills']),
+  pagesOrder: json("pages_order").$type<string[]>().default(['personal-info', 'summary', 'experience', 'education', 'projects', 'skills', 'languages']),
 });
 
 export const documentRelations = relations(documentTable, ({ one, many }) => {
@@ -45,6 +47,7 @@ export const documentRelations = relations(documentTable, ({ one, many }) => {
     educations: many(educationTable),
     skills: many(skillsTable),
     projects: many(projectTable),
+    languages: many(languageTable),
   };
 });
 
@@ -54,6 +57,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   thumbnail: (schema) => schema.thumbnail.optional(),
   currentPosition: (schema) => schema.currentPosition.optional(),
   projectsSectionTitle: (schema) => schema.projectsSectionTitle.optional(),
+  languagesSectionTitle: (schema) => schema.languagesSectionTitle.optional(),
   skillsDisplayFormat: (schema) => schema.skillsDisplayFormat.optional(),
   personalInfoDisplayFormat: (schema) => schema.personalInfoDisplayFormat.optional(),
   pagesOrder: (schema) => schema.pagesOrder.optional(),
@@ -65,6 +69,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   thumbnail: true,
   currentPosition: true,
   projectsSectionTitle: true,
+  languagesSectionTitle: true,
   skillsDisplayFormat: true,
   personalInfoDisplayFormat: true,
   pagesOrder: true,
@@ -78,6 +83,7 @@ export const updateCombinedSchema = z.object({
   themeColor: createDocumentTableSchema.shape.themeColor.optional(),
   currentPosition: createDocumentTableSchema.shape.currentPosition.optional(),
   projectsSectionTitle: createDocumentTableSchema.shape.projectsSectionTitle.optional(),
+  languagesSectionTitle: createDocumentTableSchema.shape.languagesSectionTitle.optional(),
   skillsDisplayFormat: createDocumentTableSchema.shape.skillsDisplayFormat.optional(),
   personalInfoDisplayFormat: createDocumentTableSchema.shape.personalInfoDisplayFormat.optional(),
   pagesOrder: z.array(z.string()).optional(),
@@ -86,6 +92,7 @@ export const updateCombinedSchema = z.object({
   experience: z.array(experienceTableSchema).optional(),
   skills: z.array(skillsTableSchema).optional(),
   projects: z.array(projectTableSchema).optional(),
+  languages: z.array(languageTableSchema).optional(),
 });
 
 export type DocumentSchema = z.infer<typeof createDocumentTableSchema>;

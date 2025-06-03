@@ -6,3 +6,4 @@ export { skillsTable, skillsRelations } from "./skills";
 export { modelTable } from "./model";
 export { themeTable } from "./theme";
 export { projectTable, projectRelations } from "./project";
+export { languageTable, languageRelations } from "./language";

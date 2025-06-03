@@ -8,6 +8,7 @@ import ExperienceForm from "./forms/ExperienceForm";
 import EducationForm from "./forms/EducationForm";
 import SkillsForm from "./forms/SkillsForm";
 import ProjectForm from "./forms/ProjectForm";
+import LanguageForm from "./forms/LanguageForm";
 import useGetDocument from "@/features/document/use-get-document-by-id";
 import { useParams } from "next/navigation";
 import useUpdateDocument from "@/features/document/use-update-document";
@@ -73,7 +74,7 @@ const ResumeForm = () => {
             size="default"
             className="!px-2 !py-1 !h-auto"
             disabled={
-              activeFormIndex === 6 || resumeInfo?.status === "archived"
+              activeFormIndex === 7 || resumeInfo?.status === "archived"
                 ? true
                 : false
             }
@@ -92,6 +93,7 @@ const ResumeForm = () => {
           {activeFormIndex === 4 && <EducationForm/>}
           {activeFormIndex === 5 && <ProjectForm />}
           {activeFormIndex === 6 && <SkillsForm />}
+          {activeFormIndex === 7 && <LanguageForm />}
         </div>
       </div>
     </div>

@@ -18,6 +18,7 @@ import {
   personalInfoTable,
   skillsTable,
   projectTable,
+  languageTable,
 } from "@/db/schema";
 
 const documentRoute = new Hono()
@@ -82,7 +83,9 @@ const documentRoute = new Hono()
           education,
           skills,
           projects,
+          languages,
           projectsSectionTitle,
+          languagesSectionTitle,
           skillsDisplayFormat,
           personalInfoDisplayFormat,
           pagesOrder,
@@ -116,6 +119,8 @@ const documentRoute = new Hono()
             resumeUpdate.currentPosition = currentPosition || 1;
           if (projectsSectionTitle !== undefined)
             resumeUpdate.projectsSectionTitle = projectsSectionTitle;
+          if (languagesSectionTitle !== undefined)
+            resumeUpdate.languagesSectionTitle = languagesSectionTitle;
           if (skillsDisplayFormat !== undefined)
             resumeUpdate.skillsDisplayFormat = skillsDisplayFormat;
           if (personalInfoDisplayFormat !== undefined)
@@ -281,6 +286,37 @@ const documentRoute = new Hono()
               }
             }
           }
+
+          if (languages && Array.isArray(languages)) {
+            const existingLanguages = await trx
+              .select()
+              .from(languageTable)
+              .where(eq(languageTable.docId, existingDocument.documentId));
+
+            const existingLanguagesMap = new Set(
+              existingLanguages.map((lang) => lang.id)
+            );
+
+            for (const lang of languages) {
+              const { id, ...data } = lang;
+              if (id !== undefined && existingLanguagesMap.has(id)) {
+                await trx
+                  .update(languageTable)
+                  .set(data)
+                  .where(
+                    and(
+                      eq(languageTable.docId, existingDocument.documentId),
+                      eq(languageTable.id, id)
+                    )
+                  );
+              } else {
+                await trx.insert(languageTable).values({
+                  docId: existingDocument.documentId,
+                  ...data,
+                });
+              }
+            }
+          }
         });
 
         return c.json(
@@ -415,6 +451,9 @@ const documentRoute = new Hono()
             projects: {
               orderBy: (projects) => [projects.order]
             },
+            languages: {
+              orderBy: (languages) => [languages.order]
+            },
           },
         });
         return c.json({
@@ -458,6 +497,9 @@ const documentRoute = new Hono()
             skills: true,
             projects: {
               orderBy: (projects) => [projects.order]
+            },
+            languages: {
+              orderBy: (languages) => [languages.order]
             },
           },
         });
@@ -765,6 +807,30 @@ const documentRoute = new Hono()
       }
     }
   )
+  .delete(
+    "/language/:languageId",
+    zValidator(
+      "param",
+      z.object({
+        languageId: z.string(),
+      })
+    ),
+    async (c) => {
+      try {
+        const { languageId } = c.req.valid("param");
+        if (!languageId) {
+          return c.json({ error: "LanguageId is required" }, 400);
+        }
+        const deleted = await db.delete(languageTable).where(eq(languageTable.id, Number(languageId))).returning();
+        if (!deleted.length) {
+          return c.json({ error: "Language not found" }, 404);
+        }
+        return c.json({ success: true });
+      } catch (error) {
+        return c.json({ success: false, message: "Failed to delete language", error }, 500);
+      }
+    }
+  )
   .post(
     "/:documentId/duplicate",
     zValidator(
@@ -784,6 +850,7 @@ const documentRoute = new Hono()
             educations: true,
             skills: true,
             projects: true,
+            languages: true,
           },
         });
         if (!original) {
@@ -835,6 +902,14 @@ const documentRoute = new Hono()
         for (const proj of original.projects) {
           await db.insert(projectTable).values({
             ...proj,
+            id: undefined,
+            docId: newDocumentId,
+          });
+        }
+        
+        for (const lang of original.languages) {
+          await db.insert(languageTable).values({
+            ...lang,
             id: undefined,
             docId: newDocumentId,
           });

@@ -324,7 +324,7 @@ const ExperienceForm = () => {
                   />
                 </div>
               </div>
-              {index === experiences.length - 1 && experiences.length < 5 && (
+              {index === experiences.length - 1 && experiences.length && (
                 <Button
                   className="gap-1 mt-1 text-primary border-primary/50"
                   variant="outline"

@@ -108,18 +108,24 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               const maxItemsPerRow = 3;
               const rows = Math.ceil(totalItems / maxItemsPerRow);
               const itemsPerRow = Math.ceil(totalItems / rows);
-              
+
               return Array.from({ length: rows }, (_, rowIndex) => {
                 const startIndex = rowIndex * itemsPerRow;
                 const endIndex = Math.min(startIndex + itemsPerRow, totalItems);
                 const rowItems = compactInfo.slice(startIndex, endIndex);
-                
+
                 return (
-                  <div key={rowIndex} className="flex flex-wrap justify-center gap-x-1">
+                  <div
+                    key={rowIndex}
+                    className="flex flex-wrap justify-center gap-x-1"
+                  >
                     {rowItems.map((item, index) => {
                       const isLast = index === rowItems.length - 1;
                       return (
-                        <span key={startIndex + index} className="whitespace-nowrap">
+                        <span
+                          key={startIndex + index}
+                          className="whitespace-nowrap"
+                        >
                           {item}
                           {!isLast && (
                             <span
@@ -212,7 +218,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               <a
                 href={normalizeUrl(resumeInfo.personalInfo.github)}
                 target="_blank"
-                rel="noopener noreferrer text-[13px]"
+                rel="noopener noreferrer"
                 className="hover:underline pdf-position-fix"
               >
                 {resumeInfo.personalInfo.github.replace(/^https?:\/\//, "")}
@@ -255,7 +261,7 @@ const SkeletonLoader = () => {
         <Skeleton className="h-3 w-1/4" />
         <Skeleton className="h-3 w-1/4" />
       </div>
-      <Skeleton className="h-[1.5] w-full my-2" />
+      <Skeleton className="h-[1.5px] w-full my-2" />
     </div>
   );
 };

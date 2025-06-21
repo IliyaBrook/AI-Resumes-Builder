@@ -1,5 +1,5 @@
 import React from "react"
-import Header from "./(home)/_components/common/Header"
+import Header from "../components/Header"
 import type { Metadata } from "next";
 import { Urbanist, Open_Sans } from "next/font/google";
 import "./globals.css";

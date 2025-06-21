@@ -1,7 +1,6 @@
 import React from "react";
-import TopSection from "./common/TopSection";
-import ResumeForm from "./ResumeForm";
-import ResumePreview from "./ResumePreview";
+// components
+import {ResumeForm, ResumePreview, TopSection} from "./";
 
 const EditResume = () => {
   return (

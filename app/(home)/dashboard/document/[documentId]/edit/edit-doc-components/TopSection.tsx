@@ -7,8 +7,8 @@ import useGetDocument from "@/features/document/use-get-document-by-id";
 import { useParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import ThemeColor from "./ThemeColor";
-import PreviewModal from "../PreviewModal";
-import Download from "./Download";
+import PreviewModal from "./PreviewModal";
+import { Download } from "./";
 import MoreOption from "./MoreOption";
 
 const TopSection = () => {

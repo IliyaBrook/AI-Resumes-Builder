@@ -1,7 +1,7 @@
 import React from "react";
-import AddResume from "../_components/AddResume";
-import ResumeList from "../_components/ResumeList";
-import TrashListBox from "../_components/TrashListBox";
+import AddResume from "./dashboard-components/AddResume";
+import ResumeList from "./dashboard-components/ResumeList";
+import TrashListBox from "./dashboard-components/TrashListBox";
 
 const Page = () => {
   return (

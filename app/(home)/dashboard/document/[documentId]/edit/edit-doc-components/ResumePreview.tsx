@@ -1,24 +1,17 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import PersonalInfo from "@/components/preview/PersonalInfoPreview";
-import SummaryPreview from "@/components/preview/SummaryPreview";
-import ExperiencePreview from "@/components/preview/ExperiencePreview";
-import EducationPreview from "@/components/preview/EducationPreview";
-import SkillPreview from "@/components/preview/SkillPreview";
-import ProjectPreview from "@/components/preview/ProjectPreview";
-import LanguagePreview from "@/components/preview/LanguagePreview";
+import { Button } from "@/components/ui/button";
+import {
+  DEFAULT_PAGES_ORDER,
+  SECTION_COMPONENTS,
+  syncPagesOrder,
+  type SectionKey,
+} from "@/constant/resume-sections";
 import useGetDocument from "@/features/document/use-get-document-by-id";
 import useUpdateDocument from "@/features/document/use-update-document";
+import { cn } from "@/lib/utils";
+import { MoveDown, MoveUp } from "lucide-react";
 import { useParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { MoveUp, MoveDown } from "lucide-react";
-import { 
-  DEFAULT_PAGES_ORDER, 
-  SECTION_COMPONENTS, 
-  syncPagesOrder,
-  type SectionKey 
-} from "@/constant/resume-sections";
+import React, { useEffect, useRef, useState } from "react";
 
 const RESUME_STYLES = `
   #resume-preview-id ul, #resume-preview-id ol {
@@ -72,7 +65,7 @@ const ResumePreview = () => {
   const { mutate: updateDocument } = useUpdateDocument();
   const fixedResumeInfo = normalizeResumeData(data?.data);
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [currentOrder, setCurrentOrder] = useState<string[]>(
     fixedResumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER
@@ -82,7 +75,7 @@ const ResumePreview = () => {
     if (fixedResumeInfo?.pagesOrder) {
       const currentPagesOrder = fixedResumeInfo.pagesOrder;
       const syncedOrder = syncPagesOrder(currentPagesOrder);
-      
+
       if (JSON.stringify(currentPagesOrder) !== JSON.stringify(syncedOrder)) {
         updateDocument({
           pagesOrder: syncedOrder,
@@ -96,23 +89,26 @@ const ResumePreview = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setSelectedSection(null);
       }
     };
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setSelectedSection(null);
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -123,49 +119,61 @@ const ResumePreview = () => {
     setCurrentOrder(newOrder);
   };
 
-  const moveSection = (direction: 'up' | 'down') => {
+  const moveSection = (direction: "up" | "down") => {
     if (!selectedSection) return;
-    
+
     const currentIndex = currentOrder.indexOf(selectedSection);
     if (currentIndex === -1) return;
-    
+
     const newOrder = [...currentOrder];
-    
-    if (direction === 'up' && currentIndex > 0) {
-      [newOrder[currentIndex], newOrder[currentIndex - 1]] = [newOrder[currentIndex - 1], newOrder[currentIndex]];
-    } else if (direction === 'down' && currentIndex < newOrder.length - 1) {
-      [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
+
+    if (direction === "up" && currentIndex > 0) {
+      [newOrder[currentIndex], newOrder[currentIndex - 1]] = [
+        newOrder[currentIndex - 1],
+        newOrder[currentIndex],
+      ];
+    } else if (direction === "down" && currentIndex < newOrder.length - 1) {
+      [newOrder[currentIndex], newOrder[currentIndex + 1]] = [
+        newOrder[currentIndex + 1],
+        newOrder[currentIndex],
+      ];
     } else {
       return;
     }
-    
+
     updatePagesOrder(newOrder);
   };
 
-  const canMoveUp = selectedSection && currentOrder.indexOf(selectedSection) > 0;
-  const canMoveDown = selectedSection && currentOrder.indexOf(selectedSection) < currentOrder.length - 1;
+  const canMoveUp =
+    selectedSection && currentOrder.indexOf(selectedSection) > 0;
+  const canMoveDown =
+    selectedSection &&
+    currentOrder.indexOf(selectedSection) < currentOrder.length - 1;
 
   const renderSection = (sectionKey: string) => {
     const Component = SECTION_COMPONENTS[sectionKey as SectionKey];
     if (!Component) return null;
-    
+
     const isSelected = selectedSection === sectionKey;
-    
+
     return (
       <div
         key={sectionKey}
         className={cn(
           "section-wrapper cursor-pointer transition-all duration-200 rounded-md relative",
-          isSelected && "ring-2 ring-blue-500 ring-opacity-50 bg-blue-50 dark:bg-blue-950 dark:ring-blue-400 p-2"
+          isSelected &&
+            "ring-2 ring-blue-500 ring-opacity-50 bg-blue-50 dark:bg-blue-950 dark:ring-blue-400 p-2"
         )}
         onClick={(e) => {
           e.stopPropagation();
-          setSelectedSection(selectedSection === sectionKey ? null : sectionKey);
+          setSelectedSection(
+            selectedSection === sectionKey ? null : sectionKey
+          );
         }}
         title={`Click to select "${sectionKey}" section`}
       >
         <Component isLoading={isLoading} resumeInfo={fixedResumeInfo} />
-        
+
         {isSelected && (
           <div className="absolute top-2 right-2 flex flex-col gap-1 bg-white dark:bg-gray-800 rounded-md shadow-lg border dark:border-gray-600 p-1">
             <Button
@@ -178,7 +186,7 @@ const ResumePreview = () => {
               )}
               onClick={(e) => {
                 e.stopPropagation();
-                moveSection('up');
+                moveSection("up");
               }}
               disabled={!canMoveUp}
               title="Move section up"
@@ -195,7 +203,7 @@ const ResumePreview = () => {
               )}
               onClick={(e) => {
                 e.stopPropagation();
-                moveSection('down');
+                moveSection("down");
               }}
               disabled={!canMoveDown}
               title="Move section down"
@@ -226,13 +234,13 @@ const ResumePreview = () => {
       onClick={() => setSelectedSection(null)}
     >
       <style dangerouslySetInnerHTML={{ __html: RESUME_STYLES }} />
-      
+
       {selectedSection && (
         <div className="absolute top-4 left-4 text-xs text-gray-500 bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm z-10">
           Selected section: {selectedSection} (ESC to cancel)
         </div>
       )}
-      
+
       {currentOrder.map(renderSection)}
     </div>
   );

@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useCallback, useState } from "react";
 import { DownloadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -54,7 +56,7 @@ const Download = (props: {
 
   return (
     <Button
-      disabled={isLoading || loading || status === "archived" ? true : false}
+      disabled={isLoading || loading || status === "archived"}
       variant="secondary"
       className="bg-white border gap-1 dark:bg-gray-800 !p-1 min-w-9 lg:min-w-auto lg:p-4"
       onClick={handleDownload}

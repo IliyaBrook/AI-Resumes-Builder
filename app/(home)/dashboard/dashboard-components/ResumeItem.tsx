@@ -1,18 +1,12 @@
-import { format } from "date-fns";
-import { FileText, Trash2, Copy } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { FC, useCallback, useMemo, useRef, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Tooltip } from "@/components/ui/tooltip";
-import useDeleteDocument from "@/features/document/use-delete-document";
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Tooltip } from '@/components/ui/tooltip'
+import useDeleteDocument from '@/features/document/use-delete-document'
+import { format } from 'date-fns'
+import { Copy, FileText, Trash2 } from 'lucide-react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { FC, useMemo, useState } from 'react'
 
 interface PropType {
   documentId: string;
@@ -37,8 +31,7 @@ const ResumeItem: FC<PropType> = ({
 
   const docDate = useMemo(() => {
     if (!updatedAt) return null;
-    const formattedDate = format(updatedAt, "MMM dd,yyyy");
-    return formattedDate;
+    return format(updatedAt, "MMM dd,yyyy");
   }, [updatedAt]);
 
   const gotoDoc = () => {

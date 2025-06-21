@@ -15,7 +15,7 @@
     "remove-comments": "node remove-comments.cjs && npm run format"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.21.0",
+    "@google/genai": "^1.6.0",
     "@hono/zod-validator": "^0.4.1",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-avatar": "^1.1.1",

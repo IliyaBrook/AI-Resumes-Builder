@@ -24,7 +24,7 @@ const PreviewModal = () => {
         <DialogTrigger asChild>
           <Button
             disabled={
-              isLoading || resumeInfo?.status === "archived" ? true : false
+              isLoading || resumeInfo?.status === "archived"
             }
             variant="secondary"
             className="bg-white border gap-1

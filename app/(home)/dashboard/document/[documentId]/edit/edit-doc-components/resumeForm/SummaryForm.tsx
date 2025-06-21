@@ -1,12 +1,15 @@
 "use client";
-import RichTextEditor, { parseAIResult, RichTextEditorRef } from "@/components/editor";
+import RichTextEditor, {
+  parseAIResult,
+  RichTextEditorRef,
+} from "@/components/editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useGetDocument from "@/features/document/use-get-document-by-id";
 import useUpdateDocument from "@/features/document/use-update-document";
 import useDebounce from "@/hooks/use-debounce";
 import { toast } from "@/hooks/use-toast";
-import { getAIChatSession, getCurrentModel } from "@/lib/google-ai-model";
+import { getAIChatSession } from "@/lib/google-ai-model";
 import { ResumeDataType } from "@/types/resume.type";
 import { Sparkles } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -115,7 +118,7 @@ const SummaryForm = () => {
 
   useEffect(() => {
     if (!resumeInfo || !isInitialized) return;
-    
+
     const originalSummary = resumeInfo.summary ?? "";
     if (debouncedSummary !== originalSummary) {
       setResumeInfo({ summary: debouncedSummary });
@@ -131,26 +134,33 @@ const SummaryForm = () => {
       if (!data?.data) return;
       setLoading(true);
       const { projectsSectionTitle, ...rest } = data.data;
-      const resumeData = projectsSectionTitle === null
-        ? { ...rest, skills: rest.skills.map(skill => ({ ...skill, hideRating: !!skill.hideRating })) }
-        : { ...rest, projectsSectionTitle, skills: rest.skills.map(skill => ({ ...skill, hideRating: !!skill.hideRating })) };
+      const resumeData =
+        projectsSectionTitle === null
+          ? {
+              ...rest,
+              skills: rest.skills.map((skill) => ({
+                ...skill,
+                hideRating: !!skill.hideRating,
+              })),
+            }
+          : {
+              ...rest,
+              projectsSectionTitle,
+              skills: rest.skills.map((skill) => ({
+                ...skill,
+                hideRating: !!skill.hideRating,
+              })),
+            };
       const promptText = buildPrompt(resumeData as ResumeDataType, summarySize);
-      const modelName = await getCurrentModel();
-      const chat = getAIChatSession(modelName);
+      const chat = getAIChatSession();
       const result = await chat.sendMessage(promptText);
-      let responseText = "";
-      if (
-        result.response.candidates &&
-        result.response.candidates[0]?.content?.parts[0]?.text
-      ) {
-        responseText = result.response.candidates[0].content.parts[0].text;
-      } else if (typeof result.response.text === "function") {
-        responseText = await result.response.text();
-      } else if (typeof result.response.text === "string") {
-        responseText = result.response.text;
-      }
+      const responseText = result.response.text();
       let parsed: any = parseAIResult(responseText);
-      if (parsed && typeof parsed === 'object' && (parsed.fresher || parsed.mid || parsed.experienced)) {
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        (parsed.fresher || parsed.mid || parsed.experienced)
+      ) {
         setAiGeneratedSummary({
           fresher: parsed.fresher || "",
           mid: parsed.mid || "",
@@ -169,16 +179,12 @@ const SummaryForm = () => {
     }
   };
 
-  const handleSelect = useCallback(
-    (summary: string) => {
-      if (editorRef.current) {
-        editorRef.current.setValue(summary);
-      }
-      setSummary(summary);
-    },
-    []
-  );
-  
+  const handleSelect = useCallback((summary: string) => {
+    if (editorRef.current) {
+      editorRef.current.setValue(summary);
+    }
+    setSummary(summary);
+  }, []);
 
   return (
     <div>

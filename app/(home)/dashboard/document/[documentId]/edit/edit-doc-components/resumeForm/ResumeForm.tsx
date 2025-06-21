@@ -2,17 +2,20 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import PersonalInfoForm from "./forms/PersonalInfoForm";
-import SummaryForm from "./forms/SummaryForm";
-import ExperienceForm from "./forms/ExperienceForm";
-import EducationForm from "./forms/EducationForm";
-import SkillsForm from "./forms/SkillsForm";
-import ProjectForm from "./forms/ProjectForm";
-import LanguageForm from "./forms/LanguageForm";
 import useGetDocument from "@/features/document/use-get-document-by-id";
 import { useParams } from "next/navigation";
 import useUpdateDocument from "@/features/document/use-update-document";
 import { generateThumbnail } from "@/lib/helper";
+// components
+import {
+  EducationForm,
+  ExperienceForm,
+  LanguageForm,
+  PersonalInfoForm,
+  ProjectForm,
+  SkillsForm,
+  SummaryForm
+} from './';
 
 const ResumeForm = () => {
   const param = useParams();
@@ -75,8 +78,6 @@ const ResumeForm = () => {
             className="!px-2 !py-1 !h-auto"
             disabled={
               activeFormIndex === 7 || resumeInfo?.status === "archived"
-                ? true
-                : false
             }
             onClick={handleNext}
           >

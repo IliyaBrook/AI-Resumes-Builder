@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Loader, Moon, Sun, Home } from "lucide-react";
+import { Moon, Sun, Home } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,12 +10,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 
-const MODELS = [
-  { label: "Gemini 1.5 Flash", value: "gemini-1.5-flash" },
-  { label: "Gemini 2.0 Flash", value: "gemini-2.0-flash" },
-  { label: "Gemini 2.0 Flash-Lite", value: "gemini-2.0-flash-lite" }
-];
-
 const THEMES = [
   { label: "Light", value: "light" },
   { label: "Dark", value: "dark" },
@@ -23,27 +17,12 @@ const THEMES = [
 ];
 
 const Header = () => {
-  const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
-  const { setTheme, resolvedTheme = 'light' } = useTheme();
+  const { setTheme, resolvedTheme = "light" } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
 
   React.useEffect(() => {
     setIsMounted(true);
-    fetch("/api/llm-model")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.modelName) setSelectedModel(data.modelName);
-      });
   }, []);
-
-  const handleSelect = (value: string) => {
-    setSelectedModel(value);
-    fetch("/api/llm-model", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ modelName: value }),
-    });
-  };
 
   const handleThemeSelect = (value: string) => {
     setTheme(value);
@@ -80,27 +59,6 @@ const Header = () => {
             >
               Home
             </Link>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="ml-4 px-3 py-1 border rounded text-sm flex items-center gap-2"
-                  type="button"
-                >
-                  {MODELS.find((m) => m.value === selectedModel)?.label}
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                {MODELS.map((model) => (
-                  <DropdownMenuItem
-                    key={model.value}
-                    onClick={() => handleSelect(model.value)}
-                  >
-                    {model.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
 
@@ -109,13 +67,16 @@ const Header = () => {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className={`relative flex items-center justify-center h-8 w-8 rounded border transition-colors ${resolvedTheme === "dark" ? "border-white" : "border-gray-300"}`}
+                className={`relative flex items-center justify-center h-8 w-8 rounded border transition-colors ${
+                  resolvedTheme === "dark" ? "border-white" : "border-gray-300"
+                }`}
               >
-                {isMounted && (resolvedTheme === "dark" ? (
-                  <Moon className="h-[1.2rem] w-[1.2rem] text-white" />
-                ) : (
-                  <Sun className="h-[1.2rem] w-[1.2rem] text-yellow-500" />
-                ))}
+                {isMounted &&
+                  (resolvedTheme === "dark" ? (
+                    <Moon className="h-[1.2rem] w-[1.2rem] text-white" />
+                  ) : (
+                    <Sun className="h-[1.2rem] w-[1.2rem] text-yellow-500" />
+                  ))}
                 <span className="sr-only">Toggle theme</span>
               </button>
             </DropdownMenuTrigger>

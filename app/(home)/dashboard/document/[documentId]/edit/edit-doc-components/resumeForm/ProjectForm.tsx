@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,7 +20,9 @@ const ProjectForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteProject } = useDeleteProject();
 
-  const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.projectsSectionTitle || "Projects");
+  const [sectionTitle, setSectionTitle] = React.useState(
+    resumeInfo?.projectsSectionTitle || "Projects"
+  );
   const [localProjects, setLocalProjects] = React.useState<ProjectType[]>(
     resumeInfo?.projects || []
   );
@@ -43,7 +46,9 @@ const ProjectForm = () => {
   }, [debouncedProjects]);
 
   React.useEffect(() => {
-    if (debouncedSectionTitle !== (resumeInfo?.projectsSectionTitle || "Projects")) {
+    if (
+      debouncedSectionTitle !== (resumeInfo?.projectsSectionTitle || "Projects")
+    ) {
       setResumeInfo({ projectsSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle]);
@@ -116,28 +121,30 @@ const ProjectForm = () => {
           {localProjects.map((item, index) => (
             <div key={item.id || index}>
               <div className="relative grid grid-cols-2 mb-5 pt-4 gap-3">
-                {localProjects.length > 1 && <div className="absolute -left-8 top-4 flex flex-col gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    className="size-6"
-                    onClick={() => moveProject(index, index - 1)}
-                    disabled={index === 0}
-                  >
-                    <MoveUp size={14} />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    className="size-6"
-                    onClick={() => moveProject(index, index + 1)}
-                    disabled={index === localProjects.length - 1}
-                  >
-                    <MoveDown size={14} />
-                  </Button>
-                </div>}
+                {localProjects.length > 1 && (
+                  <div className="absolute -left-8 top-4 flex flex-col gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      className="size-6"
+                      onClick={() => moveProject(index, index - 1)}
+                      disabled={index === 0}
+                    >
+                      <MoveUp size={14} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      className="size-6"
+                      onClick={() => moveProject(index, index + 1)}
+                      disabled={index === localProjects.length - 1}
+                    >
+                      <MoveDown size={14} />
+                    </Button>
+                  </div>
+                )}
                 <Button
                   variant="secondary"
                   type="button"

@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,23 +69,42 @@ const EducationForm = () => {
   >(() => {
     return resumeInfo?.educations?.length
       ? resumeInfo.educations.map(normalizeData)
-      : [{ ...initialState, currentlyStudying: false, skipDates: false, yearsOnly: false }];
+      : [
+          {
+            ...initialState,
+            currentlyStudying: false,
+            skipDates: false,
+            yearsOnly: false,
+          },
+        ];
   });
 
   const debouncedEducationList = useDebounce(educationList, 600);
 
   useEffect(() => {
-    const educations = (resumeInfo?.educations || [])
-      .map(normalizeData)
-    setEducationList(resumeInfo?.educations || [] ? educations : [{ ...initialState, currentlyStudying: false, skipDates: false }]);
+    const educations = (resumeInfo?.educations || []).map(normalizeData);
+    setEducationList(
+      resumeInfo?.educations || []
+        ? educations
+        : [{ ...initialState, currentlyStudying: false, skipDates: false }]
+    );
   }, [resumeInfo?.educations]);
 
   useEffect(() => {
     if (!resumeInfo) return;
-    const sanitized = debouncedEducationList.map(edu => ({
+    const sanitized = debouncedEducationList.map((edu) => ({
       ...edu,
-      startDate: edu.skipDates ? null : (edu.startDate === "" ? null : edu.startDate),
-      endDate: edu.skipDates || edu.currentlyStudying ? null : (edu.endDate === "" ? null : edu.endDate),
+      startDate: edu.skipDates
+        ? null
+        : edu.startDate === ""
+        ? null
+        : edu.startDate,
+      endDate:
+        edu.skipDates || edu.currentlyStudying
+          ? null
+          : edu.endDate === ""
+          ? null
+          : edu.endDate,
       yearsOnly: edu.yearsOnly ?? false,
     }));
     setResumeInfo({ education: sanitized });
@@ -221,37 +241,88 @@ const EducationForm = () => {
                         type="checkbox"
                         id={`present-checkbox-${index}`}
                         checked={item?.currentlyStudying || false}
-                        onChange={e => {
-                          setEducationList(prev => prev.map((edu, idx) => idx === index ? { ...edu, currentlyStudying: e.target.checked, endDate: e.target.checked ? "" : edu.endDate } : edu));
+                        onChange={(e) => {
+                          setEducationList((prev) =>
+                            prev.map((edu, idx) =>
+                              idx === index
+                                ? {
+                                    ...edu,
+                                    currentlyStudying: e.target.checked,
+                                    endDate: e.target.checked
+                                      ? ""
+                                      : edu.endDate,
+                                  }
+                                : edu
+                            )
+                          );
                         }}
                         className="mr-1"
                         disabled={item?.skipDates}
                       />
-                      <Label htmlFor={`present-checkbox-${index}`} className="text-xs select-none cursor-pointer">Present</Label>
+                      <Label
+                        htmlFor={`present-checkbox-${index}`}
+                        className="text-xs select-none cursor-pointer"
+                      >
+                        Present
+                      </Label>
                     </div>
                     <div className="flex items-center">
                       <input
                         type="checkbox"
                         id={`skipdates-checkbox-${index}`}
                         checked={item?.skipDates || false}
-                        onChange={e => {
-                          setEducationList(prev => prev.map((edu, idx) => idx === index ? { ...edu, skipDates: e.target.checked, startDate: e.target.checked ? "" : edu.startDate, endDate: e.target.checked ? "" : edu.endDate, currentlyStudying: e.target.checked ? false : edu.currentlyStudying } : edu));
+                        onChange={(e) => {
+                          setEducationList((prev) =>
+                            prev.map((edu, idx) =>
+                              idx === index
+                                ? {
+                                    ...edu,
+                                    skipDates: e.target.checked,
+                                    startDate: e.target.checked
+                                      ? ""
+                                      : edu.startDate,
+                                    endDate: e.target.checked
+                                      ? ""
+                                      : edu.endDate,
+                                    currentlyStudying: e.target.checked
+                                      ? false
+                                      : edu.currentlyStudying,
+                                  }
+                                : edu
+                            )
+                          );
                         }}
                         className="mr-1"
                       />
-                      <Label htmlFor={`skipdates-checkbox-${index}`} className="text-xs select-none cursor-pointer">Do not show dates</Label>
+                      <Label
+                        htmlFor={`skipdates-checkbox-${index}`}
+                        className="text-xs select-none cursor-pointer"
+                      >
+                        Do not show dates
+                      </Label>
                     </div>
                     <div className="flex items-center">
                       <input
                         type="checkbox"
                         id={`yearsonly-checkbox-${index}`}
                         checked={item?.yearsOnly || false}
-                        onChange={e => {
-                          setEducationList(prev => prev.map((edu, idx) => idx === index ? { ...edu, yearsOnly: e.target.checked } : edu));
+                        onChange={(e) => {
+                          setEducationList((prev) =>
+                            prev.map((edu, idx) =>
+                              idx === index
+                                ? { ...edu, yearsOnly: e.target.checked }
+                                : edu
+                            )
+                          );
                         }}
                         className="mr-1"
                       />
-                      <Label htmlFor={`yearsonly-checkbox-${index}`} className="text-xs select-none cursor-pointer">Years Only</Label>
+                      <Label
+                        htmlFor={`yearsonly-checkbox-${index}`}
+                        className="text-xs select-none cursor-pointer"
+                      >
+                        Years Only
+                      </Label>
                     </div>
                   </div>
                 </div>

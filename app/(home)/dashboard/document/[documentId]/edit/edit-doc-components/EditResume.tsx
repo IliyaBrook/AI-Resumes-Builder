@@ -1,5 +1,5 @@
 import React from "react";
-// components
+// page components
 import {ResumeForm, ResumePreview, TopSection} from "./";
 
 const EditResume = () => {

@@ -1,3 +1,4 @@
+"use client";
 import RichTextEditor from "@/components/editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,8 +19,10 @@ const ExperienceForm = () => {
   const documentId = param.documentId as string;
   const { data } = useGetDocument(documentId);
   const resumeInfo = data?.data;
-  const allSkills = data?.data?.skills ? resumeInfo?.skills.map(skill => skill.name).join(", ") : "";
- 
+  const allSkills = data?.data?.skills
+    ? resumeInfo?.skills.map((skill) => skill.name).join(", ")
+    : "";
+
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteExperience, isPending: isDeleting } =
     useDeleteExperience();
@@ -79,11 +82,7 @@ const ExperienceForm = () => {
     setLocalExperiences((prev) => prev.filter((exp) => exp.id !== id));
   };
 
-  const handEditor = (
-    value: string,
-    name: string,
-    index: number
-  ) => {
+  const handEditor = (value: string, name: string, index: number) => {
     setLocalExperiences((prev) =>
       prev.map((item, idx) =>
         idx === index ? { ...item, [name]: value } : item
@@ -112,11 +111,11 @@ const ExperienceForm = () => {
     let prompt = `Based on the following experience: Position title: ${
       item.title || ""
     }. Company: ${item.companyName || ""}. Summary: ${item.workSummary || ""}.`;
-    
+
     if (skills) {
       prompt += ` Available skills: ${skills}.`;
     }
-    
+
     prompt += ` Generate a <ul> HTML list with {bulletCount} <li> items of achievements relevant ONLY to the Position title mentioned above. Return ONLY HTML string, no JSON/arrays/quotes. Inside <li> highlight key skills with <b> or <strong> tags. Each <li> MUST use at least 90% of the allowed {maxLineLength} characters but never exceed it. IMPORTANT: Each bullet point MUST be about a DIFFERENT project/achievement - avoid repeating the same technologies or projects in multiple bullets. Make each bullet detailed with specific metrics and accomplishments. No job titles, dates, or headings in output. CRITICAL: ONLY mention technologies, frameworks, languages and tools that are EXPLICITLY mentioned in the Position title, Summary, or Available skills - DO NOT invent or add any technologies that aren't mentioned. Make bullets detailed, diverse and engaging.`;
     return prompt;
   };
@@ -152,28 +151,30 @@ const ExperienceForm = () => {
           {experiences.map((item, index) => (
             <div key={item.id || index}>
               <div className="relative grid grid-cols-2 mb-5 pt-4 gap-3">
-                { experiences.length > 1 && <div className="absolute -left-8 top-4 flex flex-col gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    className="size-6"
-                    onClick={() => moveExperience(index, index - 1)}
-                    disabled={index === 0}
-                  >
-                    <MoveUp size={14} />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    className="size-6"
-                    onClick={() => moveExperience(index, index + 1)}
-                    disabled={index === experiences.length - 1}
-                  >
-                    <MoveDown size={14} />
-                  </Button>
-                </div>}
+                {experiences.length > 1 && (
+                  <div className="absolute -left-8 top-4 flex flex-col gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      className="size-6"
+                      onClick={() => moveExperience(index, index - 1)}
+                      disabled={index === 0}
+                    >
+                      <MoveUp size={14} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      className="size-6"
+                      onClick={() => moveExperience(index, index + 1)}
+                      disabled={index === experiences.length - 1}
+                    >
+                      <MoveDown size={14} />
+                    </Button>
+                  </div>
+                )}
                 {experiences.length > 1 && item.id && (
                   <Button
                     variant="secondary"
@@ -263,7 +264,9 @@ const ExperienceForm = () => {
                                 ? {
                                     ...exp,
                                     currentlyWorking: e.target.checked,
-                                    endDate: e.target.checked ? "" : exp.endDate,
+                                    endDate: e.target.checked
+                                      ? ""
+                                      : exp.endDate,
                                   }
                                 : exp
                             )

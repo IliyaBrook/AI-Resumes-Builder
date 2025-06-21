@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,7 +30,9 @@ const LanguageForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteLanguage } = useDeleteLanguage();
 
-  const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.languagesSectionTitle || "Languages");
+  const [sectionTitle, setSectionTitle] = React.useState(
+    resumeInfo?.languagesSectionTitle || "Languages"
+  );
   const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>(
     resumeInfo?.languages || []
   );
@@ -40,7 +43,9 @@ const LanguageForm = () => {
     setLocalLanguages(
       (resumeInfo?.languages || [])
         .slice()
-        .sort((a: LanguageType, b: LanguageType) => (a.order || 0) - (b.order || 0))
+        .sort(
+          (a: LanguageType, b: LanguageType) => (a.order || 0) - (b.order || 0)
+        )
     );
   }, [resumeInfo?.languages]);
 
@@ -53,7 +58,10 @@ const LanguageForm = () => {
   }, [debouncedLanguages]);
 
   React.useEffect(() => {
-    if (debouncedSectionTitle !== (resumeInfo?.languagesSectionTitle || "Languages")) {
+    if (
+      debouncedSectionTitle !==
+      (resumeInfo?.languagesSectionTitle || "Languages")
+    ) {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle]);
@@ -212,4 +220,4 @@ const LanguageForm = () => {
   );
 };
 
-export default LanguageForm; 
+export default LanguageForm;

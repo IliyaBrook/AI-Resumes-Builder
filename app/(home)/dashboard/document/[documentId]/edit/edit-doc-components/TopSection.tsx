@@ -1,15 +1,12 @@
 "use client";
 import { AlertCircle } from "lucide-react";
 import React, { useCallback } from "react";
-import ResumeTitle from "./ResumeTitle";
 import useUpdateDocument from "@/features/document/use-update-document";
 import useGetDocument from "@/features/document/use-get-document-by-id";
 import { useParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
-import ThemeColor from "./ThemeColor";
-import PreviewModal from "./PreviewModal";
-import { Download } from "./";
-import MoreOption from "./MoreOption";
+// page components
+import { Download, MoreOption, PreviewModal, ThemeColor, ResumeTitle } from "./";
 
 const TopSection = () => {
   const param = useParams();

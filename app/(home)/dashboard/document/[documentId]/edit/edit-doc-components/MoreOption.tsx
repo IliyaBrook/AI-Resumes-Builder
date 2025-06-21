@@ -1,24 +1,19 @@
-import React, { useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import useUpdateDocument from "@/features/document/use-update-document";
-import useGetDocument from "@/features/document/use-get-document-by-id";
-import { useParams } from "next/navigation";
-import { toast } from "@/hooks/use-toast";
-import { Loader, MoreHorizontal, Redo, Trash2 } from "lucide-react";
-import { StatusType } from "@/types/resume.type";
+"use client";
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import useGetDocument from '@/features/document/use-get-document-by-id'
+import useUpdateDocument from '@/features/document/use-update-document'
+import { toast } from '@/hooks/use-toast'
+import { StatusType } from '@/types/resume.type'
+import { Loader, MoreHorizontal, Redo, Trash2 } from 'lucide-react'
+import { useParams, useRouter } from 'next/navigation'
+import React, { useCallback } from 'react'
 
 const MoreOption = () => {
   const router = useRouter();
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data, isLoading } = useGetDocument(documentId);
+  const { data } = useGetDocument(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 

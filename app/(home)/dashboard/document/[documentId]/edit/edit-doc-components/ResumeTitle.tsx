@@ -54,10 +54,10 @@ const ResumeTitle: FC<ResumeTitleProps> = ({
                   `,
           {
             "!opacity-70 !pointer-events-none":
-              isLoading === true || status === "archived",
+              isLoading || status === "archived",
           }
         )}
-        contentEditable={isLoading || status === "archived" ? false : true}
+        contentEditable={!(isLoading || status === "archived")}
         suppressContentEditableWarning={true}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}

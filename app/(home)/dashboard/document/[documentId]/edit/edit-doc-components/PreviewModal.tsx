@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,9 +24,7 @@ const PreviewModal = () => {
       <Dialog>
         <DialogTrigger asChild>
           <Button
-            disabled={
-              isLoading || resumeInfo?.status === "archived"
-            }
+            disabled={isLoading || resumeInfo?.status === "archived"}
             variant="secondary"
             className="bg-white border gap-1
                    dark:bg-gray-800 !p-2 w-9

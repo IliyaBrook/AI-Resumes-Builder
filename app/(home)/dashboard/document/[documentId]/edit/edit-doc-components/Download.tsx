@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useCallback, useState } from "react";
 import { DownloadCloud } from "lucide-react";
@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { formatFileName } from "@/lib/helper";
 import { StatusType } from "@/types/resume.type";
-import dynamic from "next/dynamic";
 
 const Download = (props: {
   title: string;
@@ -71,6 +70,4 @@ const Download = (props: {
   );
 };
 
-export default dynamic(() => Promise.resolve(Download), {
-  ssr: false
-});
+export default Download;

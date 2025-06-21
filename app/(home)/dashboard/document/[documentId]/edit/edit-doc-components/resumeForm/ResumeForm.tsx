@@ -6,7 +6,7 @@ import useGetDocument from "@/features/document/use-get-document-by-id";
 import { useParams } from "next/navigation";
 import useUpdateDocument from "@/features/document/use-update-document";
 import { generateThumbnail } from "@/lib/helper";
-// components
+// page components
 import {
   EducationForm,
   ExperienceForm,
@@ -14,8 +14,8 @@ import {
   PersonalInfoForm,
   ProjectForm,
   SkillsForm,
-  SummaryForm
-} from './';
+  SummaryForm,
+} from "./";
 
 const ResumeForm = () => {
   const param = useParams();
@@ -86,12 +86,10 @@ const ResumeForm = () => {
           </Button>
         </div>
         <div className="px-5 py-3 pb-5">
-          {activeFormIndex === 1 && (
-            <PersonalInfoForm/>
-          )}
-          {activeFormIndex === 2 && <SummaryForm/>}
+          {activeFormIndex === 1 && <PersonalInfoForm />}
+          {activeFormIndex === 2 && <SummaryForm />}
           {activeFormIndex === 3 && <ExperienceForm />}
-          {activeFormIndex === 4 && <EducationForm/>}
+          {activeFormIndex === 4 && <EducationForm />}
           {activeFormIndex === 5 && <ProjectForm />}
           {activeFormIndex === 6 && <SkillsForm />}
           {activeFormIndex === 7 && <LanguageForm />}

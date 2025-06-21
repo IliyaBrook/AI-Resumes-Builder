@@ -1,3 +1,4 @@
+"use client";
 import React, { useCallback, useEffect, useState } from "react";
 import useUpdateDocument from "@/features/document/use-update-document";
 import useGetDocument from "@/features/document/use-get-document-by-id";
@@ -16,26 +17,26 @@ import useDebounce from "@/hooks/use-debounce";
 
 const ThemeColor = () => {
   const colors = [
-    "#FF6F61", 
-    "#33B679", 
-    "#4B9CD3", 
-    "#FF6F91", 
-    "#9B59B6", 
-    "#1ABC9C", 
-    "#FF8C00", 
-    "#B2D300", 
-    "#8E44AD", 
-    "#FF4F81", 
-    "#2ECC71", 
-    "#3498DB", 
-    "#A3D550", 
-    "#00BFFF", 
-    "#FF6F61", 
-    "#8E44AD", 
-    "#2ECC71", 
-    "#5B2C6F", 
-    "#FF4F81", 
-    "#2980B9", 
+    "#FF6F61",
+    "#33B679",
+    "#4B9CD3",
+    "#FF6F91",
+    "#9B59B6",
+    "#1ABC9C",
+    "#FF8C00",
+    "#B2D300",
+    "#8E44AD",
+    "#FF4F81",
+    "#2ECC71",
+    "#3498DB",
+    "#A3D550",
+    "#00BFFF",
+    "#FF6F61",
+    "#8E44AD",
+    "#2ECC71",
+    "#5B2C6F",
+    "#FF4F81",
+    "#2980B9",
   ];
 
   const param = useParams();
@@ -43,7 +44,9 @@ const ThemeColor = () => {
   const { data } = useGetDocument(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
-  const [selectedColor, setSelectedColor] = useState(resumeInfo?.themeColor || INITIAL_THEME_COLOR);
+  const [selectedColor, setSelectedColor] = useState(
+    resumeInfo?.themeColor || INITIAL_THEME_COLOR
+  );
   const debouncedColor = useDebounce<string>(selectedColor, 1000);
 
   useEffect(() => {
@@ -54,12 +57,9 @@ const ThemeColor = () => {
     if (debouncedColor) onSave();
   }, [debouncedColor]);
 
-  const onColorSelect = useCallback(
-    (color: string) => {
-      setSelectedColor(color);
-    },
-    []
-  );
+  const onColorSelect = useCallback((color: string) => {
+    setSelectedColor(color);
+  }, []);
 
   const onSave = useCallback(async () => {
     if (!selectedColor) return;

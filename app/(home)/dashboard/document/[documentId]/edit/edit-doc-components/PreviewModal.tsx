@@ -6,8 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  Button
-} from "@/components/ui/dialog";
+  Button,
+} from "@/components";
 import { Eye, FileText } from "lucide-react";
 import React from "react";
 import ResumePreview from "./ResumePreview";

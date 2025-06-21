@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import SkeletonLoader from "@/components/skeleton-loader";
+import { SkeletonLoader } from "@/components";
 import { INITIAL_THEME_COLOR } from "@/lib/helper";
 import { ResumeDataType } from "@/types/resume.type";
 

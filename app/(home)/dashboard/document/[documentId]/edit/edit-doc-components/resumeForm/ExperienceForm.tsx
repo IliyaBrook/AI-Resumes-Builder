@@ -1,15 +1,12 @@
 "use client";
-import RichTextEditor from "@/components/editor";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 //hooks
 import { useDebounce, useUpdateDocument, useGetDocumentById, useDeleteExperience, useCreateExperience } from "@/hooks";
 import { ExperienceType } from "@/types/resume.type";
 import { Plus, X, MoveUp, MoveDown } from "lucide-react";
 import { useParams } from "next/navigation";
 import React from "react";
-import { parseAIResult } from "@/components/editor";
+// components
+import { parseAIResult, Label, Input, Button, RichTextEditor } from "@/components";
 
 const ExperienceForm = () => {
   const param = useParams();

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components";
 import { Frown } from "lucide-react";
 import React from "react";
 

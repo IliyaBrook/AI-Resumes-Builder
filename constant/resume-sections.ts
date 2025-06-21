@@ -1,10 +1,5 @@
-import PersonalInfo from "@/components/preview/PersonalInfoPreview";
-import SummaryPreview from "@/components/preview/SummaryPreview";
-import ExperiencePreview from "@/components/preview/ExperiencePreview";
-import EducationPreview from "@/components/preview/EducationPreview";
-import SkillPreview from "@/components/preview/SkillPreview";
-import ProjectPreview from "@/components/preview/ProjectPreview";
-import LanguagePreview from "@/components/preview/LanguagePreview";
+// components
+import { LanguagePreview, ProjectPreview, SkillPreview, EducationPreview, ExperiencePreview, SummaryPreview, PersonalInfoPreview } from "@/components";
 
 export const DEFAULT_PAGES_ORDER = [
   "personal-info",
@@ -17,7 +12,7 @@ export const DEFAULT_PAGES_ORDER = [
 ];
 
 export const SECTION_COMPONENTS = {
-  "personal-info": PersonalInfo,
+  "personal-info": PersonalInfoPreview,
   summary: SummaryPreview,
   experience: ExperiencePreview,
   education: EducationPreview,

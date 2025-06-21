@@ -1,11 +1,11 @@
 import React from "react"
-import Header from "../components/Header"
 import type { Metadata } from "next";
 import { Urbanist, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/context/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
+// components
+import { Toaster, Header } from "@/components";
 import QueryProvider from "@/context/query-provider";
 
 const urbanist = Urbanist({ subsets: ["latin"] });

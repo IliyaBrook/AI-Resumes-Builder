@@ -1,14 +1,15 @@
 "use client";
-import PersonalInfoSkeletonLoader from "@/components/skeleton-loader/personal-info-loader";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+// components
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Button,
+  Label,
+  Input,
+  PersonalInfoLoader
+} from "@/components";
 // hooks
 import { useDebounce, useUpdateDocument, useGetDocumentById } from "@/hooks";
 import { useParams } from "next/navigation";
@@ -143,7 +144,7 @@ const PersonalInfoForm = () => {
   );
 
   if (isLoading) {
-    return <PersonalInfoSkeletonLoader />;
+    return <PersonalInfoLoader />;
   }
 
   return (

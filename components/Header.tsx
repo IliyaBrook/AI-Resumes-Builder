@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Moon, Sun, Home } from "lucide-react";
+// components
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "./ui";
 import { useTheme } from "next-themes";
 
 const THEMES = [

@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   DEFAULT_PAGES_ORDER,
   SECTION_COMPONENTS,
@@ -10,6 +9,8 @@ import {
 //hooks
 import { useUpdateDocument, useGetDocumentById } from "@/hooks";
 import { cn } from "@/lib/utils";
+// components
+import { Button } from "@/components";
 import { MoveDown, MoveUp } from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";

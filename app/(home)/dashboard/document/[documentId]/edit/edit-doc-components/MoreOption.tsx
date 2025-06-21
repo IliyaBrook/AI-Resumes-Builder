@@ -1,6 +1,6 @@
 "use client";
-import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+// components
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Button } from "@/components";
 // hooks
 import { useUpdateDocument, useGetDocumentById, toast } from "@/hooks";
 import { StatusType } from '@/types/resume.type'

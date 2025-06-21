@@ -21,6 +21,7 @@
     "paths": {
       "@/*": ["./*"],
       "@/homePageComponents": ["./app/(home)/dashboard/index.ts"],
+      "@/components": ["./components/index.ts"],
       "@/hooks/*": ["hooks/index.ts"]
     }
   },

@@ -1,14 +1,12 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Plus, X, MoveUp, MoveDown } from "lucide-react";
 import { useParams } from "next/navigation";
 import React from "react";
 import { ProjectType } from "@/types/resume.type";
 // hooks
 import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from "@/hooks";
-import RichTextEditor from "@/components/editor";
+// components
+import { RichTextEditor, Label, Input, Button } from "@/components";
 
 const ProjectForm = () => {
   const param = useParams();

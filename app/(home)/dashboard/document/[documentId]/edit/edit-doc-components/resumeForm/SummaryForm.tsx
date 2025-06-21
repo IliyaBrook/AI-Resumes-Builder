@@ -1,10 +1,6 @@
 "use client";
-import RichTextEditor, {
-  parseAIResult,
-  RichTextEditorRef,
-} from "@/components/editor";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// components
+import { Card, CardContent, CardHeader, CardTitle, RichTextEditorRef, parseAIResult, RichTextEditor, Button } from "@/components";
 // hooks
 import { toast, useDebounce, useUpdateDocument, useGetDocumentById } from "@/hooks";
 import { getAIChatSession } from "@/lib/google-ai-model";

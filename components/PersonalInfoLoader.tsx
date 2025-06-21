@@ -1,6 +1,6 @@
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "./ui/skeleton";
 
-const PersonalInfoSkeletonLoader = () => {
+const PersonalInfoLoader = () => {
   return (
     <div className="grid grid-cols-2 mt-5 gap-3">
       {}
@@ -37,4 +37,4 @@ const PersonalInfoSkeletonLoader = () => {
   );
 };
 
-export default PersonalInfoSkeletonLoader;
+export default PersonalInfoLoader;

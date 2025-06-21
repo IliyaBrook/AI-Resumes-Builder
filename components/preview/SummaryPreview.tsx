@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components";
 import { ResumeDataType } from "@/types/resume.type";
 import React, { FC } from "react";
 

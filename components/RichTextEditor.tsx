@@ -18,8 +18,8 @@ import {
   BtnLink,
   createButton,
 } from "react-simple-wysiwyg";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
 import { Loader, Sparkles } from "lucide-react";
 import { toast } from "@/hooks";
 import { getAIChatSession } from "@/lib/google-ai-model";

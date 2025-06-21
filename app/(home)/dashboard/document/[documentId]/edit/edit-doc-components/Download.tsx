@@ -2,7 +2,7 @@
 
 import React, { useCallback, useState } from "react";
 import { DownloadCloud } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components";
 import { toast } from "@/hooks";
 import { formatFileName } from "@/lib/helper";
 import { StatusType } from "@/types/resume.type";

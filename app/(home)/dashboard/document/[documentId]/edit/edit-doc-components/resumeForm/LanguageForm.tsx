@@ -1,11 +1,10 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Plus, X, MoveUp, MoveDown } from "lucide-react";
 import { useParams } from "next/navigation";
 import React from "react";
 import { LanguageType } from "@/types/resume.type";
+// components
+import { Label, Input, Button } from "@/components";
 //hooks
 import { useDeleteLanguage, useUpdateDocument, useGetDocumentById, useDebounce } from "@/hooks";
 

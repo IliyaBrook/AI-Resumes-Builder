@@ -2,12 +2,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { INITIAL_THEME_COLOR } from "@/constant/colors";
+// components
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+  Button
+} from "@/components";
 import { Palette, ChevronDown } from "lucide-react";
 import { generateThumbnail } from "@/lib/helper";
 // hooks

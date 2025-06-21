@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// components
+import { Label, Input, Button } from "@/components";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { Plus, X, MoveUp, MoveDown } from "lucide-react";

@@ -1,11 +1,12 @@
 "use client";
-import { Button } from "@/components/ui/button";
+// components
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Button
 } from "@/components/ui/dialog";
 import { Eye, FileText } from "lucide-react";
 import React from "react";

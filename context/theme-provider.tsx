@@ -5,11 +5,23 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <>{children}</>;
+  }
+
   return (
-  <NextThemesProvider 
-    {...props} 
-    themes={["light", "dark", "system"]}
-  >
-    {children}
-  </NextThemesProvider>)
+    <NextThemesProvider
+      {...props}
+      themes={["light", "dark", "system"]}
+      storageKey="theme"
+    >
+      {children}
+    </NextThemesProvider>
+  );
 }

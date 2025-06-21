@@ -1,5 +1,5 @@
 import React from "react";
-import { EditResume } from "./edit-doc-components";
+import { EditResume } from "@/homePageComponents";
 
 const Page = () => {
   return <EditResume />;

@@ -6,7 +6,7 @@ import useGetDocument from "@/features/document/use-get-document-by-id";
 import { useParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 // page components
-import { Download, MoreOption, PreviewModal, ThemeColor, ResumeTitle } from "./";
+import { Download, MoreOption, PreviewModal, ThemeColor, ResumeTitle } from "@/homePageComponents";
 
 const TopSection = () => {
   const param = useParams();

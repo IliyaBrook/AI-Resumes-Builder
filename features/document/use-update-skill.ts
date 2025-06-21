@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/hono-rpc";
-import { toast } from "@/hooks/use-toast";
-import { useParams } from "next/navigation";
-import { SkillType } from "@/types/resume.type";
+import { toast } from '@/hooks/use-toast'
+import { api } from '@/lib/hono-rpc'
+import { SkillType } from '@/types/resume.type'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'next/navigation'
 
 export type UpdateSkillParams = {
   skillId: number;
@@ -14,12 +14,12 @@ const useUpdateSkill = () => {
   const documentId = param.documentId as string;
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  return useMutation({
     mutationFn: async ({ skillId, data }: UpdateSkillParams) => {
       const response = await api.document.skill[":skillId"].$patch({
         param: { skillId: skillId.toString() },
-        json: { 
-          ...data, 
+        json: {
+          ...data,
           hideRating: data.hideRating ? 1 : 0,
           name: data.name || undefined,
           category: data.category || undefined
@@ -38,8 +38,6 @@ const useUpdateSkill = () => {
       });
     },
   });
-
-  return mutation;
 };
 
 export default useUpdateSkill; 

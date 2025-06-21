@@ -1,10 +1,10 @@
 "use client";
 
-import { toast } from "@/hooks/use-toast";
-import { api } from "@/lib/hono-rpc";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-import { useParams } from "next/navigation";
+import { toast } from '@/hooks/use-toast'
+import { api } from '@/lib/hono-rpc'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { InferRequestType, InferResponseType } from 'hono'
+import { useParams } from 'next/navigation'
 
 type ResponseType = InferResponseType<
   (typeof api.document.update)[":documentId"]["$patch"]
@@ -18,7 +18,7 @@ const useUpdateDocument = () => {
   const queryClient = useQueryClient();
   const documentId = param.documentId as string;
 
-  const mutation = useMutation<ResponseType, Error, RequestType>({
+  return useMutation<ResponseType, Error, RequestType>({
     mutationFn: async (json) => {
       const response = await api.document.update[":documentId"]["$patch"]({
         param: {
@@ -41,7 +41,6 @@ const useUpdateDocument = () => {
       });
     },
   });
-  return mutation;
 };
 
 export default useUpdateDocument;

@@ -13,8 +13,8 @@ type RequestType = InferRequestType<
 
 const useRestoreDocument = () => {
   const queryClient = useQueryClient();
-
-  const mutation = useMutation<ResponseType, Error, RequestType>({
+  
+  return useMutation<ResponseType, Error, RequestType>({
     mutationFn: async (json) => {
       const response = await api.document.retore.archive.$patch({
         json: json,
@@ -33,9 +33,7 @@ const useRestoreDocument = () => {
         variant: "destructive",
       });
     },
-  });
-
-  return mutation;
+  })
 };
 
 export default useRestoreDocument;

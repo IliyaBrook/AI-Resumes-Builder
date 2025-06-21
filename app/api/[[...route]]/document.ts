@@ -1,25 +1,24 @@
-import { Hono } from "hono";
-import { zValidator } from "@hono/zod-validator";
-import { and, desc, eq, ne } from "drizzle-orm";
-import { z } from "zod";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import { db } from '@/db'
+import {
+  educationTable,
+  experienceTable,
+  languageTable,
+  personalInfoTable,
+  projectTable,
+  skillsTable
+} from '@/db/schema'
 import {
   createDocumentTableSchema,
   DocumentSchema,
   documentTable,
   updateCombinedSchema,
-  UpdateDocumentSchema,
-} from "@/db/schema/document";
-import { generateDocUUID } from "@/lib/helper";
-import { db } from "@/db";
-import {
-  educationTable,
-  experienceTable,
-  personalInfoTable,
-  skillsTable,
-  projectTable,
-  languageTable,
-} from "@/db/schema";
+  UpdateDocumentSchema
+} from '@/db/schema/document'
+import { generateDocUUID } from '@/lib/helper'
+import { zValidator } from '@hono/zod-validator'
+import { and, desc, eq, ne } from 'drizzle-orm'
+import { Hono } from 'hono'
+import { z } from 'zod'
 
 const documentRoute = new Hono()
   .post(

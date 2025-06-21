@@ -1,0 +1,31 @@
+import React from "react";
+// page components
+import {ResumeForm, ResumePreview, TopSection} from "@/homePageComponents";
+
+const EditResume = () => {
+  return (
+    <div className="relative w-full">
+      <div
+        className="w-full mx-auto max-w-7xl
+       py-4 px-5"
+      >
+        <TopSection />
+        <div className="w-full mt-1">
+          <div
+            className="flex flex-col lg:flex-row
+                  items-start w-full py-3 gap-6
+                  
+                  "
+          >
+            {}
+            <ResumeForm />
+            {}
+            <ResumePreview />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EditResume;

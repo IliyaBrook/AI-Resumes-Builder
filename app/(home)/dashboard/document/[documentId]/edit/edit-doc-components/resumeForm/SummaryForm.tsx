@@ -5,10 +5,8 @@ import RichTextEditor, {
 } from "@/components/editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import useGetDocument from "@/features/document/use-get-document-by-id";
-import useUpdateDocument from "@/features/document/use-update-document";
-import useDebounce from "@/hooks/use-debounce";
-import { toast } from "@/hooks/use-toast";
+// hooks
+import { toast, useDebounce, useUpdateDocument, useGetDocumentById } from "@/hooks";
 import { getAIChatSession } from "@/lib/google-ai-model";
 import { ResumeDataType } from "@/types/resume.type";
 import { Sparkles } from "lucide-react";
@@ -92,7 +90,7 @@ const buildPrompt = (
 const SummaryForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data, isLoading } = useGetDocument(documentId);
+  const { data, isLoading } = useGetDocumentById(documentId);
   const resumeInfo = data?.data as ResumeDataType | undefined;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const [loading, setLoading] = useState(false);

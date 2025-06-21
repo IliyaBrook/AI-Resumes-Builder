@@ -3,22 +3,18 @@ import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import useGetDocument from "@/features/document/use-get-document-by-id";
-import useUpdateDocument from "@/features/document/use-update-document";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { Plus, X, MoveUp, MoveDown } from "lucide-react";
 import { useParams } from "next/navigation";
 import { SkillType } from "@/types/resume.type";
-import useDeleteSkill from "@/features/document/use-delete-skill";
-import useCreateSkill from "@/features/document/use-create-skill";
-import useUpdateSkill from "@/features/document/use-update-skill";
-import useDebounce from "@/hooks/use-debounce";
+// hooks
+import { useDebounce, useUpdateSkill, useCreateSkill, useDeleteSkill, useUpdateDocument, useGetDocumentById } from "@/hooks";
 
 const SkillsForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data } = useGetDocument(documentId);
+  const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
   const { mutate: deleteSkill, isPending: isDeleting } = useDeleteSkill();

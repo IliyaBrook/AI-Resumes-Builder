@@ -1,18 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/hono-rpc";
-import { toast } from "@/hooks/use-toast";
+import { toast } from '@/hooks';
 import { useParams } from "next/navigation";
-import { SkillType } from "@/types/resume.type";
 
-const useCreateSkill = () => {
+export type DeleteExperienceParams = {
+  experienceId: number;
+};
+
+const useDeleteExperience = () => {
   const param = useParams();
   const documentId = param.documentId as string;
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: Omit<SkillType, "id"> & { category?: string }) => {
-      const response = await (api.document as any)["skill/create"].$post({
-        json: { ...data, hideRating: data.hideRating ? 1 : 0, docId: documentId, category: data.category },
+    mutationFn: async ({ experienceId }: DeleteExperienceParams) => {
+      const response = await api.document.experience[":experienceId"].$delete({
+        param: { experienceId: experienceId.toString() },
       });
       return await response.json();
     },
@@ -20,13 +23,13 @@ const useCreateSkill = () => {
       queryClient.invalidateQueries({ queryKey: ["document", documentId] });
       toast({
         title: "Success",
-        description: "Skill created successfully",
+        description: "Experience deleted successfully",
       });
     },
     onError: () => {
       toast({
         title: "Error",
-        description: "Failed to create skill",
+        description: "Failed to delete experience",
         variant: "destructive",
       });
     },
@@ -35,4 +38,4 @@ const useCreateSkill = () => {
   return mutation;
 };
 
-export default useCreateSkill; 
+export default useDeleteExperience; 

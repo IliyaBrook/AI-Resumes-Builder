@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Tooltip } from '@/components/ui/tooltip'
-import useDeleteDocument from '@/features/document/use-delete-document'
+import { useDeleteDocument } from "@/hooks";
 import { format } from 'date-fns'
 import { Copy, FileText, Trash2 } from 'lucide-react'
 import Image from 'next/image'

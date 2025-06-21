@@ -6,10 +6,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
-import useGetDocuments from "@/features/document/use-get-document";
-import useRestoreDocument from "@/features/document/use-restore-document";
+//hooks
+import { useRestoreDocument, useGetDocuments, toast } from "@/hooks";
 import { format } from "date-fns";
 import { Dot, FileText, Undo, Loader, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";

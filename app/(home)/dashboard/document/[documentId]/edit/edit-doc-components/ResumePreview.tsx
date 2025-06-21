@@ -6,8 +6,9 @@ import {
   syncPagesOrder,
   type SectionKey,
 } from "@/constant/resume-sections";
-import useGetDocument from "@/features/document/use-get-document-by-id";
-import useUpdateDocument from "@/features/document/use-update-document";
+
+//hooks
+import { useUpdateDocument, useGetDocumentById } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { MoveDown, MoveUp } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -61,7 +62,7 @@ function normalizeResumeData(data: any) {
 const ResumePreview = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data, isLoading } = useGetDocument(documentId);
+  const { data, isLoading } = useGetDocumentById(documentId);
   const { mutate: updateDocument } = useUpdateDocument();
   const fixedResumeInfo = normalizeResumeData(data?.data);
   const containerRef = useRef<HTMLDivElement>(null);

@@ -2,20 +2,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import useGetDocument from "@/features/document/use-get-document-by-id";
-import useUpdateDocument from "@/features/document/use-update-document";
-import useDebounce from "@/hooks/use-debounce";
 import { Plus, X, MoveUp, MoveDown } from "lucide-react";
 import { useParams } from "next/navigation";
 import React from "react";
 import { ProjectType } from "@/types/resume.type";
-import useDeleteProject from "@/features/document/use-delete-project";
+// hooks
+import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from "@/hooks";
 import RichTextEditor from "@/components/editor";
 
 const ProjectForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data } = useGetDocument(documentId);
+  const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteProject } = useDeleteProject();

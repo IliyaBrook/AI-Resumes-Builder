@@ -1,7 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/hono-rpc";
-import { toast } from "@/hooks/use-toast";
-import { useParams } from "next/navigation";
+import { toast } from '@/hooks';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'next/navigation'
 
 export type DeleteLanguageParams = {
   languageId: number;
@@ -12,9 +11,8 @@ const useDeleteLanguage = () => {
   const documentId = param.documentId as string;
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  return useMutation({
     mutationFn: async ({ languageId }: DeleteLanguageParams) => {
-      // TODO: Fix API endpoint path when language routes are properly configured
       const response = await fetch(`/api/document/language/${languageId}`, {
         method: 'DELETE',
       });
@@ -35,8 +33,6 @@ const useDeleteLanguage = () => {
       });
     },
   });
-
-  return mutation;
 };
 
 export default useDeleteLanguage; 

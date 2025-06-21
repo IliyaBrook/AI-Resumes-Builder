@@ -1,7 +1,7 @@
 "use client";
 import { InferRequestType, InferResponseType } from "hono";
 import { api } from "@/lib/hono-rpc";
-import { toast } from "@/hooks/use-toast";
+import { toast } from '@/hooks';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type ResponseType = InferResponseType<

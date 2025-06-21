@@ -9,9 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useGetDocument from "@/features/document/use-get-document-by-id";
-import useUpdateDocument from "@/features/document/use-update-document";
-import useDebounce from "@/hooks/use-debounce";
+// hooks
+import { useDebounce, useUpdateDocument, useGetDocumentById } from "@/hooks";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -26,7 +25,7 @@ import {
 const PersonalInfoForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data, isLoading } = useGetDocument(documentId);
+  const { data, isLoading } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
 

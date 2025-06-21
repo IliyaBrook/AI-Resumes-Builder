@@ -1,21 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/hono-rpc";
-import { toast } from "@/hooks/use-toast";
+import { toast } from '@/hooks';
 import { useParams } from "next/navigation";
 
-export type DeleteProjectParams = {
-  projectId: number;
+export type DeleteEducationParams = {
+  educationId: number;
 };
 
-const useDeleteProject = () => {
+const useDeleteEducation = () => {
   const param = useParams();
   const documentId = param.documentId as string;
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async ({ projectId }: DeleteProjectParams) => {
-      const response = await api.document.project[":projectId"].$delete({
-        param: { projectId: projectId.toString() },
+    mutationFn: async ({ educationId }: DeleteEducationParams) => {
+      const response = await api.document.education[":educationId"].$delete({
+        param: { educationId: educationId.toString() },
       });
       return await response.json();
     },
@@ -23,13 +23,13 @@ const useDeleteProject = () => {
       queryClient.invalidateQueries({ queryKey: ["document", documentId] });
       toast({
         title: "Success",
-        description: "Project deleted successfully",
+        description: "Education deleted successfully",
       });
     },
     onError: () => {
       toast({
         title: "Error",
-        description: "Failed to delete project",
+        description: "Failed to delete education",
         variant: "destructive",
       });
     },
@@ -38,4 +38,4 @@ const useDeleteProject = () => {
   return mutation;
 };
 
-export default useDeleteProject; 
+export default useDeleteEducation; 

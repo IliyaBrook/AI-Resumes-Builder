@@ -10,13 +10,13 @@ import {
 import { Eye, FileText } from "lucide-react";
 import React from "react";
 import ResumePreview from "./ResumePreview";
-import useGetDocument from "@/features/document/use-get-document-by-id";
+import { useGetDocumentById } from "@/hooks";
 import { useParams } from "next/navigation";
 
 const PreviewModal = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data, isLoading } = useGetDocument(documentId);
+  const { data, isLoading } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
 
   return (

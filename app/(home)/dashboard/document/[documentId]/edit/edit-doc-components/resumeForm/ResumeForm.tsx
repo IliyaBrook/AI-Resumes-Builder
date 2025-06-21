@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import useGetDocument from "@/features/document/use-get-document-by-id";
 import { useParams } from "next/navigation";
-import useUpdateDocument from "@/features/document/use-update-document";
+//hooks
+import { useUpdateDocument, useGetDocumentById } from "@/hooks";
 import { generateThumbnail } from "@/lib/helper";
 // page components
 import {
@@ -15,12 +15,12 @@ import {
   ProjectForm,
   SkillsForm,
   SummaryForm,
-} from "./";
+} from "@/homePageComponents";
 
 const ResumeForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data } = useGetDocument(documentId);
+  const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const [activeFormIndex, setActiveFormIndex] = useState(1);
   const { mutate: setResumeInfo } = useUpdateDocument();

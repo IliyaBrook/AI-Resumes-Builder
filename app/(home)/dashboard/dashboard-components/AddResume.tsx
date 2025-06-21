@@ -1,5 +1,5 @@
 "use client";
-import useCreateDocument from "@/features/document/use-create-document";
+import { useCreateDocument } from '@/hooks';
 import { FileText, Loader, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useCallback } from "react";

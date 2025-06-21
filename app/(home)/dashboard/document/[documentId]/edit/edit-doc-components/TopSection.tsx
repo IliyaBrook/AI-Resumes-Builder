@@ -1,17 +1,15 @@
 "use client";
 import { AlertCircle } from "lucide-react";
 import React, { useCallback } from "react";
-import useUpdateDocument from "@/features/document/use-update-document";
-import useGetDocument from "@/features/document/use-get-document-by-id";
 import { useParams } from "next/navigation";
-import { toast } from "@/hooks/use-toast";
+import { toast, useGetDocumentById, useUpdateDocument } from "@/hooks";
 // page components
 import { Download, MoreOption, PreviewModal, ThemeColor, ResumeTitle } from "@/homePageComponents";
 
 const TopSection = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data, isLoading } = useGetDocument(documentId);
+  const { data, isLoading } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 

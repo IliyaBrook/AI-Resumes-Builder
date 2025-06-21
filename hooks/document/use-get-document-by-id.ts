@@ -3,7 +3,7 @@
 import { api } from "@/lib/hono-rpc";
 import { useQuery } from "@tanstack/react-query";
 
-const useGetDocument = (documentId: string, isPublic: boolean = false) => {
+const useGetDocumentById = (documentId: string, isPublic: boolean = false) => {
   const query = useQuery({
     queryKey: ["document", documentId],
     queryFn: async () => {
@@ -34,4 +34,4 @@ const useGetDocument = (documentId: string, isPublic: boolean = false) => {
   return query;
 };
 
-export default useGetDocument;
+export default useGetDocumentById;

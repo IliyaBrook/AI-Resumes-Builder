@@ -21,7 +21,7 @@ import {
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Loader, Sparkles } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/hooks";
 import { getAIChatSession } from "@/lib/google-ai-model";
 
 const BtnAlignLeft = createButton("Align left", "L", "justifyLeft");

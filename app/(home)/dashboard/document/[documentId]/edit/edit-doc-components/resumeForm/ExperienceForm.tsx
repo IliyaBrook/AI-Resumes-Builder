@@ -3,11 +3,8 @@ import RichTextEditor from "@/components/editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import useCreateExperience from "@/features/document/use-create-experience";
-import useDeleteExperience from "@/features/document/use-delete-experience";
-import useGetDocument from "@/features/document/use-get-document-by-id";
-import useUpdateDocument from "@/features/document/use-update-document";
-import useDebounce from "@/hooks/use-debounce";
+//hooks
+import { useDebounce, useUpdateDocument, useGetDocumentById, useDeleteExperience, useCreateExperience } from "@/hooks";
 import { ExperienceType } from "@/types/resume.type";
 import { Plus, X, MoveUp, MoveDown } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -17,7 +14,7 @@ import { parseAIResult } from "@/components/editor";
 const ExperienceForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data } = useGetDocument(documentId);
+  const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const allSkills = data?.data?.skills
     ? resumeInfo?.skills.map((skill) => skill.name).join(", ")

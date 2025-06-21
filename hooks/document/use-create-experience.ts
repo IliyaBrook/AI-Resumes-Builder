@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/hono-rpc";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/hooks";
 import { useParams } from "next/navigation";
 import { ExperienceType } from "@/types/resume.type";
 

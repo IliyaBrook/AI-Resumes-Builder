@@ -1,4 +1,4 @@
-import { toast } from '@/hooks/use-toast'
+import { toast } from '@/hooks';
 import { api } from '@/lib/hono-rpc'
 import { SkillType } from '@/types/resume.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'

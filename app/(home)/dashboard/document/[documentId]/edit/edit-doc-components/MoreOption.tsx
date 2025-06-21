@@ -1,9 +1,8 @@
 "use client";
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import useGetDocument from '@/features/document/use-get-document-by-id'
-import useUpdateDocument from '@/features/document/use-update-document'
-import { toast } from '@/hooks/use-toast'
+// hooks
+import { useUpdateDocument, useGetDocumentById, toast } from "@/hooks";
 import { StatusType } from '@/types/resume.type'
 import { Loader, MoreHorizontal, Redo, Trash2 } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
@@ -13,7 +12,7 @@ const MoreOption = () => {
   const router = useRouter();
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data } = useGetDocument(documentId);
+  const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 

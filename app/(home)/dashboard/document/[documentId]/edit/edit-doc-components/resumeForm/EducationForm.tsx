@@ -3,14 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import useDeleteEducation from "@/features/document/use-delete-education";
-import useGetDocument from "@/features/document/use-get-document-by-id";
-import useUpdateDocument from "@/features/document/use-update-document";
-import useDebounce from "@/hooks/use-debounce";
 import { Plus, X } from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
-import useCreateEducation from "@/features/document/use-create-education";
+//hooks
+import { useCreateEducation, useDebounce, useUpdateDocument, useGetDocumentById, useDeleteEducation } from "@/hooks";
 import { Education } from "@/types/resume.type";
 
 const getToday = () => {
@@ -34,7 +31,7 @@ const initialState = {
 const EducationForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data } = useGetDocument(documentId);
+  const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
   const { mutate: deleteEducation, isPending: isDeleting } =

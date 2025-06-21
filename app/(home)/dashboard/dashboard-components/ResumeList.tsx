@@ -1,5 +1,5 @@
 'use client'
-import useGetDocuments from '@/features/document/use-get-document'
+import { useGetDocuments } from "@/hooks";
 import { Loader, RotateCw } from 'lucide-react'
 import React, { Fragment, useCallback } from 'react'
 import ResumeItem from './ResumeItem'

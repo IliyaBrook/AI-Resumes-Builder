@@ -1,7 +1,5 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import useUpdateDocument from "@/features/document/use-update-document";
-import useGetDocument from "@/features/document/use-get-document-by-id";
 import { useParams } from "next/navigation";
 import { INITIAL_THEME_COLOR } from "@/constant/colors";
 import {
@@ -12,8 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Palette, ChevronDown } from "lucide-react";
 import { generateThumbnail } from "@/lib/helper";
-import { toast } from "@/hooks/use-toast";
-import useDebounce from "@/hooks/use-debounce";
+// hooks
+import { useDebounce, useGetDocumentById, useUpdateDocument, toast } from "@/hooks";
 
 const ThemeColor = () => {
   const colors = [
@@ -41,7 +39,7 @@ const ThemeColor = () => {
 
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data } = useGetDocument(documentId);
+  const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const [selectedColor, setSelectedColor] = useState(

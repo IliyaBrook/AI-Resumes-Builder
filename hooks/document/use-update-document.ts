@@ -1,6 +1,6 @@
 "use client";
 
-import { toast } from '@/hooks/use-toast'
+import { toast } from '@/hooks';
 import { api } from '@/lib/hono-rpc'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { InferRequestType, InferResponseType } from 'hono'

@@ -236,8 +236,8 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
           }
         }
         const chat = getAIChatSession();
-        const result = await chat.sendMessage(usedPrompt);
-        const responseText = result.response.text();
+        const result = await chat.sendMessage({ message: usedPrompt });
+        const responseText = result.text || "";
         let resultValue = responseText;
         const parsedResult = parseAIResult(resultValue);
         if (typeof parsedResult === "string") {
@@ -250,6 +250,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
           if (onGenerate) onGenerate(responseText);
         }
       } catch (error) {
+        console.error("error in handleGenerate in summary:", error);
         toast({
           title: "Failed to generate summary",
           variant: "destructive",

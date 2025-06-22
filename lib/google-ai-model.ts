@@ -5,27 +5,14 @@ const ai = new GoogleGenAI({
   apiKey,
 });
 
-const MODEL_NAME = "gemini-2.5-flash-preview-04-17";
+const MODEL_NAME = "gemini-2.5-flash";
 
 const config = {
-  thinkingConfig: {
-    thinkingBudget: -1,
-  },
-  responseMimeType: "application/json",
-  systemInstruction: [
-    {
-      text: `{
-  "safetySettings": [],
-  "generationConfig": {
-      "temperature": 1,
-      "topP": 0.95,
-      "topK": 64,
-      "maxOutputTokens": 8192,
-      "responseMimeType": "application/json"
-  }
-}`,
-    },
-  ],
+  temperature: 1,
+  topP: 0.95,
+  topK: 64,
+  maxOutputTokens: 8192,
+  responseMimeType: "text/plain",
 };
 
 export async function getAIResponse(prompt: string): Promise<string> {
@@ -55,16 +42,10 @@ export async function getAIResponse(prompt: string): Promise<string> {
 }
 
 export function getAIChatSession() {
-  return {
-    sendMessage: async (prompt: string) => {
-      const responseText = await getAIResponse(prompt);
-      return {
-        response: {
-          text: () => responseText,
-        },
-      };
-    },
-  };
+  return ai.chats.create({
+    model: MODEL_NAME,
+    config,
+  });
 }
 
 export async function getCurrentModel(): Promise<string> {

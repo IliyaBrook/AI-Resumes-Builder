@@ -1,8 +1,22 @@
 "use client";
 // components
-import { Card, CardContent, CardHeader, CardTitle, RichTextEditorRef, parseAIResult, RichTextEditor, Button } from "@/components";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  RichTextEditorRef,
+  parseAIResult,
+  RichTextEditor,
+  Button,
+} from "@/components";
 // hooks
-import { toast, useDebounce, useUpdateDocument, useGetDocumentById } from "@/hooks";
+import {
+  toast,
+  useDebounce,
+  useUpdateDocument,
+  useGetDocumentById,
+} from "@/hooks";
 import { getAIChatSession } from "@/lib/google-ai-model";
 import { ResumeDataType } from "@/types/resume.type";
 import { Sparkles } from "lucide-react";
@@ -147,8 +161,8 @@ const SummaryForm = () => {
             };
       const promptText = buildPrompt(resumeData as ResumeDataType, summarySize);
       const chat = getAIChatSession();
-      const result = await chat.sendMessage(promptText);
-      const responseText = result.response.text();
+      const result = await chat.sendMessage({ message: promptText });
+      const responseText = result.text || "";
       let parsed: any = parseAIResult(responseText);
       if (
         parsed &&
@@ -164,6 +178,7 @@ const SummaryForm = () => {
         setAiGeneratedSummary(null);
       }
     } catch (error) {
+      console.error("error in summary:", error);
       toast({
         title: "Failed to generate summary",
         variant: "destructive",

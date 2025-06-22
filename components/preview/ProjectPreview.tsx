@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { INITIAL_THEME_COLOR } from "@/lib/helper";
 import { ResumeDataType } from "@/types/resume.type";
 import { Link as LinkIcon } from "lucide-react";
@@ -48,7 +48,9 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               )}
             </h5>
             <div className="text-[13px] mb-2">
-              <div dangerouslySetInnerHTML={{ __html: project.description || "" }} />
+              <div
+                dangerouslySetInnerHTML={{ __html: project.description || "" }}
+              />
             </div>
             {project.git && (
               <div className="text-[13px] mb-2 flex items-center gap-1 pdf-margin-bottom-0">
@@ -71,4 +73,4 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   );
 };
 
-export default ProjectPreview; 
+export default ProjectPreview;

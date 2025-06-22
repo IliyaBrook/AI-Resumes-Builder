@@ -3,16 +3,16 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { INITIAL_THEME_COLOR } from "@/constant/colors";
 // components
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Button
-} from "@/components";
+import { Popover, PopoverContent, PopoverTrigger, Button } from "@/components";
 import { Palette, ChevronDown } from "lucide-react";
 import { generateThumbnail } from "@/lib/helper";
 // hooks
-import { useDebounce, useGetDocumentById, useUpdateDocument, toast } from "@/hooks";
+import {
+  useDebounce,
+  useGetDocumentById,
+  useUpdateDocument,
+  toast,
+} from "@/hooks";
 
 const ThemeColor = () => {
   const colors = [

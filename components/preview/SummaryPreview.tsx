@@ -26,3 +26,4 @@ const SummaryPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 };
 
 export default SummaryPreview;
+

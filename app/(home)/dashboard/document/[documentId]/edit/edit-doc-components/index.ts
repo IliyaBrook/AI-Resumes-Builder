@@ -1,3 +1,4 @@
+"use client";
 export * from "./resumeForm";
 import dynamic from "next/dynamic";
 

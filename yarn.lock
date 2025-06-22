@@ -12,7 +12,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.26.7":
+"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.26.7":
   version: 7.27.6
   resolution: "@babel/runtime@npm:7.27.6"
   checksum: 10c0/89726be83f356f511dcdb74d3ea4d873a5f0cf0017d4530cb53aa27380c01ca102d573eff8b8b77815e624b1f8c24e7f0311834ad4fb632c90a770fda00bd4c8
@@ -435,15 +435,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hookform/resolvers@npm:^3.9.0":
-  version: 3.10.0
-  resolution: "@hookform/resolvers@npm:3.10.0"
-  peerDependencies:
-    react-hook-form: ^7.0.0
-  checksum: 10c0/7ee44533b4cdc28c4fa2a94894c735411e5a1f830f4a617c580533321a9b901df0cc8c1e2fad81ad8d55154ebc5cb844cf9c116a3148ffae2bc48758c33cbb8e
-  languageName: node
-  linkType: hard
-
 "@img/sharp-darwin-arm64@npm:0.34.2":
   version: 0.34.2
   resolution: "@img/sharp-darwin-arm64@npm:0.34.2"
@@ -819,24 +810,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pdf-lib/standard-fonts@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@pdf-lib/standard-fonts@npm:1.0.0"
-  dependencies:
-    pako: "npm:^1.0.6"
-  checksum: 10c0/c683adfb764cd235a8370a0c1d5a8d7e90e3499ad33cdecfb92e4d48b0d36cfd038e3a875ebd0937a5646ee1578d793ab98f9c374be360c9a05d2699c1caedf4
-  languageName: node
-  linkType: hard
-
-"@pdf-lib/upng@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@pdf-lib/upng@npm:1.0.1"
-  dependencies:
-    pako: "npm:^1.0.10"
-  checksum: 10c0/9c300c513c1089e561c0cccac01f396a24efb9b0e9c922a39248cb09dfced70c05b9facdfce11a7f22cbedb4129593630a18111b90a57ef34ea4c3df98f2ac1d
-  languageName: node
-  linkType: hard
-
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -867,29 +840,6 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 10c0/c3b46766238b3ee2a394d8806a5141432361bf1425110c9f0dcf480bda4ebd304453a53f294b5399c6ee3ccfcae6fd544921fd01ddc379cf5942acdd7168664b
-  languageName: node
-  linkType: hard
-
-"@radix-ui/react-avatar@npm:^1.1.1":
-  version: 1.1.10
-  resolution: "@radix-ui/react-avatar@npm:1.1.10"
-  dependencies:
-    "@radix-ui/react-context": "npm:1.1.2"
-    "@radix-ui/react-primitive": "npm:2.1.3"
-    "@radix-ui/react-use-callback-ref": "npm:1.1.1"
-    "@radix-ui/react-use-is-hydrated": "npm:0.1.0"
-    "@radix-ui/react-use-layout-effect": "npm:1.1.1"
-  peerDependencies:
-    "@types/react": "*"
-    "@types/react-dom": "*"
-    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-dom":
-      optional: true
-  checksum: 10c0/9fb0cf9a9d0fdbeaa2efda476402fc09db2e6ff9cd9aa3ea1d315d9c9579840722a4833725cb196c455e0bd775dfe04221a4f6855685ce89d2133c42e2b07e5f
   languageName: node
   linkType: hard
 
@@ -1398,21 +1348,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-use-is-hydrated@npm:0.1.0":
-  version: 0.1.0
-  resolution: "@radix-ui/react-use-is-hydrated@npm:0.1.0"
-  dependencies:
-    use-sync-external-store: "npm:^1.5.0"
-  peerDependencies:
-    "@types/react": "*"
-    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10c0/635079bafe32829fc7405895154568ea94a22689b170489fd6d77668e4885e72ff71ed6d0ea3d602852841ef0f1927aa400fee2178d5dfbeb8bc9297da7d6498
-  languageName: node
-  linkType: hard
-
 "@radix-ui/react-use-layout-effect@npm:1.1.1":
   version: 1.1.1
   resolution: "@radix-ui/react-use-layout-effect@npm:1.1.1"
@@ -1552,6 +1487,17 @@ __metadata:
     pg-protocol: "npm:*"
     pg-types: "npm:^4.0.1"
   checksum: 10c0/e68e057d9500b25cd776f4fcc547b4880c4f3b0c7b6e03c8a0e5e262b6189dd7a00f4edc8937ffc55a9f6a136a78d7e4a9b6bbe6a46122a95c134f7be66f6842
+  languageName: node
+  linkType: hard
+
+"@types/pg@npm:^8.15.4":
+  version: 8.15.4
+  resolution: "@types/pg@npm:8.15.4"
+  dependencies:
+    "@types/node": "npm:*"
+    pg-protocol: "npm:*"
+    pg-types: "npm:^2.2.0"
+  checksum: 10c0/7f9295cb2d934681bba84f7caad529c3b100d87e83ad0732c7fe496f4f79e42a795097321db54e010fcff22cb5e410cf683b4c9941907ee4564c822242816e91
   languageName: node
   linkType: hard
 
@@ -1820,7 +1766,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"canvg@npm:^3.0.11, canvg@npm:^3.0.6":
+"canvg@npm:^3.0.11":
   version: 3.0.11
   resolution: "canvg@npm:3.0.11"
   dependencies:
@@ -2027,13 +1973,6 @@ __metadata:
   version: 1.1.3
   resolution: "dlv@npm:1.1.3"
   checksum: 10c0/03eb4e769f19a027fd5b43b59e8a05e3fd2100ac239ebb0bf9a745de35d449e2f25cfaf3aa3934664551d72856f4ae8b7822016ce5c42c2d27c18ae79429ec42
-  languageName: node
-  linkType: hard
-
-"dompurify@npm:^2.5.4":
-  version: 2.5.8
-  resolution: "dompurify@npm:2.5.8"
-  checksum: 10c0/4101708d190b67be00350369d72619266a2e0ebb7dcab12628cf07711329b1df12239baea613df41b65cba571128e8ea4c29c442f4e2c98670a9bb5563521f03
   languageName: node
   linkType: hard
 
@@ -2825,31 +2764,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jspdf@npm:^2.5.2":
-  version: 2.5.2
-  resolution: "jspdf@npm:2.5.2"
-  dependencies:
-    "@babel/runtime": "npm:^7.23.2"
-    atob: "npm:^2.1.2"
-    btoa: "npm:^1.2.1"
-    canvg: "npm:^3.0.6"
-    core-js: "npm:^3.6.0"
-    dompurify: "npm:^2.5.4"
-    fflate: "npm:^0.8.1"
-    html2canvas: "npm:^1.0.0-rc.5"
-  dependenciesMeta:
-    canvg:
-      optional: true
-    core-js:
-      optional: true
-    dompurify:
-      optional: true
-    html2canvas:
-      optional: true
-  checksum: 10c0/0e715ba51fab41d7de85f76585a6a2b7d224f43e510993f17f071b608cf32f2107a66f3a04cbfb4d2e60b73dbd2a90f3092bcc70b9d30601cbc060caadc4d90a
-  languageName: node
-  linkType: hard
-
 "jspdf@npm:^3.0.0":
   version: 3.0.1
   resolution: "jspdf@npm:3.0.1"
@@ -3259,13 +3173,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pako@npm:^1.0.10, pako@npm:^1.0.11, pako@npm:^1.0.6":
-  version: 1.0.11
-  resolution: "pako@npm:1.0.11"
-  checksum: 10c0/86dd99d8b34c3930345b8bbeb5e1cd8a05f608eeb40967b293f72fe469d0e9c88b783a8777e4cc7dc7c91ce54c5e93d88ff4b4f060e6ff18408fd21030d9ffbe
-  languageName: node
-  linkType: hard
-
 "path-key@npm:^3.1.0":
   version: 3.1.1
   resolution: "path-key@npm:3.1.1"
@@ -3287,18 +3194,6 @@ __metadata:
     lru-cache: "npm:^10.2.0"
     minipass: "npm:^5.0.0 || ^6.0.2 || ^7.0.0"
   checksum: 10c0/32a13711a2a505616ae1cc1b5076801e453e7aae6ac40ab55b388bb91b9d0547a52f5aaceff710ea400205f18691120d4431e520afbe4266b836fadede15872d
-  languageName: node
-  linkType: hard
-
-"pdf-lib@npm:^1.17.1":
-  version: 1.17.1
-  resolution: "pdf-lib@npm:1.17.1"
-  dependencies:
-    "@pdf-lib/standard-fonts": "npm:^1.0.0"
-    "@pdf-lib/upng": "npm:^1.0.1"
-    pako: "npm:^1.0.11"
-    tslib: "npm:^1.11.1"
-  checksum: 10c0/a9489a402880dacd1389a3e14ff8f6139d58e3bc82f26b0fcbd0798b841aee6ccb7fcfab0992b574e57b40404ced0330a7170b3c6467363461a9df5d9daec489
   languageName: node
   linkType: hard
 
@@ -3353,7 +3248,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-types@npm:2.2.0":
+"pg-types@npm:2.2.0, pg-types@npm:^2.2.0":
   version: 2.2.0
   resolution: "pg-types@npm:2.2.0"
   dependencies:
@@ -3790,8 +3685,6 @@ __metadata:
   dependencies:
     "@google/genai": "npm:^1.6.0"
     "@hono/zod-validator": "npm:^0.4.1"
-    "@hookform/resolvers": "npm:^3.9.0"
-    "@radix-ui/react-avatar": "npm:^1.1.1"
     "@radix-ui/react-dialog": "npm:^1.1.2"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.2"
     "@radix-ui/react-icons": "npm:^1.3.0"
@@ -3802,6 +3695,7 @@ __metadata:
     "@smastrom/react-rating": "npm:^1.5.0"
     "@tanstack/react-query": "npm:^5.59.15"
     "@types/node": "npm:^20"
+    "@types/pg": "npm:^8.15.4"
     "@types/react": "npm:19.1.8"
     "@types/react-dom": "npm:19.1.6"
     "@types/uuid": "npm:^10.0.0"
@@ -3817,11 +3711,9 @@ __metadata:
     hono: "npm:^4.6.4"
     html2canvas: "npm:^1.4.1"
     html2pdf.js: "npm:^0.10.3"
-    jspdf: "npm:^2.5.2"
     lucide-react: "npm:^0.453.0"
     next: "npm:15.3.4"
     next-themes: "npm:^0.4.6"
-    pdf-lib: "npm:^1.17.1"
     pg: "npm:^8.16.0"
     postcss: "npm:^8"
     react: "npm:19.1.0"
@@ -4312,13 +4204,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.11.1":
-  version: 1.14.1
-  resolution: "tslib@npm:1.14.1"
-  checksum: 10c0/69ae09c49eea644bc5ebe1bca4fa4cc2c82b7b3e02f43b84bd891504edf66dbc6b2ec0eef31a957042de2269139e4acff911e6d186a258fb14069cd7f6febce2
-  languageName: node
-  linkType: hard
-
 "tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.8.0":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
@@ -4406,15 +4291,6 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/161599bf921cfaa41c85d2b01c871975ee99260f3e874c2d41c05890d41170297bdcf314bc5185e7a700de2034ac5b888e3efc8e9f35724f4918f53538d717c9
-  languageName: node
-  linkType: hard
-
-"use-sync-external-store@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "use-sync-external-store@npm:1.5.0"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/1b8663515c0be34fa653feb724fdcce3984037c78dd4a18f68b2c8be55cc1a1084c578d5b75f158d41b5ddffc2bf5600766d1af3c19c8e329bb20af2ec6f52f4
   languageName: node
   linkType: hard
 

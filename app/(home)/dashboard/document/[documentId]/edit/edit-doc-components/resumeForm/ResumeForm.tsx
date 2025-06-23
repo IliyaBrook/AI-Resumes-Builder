@@ -16,6 +16,7 @@ import {
   SkillsForm,
   SummaryForm,
 } from '@/homePageComponents';
+import { FirstRenderProvider } from '@/context/first-render-provider';
 
 const ResumeForm = () => {
   const param = useParams();
@@ -91,13 +92,15 @@ const ResumeForm = () => {
           </Button>
         </div>
         <div className="px-5 py-3 pb-5">
-          {activeFormIndex === 1 && <PersonalInfoForm />}
-          {activeFormIndex === 2 && <SummaryForm />}
-          {activeFormIndex === 3 && <ExperienceForm />}
-          {activeFormIndex === 4 && <EducationForm />}
-          {activeFormIndex === 5 && <ProjectForm />}
-          {activeFormIndex === 6 && <SkillsForm />}
-          {activeFormIndex === 7 && <LanguageForm />}
+          <FirstRenderProvider>
+            {activeFormIndex === 1 && <PersonalInfoForm />}
+            {activeFormIndex === 2 && <SummaryForm />}
+            {activeFormIndex === 3 && <ExperienceForm />}
+            {activeFormIndex === 4 && <EducationForm />}
+            {activeFormIndex === 5 && <ProjectForm />}
+            {activeFormIndex === 6 && <SkillsForm />}
+            {activeFormIndex === 7 && <LanguageForm />}
+          </FirstRenderProvider>
         </div>
       </div>
     </div>

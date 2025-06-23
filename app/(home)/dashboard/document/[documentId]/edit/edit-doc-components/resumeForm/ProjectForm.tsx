@@ -3,6 +3,7 @@ import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { ProjectType } from '@/types/resume.type';
+import { useFirstRender } from '@/context/first-render-provider';
 // hooks
 import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
 // components
@@ -15,6 +16,7 @@ const ProjectForm = () => {
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteProject } = useDeleteProject();
+  const { isDataLoaded } = useFirstRender();
 
   const [sectionTitle, setSectionTitle] = React.useState(
     resumeInfo?.projectsSectionTitle || 'Projects'
@@ -26,16 +28,20 @@ const ProjectForm = () => {
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
-    if (debouncedProjects && debouncedProjects !== resumeInfo?.projects) {
+    if (isDataLoaded && debouncedProjects && debouncedProjects !== resumeInfo?.projects) {
       setResumeInfo({ projects: debouncedProjects });
     }
-  }, [debouncedProjects]);
+  }, [debouncedProjects, isDataLoaded]);
 
   React.useEffect(() => {
-    if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.projectsSectionTitle) {
+    if (
+      isDataLoaded &&
+      debouncedSectionTitle &&
+      debouncedSectionTitle !== resumeInfo?.projectsSectionTitle
+    ) {
       setResumeInfo({ projectsSectionTitle: debouncedSectionTitle });
     }
-  }, [debouncedSectionTitle]);
+  }, [debouncedSectionTitle, isDataLoaded]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;

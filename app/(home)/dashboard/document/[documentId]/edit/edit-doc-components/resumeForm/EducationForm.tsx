@@ -13,6 +13,7 @@ import {
   useDeleteEducation,
 } from '@/hooks';
 import { EducationType } from '@/types/resume.type';
+import { useFirstRender } from '@/context/first-render-provider';
 
 const getToday = () => {
   const d = new Date();
@@ -29,6 +30,7 @@ const EducationForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteEducation, isPending: isDeleting } = useDeleteEducation();
   const { mutateAsync: createEducation } = useCreateEducation();
+  const { isDataLoaded } = useFirstRender();
 
   const [localEducationList, setLocalEducationList] = React.useState<EducationType[]>(
     resumeInfo?.educations || []
@@ -36,7 +38,11 @@ const EducationForm = () => {
   const debouncedEducationList = useDebounce(localEducationList, 500);
 
   React.useEffect(() => {
-    if (debouncedEducationList && debouncedEducationList !== resumeInfo?.educations) {
+    if (
+      isDataLoaded &&
+      debouncedEducationList &&
+      debouncedEducationList !== resumeInfo?.educations
+    ) {
       const sanitized = debouncedEducationList.map((edu: EducationType) => ({
         ...edu,
         endDate: edu.currentlyStudying ? null : edu.endDate,
@@ -44,7 +50,7 @@ const EducationForm = () => {
       }));
       setResumeInfo({ education: sanitized });
     }
-  }, [debouncedEducationList]);
+  }, [debouncedEducationList, isDataLoaded]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;

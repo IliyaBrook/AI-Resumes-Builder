@@ -16,16 +16,19 @@ import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { Mail, Phone, MapPin, Github, Linkedin, ChevronDown } from 'lucide-react';
 import { PersonalInfoType } from '@/types/resume.type';
+import { useFirstRender } from '@/context/first-render-provider';
 
 const PersonalInfoForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
   const { data, isLoading } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
+  const personalInfo = resumeInfo?.personalInfo;
   const { mutate: setResumeInfo } = useUpdateDocument();
+  const { isDataLoaded } = useFirstRender();
 
   const [localPersonalInfo, setLocalPersonalInfo] = useState<PersonalInfoType>(
-    resumeInfo?.personalInfo || {
+    personalInfo || {
       firstName: '',
       lastName: '',
       jobTitle: '',
@@ -45,19 +48,32 @@ const PersonalInfoForm = () => {
   const debouncedDisplayFormat = useDebounce(localDisplayFormat, 500);
 
   useEffect(() => {
-    if (debouncedPersonalInfo && debouncedPersonalInfo !== resumeInfo?.personalInfo) {
+    if (personalInfo && (!localPersonalInfo.firstName || !localPersonalInfo.lastName)) {
+      setLocalPersonalInfo(personalInfo);
+    }
+  }, [personalInfo]);
+
+  useEffect(() => {
+    if (resumeInfo?.personalInfoDisplayFormat) {
+      setLocalDisplayFormat(resumeInfo.personalInfoDisplayFormat as 'default' | 'compact');
+    }
+  }, [resumeInfo?.personalInfoDisplayFormat]);
+
+  useEffect(() => {
+    if (isDataLoaded && debouncedPersonalInfo && debouncedPersonalInfo !== personalInfo) {
       setResumeInfo({ personalInfo: debouncedPersonalInfo });
     }
-  }, [debouncedPersonalInfo, resumeInfo?.personalInfo, setResumeInfo]);
+  }, [debouncedPersonalInfo, personalInfo, setResumeInfo, isDataLoaded]);
 
   useEffect(() => {
     if (
+      isDataLoaded &&
       debouncedDisplayFormat &&
       debouncedDisplayFormat !== resumeInfo?.personalInfoDisplayFormat
     ) {
       setResumeInfo({ personalInfoDisplayFormat: debouncedDisplayFormat });
     }
-  }, [debouncedDisplayFormat, resumeInfo?.personalInfoDisplayFormat, setResumeInfo]);
+  }, [debouncedDisplayFormat, resumeInfo?.personalInfoDisplayFormat, setResumeInfo, isDataLoaded]);
 
   const handleChange = useCallback((e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -67,7 +83,6 @@ const PersonalInfoForm = () => {
   if (isLoading) {
     return <PersonalInfoLoader />;
   }
-
   return (
     <div>
       <div className="w-full">

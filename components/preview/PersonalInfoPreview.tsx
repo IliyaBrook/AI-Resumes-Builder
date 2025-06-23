@@ -10,7 +10,7 @@ interface PropsType {
   isLoading: boolean;
 }
 
-const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
+const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
   const displayFormat = resumeInfo?.personalInfoDisplayFormat || 'default';
   const isCompact = displayFormat === 'compact';
@@ -23,7 +23,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     return `https://${url}`;
   };
 
-  if (isLoading) {
+  if (isLoading || !resumeInfo?.personalInfo) {
     return <SkeletonLoader />;
   }
 
@@ -248,4 +248,4 @@ const SkeletonLoader = () => {
   );
 };
 
-export default PersonalInfo;
+export default PersonalInfoPreview;

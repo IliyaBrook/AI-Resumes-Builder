@@ -14,12 +14,9 @@ const EditResume = () => {
           <div
             className="flex flex-col lg:flex-row
                   items-start w-full py-3 gap-6
-                  
                   "
           >
-            {}
             <ResumeForm />
-            {}
             <ResumePreview />
           </div>
         </div>

@@ -14,24 +14,9 @@ export {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-export {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useFormField,
-} from "./form";
 export { Input, type InputProps } from "./input";
 export { Label } from "./label";
-export {
-  Popover,
-  PopoverAnchor,
-  PopoverContent,
-  PopoverTrigger,
-} from "./popover";
+export { Popover, PopoverContent, PopoverTrigger } from "./popover";
 export { Skeleton } from "./skeleton";
 export { Textarea, type TextareaProps } from "./textarea";
 export {

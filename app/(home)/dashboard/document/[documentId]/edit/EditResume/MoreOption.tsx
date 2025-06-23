@@ -59,42 +59,40 @@ const MoreOption = () => {
   }, [handleClick]);
 
   return (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="bg-white border dark:bg-gray-800">
-            <MoreHorizontal />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem asChild>
-            {resumeInfo?.status === 'archived' ? (
-              <Button
-                variant="ghost"
-                className="gap-1 !py-2 !cursor-pointer"
-                disabled={isPending}
-                onClick={handleRestore}
-              >
-                <Redo size="15px" />
-                Retore resume
-                {isPending && <Loader size="15px" className="animate-spin" />}
-              </Button>
-            ) : (
-              <Button
-                variant="ghost"
-                className="gap-1  !py-2 !cursor-pointer"
-                disabled={isPending}
-                onClick={handleArchive}
-              >
-                <Trash2 size="15px" />
-                Move to Trash
-                {isPending && <Loader size="15px" className="animate-spin" />}
-              </Button>
-            )}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="secondary" size="icon" className="bg-white border dark:bg-gray-800">
+          <MoreHorizontal />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem asChild>
+          {resumeInfo?.status === 'archived' ? (
+            <Button
+              variant="ghost"
+              className="gap-1 !py-2 !cursor-pointer"
+              disabled={isPending}
+              onClick={handleRestore}
+            >
+              <Redo size="15px" />
+              Retore resume
+              {isPending && <Loader size="15px" className="animate-spin" />}
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              className="gap-1  !py-2 !cursor-pointer"
+              disabled={isPending}
+              onClick={handleArchive}
+            >
+              <Trash2 size="15px" />
+              Move to Trash
+              {isPending && <Loader size="15px" className="animate-spin" />}
+            </Button>
+          )}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

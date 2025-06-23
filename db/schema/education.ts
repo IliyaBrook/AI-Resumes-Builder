@@ -5,7 +5,7 @@ import {
   pgTable,
   serial,
   text,
-  varchar
+  varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -50,5 +50,3 @@ export const educationTableSchema = createInsertSchema(educationTable, {
   skipDates: true,
   yearsOnly: true,
 });
-
-export type EducationSchema = z.infer<typeof educationTableSchema>;

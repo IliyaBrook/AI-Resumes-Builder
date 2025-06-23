@@ -35,5 +35,3 @@ export const projectTableSchema = createInsertSchema(projectTable, {
   order: true,
   git: true,
 });
-
-export type ProjectSchema = z.infer<typeof projectTableSchema>; 

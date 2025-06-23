@@ -15,39 +15,9 @@ const config = {
   responseMimeType: "text/plain",
 };
 
-export async function getAIResponse(prompt: string): Promise<string> {
-  const contents = [
-    {
-      role: "user" as const,
-      parts: [
-        {
-          text: prompt,
-        },
-      ],
-    },
-  ];
-
-  const response = await ai.models.generateContentStream({
-    model: MODEL_NAME,
-    config,
-    contents,
-  });
-
-  let fullResponse = "";
-  for await (const chunk of response) {
-    fullResponse += chunk.text || "";
-  }
-
-  return fullResponse;
-}
-
 export function getAIChatSession() {
   return ai.chats.create({
     model: MODEL_NAME,
     config,
   });
-}
-
-export async function getCurrentModel(): Promise<string> {
-  return MODEL_NAME;
 }

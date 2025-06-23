@@ -36,5 +36,3 @@ export const skillsTableSchema = createInsertSchema(skillsTable, {
   order: true,
   category: true,
 });
-
-export type SkillsSchema = z.infer<typeof skillsTableSchema>;

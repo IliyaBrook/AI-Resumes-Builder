@@ -1,5 +1,13 @@
 // components
-import { LanguagePreview, ProjectPreview, SkillPreview, EducationPreview, ExperiencePreview, SummaryPreview, PersonalInfoPreview } from "@/components";
+import {
+  LanguagePreview,
+  ProjectPreview,
+  SkillPreview,
+  EducationPreview,
+  ExperiencePreview,
+  SummaryPreview,
+  PersonalInfoPreview,
+} from "@/components";
 
 export const DEFAULT_PAGES_ORDER = [
   "personal-info",
@@ -21,7 +29,7 @@ export const SECTION_COMPONENTS = {
   languages: LanguagePreview,
 } as const;
 
-export const ALL_AVAILABLE_PAGES = Object.keys(SECTION_COMPONENTS) as Array<
+const ALL_AVAILABLE_PAGES = Object.keys(SECTION_COMPONENTS) as Array<
   keyof typeof SECTION_COMPONENTS
 >;
 

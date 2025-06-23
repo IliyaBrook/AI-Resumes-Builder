@@ -1,10 +1,10 @@
-import { toast } from '@/hooks';
-import { api } from '@/lib/hono-rpc'
-import { SkillType } from '@/types/resume.type'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
+import { toast } from "@/hooks";
+import { api } from "@/lib/hono-rpc";
+import { SkillType } from "@/types/resume.type";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
-export type UpdateSkillParams = {
+type UpdateSkillParams = {
   skillId: number;
   data: Partial<Omit<SkillType, "id">>;
 };
@@ -22,7 +22,7 @@ const useUpdateSkill = () => {
           ...data,
           hideRating: data.hideRating ? 1 : 0,
           name: data.name || undefined,
-          category: data.category || undefined
+          category: data.category || undefined,
         },
       });
       return await response.json();
@@ -40,4 +40,4 @@ const useUpdateSkill = () => {
   });
 };
 
-export default useUpdateSkill; 
+export default useUpdateSkill;

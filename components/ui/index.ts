@@ -1,4 +1,4 @@
-export { Button, type ButtonProps } from "./button";
+export { Button } from "./button";
 export { Card, CardContent, CardHeader, CardTitle } from "./card";
 export {
   Dialog,
@@ -14,14 +14,13 @@ export {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-export { Input, type InputProps } from "./input";
+export { Input } from "./input";
 export { Label } from "./label";
 export { Popover, PopoverContent, PopoverTrigger } from "./popover";
 export { Skeleton } from "./skeleton";
-export { Textarea, type TextareaProps } from "./textarea";
+export { Textarea } from "./textarea";
 export {
   Toast,
-  ToastAction,
   ToastClose,
   ToastDescription,
   ToastProvider,

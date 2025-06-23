@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/hono-rpc";
-import { toast } from '@/hooks';
+import { toast } from "@/hooks";
 import { useParams } from "next/navigation";
 
-export type DeleteExperienceParams = {
+type DeleteExperienceParams = {
   experienceId: number;
 };
 
@@ -38,4 +38,4 @@ const useDeleteExperience = () => {
   return mutation;
 };
 
-export default useDeleteExperience; 
+export default useDeleteExperience;

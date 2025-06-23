@@ -6,10 +6,12 @@ import { z } from "zod";
 
 export const personalInfoTable = pgTable("personal_info", {
   id: serial("id").notNull().primaryKey(),
-  docId: varchar("document_id", { length: 255 })
-    .references(() => documentTable.documentId, {
+  docId: varchar("document_id", { length: 255 }).references(
+    () => documentTable.documentId,
+    {
       onDelete: "cascade",
-    }),
+    }
+  ),
   firstName: varchar("first_name", { length: 255 }),
   lastName: varchar("last_name", { length: 255 }),
   jobTitle: varchar("job_title", { length: 255 }),
@@ -43,4 +45,3 @@ export const personalInfoTableSchema = createInsertSchema(personalInfoTable, {
   github: true,
   linkedin: true,
 });
-export type PersonalSchema = z.infer<typeof personalInfoTableSchema>;

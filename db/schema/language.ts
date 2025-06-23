@@ -31,5 +31,3 @@ export const languageTableSchema = createInsertSchema(languageTable, {
   level: true,
   order: true,
 });
-
-export type LanguageSchema = z.infer<typeof languageTableSchema>; 

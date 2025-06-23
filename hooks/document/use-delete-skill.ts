@@ -1,9 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/lib/hono-rpc';
-import { toast } from '@/hooks';
-import { useParams } from 'next/navigation';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/hono-rpc";
+import { toast } from "@/hooks";
+import { useParams } from "next/navigation";
 
-export type DeleteSkillParams = {
+type DeleteSkillParams = {
   skillId: number;
 };
 
@@ -38,4 +38,4 @@ const useDeleteSkill = () => {
   return mutation;
 };
 
-export default useDeleteSkill; 
+export default useDeleteSkill;

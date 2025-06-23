@@ -1,8 +1,8 @@
-import { toast } from '@/hooks';
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
+import { toast } from "@/hooks";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
-export type DeleteLanguageParams = {
+type DeleteLanguageParams = {
   languageId: number;
 };
 
@@ -14,7 +14,7 @@ const useDeleteLanguage = () => {
   return useMutation({
     mutationFn: async ({ languageId }: DeleteLanguageParams) => {
       const response = await fetch(`/api/document/language/${languageId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
       return await response.json();
     },
@@ -35,4 +35,4 @@ const useDeleteLanguage = () => {
   });
 };
 
-export default useDeleteLanguage; 
+export default useDeleteLanguage;

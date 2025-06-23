@@ -1,7 +1,7 @@
 'use client';
 
 import { api } from '@/lib/hono-rpc';
-import { useBaseMutation } from './base-mutation';
+import { useBaseMutation } from '@/hooks';
 
 const useDeleteDocument = () => {
   return useBaseMutation<any, string>({

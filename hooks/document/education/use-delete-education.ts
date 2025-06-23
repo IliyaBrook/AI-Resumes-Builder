@@ -1,4 +1,4 @@
-import { createEntityHooks } from './entity-hooks-factory';
+import { createEntityHooks } from '@/hooks';
 
 type DeleteEducationParams = {
   educationId: number;

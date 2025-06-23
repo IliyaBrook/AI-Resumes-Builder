@@ -1,4 +1,4 @@
-import { useBaseMutation } from './base-mutation';
+import { useBaseMutation } from '@/hooks';
 
 type DeleteLanguageParams = {
   languageId: number;

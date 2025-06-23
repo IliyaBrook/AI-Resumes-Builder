@@ -1,7 +1,7 @@
 'use client';
 
 import { api } from '@/lib/hono-rpc';
-import { useBaseQuery } from './base-query';
+import { useBaseQuery } from '@/hooks';
 
 const useGetDocumentById = (documentId: string, isPublic: boolean = false) => {
   return useBaseQuery({

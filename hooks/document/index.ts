@@ -1,16 +1,12 @@
-export { default as useCreateDocument } from './use-create-document';
-export { default as useCreateEducation } from './use-create-education';
-export { default as useCreateExperience } from './use-create-experience';
-export { default as useCreateSkill } from './use-create-skill';
-export { default as useDeleteDocument } from './use-delete-document';
-export { default as useDeleteEducation } from './use-delete-education';
-export { default as useDeleteExperience } from './use-delete-experience';
-export { default as useDeleteLanguage } from './use-delete-language';
-export { default as useDeleteProject } from './use-delete-project';
-export { default as useDeleteSkill } from './use-delete-skill';
-export { default as useGetDocuments } from './use-get-documents';
-export { default as useGetDocumentById } from './use-get-document-by-id';
-export { default as useRestoreDocument } from './use-restore-document';
-export { default as useUpdateDocument } from './use-update-document';
-export { default as useUpdateSkill } from './use-update-skill';
+// Base hooks and factory
+export { useBaseMutation } from './base-mutation';
+export { useBaseQuery } from './base-query';
 export { createEntityHooks } from './entity-hooks-factory';
+
+// Entity-specific hooks exports
+export * from './skills';
+export * from './education';
+export * from './experience';
+export * from './project';
+export * from './language';
+export * from './document';

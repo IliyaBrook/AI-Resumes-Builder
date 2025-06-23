@@ -1,5 +1,5 @@
 import { useParams } from 'next/navigation';
-import { createEntityHooks } from './entity-hooks-factory';
+import { createEntityHooks } from '@/hooks';
 import { SkillType } from '@/types/resume.type';
 
 const skillHooks = createEntityHooks('skill');

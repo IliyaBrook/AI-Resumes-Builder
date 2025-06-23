@@ -1,4 +1,4 @@
-import { createEntityHooks } from './entity-hooks-factory';
+import { createEntityHooks } from '@/hooks';
 import { SkillType } from '@/types/resume.type';
 
 type UpdateSkillParams = {

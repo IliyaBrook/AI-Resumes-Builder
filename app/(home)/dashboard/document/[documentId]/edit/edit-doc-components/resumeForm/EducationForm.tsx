@@ -5,7 +5,13 @@ import { Plus, X } from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
 //hooks
-import { useCreateEducation, useDebounce, useUpdateDocument, useGetDocumentById, useDeleteEducation } from "@/hooks";
+import {
+  useCreateEducation,
+  useDebounce,
+  useUpdateDocument,
+  useGetDocumentById,
+  useDeleteEducation,
+} from "@/hooks";
 import { Education } from "@/types/resume.type";
 
 const getToday = () => {

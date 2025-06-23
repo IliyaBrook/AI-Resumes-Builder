@@ -1,19 +1,19 @@
-"use client";
+'use client';
 import {
   DEFAULT_PAGES_ORDER,
   SECTION_COMPONENTS,
   syncPagesOrder,
   type SectionKey,
-} from "@/constant/resume-sections";
+} from '@/constant/resume-sections';
 
 //hooks
-import { useUpdateDocument, useGetDocumentById } from "@/hooks";
-import { cn } from "@/lib/utils";
+import { useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { cn } from '@/lib/utils';
 // components
-import { Button } from "@/components";
-import { MoveDown, MoveUp } from "lucide-react";
-import { useParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import { Button } from '@/components';
+import { MoveDown, MoveUp } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
 
 const RESUME_STYLES = `
   #resume-preview-id ul, #resume-preview-id ol {
@@ -55,6 +55,7 @@ function normalizeResumeData(data: any) {
   if (!data) return data;
   if (data.projectsSectionTitle === null) {
     const { projectsSectionTitle, ...rest } = data;
+    void projectsSectionTitle;
     return rest;
   }
   return data;
@@ -91,26 +92,23 @@ const ResumePreview = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         setSelectedSection(null);
       }
     };
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setSelectedSection(null);
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
@@ -121,7 +119,7 @@ const ResumePreview = () => {
     setCurrentOrder(newOrder);
   };
 
-  const moveSection = (direction: "up" | "down") => {
+  const moveSection = (direction: 'up' | 'down') => {
     if (!selectedSection) return;
 
     const currentIndex = currentOrder.indexOf(selectedSection);
@@ -129,12 +127,12 @@ const ResumePreview = () => {
 
     const newOrder = [...currentOrder];
 
-    if (direction === "up" && currentIndex > 0) {
+    if (direction === 'up' && currentIndex > 0) {
       [newOrder[currentIndex], newOrder[currentIndex - 1]] = [
         newOrder[currentIndex - 1],
         newOrder[currentIndex],
       ];
-    } else if (direction === "down" && currentIndex < newOrder.length - 1) {
+    } else if (direction === 'down' && currentIndex < newOrder.length - 1) {
       [newOrder[currentIndex], newOrder[currentIndex + 1]] = [
         newOrder[currentIndex + 1],
         newOrder[currentIndex],
@@ -146,11 +144,9 @@ const ResumePreview = () => {
     updatePagesOrder(newOrder);
   };
 
-  const canMoveUp =
-    selectedSection && currentOrder.indexOf(selectedSection) > 0;
+  const canMoveUp = selectedSection && currentOrder.indexOf(selectedSection) > 0;
   const canMoveDown =
-    selectedSection &&
-    currentOrder.indexOf(selectedSection) < currentOrder.length - 1;
+    selectedSection && currentOrder.indexOf(selectedSection) < currentOrder.length - 1;
 
   const renderSection = (sectionKey: string) => {
     const Component = SECTION_COMPONENTS[sectionKey as SectionKey];
@@ -162,15 +158,13 @@ const ResumePreview = () => {
       <div
         key={sectionKey}
         className={cn(
-          "section-wrapper cursor-pointer transition-all duration-200 rounded-md relative",
+          'section-wrapper cursor-pointer transition-all duration-200 rounded-md relative',
           isSelected &&
-            "ring-2 ring-blue-500 ring-opacity-50 bg-blue-50 dark:bg-blue-950 dark:ring-blue-400 p-2"
+            'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50 dark:bg-blue-950 dark:ring-blue-400 p-2'
         )}
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
-          setSelectedSection(
-            selectedSection === sectionKey ? null : sectionKey
-          );
+          setSelectedSection(selectedSection === sectionKey ? null : sectionKey);
         }}
         title={`Click to select "${sectionKey}" section`}
       >
@@ -183,12 +177,12 @@ const ResumePreview = () => {
               size="icon"
               type="button"
               className={cn(
-                "size-6 hover:bg-gray-100 dark:hover:bg-gray-700",
-                !canMoveUp && "opacity-50 cursor-not-allowed"
+                'size-6 hover:bg-gray-100 dark:hover:bg-gray-700',
+                !canMoveUp && 'opacity-50 cursor-not-allowed'
               )}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
-                moveSection("up");
+                moveSection('up');
               }}
               disabled={!canMoveUp}
               title="Move section up"
@@ -200,12 +194,12 @@ const ResumePreview = () => {
               size="icon"
               type="button"
               className={cn(
-                "size-6 hover:bg-gray-100 dark:hover:bg-gray-700",
-                !canMoveDown && "opacity-50 cursor-not-allowed"
+                'size-6 hover:bg-gray-100 dark:hover:bg-gray-700',
+                !canMoveDown && 'opacity-50 cursor-not-allowed'
               )}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
-                moveSection("down");
+                moveSection('down');
               }}
               disabled={!canMoveDown}
               title="Move section down"

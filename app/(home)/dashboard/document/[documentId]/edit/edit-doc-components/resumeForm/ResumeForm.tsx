@@ -1,11 +1,11 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useParams } from "next/navigation";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useParams } from 'next/navigation';
 //hooks
-import { useUpdateDocument, useGetDocumentById } from "@/hooks";
-import { generateThumbnail } from "@/lib/helper";
+import { useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { generateThumbnail } from '@/lib/helper';
 // page components
 import {
   EducationForm,
@@ -15,7 +15,7 @@ import {
   ProjectForm,
   SkillsForm,
   SummaryForm,
-} from "@/homePageComponents";
+} from '@/homePageComponents';
 
 const ResumeForm = () => {
   const param = useParams();
@@ -76,9 +76,7 @@ const ResumeForm = () => {
             variant="outline"
             size="default"
             className="!px-2 !py-1 !h-auto"
-            disabled={
-              activeFormIndex === 7 || resumeInfo?.status === "archived"
-            }
+            disabled={activeFormIndex === 7 || resumeInfo?.status === 'archived'}
             onClick={handleNext}
           >
             Next

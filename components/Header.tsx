@@ -1,24 +1,19 @@
-"use client";
-import React, { useState } from "react";
-import Link from "next/link";
-import { Moon, Sun, Home } from "lucide-react";
+'use client';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { Moon, Sun, Home } from 'lucide-react';
 // components
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui";
-import { useTheme } from "next-themes";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui';
+import { useTheme } from 'next-themes';
 
 const THEMES = [
-  { label: "Light", value: "light" },
-  { label: "Dark", value: "dark" },
-  { label: "System", value: "system" },
+  { label: 'Light', value: 'light' },
+  { label: 'Dark', value: 'dark' },
+  { label: 'System', value: 'system' },
 ];
 
 const Header = () => {
-  const { setTheme, resolvedTheme = "light" } = useTheme();
+  const { setTheme, resolvedTheme = 'light' } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
 
   React.useEffect(() => {
@@ -27,9 +22,9 @@ const Header = () => {
 
   const handleThemeSelect = (value: string) => {
     setTheme(value);
-    fetch("/api/theme", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    fetch('/api/theme', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ theme: value }),
     });
   };
@@ -69,11 +64,11 @@ const Header = () => {
               <button
                 type="button"
                 className={`relative flex items-center justify-center h-8 w-8 rounded border transition-colors ${
-                  resolvedTheme === "dark" ? "border-white" : "border-gray-300"
+                  resolvedTheme === 'dark' ? 'border-white' : 'border-gray-300'
                 }`}
               >
                 {isMounted &&
-                  (resolvedTheme === "dark" ? (
+                  (resolvedTheme === 'dark' ? (
                     <Moon className="h-[1.2rem] w-[1.2rem] text-white" />
                   ) : (
                     <Sun className="h-[1.2rem] w-[1.2rem] text-yellow-500" />
@@ -82,11 +77,8 @@ const Header = () => {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {THEMES.map((t) => (
-                <DropdownMenuItem
-                  key={t.value}
-                  onClick={() => handleThemeSelect(t.value)}
-                >
+              {THEMES.map(t => (
+                <DropdownMenuItem key={t.value} onClick={() => handleThemeSelect(t.value)}>
                   {t.label}
                 </DropdownMenuItem>
               ))}

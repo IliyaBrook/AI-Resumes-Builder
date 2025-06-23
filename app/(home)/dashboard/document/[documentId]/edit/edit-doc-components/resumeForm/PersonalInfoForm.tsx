@@ -1,4 +1,4 @@
-"use client";
+'use client';
 // components
 import {
   DropdownMenu,
@@ -8,20 +8,13 @@ import {
   Button,
   Label,
   Input,
-  PersonalInfoLoader
-} from "@/components";
+  PersonalInfoLoader,
+} from '@/components';
 // hooks
-import { useDebounce, useUpdateDocument, useGetDocumentById } from "@/hooks";
-import { useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Github,
-  Linkedin,
-  ChevronDown,
-} from "lucide-react";
+import { useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import { Mail, Phone, MapPin, Github, Linkedin, ChevronDown } from 'lucide-react';
 
 const PersonalInfoForm = () => {
   const param = useParams();
@@ -32,9 +25,7 @@ const PersonalInfoForm = () => {
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [displayFormat, setDisplayFormat] = useState<"default" | "compact">(
-    "default"
-  );
+  const [displayFormat, setDisplayFormat] = useState<'default' | 'compact'>('default');
 
   useEffect(() => {
     setIsInitialized(false);
@@ -53,14 +44,14 @@ const PersonalInfoForm = () => {
     linkedin?: string;
   }>({
     id: undefined,
-    firstName: "",
-    lastName: "",
-    jobTitle: "",
-    address: "",
-    phone: "",
-    email: "",
-    github: "",
-    linkedin: "",
+    firstName: '',
+    lastName: '',
+    jobTitle: '',
+    address: '',
+    phone: '',
+    email: '',
+    github: '',
+    linkedin: '',
   });
 
   useEffect(() => {
@@ -68,19 +59,18 @@ const PersonalInfoForm = () => {
       if (resumeInfo.personalInfo) {
         setPersonalInfo({
           id: resumeInfo.personalInfo.id ?? undefined,
-          firstName: resumeInfo.personalInfo.firstName || "",
-          lastName: resumeInfo.personalInfo.lastName || "",
-          jobTitle: resumeInfo.personalInfo.jobTitle || "",
-          address: resumeInfo.personalInfo.address || "",
-          phone: resumeInfo.personalInfo.phone || "",
-          email: resumeInfo.personalInfo.email || "",
-          github: resumeInfo.personalInfo.github || "",
-          linkedin: resumeInfo.personalInfo.linkedin || "",
+          firstName: resumeInfo.personalInfo.firstName || '',
+          lastName: resumeInfo.personalInfo.lastName || '',
+          jobTitle: resumeInfo.personalInfo.jobTitle || '',
+          address: resumeInfo.personalInfo.address || '',
+          phone: resumeInfo.personalInfo.phone || '',
+          email: resumeInfo.personalInfo.email || '',
+          github: resumeInfo.personalInfo.github || '',
+          linkedin: resumeInfo.personalInfo.linkedin || '',
         });
       }
-      const currentDisplayFormat =
-        resumeInfo.personalInfoDisplayFormat || "default";
-      setDisplayFormat(currentDisplayFormat as "default" | "compact");
+      const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || 'default';
+      setDisplayFormat(currentDisplayFormat as 'default' | 'compact');
       setIsInitialized(true);
       setTimeout(() => setIsDataLoaded(true), 100);
     }
@@ -94,24 +84,21 @@ const PersonalInfoForm = () => {
 
     const originalPersonalInfo = {
       id: resumeInfo.personalInfo?.id ?? undefined,
-      firstName: resumeInfo.personalInfo?.firstName || "",
-      lastName: resumeInfo.personalInfo?.lastName || "",
-      jobTitle: resumeInfo.personalInfo?.jobTitle || "",
-      address: resumeInfo.personalInfo?.address || "",
-      phone: resumeInfo.personalInfo?.phone || "",
-      email: resumeInfo.personalInfo?.email || "",
-      github: resumeInfo.personalInfo?.github || "",
-      linkedin: resumeInfo.personalInfo?.linkedin || "",
+      firstName: resumeInfo.personalInfo?.firstName || '',
+      lastName: resumeInfo.personalInfo?.lastName || '',
+      jobTitle: resumeInfo.personalInfo?.jobTitle || '',
+      address: resumeInfo.personalInfo?.address || '',
+      phone: resumeInfo.personalInfo?.phone || '',
+      email: resumeInfo.personalInfo?.email || '',
+      github: resumeInfo.personalInfo?.github || '',
+      linkedin: resumeInfo.personalInfo?.linkedin || '',
     };
 
     const hasPersonalInfoChanges =
-      JSON.stringify(debouncedPersonalInfo) !==
-      JSON.stringify(originalPersonalInfo);
+      JSON.stringify(debouncedPersonalInfo) !== JSON.stringify(originalPersonalInfo);
 
-    const currentDisplayFormat =
-      resumeInfo.personalInfoDisplayFormat || "default";
-    const hasDisplayFormatChanges =
-      debouncedDisplayFormat !== currentDisplayFormat;
+    const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || 'default';
+    const hasDisplayFormatChanges = debouncedDisplayFormat !== currentDisplayFormat;
 
     if (hasPersonalInfoChanges || hasDisplayFormatChanges) {
       const updateData: any = {};
@@ -135,13 +122,10 @@ const PersonalInfoForm = () => {
     setResumeInfo,
   ]);
 
-  const handleChange = useCallback(
-    (e: { target: { name: string; value: string } }) => {
-      const { name, value } = e.target;
-      setPersonalInfo((prev) => ({ ...prev, [name]: value }));
-    },
-    []
-  );
+  const handleChange = useCallback((e: { target: { name: string; value: string } }) => {
+    const { name, value } = e.target;
+    setPersonalInfo(prev => ({ ...prev, [name]: value }));
+  }, []);
 
   if (isLoading) {
     return <PersonalInfoLoader />;
@@ -159,17 +143,13 @@ const PersonalInfoForm = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-full justify-between h-9">
-              {displayFormat === "default" ? "Default" : "Compact"}
+              {displayFormat === 'default' ? 'Default' : 'Compact'}
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full">
-            <DropdownMenuItem onClick={() => setDisplayFormat("default")}>
-              Default
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setDisplayFormat("compact")}>
-              Compact
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setDisplayFormat('default')}>Default</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setDisplayFormat('compact')}>Compact</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

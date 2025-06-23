@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 // page components
-import {ResumeForm, ResumePreview, TopSection} from "@/homePageComponents";
+import { ResumeForm, ResumePreview, TopSection } from '@/homePageComponents';
 
 const EditResume = () => {
   return (

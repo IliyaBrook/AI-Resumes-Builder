@@ -1,23 +1,18 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { FileText, Lock, Globe, Trash2 } from "lucide-react";
-import React, { FC, useEffect, useState } from "react";
+import { cn } from '@/lib/utils';
+import { FileText, Lock, Globe, Trash2 } from 'lucide-react';
+import React, { FC, useEffect, useState } from 'react';
 
 interface ResumeTitleProps {
   initialTitle: string;
   isLoading: boolean;
-  status?: "archived" | "private" | "public" | null;
+  status?: 'archived' | 'private' | 'public' | null;
   onSave?: (newTitle: string) => void;
 }
 
-const ResumeTitle: FC<ResumeTitleProps> = ({
-  initialTitle,
-  isLoading,
-  status,
-  onSave,
-}) => {
-  const [title, setTitle] = useState("Untitled Resume");
+const ResumeTitle: FC<ResumeTitleProps> = ({ initialTitle, isLoading, status, onSave }) => {
+  const [title, setTitle] = useState('Untitled Resume');
 
   useEffect(() => {
     if (initialTitle) setTitle(initialTitle);
@@ -26,13 +21,13 @@ const ResumeTitle: FC<ResumeTitleProps> = ({
   const handleBlur = (e: React.FocusEvent<HTMLHeadingElement>) => {
     const newTitle = e.target.innerText;
     setTitle(newTitle);
-    if (onSave && typeof onSave === "function") {
+    if (onSave && typeof onSave === 'function') {
       onSave(newTitle);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLHeadingElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.preventDefault();
       e.currentTarget.blur();
     }
@@ -53,11 +48,10 @@ const ResumeTitle: FC<ResumeTitleProps> = ({
          opacity-100
                   `,
           {
-            "!opacity-70 !pointer-events-none":
-              isLoading || status === "archived",
+            '!opacity-70 !pointer-events-none': isLoading || status === 'archived',
           }
         )}
-        contentEditable={!(isLoading || status === "archived")}
+        contentEditable={!(isLoading || status === 'archived')}
         suppressContentEditableWarning={true}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
@@ -66,11 +60,11 @@ const ResumeTitle: FC<ResumeTitleProps> = ({
         {title}
       </h5>
       <span>
-        {status === "private" ? (
+        {status === 'private' ? (
           <Lock size="14px" className="" />
-        ) : status === "public" ? (
+        ) : status === 'public' ? (
           <Globe size="14px" />
-        ) : status === "archived" ? (
+        ) : status === 'archived' ? (
           <Trash2 size="14px" />
         ) : null}
       </span>

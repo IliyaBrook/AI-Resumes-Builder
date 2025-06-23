@@ -1,8 +1,8 @@
-import { SkeletonLoader } from "@/components";
-import { INITIAL_THEME_COLOR } from "@/lib/helper";
-import { ResumeDataType } from "@/types/resume.type";
-import React, { FC } from "react";
-import { formatDateByLocale } from "@/lib/utils";
+import { SkeletonLoader } from '@/components';
+import { INITIAL_THEME_COLOR } from '@/lib/helper';
+import { ResumeDataType } from '@/types/resume.type';
+import React, { FC } from 'react';
+import { formatDateByLocale } from '@/lib/utils';
 
 interface PropsType {
   resumeInfo: ResumeDataType | undefined;
@@ -17,10 +17,7 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   }
   return (
     <div className="w-full my-3">
-      <h5
-        className="text-center font-bold text-[18px]"
-        style={{ color: themeColor }}
-      >
+      <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
         Professional Experience
       </h5>
       <hr
@@ -55,26 +52,25 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               <h5 className="text-[13px] whitespace-nowrap">
                 <span className="font-bold">{experience?.companyName}</span>
                 <span>
-                  {experience?.companyName && experience?.city && ", "}
+                  {experience?.companyName && experience?.city && ', '}
                   {experience?.city}
                 </span>
                 <span>
-                  {experience?.city && experience?.state && ", "}
+                  {experience?.city && experience?.state && ', '}
                   {experience?.state}
                 </span>
               </h5>
               <span className="text-[13px] font-bold">
                 {experience?.yearsOnly
-                  ? `${experience?.startDate ? new Date(experience.startDate).getFullYear() : ''}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? 'Present' : (experience?.endDate ? new Date(experience.endDate).getFullYear() : '')}`
-                  : `${formatDateByLocale(experience?.startDate ?? undefined)}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? 'Present' : formatDateByLocale(experience?.endDate ?? undefined)}`
-                }
+                  ? `${experience?.startDate ? new Date(experience.startDate).getFullYear() : ''}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? 'Present' : experience?.endDate ? new Date(experience.endDate).getFullYear() : ''}`
+                  : `${formatDateByLocale(experience?.startDate ?? undefined)}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? 'Present' : formatDateByLocale(experience?.endDate ?? undefined)}`}
               </span>
             </div>
             <div
-              style={{ fontSize: "13px" }}
+              style={{ fontSize: '13px' }}
               className="exp-preview leading-[14.6px]"
               dangerouslySetInnerHTML={{
-                __html: experience?.workSummary || "",
+                __html: experience?.workSummary || '',
               }}
             />
           </div>

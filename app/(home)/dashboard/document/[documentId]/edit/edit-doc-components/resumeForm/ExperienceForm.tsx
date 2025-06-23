@@ -1,12 +1,18 @@
-"use client";
+'use client';
 //hooks
-import { useDebounce, useUpdateDocument, useGetDocumentById, useDeleteExperience, useCreateExperience } from "@/hooks";
-import { ExperienceType } from "@/types/resume.type";
-import { Plus, X, MoveUp, MoveDown } from "lucide-react";
-import { useParams } from "next/navigation";
-import React from "react";
+import {
+  useDebounce,
+  useUpdateDocument,
+  useGetDocumentById,
+  useDeleteExperience,
+  useCreateExperience,
+} from '@/hooks';
+import { ExperienceType } from '@/types/resume.type';
+import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import React from 'react';
 // components
-import { parseAIResult, Label, Input, Button, RichTextEditor } from "@/components";
+import { parseAIResult, Label, Input, Button, RichTextEditor } from '@/components';
 
 const ExperienceForm = () => {
   const param = useParams();
@@ -14,25 +20,21 @@ const ExperienceForm = () => {
   const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const allSkills = data?.data?.skills
-    ? resumeInfo?.skills.map((skill) => skill.name).join(", ")
-    : "";
+    ? resumeInfo?.skills.map(skill => skill.name).join(', ')
+    : '';
 
   const { mutate: setResumeInfo } = useUpdateDocument();
-  const { mutate: deleteExperience, isPending: isDeleting } =
-    useDeleteExperience();
+  const { mutate: deleteExperience, isPending: isDeleting } = useDeleteExperience();
   const { mutateAsync: createExperience } = useCreateExperience();
 
-  const [localExperiences, setLocalExperiences] = React.useState<
-    ExperienceType[]
-  >(resumeInfo?.experiences || []);
+  const [localExperiences, setLocalExperiences] = React.useState<ExperienceType[]>(
+    resumeInfo?.experiences || []
+  );
   const debouncedExperiences = useDebounce(localExperiences, 500);
 
   React.useEffect(() => {
-    if (
-      debouncedExperiences &&
-      debouncedExperiences !== resumeInfo?.experiences
-    ) {
-      const sanitized = debouncedExperiences.map((exp) => ({
+    if (debouncedExperiences && debouncedExperiences !== resumeInfo?.experiences) {
+      const sanitized = debouncedExperiences.map(exp => ({
         ...exp,
         endDate: exp.currentlyWorking ? null : exp.endDate,
         yearsOnly: exp.yearsOnly ?? false,
@@ -41,53 +43,46 @@ const ExperienceForm = () => {
     }
   }, [debouncedExperiences]);
 
-  const handleChange = (
-    e: { target: { name: string; value: string } },
-    index: number
-  ) => {
+  const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;
-    setLocalExperiences((prev) =>
-      prev.map((item, idx) =>
-        idx === index ? { ...item, [name]: value } : item
-      )
+    setLocalExperiences(prev =>
+      prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item))
     );
   };
 
   const addNewExperience = async () => {
     const newExp = {
-      title: "",
-      companyName: "",
-      city: "",
-      state: "",
-      startDate: "",
-      endDate: "",
-      workSummary: "",
+      title: '',
+      companyName: '',
+      city: '',
+      state: '',
+      startDate: '',
+      endDate: '',
+      workSummary: '',
       currentlyWorking: false,
       yearsOnly: false,
       order: localExperiences.length,
     };
     const created = await createExperience(newExp);
-    setLocalExperiences((prev) => [...prev, created]);
+    setLocalExperiences(prev => [...prev, created]);
   };
 
   const removeExperience = (id?: number) => {
     if (!id) return;
     deleteExperience({ experienceId: id });
-    setLocalExperiences((prev) => prev.filter((exp) => exp.id !== id));
+    setLocalExperiences(prev => prev.filter(exp => exp.id !== id));
   };
 
   const handEditor = (value: string, name: string, index: number) => {
-    setLocalExperiences((prev) =>
-      prev.map((item, idx) =>
-        idx === index ? { ...item, [name]: value } : item
-      )
+    setLocalExperiences(prev =>
+      prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item))
     );
   };
 
   const moveExperience = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= localExperiences.length) return;
 
-    setLocalExperiences((prev) => {
+    setLocalExperiences(prev => {
       const newExperiences = [...prev];
       const [movedItem] = newExperiences.splice(fromIndex, 1);
       newExperiences.splice(toIndex, 0, movedItem);
@@ -103,8 +98,8 @@ const ExperienceForm = () => {
 
   const buildExperiencePrompt = (item: ExperienceType, skills: string) => {
     let prompt = `Based on the following experience: Position title: ${
-      item.title || ""
-    }. Company: ${item.companyName || ""}. Summary: ${item.workSummary || ""}.`;
+      item.title || ''
+    }. Company: ${item.companyName || ''}. Summary: ${item.workSummary || ''}.`;
 
     if (skills) {
       prompt += ` Available skills: ${skills}.`;
@@ -123,9 +118,7 @@ const ExperienceForm = () => {
             <p className="text-sm">Add previous job experience</p>
           </div>
           {experiences.length > 1 && (
-            <div className="text-sm text-muted-foreground">
-              Use arrows to reorder experiences
-            </div>
+            <div className="text-sm text-muted-foreground">Use arrows to reorder experiences</div>
           )}
         </div>
       </div>
@@ -187,8 +180,8 @@ const ExperienceForm = () => {
                     name="title"
                     placeholder=""
                     required
-                    value={item?.title || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.title || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div>
@@ -197,8 +190,8 @@ const ExperienceForm = () => {
                     name="companyName"
                     placeholder=""
                     required
-                    value={item?.companyName || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.companyName || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div>
@@ -207,8 +200,8 @@ const ExperienceForm = () => {
                     name="city"
                     placeholder=""
                     required
-                    value={item?.city || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.city || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div>
@@ -217,8 +210,8 @@ const ExperienceForm = () => {
                     name="state"
                     placeholder=""
                     required
-                    value={item?.state || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.state || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div>
@@ -228,8 +221,8 @@ const ExperienceForm = () => {
                     type="date"
                     placeholder=""
                     required
-                    value={item?.startDate || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.startDate || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -240,8 +233,8 @@ const ExperienceForm = () => {
                       type="date"
                       placeholder=""
                       required={!item?.currentlyWorking}
-                      value={item?.endDate || ""}
-                      onChange={(e) => handleChange(e, index)}
+                      value={item?.endDate || ''}
+                      onChange={e => handleChange(e, index)}
                       disabled={item?.currentlyWorking}
                     />
                   </div>
@@ -251,16 +244,14 @@ const ExperienceForm = () => {
                         type="checkbox"
                         id={`present-checkbox-${index}`}
                         checked={item?.currentlyWorking || false}
-                        onChange={(e) => {
-                          setLocalExperiences((prev) =>
+                        onChange={e => {
+                          setLocalExperiences(prev =>
                             prev.map((exp, idx) =>
                               idx === index
                                 ? {
                                     ...exp,
                                     currentlyWorking: e.target.checked,
-                                    endDate: e.target.checked
-                                      ? ""
-                                      : exp.endDate,
+                                    endDate: e.target.checked ? '' : exp.endDate,
                                   }
                                 : exp
                             )
@@ -280,8 +271,8 @@ const ExperienceForm = () => {
                         type="checkbox"
                         id={`years-only-checkbox-${index}`}
                         checked={item?.yearsOnly || false}
-                        onChange={(e) => {
-                          setLocalExperiences((prev) =>
+                        onChange={e => {
+                          setLocalExperiences(prev =>
                             prev.map((exp, idx) =>
                               idx === index
                                 ? {
@@ -306,15 +297,11 @@ const ExperienceForm = () => {
                 <div className="col-span-2 mt-1">
                   <RichTextEditor
                     jobTitle={item.title}
-                    initialValue={item.workSummary || ""}
-                    onEditorChange={(value) =>
-                      handEditor(
-                        String(parseAIResult(value)),
-                        "workSummary",
-                        index
-                      )
+                    initialValue={item.workSummary || ''}
+                    onEditorChange={value =>
+                      handEditor(String(parseAIResult(value)), 'workSummary', index)
                     }
-                    prompt={buildExperiencePrompt(item, allSkills || "")}
+                    prompt={buildExperiencePrompt(item, allSkills || '')}
                     title={undefined}
                     showBullets={true}
                     showLineLengthSelector={true}

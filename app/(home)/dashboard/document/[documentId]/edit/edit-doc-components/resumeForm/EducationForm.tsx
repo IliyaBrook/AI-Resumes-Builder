@@ -1,9 +1,9 @@
-"use client";
+'use client';
 // components
-import { Textarea, Label, Input, Button } from "@/components";
-import { Plus, X } from "lucide-react";
-import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import { Textarea, Label, Input, Button } from '@/components';
+import { Plus, X } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import React, { useEffect } from 'react';
 //hooks
 import {
   useCreateEducation,
@@ -11,25 +11,25 @@ import {
   useUpdateDocument,
   useGetDocumentById,
   useDeleteEducation,
-} from "@/hooks";
-import { Education } from "@/types/resume.type";
+} from '@/hooks';
+import { Education } from '@/types/resume.type';
 
 const getToday = () => {
   const d = new Date();
-  const month = (d.getMonth() + 1).toString().padStart(2, "0");
-  const day = d.getDate().toString().padStart(2, "0");
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const day = d.getDate().toString().padStart(2, '0');
   return `${d.getFullYear()}-${month}-${day}`;
 };
 
 const initialState = {
   id: undefined,
   docId: undefined,
-  universityName: "",
+  universityName: '',
   startDate: getToday(),
   endDate: getToday(),
-  degree: "",
-  major: "",
-  description: "",
+  degree: '',
+  major: '',
+  description: '',
 };
 
 const EducationForm = () => {
@@ -38,19 +38,18 @@ const EducationForm = () => {
   const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
-  const { mutate: deleteEducation, isPending: isDeleting } =
-    useDeleteEducation();
+  const { mutate: deleteEducation, isPending: isDeleting } = useDeleteEducation();
   const { mutateAsync: createEducation } = useCreateEducation();
 
   const normalizeData = (item: Education) => ({
     ...item,
     docId: item.docId ?? undefined,
-    universityName: item.universityName || "",
-    startDate: item.startDate || "",
-    endDate: item.endDate || "",
-    degree: item.degree || "",
-    major: item.major || "",
-    description: item.description || "",
+    universityName: item.universityName || '',
+    startDate: item.startDate || '',
+    endDate: item.endDate || '',
+    degree: item.degree || '',
+    major: item.major || '',
+    description: item.description || '',
   });
 
   const [educationList, setEducationList] = React.useState<
@@ -93,30 +92,19 @@ const EducationForm = () => {
 
   useEffect(() => {
     if (!resumeInfo) return;
-    const sanitized = debouncedEducationList.map((edu) => ({
+    const sanitized = debouncedEducationList.map(edu => ({
       ...edu,
-      startDate: edu.skipDates
-        ? null
-        : edu.startDate === ""
-        ? null
-        : edu.startDate,
+      startDate: edu.skipDates ? null : edu.startDate === '' ? null : edu.startDate,
       endDate:
-        edu.skipDates || edu.currentlyStudying
-          ? null
-          : edu.endDate === ""
-          ? null
-          : edu.endDate,
+        edu.skipDates || edu.currentlyStudying ? null : edu.endDate === '' ? null : edu.endDate,
       yearsOnly: edu.yearsOnly ?? false,
     }));
     setResumeInfo({ education: sanitized });
   }, [debouncedEducationList]);
 
-  const handleChange = (
-    e: { target: { name: string; value: string } },
-    index: number
-  ) => {
+  const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;
-    setEducationList((prevState) => {
+    setEducationList(prevState => {
       const newEducationList = [...prevState];
       newEducationList[index] = {
         ...newEducationList[index],
@@ -128,22 +116,22 @@ const EducationForm = () => {
 
   const addNewEducation = async () => {
     const newEdu = {
-      universityName: "",
+      universityName: '',
       startDate: getToday(),
       endDate: getToday(),
-      degree: "",
-      major: "",
-      description: "",
+      degree: '',
+      major: '',
+      description: '',
       yearsOnly: false,
     };
     const created = await createEducation(newEdu);
-    setEducationList((prev) => [...prev, created]);
+    setEducationList(prev => [...prev, created]);
   };
 
   const removeEducation = (id?: number) => {
     if (!id) return;
     deleteEducation({ educationId: id });
-    setEducationList((prev) => prev.filter((item) => item.id !== id));
+    setEducationList(prev => prev.filter(item => item.id !== id));
   };
 
   return (
@@ -187,8 +175,8 @@ const EducationForm = () => {
                     name="universityName"
                     placeholder=""
                     required
-                    value={item?.universityName || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.universityName || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div>
@@ -197,8 +185,8 @@ const EducationForm = () => {
                     name="degree"
                     placeholder=""
                     required
-                    value={item?.degree || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.degree || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div>
@@ -207,8 +195,8 @@ const EducationForm = () => {
                     name="major"
                     placeholder=""
                     required
-                    value={item?.major || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.major || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div>
@@ -218,8 +206,8 @@ const EducationForm = () => {
                     type="date"
                     placeholder=""
                     required={!item?.skipDates}
-                    value={item?.startDate || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.startDate || ''}
+                    onChange={e => handleChange(e, index)}
                     disabled={item?.skipDates}
                   />
                 </div>
@@ -231,8 +219,8 @@ const EducationForm = () => {
                       type="date"
                       placeholder=""
                       required={!item?.skipDates && !item?.currentlyStudying}
-                      value={item?.endDate || ""}
-                      onChange={(e) => handleChange(e, index)}
+                      value={item?.endDate || ''}
+                      onChange={e => handleChange(e, index)}
                       disabled={item?.skipDates || item?.currentlyStudying}
                     />
                   </div>
@@ -242,16 +230,14 @@ const EducationForm = () => {
                         type="checkbox"
                         id={`present-checkbox-${index}`}
                         checked={item?.currentlyStudying || false}
-                        onChange={(e) => {
-                          setEducationList((prev) =>
+                        onChange={e => {
+                          setEducationList(prev =>
                             prev.map((edu, idx) =>
                               idx === index
                                 ? {
                                     ...edu,
                                     currentlyStudying: e.target.checked,
-                                    endDate: e.target.checked
-                                      ? ""
-                                      : edu.endDate,
+                                    endDate: e.target.checked ? '' : edu.endDate,
                                   }
                                 : edu
                             )
@@ -272,19 +258,15 @@ const EducationForm = () => {
                         type="checkbox"
                         id={`skipdates-checkbox-${index}`}
                         checked={item?.skipDates || false}
-                        onChange={(e) => {
-                          setEducationList((prev) =>
+                        onChange={e => {
+                          setEducationList(prev =>
                             prev.map((edu, idx) =>
                               idx === index
                                 ? {
                                     ...edu,
                                     skipDates: e.target.checked,
-                                    startDate: e.target.checked
-                                      ? ""
-                                      : edu.startDate,
-                                    endDate: e.target.checked
-                                      ? ""
-                                      : edu.endDate,
+                                    startDate: e.target.checked ? '' : edu.startDate,
+                                    endDate: e.target.checked ? '' : edu.endDate,
                                     currentlyStudying: e.target.checked
                                       ? false
                                       : edu.currentlyStudying,
@@ -307,12 +289,10 @@ const EducationForm = () => {
                         type="checkbox"
                         id={`yearsonly-checkbox-${index}`}
                         checked={item?.yearsOnly || false}
-                        onChange={(e) => {
-                          setEducationList((prev) =>
+                        onChange={e => {
+                          setEducationList(prev =>
                             prev.map((edu, idx) =>
-                              idx === index
-                                ? { ...edu, yearsOnly: e.target.checked }
-                                : edu
+                              idx === index ? { ...edu, yearsOnly: e.target.checked } : edu
                             )
                           );
                         }}
@@ -333,25 +313,24 @@ const EducationForm = () => {
                     name="description"
                     placeholder=""
                     required
-                    value={item.description || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item.description || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
               </div>
 
-              {index === educationList.length - 1 &&
-                educationList.length < 5 && (
-                  <Button
-                    className="gap-1 mt-1 text-primary border-primary/50"
-                    variant="outline"
-                    type="button"
-                    disabled={isPending}
-                    onClick={addNewEducation}
-                  >
-                    <Plus size="15px" />
-                    Add More Education
-                  </Button>
-                )}
+              {index === educationList.length - 1 && educationList.length < 5 && (
+                <Button
+                  className="gap-1 mt-1 text-primary border-primary/50"
+                  variant="outline"
+                  type="button"
+                  disabled={isPending}
+                  onClick={addNewEducation}
+                >
+                  <Plus size="15px" />
+                  Add More Education
+                </Button>
+              )}
             </div>
           ))}
         </div>

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 // components
 import {
   Dialog,
@@ -7,13 +7,13 @@ import {
   DialogTitle,
   DialogTrigger,
   Button,
-} from "@/components";
+} from '@/components';
 
-import { Eye, FileText } from "lucide-react";
-import React from "react";
-import ResumePreview from "./ResumePreview";
-import { useGetDocumentById } from "@/hooks";
-import { useParams } from "next/navigation";
+import { Eye, FileText } from 'lucide-react';
+import React from 'react';
+import ResumePreview from './ResumePreview';
+import { useGetDocumentById } from '@/hooks';
+import { useParams } from 'next/navigation';
 
 const PreviewModal = () => {
   const param = useParams();
@@ -25,7 +25,7 @@ const PreviewModal = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          disabled={isLoading || resumeInfo?.status === "archived"}
+          disabled={isLoading || resumeInfo?.status === 'archived'}
           variant="secondary"
           className="bg-white border gap-1
                dark:bg-gray-800 !p-2 w-9

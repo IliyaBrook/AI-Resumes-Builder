@@ -1,12 +1,18 @@
-"use client";
+'use client';
 // components
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Button } from "@/components";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Button,
+} from '@/components';
 // hooks
-import { useUpdateDocument, useGetDocumentById, toast } from "@/hooks";
-import { StatusType } from '@/types/resume.type'
-import { Loader, MoreHorizontal, Redo, Trash2 } from 'lucide-react'
-import { useParams, useRouter } from 'next/navigation'
-import React, { useCallback } from 'react'
+import { useUpdateDocument, useGetDocumentById, toast } from '@/hooks';
+import { StatusType } from '@/types/resume.type';
+import { Loader, MoreHorizontal, Redo, Trash2 } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useCallback } from 'react';
 
 const MoreOption = () => {
   const router = useRouter();
@@ -27,15 +33,15 @@ const MoreOption = () => {
           onSuccess: () => {
             router.replace(`/dashboard/`);
             toast({
-              title: "Success",
+              title: 'Success',
               description: `Moved to trash successfully`,
             });
           },
           onError() {
             toast({
-              title: "Error",
-              description: "Failed to update status",
-              variant: "destructive",
+              title: 'Error',
+              description: 'Failed to update status',
+              variant: 'destructive',
             });
           },
         }
@@ -48,22 +54,18 @@ const MoreOption = () => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="secondary"
-            size="icon"
-            className="bg-white border dark:bg-gray-800"
-          >
+          <Button variant="secondary" size="icon" className="bg-white border dark:bg-gray-800">
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem asChild>
-            {resumeInfo?.status === "archived" ? (
+            {resumeInfo?.status === 'archived' ? (
               <Button
                 variant="ghost"
                 className="gap-1 !py-2 !cursor-pointer"
                 disabled={isPending}
-                onClick={() => handleClick("private")}
+                onClick={() => handleClick('private')}
               >
                 <Redo size="15px" />
                 Retore resume
@@ -74,7 +76,7 @@ const MoreOption = () => {
                 variant="ghost"
                 className="gap-1  !py-2 !cursor-pointer"
                 disabled={isPending}
-                onClick={() => handleClick("archived")}
+                onClick={() => handleClick('archived')}
               >
                 <Trash2 size="15px" />
                 Move to Trash

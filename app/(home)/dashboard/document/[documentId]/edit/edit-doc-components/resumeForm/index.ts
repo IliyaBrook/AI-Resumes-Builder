@@ -1,8 +1,8 @@
-export {default as ResumeForm} from './ResumeForm'
-export {default as EducationForm} from './EducationForm'
-export {default as ExperienceForm} from './ExperienceForm'
-export {default as LanguageForm} from './LanguageForm'
-export {default as PersonalInfoForm} from './PersonalInfoForm'
-export {default as ProjectForm} from './ProjectForm'
-export {default as SkillsForm} from './SkillsForm'
-export {default as SummaryForm} from './SummaryForm'
+export { default as ResumeForm } from './ResumeForm';
+export { default as EducationForm } from './EducationForm';
+export { default as ExperienceForm } from './ExperienceForm';
+export { default as LanguageForm } from './LanguageForm';
+export { default as PersonalInfoForm } from './PersonalInfoForm';
+export { default as ProjectForm } from './ProjectForm';
+export { default as SkillsForm } from './SkillsForm';
+export { default as SummaryForm } from './SummaryForm';

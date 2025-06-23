@@ -1,41 +1,36 @@
-"use client";
-import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { INITIAL_THEME_COLOR } from "@/constant/colors";
+'use client';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { INITIAL_THEME_COLOR } from '@/constant/colors';
 // components
-import { Popover, PopoverContent, PopoverTrigger, Button } from "@/components";
-import { Palette, ChevronDown } from "lucide-react";
-import { generateThumbnail } from "@/lib/helper";
+import { Popover, PopoverContent, PopoverTrigger, Button } from '@/components';
+import { Palette, ChevronDown } from 'lucide-react';
+import { generateThumbnail } from '@/lib/helper';
 // hooks
-import {
-  useDebounce,
-  useGetDocumentById,
-  useUpdateDocument,
-  toast,
-} from "@/hooks";
+import { useDebounce, useGetDocumentById, useUpdateDocument, toast } from '@/hooks';
 
 const ThemeColor = () => {
   const colors = [
-    "#FF6F61",
-    "#33B679",
-    "#4B9CD3",
-    "#FF6F91",
-    "#9B59B6",
-    "#1ABC9C",
-    "#FF8C00",
-    "#B2D300",
-    "#8E44AD",
-    "#FF4F81",
-    "#2ECC71",
-    "#3498DB",
-    "#A3D550",
-    "#00BFFF",
-    "#FF6F61",
-    "#8E44AD",
-    "#2ECC71",
-    "#5B2C6F",
-    "#FF4F81",
-    "#2980B9",
+    '#FF6F61',
+    '#33B679',
+    '#4B9CD3',
+    '#FF6F91',
+    '#9B59B6',
+    '#1ABC9C',
+    '#FF8C00',
+    '#B2D300',
+    '#8E44AD',
+    '#FF4F81',
+    '#2ECC71',
+    '#3498DB',
+    '#A3D550',
+    '#00BFFF',
+    '#FF6F61',
+    '#8E44AD',
+    '#2ECC71',
+    '#5B2C6F',
+    '#FF4F81',
+    '#2980B9',
   ];
 
   const param = useParams();
@@ -43,9 +38,7 @@ const ThemeColor = () => {
   const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
-  const [selectedColor, setSelectedColor] = useState(
-    resumeInfo?.themeColor || INITIAL_THEME_COLOR
-  );
+  const [selectedColor, setSelectedColor] = useState(resumeInfo?.themeColor || INITIAL_THEME_COLOR);
   const debouncedColor = useDebounce<string>(selectedColor, 1000);
 
   useEffect(() => {
@@ -72,9 +65,9 @@ const ThemeColor = () => {
       {
         onError() {
           toast({
-            title: "Error",
-            description: "Failed to update theme",
-            variant: "destructive",
+            title: 'Error',
+            description: 'Failed to update theme',
+            variant: 'destructive',
           });
         },
       }
@@ -85,7 +78,7 @@ const ThemeColor = () => {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          disabled={resumeInfo?.status === "archived" ? true : false}
+          disabled={resumeInfo?.status === 'archived' ? true : false}
           variant="secondary"
           className="bg-white border gap-1
                    dark:bg-gray-800 !p-2
@@ -120,7 +113,7 @@ const ThemeColor = () => {
               className={`h-5 w-8 rounded-[5px]
                             hover:border-black border
 
-                          ${selectedColor === item && "border border-black"}
+                          ${selectedColor === item && 'border border-black'}
                             `}
               style={{
                 background: item,

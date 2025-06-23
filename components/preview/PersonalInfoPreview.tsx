@@ -1,9 +1,9 @@
-"use client";
-import { Skeleton } from "@/components";
-import { INITIAL_THEME_COLOR } from "@/lib/helper";
-import { ResumeDataType } from "@/types/resume.type";
-import React, { FC } from "react";
-import { Mail, Phone, MapPin, Github, Linkedin } from "lucide-react";
+'use client';
+import { Skeleton } from '@/components';
+import { INITIAL_THEME_COLOR } from '@/lib/helper';
+import { ResumeDataType } from '@/types/resume.type';
+import React, { FC } from 'react';
+import { Mail, Phone, MapPin, Github, Linkedin } from 'lucide-react';
 
 interface PropsType {
   resumeInfo: ResumeDataType | undefined;
@@ -12,12 +12,12 @@ interface PropsType {
 
 const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
-  const displayFormat = resumeInfo?.personalInfoDisplayFormat || "default";
-  const isCompact = displayFormat === "compact";
+  const displayFormat = resumeInfo?.personalInfoDisplayFormat || 'default';
+  const isCompact = displayFormat === 'compact';
 
   const normalizeUrl = (url: string) => {
     if (!url) return url;
-    if (url.startsWith("http://") || url.startsWith("https://")) {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
     return `https://${url}`;
@@ -39,24 +39,16 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     }
 
     if (resumeInfo?.personalInfo?.address) {
-      compactInfo.push(
-        <span key="address">{resumeInfo.personalInfo.address}</span>
-      );
+      compactInfo.push(<span key="address">{resumeInfo.personalInfo.address}</span>);
     }
 
     if (resumeInfo?.personalInfo?.phone) {
-      compactInfo.push(
-        <span key="phone">{resumeInfo.personalInfo.phone}</span>
-      );
+      compactInfo.push(<span key="phone">{resumeInfo.personalInfo.phone}</span>);
     }
 
     if (resumeInfo?.personalInfo?.email) {
       compactInfo.push(
-        <a
-          key="email"
-          href={`mailto:${resumeInfo.personalInfo.email}`}
-          className="hover:underline"
-        >
+        <a key="email" href={`mailto:${resumeInfo.personalInfo.email}`} className="hover:underline">
           {resumeInfo.personalInfo.email}
         </a>
       );
@@ -71,7 +63,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           rel="noopener noreferrer"
           className="hover:underline"
         >
-          {resumeInfo.personalInfo.github.replace(/^https?:\/\//, "")}
+          {resumeInfo.personalInfo.github.replace(/^https?:\/\//, '')}
         </a>
       );
     }
@@ -85,7 +77,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           rel="noopener noreferrer"
           className="hover:underline"
         >
-          {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, "")}
+          {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, '')}
         </a>
       );
     }
@@ -98,8 +90,8 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
             color: themeColor,
           }}
         >
-          {resumeInfo?.personalInfo?.firstName || "First Name"}{" "}
-          {resumeInfo?.personalInfo?.lastName || "Last Name"}
+          {resumeInfo?.personalInfo?.firstName || 'First Name'}{' '}
+          {resumeInfo?.personalInfo?.lastName || 'Last Name'}
         </h2>
         <div className="text-center text-sm font-medium mb-2 text-gray-600 w-full">
           <div className="flex flex-col items-center gap-y-1">
@@ -115,17 +107,11 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 const rowItems = compactInfo.slice(startIndex, endIndex);
 
                 return (
-                  <div
-                    key={rowIndex}
-                    className="flex flex-wrap justify-center gap-x-1"
-                  >
+                  <div key={rowIndex} className="flex flex-wrap justify-center gap-x-1">
                     {rowItems.map((item, index) => {
                       const isLast = index === rowItems.length - 1;
                       return (
-                        <span
-                          key={startIndex + index}
-                          className="whitespace-nowrap"
-                        >
+                        <span key={startIndex + index} className="whitespace-nowrap">
                           {item}
                           {!isLast && (
                             <span
@@ -166,21 +152,17 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           color: themeColor,
         }}
       >
-        {resumeInfo?.personalInfo?.firstName || "First Name"}{" "}
-        {resumeInfo?.personalInfo?.lastName || "Last Name"}
+        {resumeInfo?.personalInfo?.firstName || 'First Name'}{' '}
+        {resumeInfo?.personalInfo?.lastName || 'Last Name'}
       </h2>
       <div className="text-center text-base font-medium mb-2 text-gray-600 w-full">
         <div className="flex justify-center">
-          <span className="font-bold">
-            {resumeInfo?.personalInfo?.jobTitle || "Job Title"}
-          </span>
+          <span className="font-bold">{resumeInfo?.personalInfo?.jobTitle || 'Job Title'}</span>
           <span>
             {resumeInfo?.personalInfo?.address && (
               <span className="ml-2 flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
                 <MapPin size={15} className="opacity-70 shrink-0" />
-                <span className="pdf-position-fix">
-                  {resumeInfo.personalInfo.address}
-                </span>
+                <span className="pdf-position-fix">{resumeInfo.personalInfo.address}</span>
               </span>
             )}
           </span>
@@ -221,7 +203,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 rel="noopener noreferrer"
                 className="hover:underline pdf-position-fix"
               >
-                {resumeInfo.personalInfo.github.replace(/^https?:\/\//, "")}
+                {resumeInfo.personalInfo.github.replace(/^https?:\/\//, '')}
               </a>
             </span>
           )}
@@ -234,7 +216,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 rel="noopener noreferrer"
                 className="hover:underline pdf-position-fix"
               >
-                {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, '')}
               </a>
             </span>
           )}

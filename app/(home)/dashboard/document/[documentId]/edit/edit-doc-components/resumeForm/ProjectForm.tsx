@@ -1,12 +1,12 @@
-"use client";
-import { Plus, X, MoveUp, MoveDown } from "lucide-react";
-import { useParams } from "next/navigation";
-import React from "react";
-import { ProjectType } from "@/types/resume.type";
+'use client';
+import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import React from 'react';
+import { ProjectType } from '@/types/resume.type';
 // hooks
-import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from "@/hooks";
+import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
 // components
-import { RichTextEditor, Label, Input, Button } from "@/components";
+import { RichTextEditor, Label, Input, Button } from '@/components';
 
 const ProjectForm = () => {
   const param = useParams();
@@ -17,7 +17,7 @@ const ProjectForm = () => {
   const { mutate: deleteProject } = useDeleteProject();
 
   const [sectionTitle, setSectionTitle] = React.useState(
-    resumeInfo?.projectsSectionTitle || "Projects"
+    resumeInfo?.projectsSectionTitle || 'Projects'
   );
   const [localProjects, setLocalProjects] = React.useState<ProjectType[]>(
     resumeInfo?.projects || []
@@ -27,14 +27,12 @@ const ProjectForm = () => {
 
   React.useEffect(() => {
     setLocalProjects(
-      (resumeInfo?.projects || [])
-        .slice()
-        .sort((a, b) => (a.order || 0) - (b.order || 0))
+      (resumeInfo?.projects || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0))
     );
   }, [resumeInfo?.projects]);
 
   React.useEffect(() => {
-    setSectionTitle(resumeInfo?.projectsSectionTitle || "Projects");
+    setSectionTitle(resumeInfo?.projectsSectionTitle || 'Projects');
   }, [resumeInfo?.projectsSectionTitle]);
 
   React.useEffect(() => {
@@ -42,42 +40,32 @@ const ProjectForm = () => {
   }, [debouncedProjects]);
 
   React.useEffect(() => {
-    if (
-      debouncedSectionTitle !== (resumeInfo?.projectsSectionTitle || "Projects")
-    ) {
+    if (debouncedSectionTitle !== (resumeInfo?.projectsSectionTitle || 'Projects')) {
       setResumeInfo({ projectsSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle]);
 
-  const handleChange = (
-    e: { target: { name: string; value: string } },
-    index: number
-  ) => {
+  const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;
-    setLocalProjects((prev) =>
-      prev.map((item, idx) =>
-        idx === index ? { ...item, [name]: value } : item
-      )
+    setLocalProjects(prev =>
+      prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item))
     );
   };
 
   const addNewProject = () => {
-    setLocalProjects((prev) => [
-      ...prev,
-      { name: "", url: "", description: "", order: prev.length },
-    ]);
+    setLocalProjects(prev => [...prev, { name: '', url: '', description: '', order: prev.length }]);
   };
 
   const removeProject = (index: number, id?: number) => {
     if (id) {
       deleteProject({ projectId: id });
     }
-    setLocalProjects((prev) => prev.filter((_, idx) => idx !== index));
+    setLocalProjects(prev => prev.filter((_, idx) => idx !== index));
   };
 
   const moveProject = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= localProjects.length) return;
-    setLocalProjects((prev) => {
+    setLocalProjects(prev => {
       const newProjects = [...prev];
       const [movedItem] = newProjects.splice(fromIndex, 1);
       newProjects.splice(toIndex, 0, movedItem);
@@ -89,16 +77,14 @@ const ProjectForm = () => {
     <div>
       <div className="flex items-center gap-2 mb-2">
         {localProjects.length > 1 && (
-          <div className="text-sm text-muted-foreground">
-            Use arrows to reorder experiences
-          </div>
+          <div className="text-sm text-muted-foreground">Use arrows to reorder experiences</div>
         )}
       </div>
       <div className="w-full flex items-center gap-2 mb-2">
         <Input
           className="font-bold text-lg flex-1"
           value={sectionTitle}
-          onChange={(e) => setSectionTitle(e.target.value)}
+          onChange={e => setSectionTitle(e.target.value)}
         />
       </div>
       <form>
@@ -156,8 +142,8 @@ const ProjectForm = () => {
                     name="name"
                     placeholder="Project name"
                     required
-                    value={item?.name || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.name || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div className="col-span-2">
@@ -165,8 +151,8 @@ const ProjectForm = () => {
                   <Input
                     name="url"
                     placeholder="https://project-url.com"
-                    value={item?.url || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.url || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div className="col-span-2">
@@ -174,36 +160,32 @@ const ProjectForm = () => {
                   <Input
                     name="git"
                     placeholder="https://github.com/user/repo"
-                    value={item?.git || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.git || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div className="col-span-2 mt-1">
                   <Label className="text-sm">Description</Label>
                   <RichTextEditor
-                    value={item?.description || ""}
-                    onEditorChange={(val) =>
-                      handleChange(
-                        { target: { name: "description", value: val } },
-                        index
-                      )
+                    value={item?.description || ''}
+                    onEditorChange={val =>
+                      handleChange({ target: { name: 'description', value: val } }, index)
                     }
                     placeholder="Project description"
                   />
                 </div>
               </div>
-              {index === localProjects.length - 1 &&
-                localProjects.length < 10 && (
-                  <Button
-                    className="gap-1 mt-1 text-primary border-primary/50"
-                    variant="outline"
-                    type="button"
-                    onClick={addNewProject}
-                  >
-                    <Plus size="15px" />
-                    Add More Project
-                  </Button>
-                )}
+              {index === localProjects.length - 1 && localProjects.length < 10 && (
+                <Button
+                  className="gap-1 mt-1 text-primary border-primary/50"
+                  variant="outline"
+                  type="button"
+                  onClick={addNewProject}
+                >
+                  <Plus size="15px" />
+                  Add More Project
+                </Button>
+              )}
             </div>
           ))}
         </div>

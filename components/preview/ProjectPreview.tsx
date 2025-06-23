@@ -1,7 +1,7 @@
-import React, { FC } from "react";
-import { INITIAL_THEME_COLOR } from "@/lib/helper";
-import { ResumeDataType } from "@/types/resume.type";
-import { Link as LinkIcon } from "lucide-react";
+import React, { FC } from 'react';
+import { INITIAL_THEME_COLOR } from '@/lib/helper';
+import { ResumeDataType } from '@/types/resume.type';
+import { Link as LinkIcon } from 'lucide-react';
 
 interface PropsType {
   resumeInfo: ResumeDataType | undefined;
@@ -20,16 +20,10 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 
   return (
     <div className="w-full my-3">
-      <h5
-        className="text-center font-bold text-[18px]"
-        style={{ color: themeColor }}
-      >
-        {resumeInfo?.projectsSectionTitle?.trim() || "Projects"}
+      <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
+        {resumeInfo?.projectsSectionTitle?.trim() || 'Projects'}
       </h5>
-      <hr
-        className="border-[1.5px] mt-2 mb-2"
-        style={{ borderColor: themeColor }}
-      />
+      <hr className="border-[1.5px] mt-2 mb-2" style={{ borderColor: themeColor }} />
       <div className="flex flex-col gap-2 min-h-9">
         {projects.map((project, index) => (
           <div key={project.id || index}>
@@ -48,9 +42,7 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               )}
             </h5>
             <div className="text-[13px] mb-2">
-              <div
-                dangerouslySetInnerHTML={{ __html: project.description || "" }}
-              />
+              <div dangerouslySetInnerHTML={{ __html: project.description || '' }} />
             </div>
             {project.git && (
               <div className="text-[13px] mb-2 flex items-center gap-1 pdf-margin-bottom-0">

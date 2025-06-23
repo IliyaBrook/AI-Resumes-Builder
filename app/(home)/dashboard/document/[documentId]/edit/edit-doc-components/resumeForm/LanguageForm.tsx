@@ -1,22 +1,22 @@
-"use client";
-import { Plus, X, MoveUp, MoveDown } from "lucide-react";
-import { useParams } from "next/navigation";
-import React from "react";
-import { LanguageType } from "@/types/resume.type";
+'use client';
+import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import React from 'react';
+import { LanguageType } from '@/types/resume.type';
 // components
-import { Label, Input, Button } from "@/components";
+import { Label, Input, Button } from '@/components';
 //hooks
-import { useDeleteLanguage, useUpdateDocument, useGetDocumentById, useDebounce } from "@/hooks";
+import { useDeleteLanguage, useUpdateDocument, useGetDocumentById, useDebounce } from '@/hooks';
 
 const LANGUAGE_LEVELS = [
-  { value: "", label: "Do not specify" },
-  { value: "A1", label: "A1 - Beginner" },
-  { value: "A2", label: "A2 - Elementary" },
-  { value: "B1", label: "B1 - Intermediate" },
-  { value: "B2", label: "B2 - Upper-Intermediate" },
-  { value: "C1", label: "C1 - Advanced" },
-  { value: "C2", label: "C2 - Proficient" },
-  { value: "Native", label: "Native" },
+  { value: '', label: 'Do not specify' },
+  { value: 'A1', label: 'A1 - Beginner' },
+  { value: 'A2', label: 'A2 - Elementary' },
+  { value: 'B1', label: 'B1 - Intermediate' },
+  { value: 'B2', label: 'B2 - Upper-Intermediate' },
+  { value: 'C1', label: 'C1 - Advanced' },
+  { value: 'C2', label: 'C2 - Proficient' },
+  { value: 'Native', label: 'Native' },
 ];
 
 const LanguageForm = () => {
@@ -28,7 +28,7 @@ const LanguageForm = () => {
   const { mutate: deleteLanguage } = useDeleteLanguage();
 
   const [sectionTitle, setSectionTitle] = React.useState(
-    resumeInfo?.languagesSectionTitle || "Languages"
+    resumeInfo?.languagesSectionTitle || 'Languages'
   );
   const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>(
     resumeInfo?.languages || []
@@ -40,14 +40,12 @@ const LanguageForm = () => {
     setLocalLanguages(
       (resumeInfo?.languages || [])
         .slice()
-        .sort(
-          (a: LanguageType, b: LanguageType) => (a.order || 0) - (b.order || 0)
-        )
+        .sort((a: LanguageType, b: LanguageType) => (a.order || 0) - (b.order || 0))
     );
   }, [resumeInfo?.languages]);
 
   React.useEffect(() => {
-    setSectionTitle(resumeInfo?.languagesSectionTitle || "Languages");
+    setSectionTitle(resumeInfo?.languagesSectionTitle || 'Languages');
   }, [resumeInfo?.languagesSectionTitle]);
 
   React.useEffect(() => {
@@ -55,51 +53,38 @@ const LanguageForm = () => {
   }, [debouncedLanguages]);
 
   React.useEffect(() => {
-    if (
-      debouncedSectionTitle !==
-      (resumeInfo?.languagesSectionTitle || "Languages")
-    ) {
+    if (debouncedSectionTitle !== (resumeInfo?.languagesSectionTitle || 'Languages')) {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle]);
 
-  const handleChange = (
-    e: { target: { name: string; value: string } },
-    index: number
-  ) => {
+  const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;
-    setLocalLanguages((prev) =>
-      prev.map((item, idx) =>
-        idx === index ? { ...item, [name]: value } : item
-      )
+    setLocalLanguages(prev =>
+      prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item))
     );
   };
 
   const handleLevelChange = (value: string, index: number) => {
-    setLocalLanguages((prev) =>
-      prev.map((item, idx) =>
-        idx === index ? { ...item, level: value } : item
-      )
+    setLocalLanguages(prev =>
+      prev.map((item, idx) => (idx === index ? { ...item, level: value } : item))
     );
   };
 
   const addNewLanguage = () => {
-    setLocalLanguages((prev) => [
-      ...prev,
-      { name: "", level: "", order: prev.length },
-    ]);
+    setLocalLanguages(prev => [...prev, { name: '', level: '', order: prev.length }]);
   };
 
   const removeLanguage = (index: number, id?: number) => {
     if (id) {
       deleteLanguage({ languageId: id });
     }
-    setLocalLanguages((prev) => prev.filter((_, idx) => idx !== index));
+    setLocalLanguages(prev => prev.filter((_, idx) => idx !== index));
   };
 
   const moveLanguage = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= localLanguages.length) return;
-    setLocalLanguages((prev) => {
+    setLocalLanguages(prev => {
       const newLanguages = [...prev];
       const [movedItem] = newLanguages.splice(fromIndex, 1);
       newLanguages.splice(toIndex, 0, movedItem);
@@ -111,16 +96,14 @@ const LanguageForm = () => {
     <div>
       <div className="flex items-center gap-2 mb-2">
         {localLanguages.length > 1 && (
-          <div className="text-sm text-muted-foreground">
-            Use arrows to reorder languages
-          </div>
+          <div className="text-sm text-muted-foreground">Use arrows to reorder languages</div>
         )}
       </div>
       <div className="w-full flex items-center gap-2 mb-2">
         <Input
           className="font-bold text-lg flex-1"
           value={sectionTitle}
-          onChange={(e) => setSectionTitle(e.target.value)}
+          onChange={e => setSectionTitle(e.target.value)}
         />
       </div>
       <form>
@@ -178,18 +161,18 @@ const LanguageForm = () => {
                     name="name"
                     placeholder="English, Spanish, etc."
                     required
-                    value={item?.name || ""}
-                    onChange={(e) => handleChange(e, index)}
+                    value={item?.name || ''}
+                    onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div>
                   <Label className="text-sm">Proficiency Level</Label>
                   <select
                     className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    value={item?.level || ""}
-                    onChange={(e) => handleLevelChange(e.target.value, index)}
+                    value={item?.level || ''}
+                    onChange={e => handleLevelChange(e.target.value, index)}
                   >
-                    {LANGUAGE_LEVELS.map((level) => (
+                    {LANGUAGE_LEVELS.map(level => (
                       <option key={level.value} value={level.value}>
                         {level.label}
                       </option>
@@ -197,18 +180,17 @@ const LanguageForm = () => {
                   </select>
                 </div>
               </div>
-              {index === localLanguages.length - 1 &&
-                localLanguages.length < 20 && (
-                  <Button
-                    className="gap-1 mt-1 text-primary border-primary/50"
-                    variant="outline"
-                    type="button"
-                    onClick={addNewLanguage}
-                  >
-                    <Plus size="15px" />
-                    Add Language
-                  </Button>
-                )}
+              {index === localLanguages.length - 1 && localLanguages.length < 20 && (
+                <Button
+                  className="gap-1 mt-1 text-primary border-primary/50"
+                  variant="outline"
+                  type="button"
+                  onClick={addNewLanguage}
+                >
+                  <Plus size="15px" />
+                  Add Language
+                </Button>
+              )}
             </div>
           ))}
         </div>

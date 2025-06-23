@@ -1,6 +1,6 @@
-import { Skeleton } from "@/components";
-import { ResumeDataType } from "@/types/resume.type";
-import React, { FC } from "react";
+import { Skeleton } from '@/components';
+import { ResumeDataType } from '@/types/resume.type';
+import React, { FC } from 'react';
 
 interface PropsType {
   resumeInfo: ResumeDataType | undefined;
@@ -17,7 +17,7 @@ const SummaryPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           {resumeInfo?.summary ? (
             <div dangerouslySetInnerHTML={{ __html: resumeInfo?.summary }} />
           ) : (
-            "Enter a brief description of your profession baground."
+            'Enter a brief description of your profession baground.'
           )}
         </div>
       )}
@@ -26,4 +26,3 @@ const SummaryPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 };
 
 export default SummaryPreview;
-

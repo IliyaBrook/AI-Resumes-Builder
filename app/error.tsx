@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { AlertTriangle } from "lucide-react";
+import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle } from 'lucide-react';
 
 export default function Error({
   error,
@@ -20,12 +20,10 @@ export default function Error({
       <div className="text-center space-y-4">
         <AlertTriangle className="h-20 w-20 text-destructive mx-auto" />
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-foreground">
-            Something went wrong!
-          </h1>
+          <h1 className="text-2xl font-bold text-foreground">Something went wrong!</h1>
           <p className="text-muted-foreground max-w-md">
-            An unexpected error occurred. Please try again or contact support if
-            the problem persists.
+            An unexpected error occurred. Please try again or contact support if the problem
+            persists.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -34,7 +32,7 @@ export default function Error({
           </Button>
           <Button
             variant="outline"
-            onClick={() => (window.location.href = "/dashboard")}
+            onClick={() => (window.location.href = '/dashboard')}
             className="min-w-32"
           >
             Go to Dashboard

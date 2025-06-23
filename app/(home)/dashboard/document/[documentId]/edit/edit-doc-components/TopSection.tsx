@@ -1,10 +1,10 @@
-"use client";
-import { AlertCircle } from "lucide-react";
-import React, { useCallback } from "react";
-import { useParams } from "next/navigation";
-import { toast, useGetDocumentById, useUpdateDocument } from "@/hooks";
+'use client';
+import { AlertCircle } from 'lucide-react';
+import React, { useCallback } from 'react';
+import { useParams } from 'next/navigation';
+import { toast, useGetDocumentById, useUpdateDocument } from '@/hooks';
 // page components
-import { Download, MoreOption, PreviewModal, ThemeColor, ResumeTitle } from "@/homePageComponents";
+import { Download, MoreOption, PreviewModal, ThemeColor, ResumeTitle } from '@/homePageComponents';
 
 const TopSection = () => {
   const param = useParams();
@@ -15,21 +15,21 @@ const TopSection = () => {
 
   const handleTitle = useCallback(
     (title: string) => {
-      if (title === "Untitled Resume" && !title) return;
+      if (title === 'Untitled Resume' && !title) return;
       setResumeInfo(
         { title },
         {
           onSuccess: () => {
             toast({
-              title: "Success",
-              description: "Title updated successfully",
+              title: 'Success',
+              description: 'Title updated successfully',
             });
           },
           onError: () => {
             toast({
-              title: "Error",
-              description: "Failed to update the title",
-              variant: "destructive",
+              title: 'Error',
+              description: 'Failed to update the title',
+              variant: 'destructive',
             });
           },
         }
@@ -39,7 +39,7 @@ const TopSection = () => {
   );
   return (
     <>
-      {resumeInfo?.status === "archived" && (
+      {resumeInfo?.status === 'archived' && (
         <div
           className="
             absolute z-[9] inset-0 h-6 top-0
@@ -62,9 +62,9 @@ const TopSection = () => {
         <div className="flex items-center gap-2">
           <ResumeTitle
             isLoading={isLoading || isPending}
-            initialTitle={resumeInfo?.title || ""}
+            initialTitle={resumeInfo?.title || ''}
             status={resumeInfo?.status}
-            onSave={(value) => handleTitle(value)}
+            onSave={value => handleTitle(value)}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -76,7 +76,7 @@ const TopSection = () => {
 
           {}
           <Download
-            title={resumeInfo?.title || "Unititled Resume"}
+            title={resumeInfo?.title || 'Unititled Resume'}
             status={resumeInfo?.status}
             isLoading={isLoading}
           />

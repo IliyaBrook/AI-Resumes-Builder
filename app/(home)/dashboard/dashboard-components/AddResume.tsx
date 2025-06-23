@@ -1,8 +1,8 @@
-"use client";
+'use client';
 import { useCreateDocument } from '@/hooks';
-import { FileText, Loader, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useCallback } from "react";
+import { FileText, Loader, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useCallback } from 'react';
 
 const AddResume = () => {
   const router = useRouter();
@@ -10,10 +10,10 @@ const AddResume = () => {
   const onCreate = useCallback(() => {
     mutate(
       {
-        title: "Untitled Resume",
+        title: 'Untitled Resume',
       },
       {
-        onSuccess: (response) => {
+        onSuccess: response => {
           const documentId = response.data.documentId;
           router.push(`/dashboard/document/${documentId}/edit`);
         },

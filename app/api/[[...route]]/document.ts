@@ -1,74 +1,67 @@
-import { db } from '@/db'
+import { db } from '@/db';
 import {
   educationTable,
   experienceTable,
   languageTable,
   personalInfoTable,
   projectTable,
-  skillsTable
-} from '@/db/schema'
+  skillsTable,
+} from '@/db/schema';
 import {
   createDocumentTableSchema,
   DocumentSchema,
   documentTable,
   updateCombinedSchema,
-  UpdateDocumentSchema
-} from '@/db/schema/document'
-import { generateDocUUID } from '@/lib/helper'
-import { zValidator } from '@hono/zod-validator'
-import { and, desc, eq, ne } from 'drizzle-orm'
-import { Hono } from 'hono'
-import { z } from 'zod'
+  UpdateDocumentSchema,
+} from '@/db/schema/document';
+import { generateDocUUID } from '@/lib/helper';
+import { zValidator } from '@hono/zod-validator';
+import { and, desc, eq, ne } from 'drizzle-orm';
+import { Hono } from 'hono';
+import { z } from 'zod';
 
 const documentRoute = new Hono()
-  .post(
-    "/create",
-    zValidator("json", createDocumentTableSchema),
-    async (c) => {
-      try {
-        const { title } = c.req.valid("json") as DocumentSchema;
-        const documentId = generateDocUUID();
+  .post('/create', zValidator('json', createDocumentTableSchema), async c => {
+    try {
+      const { title } = c.req.valid('json') as DocumentSchema;
+      const documentId = generateDocUUID();
 
-        const newDoc = {
-          title: title,
-          documentId: documentId,
-        };
+      const newDoc = {
+        title: title,
+        documentId: documentId,
+      };
 
-        const [data] = await db
-          .insert(documentTable)
-          .values(newDoc)
-          .returning();
-        return c.json(
-          {
-            success: "ok",
-            data,
-          },
-          { status: 200 }
-        );
-      } catch (error) {
-        return c.json(
-          {
-            success: false,
-            message: "Failed to create document",
-            error: error,
-          },
-          500
-        );
-      }
+      const [data] = await db.insert(documentTable).values(newDoc).returning();
+      return c.json(
+        {
+          success: 'ok',
+          data,
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      return c.json(
+        {
+          success: false,
+          message: 'Failed to create document',
+          error: error,
+        },
+        500
+      );
     }
-  )
+  })
   .patch(
-    "/update/:documentId",
+    '/update/:documentId',
     zValidator(
-      "param",
+      'param',
       z.object({
         documentId: z.string(),
       })
     ),
-    zValidator("json", updateCombinedSchema),
-    async (c) => {
+    zValidator('json', updateCombinedSchema),
+    async c => {
       try {
-        const { documentId } = c.req.valid("param");
+        const { documentId } = c.req.valid('param');
 
         const {
           title,
@@ -88,24 +81,20 @@ const documentRoute = new Hono()
           skillsDisplayFormat,
           personalInfoDisplayFormat,
           pagesOrder,
-        } = c.req.valid("json");
+        } = c.req.valid('json');
 
         if (!documentId) {
-          return c.json({ error: "DocumentId is required" }, 400);
+          return c.json({ error: 'DocumentId is required' }, 400);
         }
 
-        await db.transaction(async (trx) => {
+        await db.transaction(async trx => {
           const [existingDocument] = await trx
             .select()
             .from(documentTable)
-            .where(
-              and(
-                eq(documentTable.documentId, documentId)
-              )
-            );
+            .where(and(eq(documentTable.documentId, documentId)));
 
           if (!existingDocument) {
-            return c.json({ error: "Document not found" }, 404);
+            return c.json({ error: 'Document not found' }, 404);
           }
 
           const resumeUpdate = {} as UpdateDocumentSchema;
@@ -114,8 +103,7 @@ const documentRoute = new Hono()
           if (summary) resumeUpdate.summary = summary;
           if (themeColor) resumeUpdate.themeColor = themeColor;
           if (status) resumeUpdate.status = status;
-          if (currentPosition)
-            resumeUpdate.currentPosition = currentPosition || 1;
+          if (currentPosition) resumeUpdate.currentPosition = currentPosition || 1;
           if (projectsSectionTitle !== undefined)
             resumeUpdate.projectsSectionTitle = projectsSectionTitle;
           if (languagesSectionTitle !== undefined)
@@ -124,18 +112,13 @@ const documentRoute = new Hono()
             resumeUpdate.skillsDisplayFormat = skillsDisplayFormat;
           if (personalInfoDisplayFormat !== undefined)
             resumeUpdate.personalInfoDisplayFormat = personalInfoDisplayFormat;
-          if (pagesOrder !== undefined)
-            resumeUpdate.pagesOrder = pagesOrder;
+          if (pagesOrder !== undefined) resumeUpdate.pagesOrder = pagesOrder;
 
           if (Object.keys(resumeUpdate)?.length > 0) {
             await trx
               .update(documentTable)
               .set(resumeUpdate)
-              .where(
-                and(
-                  eq(documentTable.documentId, documentId)
-                )
-              )
+              .where(and(eq(documentTable.documentId, documentId)))
               .returning();
           }
 
@@ -168,9 +151,7 @@ const documentRoute = new Hono()
               .from(experienceTable)
               .where(eq(experienceTable.docId, existingDocument.documentId));
 
-            const existingExperienceMap = new Set(
-              existingExperience.map((exp) => exp.id)
-            );
+            const existingExperienceMap = new Set(existingExperience.map(exp => exp.id));
 
             for (const exp of experience) {
               const { id, ...data } = exp;
@@ -199,9 +180,7 @@ const documentRoute = new Hono()
               .from(educationTable)
               .where(eq(educationTable.docId, existingDocument.documentId));
 
-            const existingEducationMap = new Set(
-              existingEducation.map((edu) => edu.id)
-            );
+            const existingEducationMap = new Set(existingEducation.map(edu => edu.id));
 
             for (const edu of education) {
               const { id, ...data } = edu;
@@ -230,9 +209,7 @@ const documentRoute = new Hono()
               .from(skillsTable)
               .where(eq(skillsTable.docId, existingDocument.documentId));
 
-            const existingSkillsMap = new Set(
-              existingskills.map((skill) => skill.id)
-            );
+            const existingSkillsMap = new Set(existingskills.map(skill => skill.id));
 
             for (const skill of skills) {
               const { id, ...data } = skill;
@@ -241,10 +218,7 @@ const documentRoute = new Hono()
                   .update(skillsTable)
                   .set(data)
                   .where(
-                    and(
-                      eq(skillsTable.docId, existingDocument.documentId),
-                      eq(skillsTable.id, id)
-                    )
+                    and(eq(skillsTable.docId, existingDocument.documentId), eq(skillsTable.id, id))
                   );
               } else {
                 await trx.insert(skillsTable).values({
@@ -261,9 +235,7 @@ const documentRoute = new Hono()
               .from(projectTable)
               .where(eq(projectTable.docId, existingDocument.documentId));
 
-            const existingProjectsMap = new Set(
-              existingProjects.map((proj) => proj.id)
-            );
+            const existingProjectsMap = new Set(existingProjects.map(proj => proj.id));
 
             for (const proj of projects) {
               const { id, ...data } = proj;
@@ -292,9 +264,7 @@ const documentRoute = new Hono()
               .from(languageTable)
               .where(eq(languageTable.docId, existingDocument.documentId));
 
-            const existingLanguagesMap = new Set(
-              existingLanguages.map((lang) => lang.id)
-            );
+            const existingLanguagesMap = new Set(existingLanguages.map(lang => lang.id));
 
             for (const lang of languages) {
               const { id, ...data } = lang;
@@ -320,8 +290,8 @@ const documentRoute = new Hono()
 
         return c.json(
           {
-            success: "ok",
-            message: "Updated successfully",
+            success: 'ok',
+            message: 'Updated successfully',
           },
           { status: 200 }
         );
@@ -329,7 +299,7 @@ const documentRoute = new Hono()
         return c.json(
           {
             success: false,
-            message: "Failed to update document",
+            message: 'Failed to update document',
             error: error,
           },
           500
@@ -338,50 +308,44 @@ const documentRoute = new Hono()
     }
   )
   .patch(
-    "/retore/archive",
+    '/retore/archive',
     zValidator(
-      "json",
+      'json',
       z.object({
         documentId: z.string(),
         status: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { documentId, status } = c.req.valid("json");
+        const { documentId, status } = c.req.valid('json');
 
         if (!documentId) {
-          return c.json({ message: "DocumentId must provided" }, 400);
+          return c.json({ message: 'DocumentId must provided' }, 400);
         }
 
-        if (status !== "archived") {
-          return c.json(
-            { message: "Status must be archived before restore" },
-            400
-          );
+        if (status !== 'archived') {
+          return c.json({ message: 'Status must be archived before restore' }, 400);
         }
 
         const [documentData] = await db
           .update(documentTable)
           .set({
-            status: "private",
+            status: 'private',
           })
           .where(
-            and(
-              eq(documentTable.documentId, documentId),
-              eq(documentTable.status, "archived")
-            )
+            and(eq(documentTable.documentId, documentId), eq(documentTable.status, 'archived'))
           )
           .returning();
 
         if (!documentData) {
-          return c.json({ message: "Document not found" }, 404);
+          return c.json({ message: 'Document not found' }, 404);
         }
 
         return c.json(
           {
-            success: "ok",
-            message: "Updated successfully",
+            success: 'ok',
+            message: 'Updated successfully',
             data: documentData,
           },
           { status: 200 }
@@ -390,7 +354,7 @@ const documentRoute = new Hono()
         return c.json(
           {
             success: false,
-            message: "Failed to retore document",
+            message: 'Failed to retore document',
             error: error,
           },
           500
@@ -398,17 +362,13 @@ const documentRoute = new Hono()
       }
     }
   )
-  .get("all", async (c) => {
+  .get('all', async c => {
     try {
       const documents = await db
         .select()
         .from(documentTable)
         .orderBy(desc(documentTable.updatedAt))
-        .where(
-          and(
-            ne(documentTable.status, "archived")
-          )
-        );
+        .where(and(ne(documentTable.status, 'archived')));
       return c.json({
         success: true,
         data: documents,
@@ -417,7 +377,7 @@ const documentRoute = new Hono()
       return c.json(
         {
           success: false,
-          message: "Failed to fetch documents",
+          message: 'Failed to fetch documents',
           error: error,
         },
         500
@@ -425,33 +385,31 @@ const documentRoute = new Hono()
     }
   })
   .get(
-    "/:documentId",
+    '/:documentId',
     zValidator(
-      "param",
+      'param',
       z.object({
         documentId: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { documentId } = c.req.valid("param");
+        const { documentId } = c.req.valid('param');
 
         const documentData = await db.query.documentTable.findFirst({
-          where: and(
-            eq(documentTable.documentId, documentId)
-          ),
+          where: and(eq(documentTable.documentId, documentId)),
           with: {
             personalInfo: true,
             experiences: {
-              orderBy: (experiences) => [experiences.order]
+              orderBy: experiences => [experiences.order],
             },
             educations: true,
             skills: true,
             projects: {
-              orderBy: (projects) => [projects.order]
+              orderBy: projects => [projects.order],
             },
             languages: {
-              orderBy: (languages) => [languages.order]
+              orderBy: languages => [languages.order],
             },
           },
         });
@@ -463,7 +421,7 @@ const documentRoute = new Hono()
         return c.json(
           {
             success: false,
-            message: "Failed to fetch documents",
+            message: 'Failed to fetch documents',
             error: error,
           },
           500
@@ -472,33 +430,30 @@ const documentRoute = new Hono()
     }
   )
   .get(
-    "public/doc/:documentId",
+    'public/doc/:documentId',
     zValidator(
-      "param",
+      'param',
       z.object({
         documentId: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { documentId } = c.req.valid("param");
+        const { documentId } = c.req.valid('param');
         const documentData = await db.query.documentTable.findFirst({
-          where: and(
-            eq(documentTable.status, "public"),
-            eq(documentTable.documentId, documentId)
-          ),
+          where: and(eq(documentTable.status, 'public'), eq(documentTable.documentId, documentId)),
           with: {
             personalInfo: true,
             experiences: {
-              orderBy: (experiences) => [experiences.order]
+              orderBy: experiences => [experiences.order],
             },
             educations: true,
             skills: true,
             projects: {
-              orderBy: (projects) => [projects.order]
+              orderBy: projects => [projects.order],
             },
             languages: {
-              orderBy: (languages) => [languages.order]
+              orderBy: languages => [languages.order],
             },
           },
         });
@@ -507,7 +462,7 @@ const documentRoute = new Hono()
           return c.json(
             {
               error: true,
-              message: "unauthorized",
+              message: 'unauthorized',
             },
             401
           );
@@ -520,7 +475,7 @@ const documentRoute = new Hono()
         return c.json(
           {
             success: false,
-            message: "Failed to fetch document",
+            message: 'Failed to fetch document',
             error: error,
           },
           500
@@ -528,16 +483,12 @@ const documentRoute = new Hono()
       }
     }
   )
-  .get("/trash/all", async (c) => {
+  .get('/trash/all', async c => {
     try {
       const documents = await db
         .select()
         .from(documentTable)
-        .where(
-          and(
-            eq(documentTable.status, "archived")
-          )
-        );
+        .where(and(eq(documentTable.status, 'archived')));
       return c.json({
         success: true,
         data: documents,
@@ -546,7 +497,7 @@ const documentRoute = new Hono()
       return c.json(
         {
           success: false,
-          message: "Failed to fetch documents",
+          message: 'Failed to fetch documents',
           error: error,
         },
         500
@@ -554,105 +505,117 @@ const documentRoute = new Hono()
     }
   })
   .delete(
-    "/:documentId",
+    '/:documentId',
     zValidator(
-      "param",
+      'param',
       z.object({
         documentId: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { documentId } = c.req.valid("param");
+        const { documentId } = c.req.valid('param');
         if (!documentId) {
-          return c.json({ error: "DocumentId is required" }, 400);
+          return c.json({ error: 'DocumentId is required' }, 400);
         }
-        const deleted = await db.delete(documentTable).where(eq(documentTable.documentId, documentId)).returning();
+        const deleted = await db
+          .delete(documentTable)
+          .where(eq(documentTable.documentId, documentId))
+          .returning();
         if (!deleted.length) {
-          return c.json({ error: "Document not found" }, 404);
+          return c.json({ error: 'Document not found' }, 404);
         }
         return c.json({ success: true });
       } catch (error) {
-        return c.json({ success: false, message: "Failed to delete document", error }, 500);
+        return c.json({ success: false, message: 'Failed to delete document', error }, 500);
       }
     }
   )
   .delete(
-    "/experience/:experienceId",
+    '/experience/:experienceId',
     zValidator(
-      "param",
+      'param',
       z.object({
         experienceId: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { experienceId } = c.req.valid("param");
+        const { experienceId } = c.req.valid('param');
         if (!experienceId) {
-          return c.json({ error: "ExperienceId is required" }, 400);
+          return c.json({ error: 'ExperienceId is required' }, 400);
         }
-        const deleted = await db.delete(experienceTable).where(eq(experienceTable.id, Number(experienceId))).returning();
+        const deleted = await db
+          .delete(experienceTable)
+          .where(eq(experienceTable.id, Number(experienceId)))
+          .returning();
         if (!deleted.length) {
-          return c.json({ error: "Experience not found" }, 404);
+          return c.json({ error: 'Experience not found' }, 404);
         }
         return c.json({ success: true });
       } catch (error) {
-        return c.json({ success: false, message: "Failed to delete experience", error }, 500);
+        return c.json({ success: false, message: 'Failed to delete experience', error }, 500);
       }
     }
   )
   .delete(
-    "/education/:educationId",
+    '/education/:educationId',
     zValidator(
-      "param",
+      'param',
       z.object({
         educationId: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { educationId } = c.req.valid("param");
+        const { educationId } = c.req.valid('param');
         if (!educationId) {
-          return c.json({ error: "EducationId is required" }, 400);
+          return c.json({ error: 'EducationId is required' }, 400);
         }
-        const deleted = await db.delete(educationTable).where(eq(educationTable.id, Number(educationId))).returning();
+        const deleted = await db
+          .delete(educationTable)
+          .where(eq(educationTable.id, Number(educationId)))
+          .returning();
         if (!deleted.length) {
-          return c.json({ error: "Education not found" }, 404);
+          return c.json({ error: 'Education not found' }, 404);
         }
         return c.json({ success: true });
       } catch (error) {
-        return c.json({ success: false, message: "Failed to delete education", error }, 500);
+        return c.json({ success: false, message: 'Failed to delete education', error }, 500);
       }
     }
   )
   .delete(
-    "/skill/:skillId",
+    '/skill/:skillId',
     zValidator(
-      "param",
+      'param',
       z.object({
         skillId: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { skillId } = c.req.valid("param");
+        const { skillId } = c.req.valid('param');
         if (!skillId) {
-          return c.json({ error: "SkillId is required" }, 400);
+          return c.json({ error: 'SkillId is required' }, 400);
         }
-        const deleted = await db.delete(skillsTable).where(eq(skillsTable.id, Number(skillId))).returning();
+        const deleted = await db
+          .delete(skillsTable)
+          .where(eq(skillsTable.id, Number(skillId)))
+          .returning();
         if (!deleted.length) {
-          return c.json({ error: "Skill not found" }, 404);
+          return c.json({ error: 'Skill not found' }, 404);
         }
         return c.json({ success: true });
       } catch (error) {
-        return c.json({ success: false, message: "Failed to delete skill", error }, 500);
+        return c.json({ success: false, message: 'Failed to delete skill', error }, 500);
       }
     }
   )
   .post(
-    "/experience/create",
+    '/experience/create',
     zValidator(
-      "json",
+      'json',
       z.object({
         docId: z.string(),
         title: z.string().optional(),
@@ -666,20 +629,20 @@ const documentRoute = new Hono()
         yearsOnly: z.boolean().optional(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const data = c.req.valid("json");
+        const data = c.req.valid('json');
         const [created] = await db.insert(experienceTable).values(data).returning();
         return c.json(created, 200);
       } catch (error) {
-        return c.json({ success: false, message: "Failed to create experience", error }, 500);
+        return c.json({ success: false, message: 'Failed to create experience', error }, 500);
       }
     }
   )
   .post(
-    "/education/create",
+    '/education/create',
     zValidator(
-      "json",
+      'json',
       z.object({
         docId: z.string(),
         universityName: z.string().optional(),
@@ -692,20 +655,20 @@ const documentRoute = new Hono()
         skipDates: z.boolean().optional(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const data = c.req.valid("json");
+        const data = c.req.valid('json');
         const [created] = await db.insert(educationTable).values(data).returning();
         return c.json(created, 200);
       } catch (error) {
-        return c.json({ success: false, message: "Failed to create education", error }, 500);
+        return c.json({ success: false, message: 'Failed to create education', error }, 500);
       }
     }
   )
   .post(
-    "/skill/create",
+    '/skill/create',
     zValidator(
-      "json",
+      'json',
       z.object({
         docId: z.string(),
         name: z.string().optional(),
@@ -715,26 +678,26 @@ const documentRoute = new Hono()
         order: z.number().optional(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const data = c.req.valid("json");
+        const data = c.req.valid('json');
         const [created] = await db.insert(skillsTable).values(data).returning();
         return c.json(created, 200);
       } catch (error) {
-        return c.json({ success: false, message: "Failed to create skill", error }, 500);
+        return c.json({ success: false, message: 'Failed to create skill', error }, 500);
       }
     }
   )
   .patch(
-    "/skill/:skillId",
+    '/skill/:skillId',
     zValidator(
-      "param",
+      'param',
       z.object({
         skillId: z.string(),
       })
     ),
     zValidator(
-      "json",
+      'json',
       z.object({
         name: z.string().optional(),
         rating: z.number().optional(),
@@ -743,27 +706,31 @@ const documentRoute = new Hono()
         order: z.number().optional(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { skillId } = c.req.valid("param");
-        const data = c.req.valid("json");
+        const { skillId } = c.req.valid('param');
+        const data = c.req.valid('json');
         if (!skillId) {
-          return c.json({ error: "SkillId is required" }, 400);
+          return c.json({ error: 'SkillId is required' }, 400);
         }
-        const [updated] = await db.update(skillsTable).set(data).where(eq(skillsTable.id, Number(skillId))).returning();
+        const [updated] = await db
+          .update(skillsTable)
+          .set(data)
+          .where(eq(skillsTable.id, Number(skillId)))
+          .returning();
         if (!updated) {
-          return c.json({ error: "Skill not found" }, 404);
+          return c.json({ error: 'Skill not found' }, 404);
         }
         return c.json(updated, 200);
       } catch (error) {
-        return c.json({ success: false, message: "Failed to update skill", error }, 500);
+        return c.json({ success: false, message: 'Failed to update skill', error }, 500);
       }
     }
   )
   .post(
-    "/project/create",
+    '/project/create',
     zValidator(
-      "json",
+      'json',
       z.object({
         docId: z.string(),
         name: z.string(),
@@ -772,75 +739,81 @@ const documentRoute = new Hono()
         order: z.number().optional(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const data = c.req.valid("json");
+        const data = c.req.valid('json');
         const [created] = await db.insert(projectTable).values(data).returning();
         return c.json(created, 200);
       } catch (error) {
-        return c.json({ success: false, message: "Failed to create project", error }, 500);
+        return c.json({ success: false, message: 'Failed to create project', error }, 500);
       }
     }
   )
   .delete(
-    "/project/:projectId",
+    '/project/:projectId',
     zValidator(
-      "param",
+      'param',
       z.object({
         projectId: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { projectId } = c.req.valid("param");
+        const { projectId } = c.req.valid('param');
         if (!projectId) {
-          return c.json({ error: "ProjectId is required" }, 400);
+          return c.json({ error: 'ProjectId is required' }, 400);
         }
-        const deleted = await db.delete(projectTable).where(eq(projectTable.id, Number(projectId))).returning();
+        const deleted = await db
+          .delete(projectTable)
+          .where(eq(projectTable.id, Number(projectId)))
+          .returning();
         if (!deleted.length) {
-          return c.json({ error: "Project not found" }, 404);
+          return c.json({ error: 'Project not found' }, 404);
         }
         return c.json({ success: true });
       } catch (error) {
-        return c.json({ success: false, message: "Failed to delete project", error }, 500);
+        return c.json({ success: false, message: 'Failed to delete project', error }, 500);
       }
     }
   )
   .delete(
-    "/language/:languageId",
+    '/language/:languageId',
     zValidator(
-      "param",
+      'param',
       z.object({
         languageId: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { languageId } = c.req.valid("param");
+        const { languageId } = c.req.valid('param');
         if (!languageId) {
-          return c.json({ error: "LanguageId is required" }, 400);
+          return c.json({ error: 'LanguageId is required' }, 400);
         }
-        const deleted = await db.delete(languageTable).where(eq(languageTable.id, Number(languageId))).returning();
+        const deleted = await db
+          .delete(languageTable)
+          .where(eq(languageTable.id, Number(languageId)))
+          .returning();
         if (!deleted.length) {
-          return c.json({ error: "Language not found" }, 404);
+          return c.json({ error: 'Language not found' }, 404);
         }
         return c.json({ success: true });
       } catch (error) {
-        return c.json({ success: false, message: "Failed to delete language", error }, 500);
+        return c.json({ success: false, message: 'Failed to delete language', error }, 500);
       }
     }
   )
   .post(
-    "/:documentId/duplicate",
+    '/:documentId/duplicate',
     zValidator(
-      "param",
+      'param',
       z.object({
         documentId: z.string(),
       })
     ),
-    async (c) => {
+    async c => {
       try {
-        const { documentId } = c.req.valid("param");
+        const { documentId } = c.req.valid('param');
         const original = await db.query.documentTable.findFirst({
           where: eq(documentTable.documentId, documentId),
           with: {
@@ -853,19 +826,22 @@ const documentRoute = new Hono()
           },
         });
         if (!original) {
-          return c.json({ success: false, message: "Document not found" }, 404);
+          return c.json({ success: false, message: 'Document not found' }, 404);
         }
         const newDocumentId = generateDocUUID();
         const now = new Date().toISOString();
-        const [newDoc] = await db.insert(documentTable).values({
-          ...original,
-          id: undefined,
-          documentId: newDocumentId,
-          title: original.title + " (copy)",
-          createdAt: now,
-          updatedAt: now,
-        }).returning();
-        
+        const [newDoc] = await db
+          .insert(documentTable)
+          .values({
+            ...original,
+            id: undefined,
+            documentId: newDocumentId,
+            title: original.title + ' (copy)',
+            createdAt: now,
+            updatedAt: now,
+          })
+          .returning();
+
         if (original.personalInfo) {
           await db.insert(personalInfoTable).values({
             ...original.personalInfo,
@@ -873,7 +849,7 @@ const documentRoute = new Hono()
             docId: newDocumentId,
           });
         }
-        
+
         for (const exp of original.experiences) {
           await db.insert(experienceTable).values({
             ...exp,
@@ -881,7 +857,7 @@ const documentRoute = new Hono()
             docId: newDocumentId,
           });
         }
-        
+
         for (const edu of original.educations) {
           await db.insert(educationTable).values({
             ...edu,
@@ -889,7 +865,7 @@ const documentRoute = new Hono()
             docId: newDocumentId,
           });
         }
-        
+
         for (const skill of original.skills) {
           await db.insert(skillsTable).values({
             ...skill,
@@ -897,7 +873,7 @@ const documentRoute = new Hono()
             docId: newDocumentId,
           });
         }
-        
+
         for (const proj of original.projects) {
           await db.insert(projectTable).values({
             ...proj,
@@ -905,7 +881,7 @@ const documentRoute = new Hono()
             docId: newDocumentId,
           });
         }
-        
+
         for (const lang of original.languages) {
           await db.insert(languageTable).values({
             ...lang,
@@ -915,7 +891,7 @@ const documentRoute = new Hono()
         }
         return c.json({ success: true, data: newDoc }, 200);
       } catch (error) {
-        return c.json({ success: false, message: "Failed to duplicate document", error }, 500);
+        return c.json({ success: false, message: 'Failed to duplicate document', error }, 500);
       }
     }
   );

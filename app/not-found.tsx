@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Search, Home } from "lucide-react";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Search, Home } from 'lucide-react';
 
 export default function NotFound() {
   return (
@@ -9,9 +9,7 @@ export default function NotFound() {
         <Search className="h-20 w-20 text-muted-foreground mx-auto" />
         <div className="space-y-2">
           <h1 className="text-4xl font-bold text-foreground">404</h1>
-          <h2 className="text-xl font-semibold text-foreground">
-            Page Not Found
-          </h2>
+          <h2 className="text-xl font-semibold text-foreground">Page Not Found</h2>
           <p className="text-muted-foreground max-w-md">
             The page you are looking for doesn't exist or has been moved.
           </p>

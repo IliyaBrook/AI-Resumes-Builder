@@ -1,8 +1,8 @@
-"use client";
-import { useGetDocuments } from "@/hooks";
-import { Loader, RotateCw } from "lucide-react";
-import React, { Fragment, useCallback } from "react";
-import { ResumeItem } from "@/homePageComponents";
+'use client';
+import { useGetDocuments } from '@/hooks';
+import { Loader, RotateCw } from 'lucide-react';
+import React, { Fragment, useCallback } from 'react';
+import { ResumeItem } from '@/homePageComponents';
 
 const ResumeList = () => {
   const { data, isLoading, isError, refetch } = useGetDocuments();
@@ -11,7 +11,7 @@ const ResumeList = () => {
   const onDuplicate = useCallback(
     async (documentId: string) => {
       await fetch(`/api/document/${documentId}/duplicate`, {
-        method: "POST",
+        method: 'POST',
       });
       refetch();
     },
@@ -40,7 +40,7 @@ const ResumeList = () => {
         </div>
       ) : (
         <>
-          {resumes?.map((resume) => (
+          {resumes?.map(resume => (
             <ResumeItem
               key={resume.documentId}
               documentId={resume.documentId}

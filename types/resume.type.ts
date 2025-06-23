@@ -49,7 +49,7 @@ type PersonalInfoType = {
   linkedin?: string | null;
 };
 
-export type StatusType = "archived" | "private" | "public" | undefined;
+export type StatusType = 'archived' | 'private' | 'public' | undefined;
 
 export type ProjectType = {
   id?: number;
@@ -104,3 +104,22 @@ export type Education = {
   skipDates?: boolean;
   yearsOnly?: boolean;
 };
+
+export type AIGeneratedSummariesType = {
+  fresher: string;
+  mid: string;
+  experienced: string;
+};
+
+export type AIResultObjectType = {
+  workSummary?: string;
+  html?: string;
+  experience?: string[];
+  fresher?: string;
+  mid?: string;
+  experienced?: string;
+};
+
+export type AIResultType = AIResultObjectType | string[] | string;
+
+export type ParsedAIResult = AIGeneratedSummariesType | string;

@@ -1,7 +1,7 @@
-import { SkeletonLoader } from "@/components";
-import { INITIAL_THEME_COLOR } from "@/lib/helper";
-import { ResumeDataType } from "@/types/resume.type";
-import { FC } from "react";
+import { SkeletonLoader } from '@/components';
+import { INITIAL_THEME_COLOR } from '@/lib/helper';
+import { ResumeDataType } from '@/types/resume.type';
+import { FC } from 'react';
 
 interface PropsType {
   resumeInfo: ResumeDataType | undefined;
@@ -13,19 +13,20 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   if (isLoading) {
     return <SkeletonLoader />;
   }
-  const skills = (resumeInfo?.skills || [])
-    .slice()
-    .sort((a, b) => (a.order || 0) - (b.order || 0));
+  const skills = (resumeInfo?.skills || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0));
   const hideRating = !!skills[0]?.hideRating;
   const displayFormat = resumeInfo?.skillsDisplayFormat || 'default';
 
   if (displayFormat === 'byCategory') {
-    const skillsByCategory = skills.reduce((acc, skill) => {
-      const category = skill.category || "General";
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(skill);
-      return acc;
-    }, {} as Record<string, typeof skills>);
+    const skillsByCategory = skills.reduce(
+      (acc, skill) => {
+        const category = skill.category || 'General';
+        if (!acc[category]) acc[category] = [];
+        acc[category].push(skill);
+        return acc;
+      },
+      {} as Record<string, typeof skills>
+    );
 
     const sortedCategories = Object.keys(skillsByCategory).sort((a, b) => {
       const aMinOrder = Math.min(...skillsByCategory[a].map(skill => skill.order || 0));
@@ -35,30 +36,21 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 
     return (
       <div className="w-full my-3">
-        <h5
-          className="text-center font-bold text-[18px]"
-          style={{ color: themeColor }}
-        >
+        <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
           Skills
         </h5>
-        <hr
-          className="border-[1.5px] mt-2 mb-2"
-          style={{ borderColor: themeColor }}
-        />
+        <hr className="border-[1.5px] mt-2 mb-2" style={{ borderColor: themeColor }} />
         <div>
-          {sortedCategories.map((categoryName) => (
+          {sortedCategories.map(categoryName => (
             <div key={categoryName}>
-              <span
-                className="font-bold text-[13px] inline"
-                style={{ color: themeColor }}
-              >
-                {categoryName}:{" "}
+              <span className="font-bold text-[13px] inline" style={{ color: themeColor }}>
+                {categoryName}:{' '}
               </span>
               <span className="text-[12px] text-gray-700">
                 {skillsByCategory[categoryName]
                   .sort((a, b) => (a.order || 0) - (b.order || 0))
-                  .map((skill) => skill.name)
-                  .join(", ")}
+                  .map(skill => skill.name)
+                  .join(', ')}
               </span>
             </div>
           ))}
@@ -70,20 +62,14 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   if (hideRating) {
     const columns = [[], [], [], []] as string[][];
     skills.forEach((skill, idx) => {
-      columns[idx % 4].push(skill?.name || "");
+      columns[idx % 4].push(skill?.name || '');
     });
     return (
       <div className="w-full my-3">
-        <h5
-          className="text-center font-bold text-[18px]"
-          style={{ color: themeColor }}
-        >
+        <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
           Skills
         </h5>
-        <hr
-          className="border-[1.5px] mt-2 mb-2"
-          style={{ borderColor: themeColor }}
-        />
+        <hr className="border-[1.5px] mt-2 mb-2" style={{ borderColor: themeColor }} />
         <div className="grid grid-cols-4 gap-x-4">
           {columns.map((col, colIdx) => (
             <div key={colIdx} className="flex flex-col gap-2">
@@ -91,7 +77,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 <span
                   key={idx}
                   className="text-[12px] break-words max-w-full"
-                  style={{ wordBreak: "break-word" }}
+                  style={{ wordBreak: 'break-word' }}
                 >
                   {name}
                 </span>
@@ -108,27 +94,16 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 
   return (
     <div className="w-full my-3">
-      <h5
-        className="text-center font-bold text-[18px]"
-        style={{ color: themeColor }}
-      >
+      <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
         Skills
       </h5>
-      <hr
-        className="border-[1.5px] mt-2 mb-2"
-        style={{ borderColor: themeColor }}
-      />
+      <hr className="border-[1.5px] mt-2 mb-2" style={{ borderColor: themeColor }} />
       <div className="grid grid-cols-2 gap-x-8">
         {[leftSkills, rightSkills].map((col, colIdx) => (
           <div key={colIdx} className="flex flex-col gap-2">
             {col.map((skill, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between min-w-0"
-              >
-                <span className="text-[13px] mr-2 min-w-[60px]">
-                  {skill?.name}
-                </span>
+              <div key={idx} className="flex items-center justify-between min-w-0">
+                <span className="text-[13px] mr-2 min-w-[60px]">{skill?.name}</span>
                 {skill?.rating && skill?.name ? (
                   <div className="flex-1 flex items-center">
                     <div className="w-full bg-gray-200 rounded h-[6px]">
@@ -136,7 +111,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                         className="h-[6px] rounded"
                         style={{
                           background: themeColor,
-                          width: skill.rating * 20 + "%",
+                          width: skill.rating * 20 + '%',
                         }}
                       />
                     </div>

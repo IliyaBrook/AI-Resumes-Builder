@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db";
-import { themeTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/db';
+import { themeTable } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 export async function GET() {
   const theme = await db.select().from(themeTable).orderBy(themeTable.id).limit(1);
-  return NextResponse.json({ theme: theme[0]?.theme || "system" });
+  return NextResponse.json({ theme: theme[0]?.theme || 'system' });
 }
 
 export async function POST(req: NextRequest) {
@@ -17,4 +17,4 @@ export async function POST(req: NextRequest) {
     await db.insert(themeTable).values({ theme });
   }
   return NextResponse.json({ success: true });
-} 
+}

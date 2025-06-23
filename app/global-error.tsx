@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export default function GlobalError({
   error,
@@ -22,8 +22,7 @@ export default function GlobalError({
             <div className="space-y-2">
               <h1 className="text-2xl font-bold">Application Error</h1>
               <p className="text-muted-foreground max-w-md">
-                A critical error occurred. Please refresh the page or contact
-                support.
+                A critical error occurred. Please refresh the page or contact support.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -34,7 +33,7 @@ export default function GlobalError({
                 Try again
               </button>
               <button
-                onClick={() => (window.location.href = "/")}
+                onClick={() => (window.location.href = '/')}
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 min-w-32"
               >
                 Go Home

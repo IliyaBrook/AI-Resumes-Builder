@@ -6,6 +6,7 @@ export * from './PersonalInfo';
 export * from './Project';
 export * from './Skills';
 export * from './Summary';
+export * from './Education';
 
 import dynamic from 'next/dynamic';
 
@@ -16,7 +17,7 @@ export { default as ResumePreview } from './ResumePreview';
 export { default as EditResume } from './EditResume';
 export { default as MoreOption } from './MoreOption';
 export { default as PreviewModal } from './PreviewModal';
-
+export { default as ResumeForm } from './ResumeForm';
 export { default as ResumeTitle } from './ResumeTitle';
 export { default as ThemeColor } from './ThemeColor';
 export { default as TopSection } from './TopSection';

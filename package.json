@@ -56,7 +56,6 @@
     "cross-env": "^7.0.3",
     "drizzle-kit": "^0.25.0",
     "postcss": "^8",
-    "strip-comments": "github:IliyaBrook/strip-comments",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },

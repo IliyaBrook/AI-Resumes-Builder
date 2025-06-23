@@ -2,18 +2,22 @@
   "name": "resume-builder",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:init": "psql -U postgres -d postgres -f ./db/init-db.sql",
     "db:run": "docker-compose up -d postgres",
     "remove-comments": "node remove-comments.cjs && npm run format",
     "check:unused": "knip",
-    "fix:unused": "knip --fix"
+    "fix:unused": "knip --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
   },
   "dependencies": {
     "@google/genai": "^1.6.0",
@@ -48,16 +52,22 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@eslint/js": "^9.29.0",
     "@types/node": "^20",
     "@types/pg": "^8.15.4",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@types/uuid": "^10.0.0",
     "drizzle-kit": "^0.25.0",
+    "eslint": "^9.29.0",
+    "eslint-config-next": "15.3.4",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "knip": "^5.61.2",
     "postcss": "^8",
+    "prettier": "^3.4.2",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.35.0"
   },
   "packageManager": "yarn@4.9.1",
   "overrides": {

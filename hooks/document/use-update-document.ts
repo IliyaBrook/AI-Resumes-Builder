@@ -1,8 +1,7 @@
 'use client';
 
-import { toast } from '@/hooks';
 import { api } from '@/lib/hono-rpc';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useBaseMutation } from './base-mutation';
 import { useParams } from 'next/navigation';
 import {
   APIResponseType,
@@ -48,10 +47,9 @@ type UpdateDocumentResponse = APIResponseType<{ message: string }>;
 
 const useUpdateDocument = () => {
   const param = useParams();
-  const queryClient = useQueryClient();
   const documentId = param.documentId as string;
 
-  return useMutation<UpdateDocumentResponse, Error, UpdateDocumentRequest>({
+  return useBaseMutation<UpdateDocumentResponse, UpdateDocumentRequest>({
     mutationFn: async json => {
       const response = await api.document.update[':documentId']['$patch']({
         param: {
@@ -61,18 +59,9 @@ const useUpdateDocument = () => {
       });
       return await response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['document', documentId],
-      });
-    },
-    onError: () => {
-      toast({
-        title: 'Error',
-        description: 'Failed to update document',
-        variant: 'destructive',
-      });
-    },
+    successMessage: 'Document updated successfully',
+    errorMessage: 'Failed to update document',
+    invalidateQueries: [['document', 'documentId']],
   });
 };
 

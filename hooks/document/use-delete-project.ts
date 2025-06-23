@@ -1,41 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/hono-rpc";
-import { toast } from "@/hooks";
-import { useParams } from "next/navigation";
+import { createEntityHooks } from './entity-hooks-factory';
 
 type DeleteProjectParams = {
   projectId: number;
 };
 
+const projectHooks = createEntityHooks('project');
+
 const useDeleteProject = () => {
-  const param = useParams();
-  const documentId = param.documentId as string;
-  const queryClient = useQueryClient();
+  const deleteHook = projectHooks.useDelete<any>();
 
-  const mutation = useMutation({
-    mutationFn: async ({ projectId }: DeleteProjectParams) => {
-      const response = await api.document.project[":projectId"].$delete({
-        param: { projectId: projectId.toString() },
-      });
-      return await response.json();
+  return {
+    ...deleteHook,
+    mutate: ({ projectId }: DeleteProjectParams) => {
+      deleteHook.mutate({ id: projectId });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["document", documentId] });
-      toast({
-        title: "Success",
-        description: "Project deleted successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to delete project",
-        variant: "destructive",
-      });
-    },
-  });
-
-  return mutation;
+  };
 };
 
 export default useDeleteProject;

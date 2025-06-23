@@ -1,38 +1,28 @@
-import { toast } from "@/hooks";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useBaseMutation } from './base-mutation';
 
 type DeleteLanguageParams = {
   languageId: number;
 };
 
 const useDeleteLanguage = () => {
-  const param = useParams();
-  const documentId = param.documentId as string;
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ languageId }: DeleteLanguageParams) => {
+  const deleteHook = useBaseMutation<any, { languageId: number }>({
+    mutationFn: async ({ languageId }) => {
       const response = await fetch(`/api/document/language/${languageId}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
       return await response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["document", documentId] });
-      toast({
-        title: "Success",
-        description: "Language deleted successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to delete language",
-        variant: "destructive",
-      });
-    },
+    successMessage: 'Language deleted successfully',
+    errorMessage: 'Failed to delete language',
+    invalidateQueries: [['document', 'documentId']],
   });
+
+  return {
+    ...deleteHook,
+    mutate: ({ languageId }: DeleteLanguageParams) => {
+      deleteHook.mutate({ languageId });
+    },
+  };
 };
 
 export default useDeleteLanguage;

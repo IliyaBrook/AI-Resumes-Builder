@@ -1,41 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/hono-rpc";
-import { toast } from "@/hooks";
-import { useParams } from "next/navigation";
+import { createEntityHooks } from './entity-hooks-factory';
 
 type DeleteExperienceParams = {
   experienceId: number;
 };
 
+const experienceHooks = createEntityHooks('experience');
+
 const useDeleteExperience = () => {
-  const param = useParams();
-  const documentId = param.documentId as string;
-  const queryClient = useQueryClient();
+  const deleteHook = experienceHooks.useDelete<any>();
 
-  const mutation = useMutation({
-    mutationFn: async ({ experienceId }: DeleteExperienceParams) => {
-      const response = await api.document.experience[":experienceId"].$delete({
-        param: { experienceId: experienceId.toString() },
-      });
-      return await response.json();
+  return {
+    ...deleteHook,
+    mutate: ({ experienceId }: DeleteExperienceParams) => {
+      deleteHook.mutate({ id: experienceId });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["document", documentId] });
-      toast({
-        title: "Success",
-        description: "Experience deleted successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to delete experience",
-        variant: "destructive",
-      });
-    },
-  });
-
-  return mutation;
+  };
 };
 
 export default useDeleteExperience;

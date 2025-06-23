@@ -1,36 +1,20 @@
-"use client";
+'use client';
 
-import { toast } from "@/hooks";
-import { api } from "@/lib/hono-rpc";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from '@/lib/hono-rpc';
+import { useBaseMutation } from './base-mutation';
 
 const useDeleteDocument = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
+  return useBaseMutation<any, string>({
     mutationFn: async (documentId: string) => {
-      const response = await api.document[":documentId"].$delete({
+      const response = await api.document[':documentId'].$delete({
         param: { documentId },
       });
       return await response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["documents"] });
-      toast({
-        title: "Success",
-        description: "Resume deleted successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to delete resume",
-        variant: "destructive",
-      });
-    },
+    successMessage: 'Resume deleted successfully',
+    errorMessage: 'Failed to delete resume',
+    invalidateQueries: [['documents']],
   });
-
-  return mutation;
 };
 
-export default useDeleteDocument; 
+export default useDeleteDocument;

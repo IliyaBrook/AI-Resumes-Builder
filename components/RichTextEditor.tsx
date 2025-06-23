@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
 import {
   EditorProvider,
   Editor,
@@ -237,6 +237,10 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       }
     };
 
+    const handleGenerateClick = useCallback(() => {
+      void handleGenerate();
+    }, [handleGenerate]);
+
     return (
       <div>
         <div className="flex items-center justify-between my-2">
@@ -279,7 +283,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
                 type="button"
                 className="gap-1"
                 disabled={loading || disabled}
-                onClick={handleGenerate}
+                onClick={handleGenerateClick}
               >
                 <>
                   <Sparkles size="15px" className="text-purple-500" />

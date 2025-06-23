@@ -32,12 +32,19 @@ const ResumeForm = () => {
 
   useEffect(() => {
     if (!resumeInfo || resumeInfo.thumbnail) return;
-    (async () => {
-      const thumbnail = await generateThumbnail();
-      if (thumbnail) {
-        setResumeInfo({ thumbnail });
+
+    const generateAndSetThumbnail = async () => {
+      try {
+        const thumbnail = await generateThumbnail();
+        if (thumbnail) {
+          setResumeInfo({ thumbnail });
+        }
+      } catch (error) {
+        console.error('Failed to generate thumbnail:', error);
       }
-    })();
+    };
+
+    void generateAndSetThumbnail();
   }, [resumeInfo, setResumeInfo]);
 
   return (

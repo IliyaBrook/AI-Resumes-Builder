@@ -45,10 +45,6 @@ const ThemeColor = () => {
     setSelectedColor(resumeInfo?.themeColor || INITIAL_THEME_COLOR);
   }, [resumeInfo?.themeColor]);
 
-  useEffect(() => {
-    if (debouncedColor) onSave();
-  }, [debouncedColor]);
-
   const onColorSelect = useCallback((color: string) => {
     setSelectedColor(color);
   }, []);
@@ -73,6 +69,12 @@ const ThemeColor = () => {
       }
     );
   }, [selectedColor, setResumeInfo]);
+
+  useEffect(() => {
+    if (debouncedColor) {
+      void onSave();
+    }
+  }, [debouncedColor, onSave]);
 
   return (
     <Popover>

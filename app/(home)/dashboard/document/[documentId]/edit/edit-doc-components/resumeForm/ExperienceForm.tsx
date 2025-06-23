@@ -7,10 +7,10 @@ import {
   useDeleteExperience,
   useCreateExperience,
 } from '@/hooks';
-import { ExperienceType } from '@/types/resume.type';
+import { ExperienceType, SkillType } from '@/types/resume.type';
 import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useCallback } from 'react';
 // components
 import { parseAIResult, Label, Input, Button, RichTextEditor } from '@/components';
 
@@ -20,7 +20,7 @@ const ExperienceForm = () => {
   const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const allSkills = data?.data?.skills
-    ? resumeInfo?.skills.map(skill => skill.name).join(', ')
+    ? resumeInfo?.skills.map((skill: SkillType) => skill.name).join(', ')
     : '';
 
   const { mutate: setResumeInfo } = useUpdateDocument();
@@ -109,6 +109,10 @@ const ExperienceForm = () => {
     return prompt;
   };
 
+  const handleAddExperience = useCallback(() => {
+    void addNewExperience();
+  }, [addNewExperience]);
+
   return (
     <div>
       <div className="w-full">
@@ -129,7 +133,7 @@ const ExperienceForm = () => {
               className="gap-1 mt-1 text-primary border-primary/50"
               variant="outline"
               type="button"
-              onClick={addNewExperience}
+              onClick={handleAddExperience}
             >
               <Plus size="15px" />
               Add More Experience
@@ -298,9 +302,11 @@ const ExperienceForm = () => {
                   <RichTextEditor
                     jobTitle={item.title}
                     initialValue={item.workSummary || ''}
-                    onEditorChange={value =>
-                      handEditor(String(parseAIResult(value)), 'workSummary', index)
-                    }
+                    onEditorChange={value => {
+                      const parsedResult = parseAIResult(value);
+                      const stringValue = typeof parsedResult === 'string' ? parsedResult : '';
+                      handEditor(stringValue, 'workSummary', index);
+                    }}
                     prompt={buildExperiencePrompt(item, allSkills || '')}
                     title={undefined}
                     showBullets={true}
@@ -313,7 +319,7 @@ const ExperienceForm = () => {
                   className="gap-1 mt-1 text-primary border-primary/50"
                   variant="outline"
                   type="button"
-                  onClick={addNewExperience}
+                  onClick={handleAddExperience}
                 >
                   <Plus size="15px" />
                   Add More Experience

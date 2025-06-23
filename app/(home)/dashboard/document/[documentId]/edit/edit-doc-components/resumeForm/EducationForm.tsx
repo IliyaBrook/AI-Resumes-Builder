@@ -3,7 +3,7 @@
 import { Textarea, Label, Input, Button } from '@/components';
 import { Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 //hooks
 import {
   useCreateEducation,
@@ -133,6 +133,10 @@ const EducationForm = () => {
     deleteEducation({ educationId: id });
     setEducationList(prev => prev.filter(item => item.id !== id));
   };
+
+  const handleAddEducation = useCallback(() => {
+    void addNewEducation();
+  }, [addNewEducation]);
 
   return (
     <div>
@@ -325,7 +329,7 @@ const EducationForm = () => {
                   variant="outline"
                   type="button"
                   disabled={isPending}
-                  onClick={addNewEducation}
+                  onClick={handleAddEducation}
                 >
                   <Plus size="15px" />
                   Add More Education

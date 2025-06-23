@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 // components
 import { Label, Input, Button } from '@/components';
 import { Rating } from '@smastrom/react-rating';
@@ -44,7 +44,7 @@ const SkillsForm = () => {
   const skillsByCategory = React.useMemo(() => {
     if (format !== 'byCategory') return {};
     const grouped: Record<string, SkillType[]> = {};
-    (resumeInfo?.skills || []).forEach(skill => {
+    (resumeInfo?.skills || []).forEach((skill: SkillType) => {
       const category = skill.category || 'General';
       if (!grouped[category]) grouped[category] = [];
       grouped[category].push({
@@ -57,8 +57,8 @@ const SkillsForm = () => {
     const sortedGrouped: Record<string, SkillType[]> = {};
     Object.keys(grouped)
       .sort((a, b) => {
-        const aMinOrder = Math.min(...grouped[a].map(skill => skill.order || 0));
-        const bMinOrder = Math.min(...grouped[b].map(skill => skill.order || 0));
+        const aMinOrder = Math.min(...grouped[a].map((skill: SkillType) => skill.order || 0));
+        const bMinOrder = Math.min(...grouped[b].map((skill: SkillType) => skill.order || 0));
         return aMinOrder - bMinOrder;
       })
       .forEach(categoryName => {
@@ -83,7 +83,7 @@ const SkillsForm = () => {
   useEffect(() => {
     if (resumeInfo?.skills) {
       setSkillsList(
-        resumeInfo.skills.map(skill => ({
+        resumeInfo.skills.map((skill: SkillType) => ({
           ...skill,
           hideRating: !!skill.hideRating,
           category: skill.category || '',
@@ -96,7 +96,7 @@ const SkillsForm = () => {
 
       setLocalSkillInputs(prev => {
         const newInputs: Record<number, string> = {};
-        resumeInfo.skills.forEach(skill => {
+        resumeInfo.skills.forEach((skill: SkillType) => {
           if (skill.id) {
             newInputs[skill.id] = prev[skill.id] !== undefined ? prev[skill.id] : skill.name || '';
           }
@@ -106,7 +106,7 @@ const SkillsForm = () => {
 
       setLocalCategoryInputs(prev => {
         const newInputs: Record<number, string> = {};
-        resumeInfo.skills.forEach(skill => {
+        resumeInfo.skills.forEach((skill: SkillType) => {
           if (skill.id) {
             newInputs[skill.id] =
               prev[skill.id] !== undefined ? prev[skill.id] : skill.category || '';
@@ -119,7 +119,7 @@ const SkillsForm = () => {
 
   useEffect(() => {
     Object.entries(debouncedSkillInputs).forEach(([skillId, name]) => {
-      const currentSkill = resumeInfo?.skills?.find(s => s.id === Number(skillId));
+      const currentSkill = resumeInfo?.skills?.find((s: SkillType) => s.id === Number(skillId));
       if (name !== undefined && currentSkill && currentSkill.name !== name) {
         updateSkill({ skillId: Number(skillId), data: { name } });
       }
@@ -128,7 +128,7 @@ const SkillsForm = () => {
 
   useEffect(() => {
     Object.entries(debouncedCategoryInputs).forEach(([skillId, category]) => {
-      const currentSkill = resumeInfo?.skills?.find(s => s.id === Number(skillId));
+      const currentSkill = resumeInfo?.skills?.find((s: SkillType) => s.id === Number(skillId));
       if (category !== undefined && currentSkill && currentSkill.category !== category) {
         updateSkill({ skillId: Number(skillId), data: { category } });
       }
@@ -257,8 +257,8 @@ const SkillsForm = () => {
 
   const handleRemoveCategory = (categoryName: string) => {
     const skillsInCategory =
-      resumeInfo?.skills?.filter(skill => skill.category === categoryName) || [];
-    skillsInCategory.forEach(skill => {
+      resumeInfo?.skills?.filter((skill: SkillType) => skill.category === categoryName) || [];
+    skillsInCategory.forEach((skill: SkillType) => {
       if (skill.id) {
         deleteSkill({ skillId: skill.id });
       }
@@ -276,11 +276,11 @@ const SkillsForm = () => {
     setEditCategoryName(categoryName);
   };
 
-  const handleSaveCategoryName = async () => {
+  const handleSaveCategoryName = () => {
     if (!editingCategory || !editCategoryName.trim()) return;
 
     const skillsInCategory =
-      resumeInfo?.skills?.filter(skill => skill.category === editingCategory) || [];
+      resumeInfo?.skills?.filter((skill: SkillType) => skill.category === editingCategory) || [];
 
     for (const skill of skillsInCategory) {
       if (skill.id) {
@@ -303,30 +303,27 @@ const SkillsForm = () => {
   const moveCategorySkills = (fromCategoryName: string, toCategoryName: string) => {
     if (!resumeInfo?.skills) return;
 
-    const fromSkills = resumeInfo.skills.filter(skill => skill.category === fromCategoryName);
-    const toSkills = resumeInfo.skills.filter(skill => skill.category === toCategoryName);
+    const fromSkills = resumeInfo.skills.filter(
+      (skill: SkillType) => skill.category === fromCategoryName
+    );
+    const toSkills = resumeInfo.skills.filter(
+      (skill: SkillType) => skill.category === toCategoryName
+    );
 
-    const sortedCategories = Object.keys(skillsByCategory);
-    const fromIndex = sortedCategories.indexOf(fromCategoryName);
-    const toIndex = sortedCategories.indexOf(toCategoryName);
+    if (fromSkills.length === 0) return;
 
-    if (fromIndex === toIndex) return;
+    const toMinOrder = Math.min(...toSkills.map((skill: SkillType) => skill.order || 0));
 
-    const toMinOrder = Math.min(...toSkills.map(skill => skill.order || 0));
-    const toMaxOrder = Math.max(...toSkills.map(skill => skill.order || 0));
+    const insertPosition = toMinOrder - 1;
 
-    let newBaseOrder: number;
-    if (fromIndex < toIndex) {
-      newBaseOrder = toMaxOrder + 1;
-    } else {
-      newBaseOrder = toMinOrder - fromSkills.length;
-    }
-
-    fromSkills.forEach((skill, idx) => {
+    fromSkills.forEach((skill: SkillType, idx: number) => {
       if (skill.id) {
         updateSkill({
           skillId: skill.id,
-          data: { order: newBaseOrder + idx },
+          data: {
+            category: toCategoryName,
+            order: insertPosition - idx,
+          },
         });
       }
     });
@@ -351,6 +348,26 @@ const SkillsForm = () => {
   const getSkillValue = (skill: SkillType, field: keyof SkillType) => {
     return skill[field];
   };
+
+  // Wrapper functions for onClick handlers
+  const handleAddSkillClick = useCallback(() => {
+    void addNewSkill();
+  }, [addNewSkill]);
+
+  const handleAddNewCategoryClick = useCallback(() => {
+    void handleAddNewCategory();
+  }, [handleAddNewCategory]);
+
+  const handleAddSkillToCategoryClick = useCallback(
+    (categoryName: string) => {
+      void handleAddSkillToCategory(categoryName);
+    },
+    [handleAddSkillToCategory]
+  );
+
+  const handleSaveCategoryNameClick = useCallback(() => {
+    handleSaveCategoryName();
+  }, [handleSaveCategoryName]);
 
   return (
     <div>
@@ -391,7 +408,7 @@ const SkillsForm = () => {
                   variant="outline"
                   type="button"
                   disabled={isPending}
-                  onClick={addNewSkill}
+                  onClick={handleAddSkillClick}
                 >
                   <Plus size="15px" />
                   Add More Skills
@@ -475,7 +492,7 @@ const SkillsForm = () => {
                       variant="outline"
                       type="button"
                       disabled={isPending}
-                      onClick={addNewSkill}
+                      onClick={handleAddSkillClick}
                     >
                       <Plus size="15px" />
                       Add More Skills
@@ -501,7 +518,7 @@ const SkillsForm = () => {
               onChange={e => setNewCategoryName(e.target.value)}
               className="w-48"
             />
-            <Button type="button" onClick={handleAddNewCategory} variant="outline">
+            <Button type="button" onClick={handleAddNewCategoryClick} variant="outline">
               <Plus size="15px" /> Add category
             </Button>
           </div>
@@ -540,7 +557,7 @@ const SkillsForm = () => {
                         onChange={e => setEditCategoryName(e.target.value)}
                         className="w-48 font-semibold"
                         onKeyDown={e => {
-                          if (e.key === 'Enter') handleSaveCategoryName();
+                          if (e.key === 'Enter') handleSaveCategoryNameClick();
                           if (e.key === 'Escape') handleCancelEditCategory();
                         }}
                         autoFocus
@@ -548,7 +565,7 @@ const SkillsForm = () => {
                       <Button
                         type="button"
                         size="sm"
-                        onClick={handleSaveCategoryName}
+                        onClick={handleSaveCategoryNameClick}
                         disabled={!editCategoryName.trim()}
                       >
                         Save
@@ -627,7 +644,7 @@ const SkillsForm = () => {
                     type="button"
                     variant="outline"
                     className="gap-1 mt-2"
-                    onClick={() => handleAddSkillToCategory(categoryName)}
+                    onClick={() => handleAddSkillToCategoryClick(categoryName)}
                   >
                     <Plus size="15px" /> Add skill
                   </Button>
@@ -639,7 +656,7 @@ const SkillsForm = () => {
                 type="button"
                 variant="outline"
                 className="gap-1"
-                onClick={() => handleAddSkillToCategory('General')}
+                onClick={() => handleAddSkillToCategoryClick('General')}
               >
                 <Plus size="15px" /> Add first skill
               </Button>

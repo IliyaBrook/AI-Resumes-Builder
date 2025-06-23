@@ -9,7 +9,6 @@ import {
 } from '@/db/schema';
 import {
   createDocumentTableSchema,
-  DocumentSchema,
   documentTable,
   updateCombinedSchema,
   UpdateDocumentSchema,
@@ -23,7 +22,7 @@ import { z } from 'zod';
 const documentRoute = new Hono()
   .post('/create', zValidator('json', createDocumentTableSchema), async c => {
     try {
-      const { title } = c.req.valid('json') as DocumentSchema;
+      const { title } = c.req.valid('json');
       const documentId = generateDocUUID();
 
       const newDoc = {

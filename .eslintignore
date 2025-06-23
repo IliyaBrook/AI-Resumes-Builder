@@ -1,0 +1,25 @@
+# Compiled output
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Cache directories
+.nx/
+.next/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp 

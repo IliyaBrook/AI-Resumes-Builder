@@ -27,7 +27,9 @@ const ProjectForm = () => {
 
   React.useEffect(() => {
     setLocalProjects(
-      (resumeInfo?.projects || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0))
+      (resumeInfo?.projects || [])
+        .slice()
+        .sort((a: ProjectType, b: ProjectType) => (a.order || 0) - (b.order || 0))
     );
   }, [resumeInfo?.projects]);
 

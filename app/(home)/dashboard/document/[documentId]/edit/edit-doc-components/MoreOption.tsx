@@ -23,7 +23,7 @@ const MoreOption = () => {
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 
   const handleClick = useCallback(
-    async (status: StatusType) => {
+    (status: StatusType) => {
       if (!resumeInfo) return;
       setResumeInfo(
         {
@@ -50,6 +50,14 @@ const MoreOption = () => {
     [setResumeInfo, resumeInfo, router]
   );
 
+  const handleRestore = useCallback(() => {
+    handleClick('private');
+  }, [handleClick]);
+
+  const handleArchive = useCallback(() => {
+    handleClick('archived');
+  }, [handleClick]);
+
   return (
     <>
       <DropdownMenu>
@@ -65,7 +73,7 @@ const MoreOption = () => {
                 variant="ghost"
                 className="gap-1 !py-2 !cursor-pointer"
                 disabled={isPending}
-                onClick={() => handleClick('private')}
+                onClick={handleRestore}
               >
                 <Redo size="15px" />
                 Retore resume
@@ -76,7 +84,7 @@ const MoreOption = () => {
                 variant="ghost"
                 className="gap-1  !py-2 !cursor-pointer"
                 disabled={isPending}
-                onClick={() => handleClick('archived')}
+                onClick={handleArchive}
               >
                 <Trash2 size="15px" />
                 Move to Trash

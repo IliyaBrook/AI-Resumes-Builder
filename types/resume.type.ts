@@ -123,3 +123,19 @@ export type AIResultObjectType = {
 export type AIResultType = AIResultObjectType | string[] | string;
 
 export type ParsedAIResult = AIGeneratedSummariesType | string;
+
+export type DocumentType = {
+  id?: number;
+  documentId: string;
+  title: string;
+  status: StatusType;
+  thumbnail?: string | null;
+  themeColor?: string | null;
+  updatedAt: string;
+};
+
+export type APIResponseType<T> = {
+  data: T;
+  message?: string;
+  success?: boolean;
+};

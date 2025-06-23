@@ -64,17 +64,12 @@ const TopSection = () => {
             isLoading={isLoading || isPending}
             initialTitle={resumeInfo?.title || ''}
             status={resumeInfo?.status}
-            onSave={value => handleTitle(value)}
+            onSave={(value: string) => handleTitle(value)}
           />
         </div>
         <div className="flex items-center gap-2">
-          {}
           <ThemeColor />
-
-          {}
           <PreviewModal />
-
-          {}
           <Download
             title={resumeInfo?.title || 'Unititled Resume'}
             status={resumeInfo?.status}

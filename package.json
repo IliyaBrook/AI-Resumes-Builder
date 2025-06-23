@@ -16,7 +16,7 @@
     "fix:unused": "knip --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "next lint",
+    "lint": "next lint && yarn tsc --noEmit",
     "lint:fix": "next lint --fix"
   },
   "dependencies": {

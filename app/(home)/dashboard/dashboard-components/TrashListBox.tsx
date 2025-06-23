@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { Dot, FileText, Loader, Search, Trash2, Undo } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { DocumentType } from '@/types/resume.type';
 
 const TrashListBox = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const TrashListBox = () => {
   const resumes = data?.data ?? [];
   const [search, setSearch] = useState('');
 
-  const filteredDocuments = resumes?.filter(doc => {
+  const filteredDocuments = resumes?.filter((doc: DocumentType) => {
     return doc.title?.toLowerCase()?.includes(search?.toLowerCase());
   });
 
@@ -24,13 +25,13 @@ const TrashListBox = () => {
     router.push(`/dashboard/document/${docId}/edit`);
   };
 
-  const onRestore = async (
+  const onRestore = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     docId: string,
     status: string
   ) => {
     event.stopPropagation();
-    mutateAsync(
+    void mutateAsync(
       {
         documentId: docId,
         status: status,
@@ -41,6 +42,14 @@ const TrashListBox = () => {
             title: 'Success',
             description: `Restore document successfully`,
           });
+        },
+        onError: error => {
+          toast({
+            title: 'Error',
+            description: 'Failed to restore document',
+            variant: 'destructive',
+          });
+          console.error('Failed to restore document:', error);
         },
       }
     );
@@ -94,7 +103,7 @@ const TrashListBox = () => {
                 No documents found
               </p>
 
-              {filteredDocuments?.map(doc => (
+              {filteredDocuments?.map((doc: DocumentType) => (
                 <div
                   key={doc.id}
                   role="button"
@@ -134,7 +143,7 @@ const TrashListBox = () => {
                   <div>
                     <div
                       role="button"
-                      onClick={e => onRestore(e, doc.documentId, doc.status)}
+                      onClick={e => onRestore(e, doc.documentId, doc.status || 'private')}
                       className="rounded-sm
                                hover:bg-neutral-200
                        w-6 h-6 flex 

@@ -22,7 +22,7 @@ const Header = () => {
 
   const handleThemeSelect = (value: string) => {
     setTheme(value);
-    fetch('/api/theme', {
+    void fetch('/api/theme', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ theme: value }),

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+.yarn/
+
+# Build outputs
+dist/
+.next/
+build/
+
+# Logs
+*.log
+
+# Cache
+.nx/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Lock files
+yarn.lock
+package-lock.json
+
+# Generated files
+*.generated.* 

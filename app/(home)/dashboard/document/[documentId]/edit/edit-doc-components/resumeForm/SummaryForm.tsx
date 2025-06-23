@@ -1,27 +1,21 @@
 'use client';
 // components
 import {
-  Card,
+  Button,
   CardContent,
   CardHeader,
   CardTitle,
+  Card,
+  RichTextEditor,
   RichTextEditorRef,
   parseAIResult,
-  RichTextEditor,
-  Button,
 } from '@/components';
-// hooks
 import { toast, useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
 import { getAIChatSession } from '@/lib/google-ai-model';
-import {
-  ResumeDataType,
-  SkillType,
-  AIGeneratedSummariesType,
-  ParsedAIResult,
-} from '@/types/resume.type';
 import { Sparkles } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
+import { AIGeneratedSummariesType, ResumeDataType, SkillType } from '@/types/resume.type';
 
 const buildPrompt = (resumeInfo: ResumeDataType, summarySize: string = 'default') => {
   const jobTitle = resumeInfo?.personalInfo?.jobTitle || '';
@@ -148,7 +142,7 @@ const SummaryForm = () => {
       const chat = getAIChatSession();
       const result = await chat.sendMessage({ message: promptText });
       const responseText = result.text || '';
-      const parsed = parseAIResult(responseText) as ParsedAIResult;
+      const parsed = parseAIResult(responseText);
       if (
         parsed &&
         typeof parsed === 'object' &&
@@ -180,6 +174,10 @@ const SummaryForm = () => {
     setSummary(summary);
   }, []);
 
+  const handleGenerateAI = useCallback(() => {
+    void GenerateSummaryFromAI();
+  }, [GenerateSummaryFromAI]);
+
   return (
     <div>
       <div className="w-full">
@@ -208,7 +206,7 @@ const SummaryForm = () => {
               type="button"
               className="gap-1"
               disabled={loading || isLoading}
-              onClick={() => GenerateSummaryFromAI()}
+              onClick={handleGenerateAI}
             >
               <Sparkles size="15px" className="text-purple-500" />
               Generate with AI

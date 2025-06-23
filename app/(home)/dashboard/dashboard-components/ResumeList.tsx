@@ -2,7 +2,7 @@
 import { useGetDocuments } from '@/hooks';
 import { Loader, RotateCw } from 'lucide-react';
 import React, { Fragment, useCallback } from 'react';
-import { ResumeItem } from '@/homePageComponents';
+import { ResumeItem } from '@/editResume';
 import { DocumentType } from '@/types/resume.type';
 
 const ResumeList = () => {

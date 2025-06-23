@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrashListBox, ResumeList, AddResume } from '@/homePageComponents';
+import { TrashListBox, ResumeList, AddResume } from '@/editResume';
 
 const Page = () => {
   return (

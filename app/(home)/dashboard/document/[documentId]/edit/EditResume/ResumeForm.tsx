@@ -15,7 +15,7 @@ import {
   ProjectForm,
   SkillsForm,
   SummaryForm,
-} from '@/homePageComponents';
+} from '@/editResume';
 import { FirstRenderProvider } from '@/context/first-render-provider';
 
 const ResumeForm = () => {

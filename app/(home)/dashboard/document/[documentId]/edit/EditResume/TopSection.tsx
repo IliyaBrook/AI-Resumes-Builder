@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { toast, useGetDocumentById, useUpdateDocument } from '@/hooks';
 // page components
-import { Download, MoreOption, PreviewModal, ThemeColor, ResumeTitle } from '@/homePageComponents';
+import { Download, MoreOption, PreviewModal, ThemeColor, ResumeTitle } from '@/editResume';
 
 const TopSection = () => {
   const param = useParams();

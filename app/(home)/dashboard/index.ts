@@ -1,2 +1,2 @@
 export * from './dashboard-components';
-export * from './document/[documentId]/edit/EditResume';
+export * from './document/[documentId]/edit/editResume';

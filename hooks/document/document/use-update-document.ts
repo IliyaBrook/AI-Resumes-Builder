@@ -62,6 +62,7 @@ const useUpdateDocument = () => {
     successMessage: 'Document updated successfully',
     errorMessage: 'Failed to update document',
     invalidateQueries: [['document', 'documentId']],
+    showSuccessToast: false,
   });
 };
 

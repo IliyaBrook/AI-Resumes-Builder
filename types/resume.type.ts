@@ -36,7 +36,7 @@ export type SkillType = {
   category?: string;
 };
 
-type PersonalInfoType = {
+export type PersonalInfoType = {
   id?: number;
   docId?: string | null;
   firstName?: string | null;

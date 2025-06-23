@@ -26,23 +26,13 @@ const ProjectForm = () => {
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
-    setLocalProjects(
-      (resumeInfo?.projects || [])
-        .slice()
-        .sort((a: ProjectType, b: ProjectType) => (a.order || 0) - (b.order || 0))
-    );
-  }, [resumeInfo?.projects]);
-
-  React.useEffect(() => {
-    setSectionTitle(resumeInfo?.projectsSectionTitle || 'Projects');
-  }, [resumeInfo?.projectsSectionTitle]);
-
-  React.useEffect(() => {
-    setResumeInfo({ projects: debouncedProjects });
+    if (debouncedProjects && debouncedProjects !== resumeInfo?.projects) {
+      setResumeInfo({ projects: debouncedProjects });
+    }
   }, [debouncedProjects]);
 
   React.useEffect(() => {
-    if (debouncedSectionTitle !== (resumeInfo?.projectsSectionTitle || 'Projects')) {
+    if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.projectsSectionTitle) {
       setResumeInfo({ projectsSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle]);

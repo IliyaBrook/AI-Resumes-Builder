@@ -16,24 +16,7 @@ const TopSection = () => {
   const handleTitle = useCallback(
     (title: string) => {
       if (title === 'Untitled Resume' && !title) return;
-      setResumeInfo(
-        { title },
-        {
-          onSuccess: () => {
-            toast({
-              title: 'Success',
-              description: 'Title updated successfully',
-            });
-          },
-          onError: () => {
-            toast({
-              title: 'Error',
-              description: 'Failed to update the title',
-              variant: 'destructive',
-            });
-          },
-        }
-      );
+      setResumeInfo({ title });
     },
     [setResumeInfo]
   );

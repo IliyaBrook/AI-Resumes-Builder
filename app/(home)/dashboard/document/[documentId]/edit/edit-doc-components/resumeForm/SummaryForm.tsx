@@ -82,38 +82,23 @@ const SummaryForm = () => {
   const resumeInfo = data?.data as ResumeDataType | undefined;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const [loading, setLoading] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
   const [aiGeneratedSummary, setAiGeneratedSummary] = useState<AIGeneratedSummariesType | null>(
     null
   );
-  const [summary, setSummary] = useState('');
+  const [localSummary, setLocalSummary] = useState(resumeInfo?.summary || '');
   const [summarySize, setSummarySize] = useState('default');
   const editorRef = React.useRef<RichTextEditorRef>(null);
 
-  useEffect(() => {
-    setIsInitialized(false);
-  }, [documentId]);
+  const debouncedSummary = useDebounce(localSummary, 500);
 
   useEffect(() => {
-    if (resumeInfo?.summary !== undefined && !isInitialized) {
-      setSummary(resumeInfo.summary ?? '');
-      setIsInitialized(true);
-    }
-  }, [resumeInfo?.summary, isInitialized]);
-
-  const debouncedSummary = useDebounce(summary, 600);
-
-  useEffect(() => {
-    if (!resumeInfo || !isInitialized) return;
-
-    const originalSummary = resumeInfo.summary ?? '';
-    if (debouncedSummary !== originalSummary) {
+    if (debouncedSummary && debouncedSummary !== resumeInfo?.summary) {
       setResumeInfo({ summary: debouncedSummary });
     }
-  }, [debouncedSummary, resumeInfo, isInitialized, setResumeInfo]);
+  }, [debouncedSummary, resumeInfo?.summary, setResumeInfo]);
 
   const handleChange = (value: string) => {
-    setSummary(value);
+    setLocalSummary(value);
   };
 
   const GenerateSummaryFromAI = async () => {
@@ -171,7 +156,7 @@ const SummaryForm = () => {
     if (editorRef.current) {
       editorRef.current.setValue(summary);
     }
-    setSummary(summary);
+    setLocalSummary(summary);
   }, []);
 
   const handleGenerateAI = useCallback(() => {
@@ -216,8 +201,8 @@ const SummaryForm = () => {
             <RichTextEditor
               ref={editorRef}
               jobTitle={resumeInfo?.personalInfo?.jobTitle || null}
-              initialValue={summary}
-              value={summary}
+              initialValue={localSummary}
+              value={localSummary}
               onEditorChange={handleChange}
               showBullets={false}
               disabled={false}

@@ -124,6 +124,7 @@ export const createEntityHooks = (entityType: keyof typeof entityConfigs) => {
       successMessage: config.messages.update.success,
       errorMessage: config.messages.update.error,
       invalidateQueries: config.invalidateQueries,
+      showSuccessToast: false,
     });
   };
 

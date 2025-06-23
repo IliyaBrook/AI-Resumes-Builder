@@ -11,10 +11,11 @@ import {
   PersonalInfoLoader,
 } from '@/components';
 // hooks
-import { useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { useDebounce, useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { Mail, Phone, MapPin, Github, Linkedin, ChevronDown } from 'lucide-react';
+import { PersonalInfoType } from '@/types/resume.type';
 
 const PersonalInfoForm = () => {
   const param = useParams();
@@ -23,108 +24,44 @@ const PersonalInfoForm = () => {
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
 
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [displayFormat, setDisplayFormat] = useState<'default' | 'compact'>('default');
-
-  useEffect(() => {
-    setIsInitialized(false);
-    setIsDataLoaded(false);
-  }, [documentId]);
-
-  const [personalInfo, setPersonalInfo] = useState<{
-    id?: number;
-    firstName: string;
-    lastName: string;
-    jobTitle: string;
-    address: string;
-    phone: string;
-    email: string;
-    github?: string;
-    linkedin?: string;
-  }>({
-    id: undefined,
-    firstName: '',
-    lastName: '',
-    jobTitle: '',
-    address: '',
-    phone: '',
-    email: '',
-    github: '',
-    linkedin: '',
-  });
-
-  useEffect(() => {
-    if (resumeInfo && !isInitialized) {
-      if (resumeInfo.personalInfo) {
-        setPersonalInfo({
-          id: resumeInfo.personalInfo.id ?? undefined,
-          firstName: resumeInfo.personalInfo.firstName || '',
-          lastName: resumeInfo.personalInfo.lastName || '',
-          jobTitle: resumeInfo.personalInfo.jobTitle || '',
-          address: resumeInfo.personalInfo.address || '',
-          phone: resumeInfo.personalInfo.phone || '',
-          email: resumeInfo.personalInfo.email || '',
-          github: resumeInfo.personalInfo.github || '',
-          linkedin: resumeInfo.personalInfo.linkedin || '',
-        });
-      }
-      const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || 'default';
-      setDisplayFormat(currentDisplayFormat as 'default' | 'compact');
-      setIsInitialized(true);
-      setTimeout(() => setIsDataLoaded(true), 100);
+  const [localPersonalInfo, setLocalPersonalInfo] = useState<PersonalInfoType>(
+    resumeInfo?.personalInfo || {
+      firstName: '',
+      lastName: '',
+      jobTitle: '',
+      address: '',
+      phone: '',
+      email: '',
+      github: '',
+      linkedin: '',
     }
-  }, [resumeInfo, isInitialized]);
+  );
 
-  const debouncedPersonalInfo = useDebounce(personalInfo, 600);
-  const debouncedDisplayFormat = useDebounce(displayFormat, 600);
+  const [localDisplayFormat, setLocalDisplayFormat] = useState<'default' | 'compact'>(
+    (resumeInfo?.personalInfoDisplayFormat as 'default' | 'compact') || 'default'
+  );
+
+  const debouncedPersonalInfo = useDebounce(localPersonalInfo, 500);
+  const debouncedDisplayFormat = useDebounce(localDisplayFormat, 500);
 
   useEffect(() => {
-    if (!resumeInfo || !isInitialized || !isDataLoaded) return;
-
-    const originalPersonalInfo = {
-      id: resumeInfo.personalInfo?.id ?? undefined,
-      firstName: resumeInfo.personalInfo?.firstName || '',
-      lastName: resumeInfo.personalInfo?.lastName || '',
-      jobTitle: resumeInfo.personalInfo?.jobTitle || '',
-      address: resumeInfo.personalInfo?.address || '',
-      phone: resumeInfo.personalInfo?.phone || '',
-      email: resumeInfo.personalInfo?.email || '',
-      github: resumeInfo.personalInfo?.github || '',
-      linkedin: resumeInfo.personalInfo?.linkedin || '',
-    };
-
-    const hasPersonalInfoChanges =
-      JSON.stringify(debouncedPersonalInfo) !== JSON.stringify(originalPersonalInfo);
-
-    const currentDisplayFormat = resumeInfo.personalInfoDisplayFormat || 'default';
-    const hasDisplayFormatChanges = debouncedDisplayFormat !== currentDisplayFormat;
-
-    if (hasPersonalInfoChanges || hasDisplayFormatChanges) {
-      const updateData: any = {};
-
-      if (hasPersonalInfoChanges) {
-        updateData.personalInfo = debouncedPersonalInfo;
-      }
-
-      if (hasDisplayFormatChanges) {
-        updateData.personalInfoDisplayFormat = debouncedDisplayFormat;
-      }
-
-      setResumeInfo(updateData);
+    if (debouncedPersonalInfo && debouncedPersonalInfo !== resumeInfo?.personalInfo) {
+      setResumeInfo({ personalInfo: debouncedPersonalInfo });
     }
-  }, [
-    debouncedPersonalInfo,
-    debouncedDisplayFormat,
-    resumeInfo,
-    isInitialized,
-    isDataLoaded,
-    setResumeInfo,
-  ]);
+  }, [debouncedPersonalInfo, resumeInfo?.personalInfo, setResumeInfo]);
+
+  useEffect(() => {
+    if (
+      debouncedDisplayFormat &&
+      debouncedDisplayFormat !== resumeInfo?.personalInfoDisplayFormat
+    ) {
+      setResumeInfo({ personalInfoDisplayFormat: debouncedDisplayFormat });
+    }
+  }, [debouncedDisplayFormat, resumeInfo?.personalInfoDisplayFormat, setResumeInfo]);
 
   const handleChange = useCallback((e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-    setPersonalInfo(prev => ({ ...prev, [name]: value }));
+    setLocalPersonalInfo((prev: PersonalInfoType) => ({ ...prev, [name]: value }));
   }, []);
 
   if (isLoading) {
@@ -143,13 +80,17 @@ const PersonalInfoForm = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-full justify-between h-9">
-              {displayFormat === 'default' ? 'Default' : 'Compact'}
+              {localDisplayFormat === 'default' ? 'Default' : 'Compact'}
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full">
-            <DropdownMenuItem onClick={() => setDisplayFormat('default')}>Default</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setDisplayFormat('compact')}>Compact</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setLocalDisplayFormat('default')}>
+              Default
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setLocalDisplayFormat('compact')}>
+              Compact
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -164,7 +105,7 @@ const PersonalInfoForm = () => {
                   required
                   autoComplete="off"
                   placeholder=""
-                  value={personalInfo.firstName}
+                  value={localPersonalInfo.firstName || ''}
                   onChange={handleChange}
                   className="h-9"
                 />
@@ -176,7 +117,7 @@ const PersonalInfoForm = () => {
                   required
                   autoComplete="off"
                   placeholder=""
-                  value={personalInfo.lastName}
+                  value={localPersonalInfo.lastName || ''}
                   onChange={handleChange}
                   className="h-9"
                 />
@@ -190,7 +131,7 @@ const PersonalInfoForm = () => {
                 required
                 autoComplete="off"
                 placeholder=""
-                value={personalInfo.jobTitle}
+                value={localPersonalInfo.jobTitle || ''}
                 onChange={handleChange}
                 className="h-9"
               />
@@ -206,7 +147,7 @@ const PersonalInfoForm = () => {
                     required
                     autoComplete="off"
                     placeholder=""
-                    value={personalInfo.phone}
+                    value={localPersonalInfo.phone || ''}
                     onChange={handleChange}
                     className="pl-8 h-9"
                   />
@@ -221,7 +162,7 @@ const PersonalInfoForm = () => {
                     required
                     autoComplete="off"
                     placeholder=""
-                    value={personalInfo.email}
+                    value={localPersonalInfo.email || ''}
                     onChange={handleChange}
                     className="pl-8 h-9"
                   />
@@ -238,7 +179,7 @@ const PersonalInfoForm = () => {
                     name="github"
                     autoComplete="off"
                     placeholder="username"
-                    value={personalInfo.github}
+                    value={localPersonalInfo.github || ''}
                     onChange={handleChange}
                     className="pl-8 h-9"
                   />
@@ -252,7 +193,7 @@ const PersonalInfoForm = () => {
                     name="linkedin"
                     autoComplete="off"
                     placeholder="username"
-                    value={personalInfo.linkedin}
+                    value={localPersonalInfo.linkedin || ''}
                     onChange={handleChange}
                     className="pl-8 h-9"
                   />
@@ -269,7 +210,7 @@ const PersonalInfoForm = () => {
                   required
                   autoComplete="off"
                   placeholder=""
-                  value={personalInfo.address}
+                  value={localPersonalInfo.address || ''}
                   onChange={handleChange}
                   className="pl-8 h-9"
                 />

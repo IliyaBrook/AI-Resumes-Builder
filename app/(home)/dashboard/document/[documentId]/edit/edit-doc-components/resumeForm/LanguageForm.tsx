@@ -37,23 +37,13 @@ const LanguageForm = () => {
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
-    setLocalLanguages(
-      (resumeInfo?.languages || [])
-        .slice()
-        .sort((a: LanguageType, b: LanguageType) => (a.order || 0) - (b.order || 0))
-    );
-  }, [resumeInfo?.languages]);
-
-  React.useEffect(() => {
-    setSectionTitle(resumeInfo?.languagesSectionTitle || 'Languages');
-  }, [resumeInfo?.languagesSectionTitle]);
-
-  React.useEffect(() => {
-    setResumeInfo({ languages: debouncedLanguages });
+    if (debouncedLanguages && debouncedLanguages !== resumeInfo?.languages) {
+      setResumeInfo({ languages: debouncedLanguages });
+    }
   }, [debouncedLanguages]);
 
   React.useEffect(() => {
-    if (debouncedSectionTitle !== (resumeInfo?.languagesSectionTitle || 'Languages')) {
+    if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.languagesSectionTitle) {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle]);

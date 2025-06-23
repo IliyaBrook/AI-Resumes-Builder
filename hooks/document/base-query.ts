@@ -15,7 +15,7 @@ export const useBaseQuery = <TData>({
   queryKey,
   queryFn,
   enabled = true,
-  staleTime = 5 * 60 * 1000, // 5 минут по умолчанию
+  staleTime = 5 * 60 * 1000,
   retry = 3,
   refetchOnWindowFocus = false,
 }: QueryConfig<TData>) => {

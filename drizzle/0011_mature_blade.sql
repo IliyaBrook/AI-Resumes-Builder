@@ -1,1 +1,0 @@
-ALTER TABLE "document" ADD COLUMN "personal_info_display_format" varchar(32) DEFAULT 'default';

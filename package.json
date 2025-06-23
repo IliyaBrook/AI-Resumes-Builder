@@ -7,12 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:init": "psql -U postgres -d postgres -f ./db/init-db.sql",
     "db:run": "docker-compose up -d postgres",
-    "remove-comments": "node remove-comments.cjs && npm run format"
+    "remove-comments": "node remove-comments.cjs && npm run format",
+    "check:unused": "knip",
+    "fix:unused": "knip --fix"
   },
   "dependencies": {
     "@google/genai": "^1.6.0",
@@ -55,6 +56,7 @@
     "@types/uuid": "^10.0.0",
     "cross-env": "^7.0.3",
     "drizzle-kit": "^0.25.0",
+    "knip": "^5.61.2",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"

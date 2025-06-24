@@ -8,7 +8,6 @@ type tSetHasBeenFirstRender = React.Dispatch<React.SetStateAction<TFirstRenderSt
 
 interface FirstRenderContextType {
   firstRender: TFirstRenderState;
-  setFirstRender: tSetHasBeenFirstRender;
 }
 
 interface FirstRenderProviderProps {
@@ -17,7 +16,6 @@ interface FirstRenderProviderProps {
 
 export const FirstRenderContext = createContext<FirstRenderContextType>({
   firstRender: 'pending',
-  setFirstRender: () => {},
 });
 
 export const FirstRenderProvider: React.FC<FirstRenderProviderProps> = ({ children }) => {
@@ -51,5 +49,5 @@ export const FirstRenderProvider: React.FC<FirstRenderProviderProps> = ({ childr
     setHasBeenFirstRender(false);
   }, [documentId]);
 
-  return <FirstRenderContext.Provider value={{ firstRender, setFirstRender }}>{children}</FirstRenderContext.Provider>;
+  return <FirstRenderContext.Provider value={{ firstRender }}>{children}</FirstRenderContext.Provider>;
 };

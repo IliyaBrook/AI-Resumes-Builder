@@ -7,7 +7,6 @@ import { LanguageType } from '@/types/resume.type';
 import { Label, Input, Button } from '@/components';
 //hooks
 import { useDeleteLanguage, useUpdateDocument, useGetDocumentById, useDebounce } from '@/hooks';
-import { useFirstRender } from '@/hooks';
 
 const LANGUAGE_LEVELS = [
   { value: '', label: 'Do not specify' },
@@ -27,7 +26,6 @@ const LanguageForm = () => {
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteLanguage } = useDeleteLanguage();
-  const { firstRender } = useFirstRender();
 
   const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.languagesSectionTitle || 'Languages');
   const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>(resumeInfo?.languages || []);
@@ -35,20 +33,10 @@ const LanguageForm = () => {
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
-    if (firstRender === 'notFirstRender' && debouncedLanguages && debouncedLanguages !== resumeInfo?.languages) {
-      setResumeInfo({ languages: debouncedLanguages });
-    }
-  }, [debouncedLanguages, firstRender]);
-
-  React.useEffect(() => {
-    if (
-      firstRender === 'notFirstRender' &&
-      debouncedSectionTitle &&
-      debouncedSectionTitle !== resumeInfo?.languagesSectionTitle
-    ) {
+    if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.languagesSectionTitle) {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }
-  }, [debouncedSectionTitle, firstRender]);
+  }, [debouncedSectionTitle]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;

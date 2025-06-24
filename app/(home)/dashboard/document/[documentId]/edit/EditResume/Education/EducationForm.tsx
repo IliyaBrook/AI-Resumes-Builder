@@ -5,14 +5,7 @@ import { Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 //hooks
-import {
-  useCreateEducation,
-  useDebounce,
-  useUpdateDocument,
-  useGetDocumentById,
-  useDeleteEducation,
-  useFirstRender,
-} from '@/hooks';
+import { useCreateEducation, useDebounce, useUpdateDocument, useGetDocumentById, useDeleteEducation } from '@/hooks';
 import { EducationType } from '@/types/resume.type';
 
 const getToday = () => {
@@ -30,13 +23,12 @@ const EducationForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteEducation, isPending: isDeleting } = useDeleteEducation();
   const { mutateAsync: createEducation } = useCreateEducation();
-  const { firstRender } = useFirstRender();
 
   const [localEducationList, setLocalEducationList] = React.useState<EducationType[]>(resumeInfo?.educations || []);
   const debouncedEducationList = useDebounce(localEducationList, 500);
 
   React.useEffect(() => {
-    if (firstRender === 'notFirstRender' && debouncedEducationList && debouncedEducationList !== resumeInfo?.educations) {
+    if (debouncedEducationList && debouncedEducationList !== resumeInfo?.educations) {
       const sanitized = debouncedEducationList.map((edu: EducationType) => ({
         ...edu,
         endDate: edu.currentlyStudying ? null : edu.endDate,
@@ -44,7 +36,7 @@ const EducationForm = () => {
       }));
       setResumeInfo({ education: sanitized });
     }
-  }, [debouncedEducationList, firstRender]);
+  }, [debouncedEducationList]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;

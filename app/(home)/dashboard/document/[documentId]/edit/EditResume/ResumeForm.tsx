@@ -27,10 +27,6 @@ const ResumeForm = () => {
 
   const resumeInfo = data?.data;
   const thumbnail = resumeInfo?.thumbnail;
-  const resumeInfoStringed = resumeInfo ? JSON.stringify(resumeInfo) : null;
-  const resumeInfoStringedPrev = useRef<string | null>(null);
-
-  console.log('is first render', firstRender);
 
   const handleNext = () => {
     const newIndex = activeFormIndex + 1;
@@ -38,11 +34,6 @@ const ResumeForm = () => {
   };
 
   useEffect(() => {
-    if (!resumeInfo || resumeInfoStringed === resumeInfoStringedPrev.current) {
-      resumeInfoStringedPrev.current = resumeInfoStringed;
-      return;
-    }
-
     const generateAndSetThumbnail = async () => {
       try {
         const thumbnail = await generateThumbnail();
@@ -54,9 +45,13 @@ const ResumeForm = () => {
       }
     };
 
-    void generateAndSetThumbnail();
-    resumeInfoStringedPrev.current = resumeInfoStringed;
-  }, [resumeInfo, resumeInfoStringed, setResumeInfo]);
+    if (resumeInfo && firstRender === 'notFirstRender') {
+      void generateAndSetThumbnail();
+    }
+    if (resumeInfo && !thumbnail && firstRender === 'firstRender') {
+      void generateAndSetThumbnail();
+    }
+  }, [resumeInfo, setResumeInfo]);
 
   return (
     <div className="w-full flex-1 lg:sticky lg:top-16">

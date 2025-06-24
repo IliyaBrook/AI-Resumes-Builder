@@ -18,12 +18,8 @@ const ProjectForm = () => {
   const { mutate: deleteProject } = useDeleteProject();
   const { isDataLoaded } = useFirstRender();
 
-  const [sectionTitle, setSectionTitle] = React.useState(
-    resumeInfo?.projectsSectionTitle || 'Projects'
-  );
-  const [localProjects, setLocalProjects] = React.useState<ProjectType[]>(
-    resumeInfo?.projects || []
-  );
+  const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.projectsSectionTitle || 'Projects');
+  const [localProjects, setLocalProjects] = React.useState<ProjectType[]>(resumeInfo?.projects || []);
   const debouncedProjects = useDebounce(localProjects, 500);
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
@@ -34,20 +30,14 @@ const ProjectForm = () => {
   }, [debouncedProjects, isDataLoaded]);
 
   React.useEffect(() => {
-    if (
-      isDataLoaded &&
-      debouncedSectionTitle &&
-      debouncedSectionTitle !== resumeInfo?.projectsSectionTitle
-    ) {
+    if (isDataLoaded && debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.projectsSectionTitle) {
       setResumeInfo({ projectsSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle, isDataLoaded]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;
-    setLocalProjects(prev =>
-      prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item))
-    );
+    setLocalProjects(prev => prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item)));
   };
 
   const addNewProject = () => {
@@ -73,23 +63,23 @@ const ProjectForm = () => {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-2">
+      <div className="mb-2 flex items-center gap-2">
         {localProjects.length > 1 && (
           <div className="text-sm text-muted-foreground">Use arrows to reorder experiences</div>
         )}
       </div>
-      <div className="w-full flex items-center gap-2 mb-2">
+      <div className="mb-2 flex w-full items-center gap-2">
         <Input
-          className="font-bold text-lg flex-1"
+          className="flex-1 text-lg font-bold"
           value={sectionTitle}
           onChange={e => setSectionTitle(e.target.value)}
         />
       </div>
       <form>
-        <div className="border w-full h-auto divide-y-[1px] rounded-md px-3 pb-4 my-3">
+        <div className="my-3 h-auto w-full divide-y-[1px] rounded-md border px-3 pb-4">
           {localProjects.length === 0 && (
             <Button
-              className="gap-1 mt-1 text-primary border-primary/50"
+              className="mt-1 gap-1 border-primary/50 text-primary"
               variant="outline"
               type="button"
               onClick={addNewProject}
@@ -100,7 +90,7 @@ const ProjectForm = () => {
           )}
           {localProjects.map((item, index) => (
             <div key={item.id || index}>
-              <div className="relative grid grid-cols-2 mb-5 pt-4 gap-3">
+              <div className="relative mb-5 grid grid-cols-2 gap-3 pt-4">
                 {localProjects.length > 1 && (
                   <div className="absolute -left-8 top-4 flex flex-col gap-1">
                     <Button
@@ -128,7 +118,7 @@ const ProjectForm = () => {
                 <Button
                   variant="secondary"
                   type="button"
-                  className="size-[20px] text-center rounded-full absolute -top-3 -right-5 !bg-black dark:!bg-gray-600 text-white"
+                  className="absolute -right-5 -top-3 size-[20px] rounded-full !bg-black text-center text-white dark:!bg-gray-600"
                   size="icon"
                   onClick={() => removeProject(index, item.id)}
                 >
@@ -166,16 +156,14 @@ const ProjectForm = () => {
                   <Label className="text-sm">Description</Label>
                   <RichTextEditor
                     value={item?.description || ''}
-                    onEditorChange={val =>
-                      handleChange({ target: { name: 'description', value: val } }, index)
-                    }
+                    onEditorChange={val => handleChange({ target: { name: 'description', value: val } }, index)}
                     placeholder="Project description"
                   />
                 </div>
               </div>
               {index === localProjects.length - 1 && localProjects.length < 10 && (
                 <Button
-                  className="gap-1 mt-1 text-primary border-primary/50"
+                  className="mt-1 gap-1 border-primary/50 text-primary"
                   variant="outline"
                   type="button"
                   onClick={addNewProject}

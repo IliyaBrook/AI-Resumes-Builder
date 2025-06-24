@@ -27,9 +27,7 @@ export const useDataTracking = <T>(initialData?: T, options: UseDataTrackingOpti
   const updateCurrentData = useCallback(
     (data: T) => {
       currentDataRef.current = data;
-      const hasChanges = originalDataRef.current
-        ? hasDataChanged(originalDataRef.current, data)
-        : false;
+      const hasChanges = originalDataRef.current ? hasDataChanged(originalDataRef.current, data) : false;
 
       if (hasChanges !== hasChangesRef.current) {
         hasChangesRef.current = hasChanges;

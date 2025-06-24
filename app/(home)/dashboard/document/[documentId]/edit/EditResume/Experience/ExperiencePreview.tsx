@@ -16,20 +16,18 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     return <SkeletonLoader />;
   }
   return (
-    <div className="w-full my-3">
-      <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
+    <div className="my-3 w-full">
+      <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
         Professional Experience
       </h5>
       <hr
-        className="
-          border-[1.5px] mt-2 mb-2
-          "
+        className="mb-2 mt-2 border-[1.5px]"
         style={{
           borderColor: themeColor,
         }}
       />
 
-      <div className="flex flex-col gap-2 min-h-9">
+      <div className="flex min-h-9 flex-col gap-2">
         <style>{`
           .exp-preview ul {
             list-style-position: outside;
@@ -45,11 +43,8 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
             <h5 className="text-[15px] font-bold" style={{ color: themeColor }}>
               {experience?.title}
             </h5>
-            <div
-              className="flex items-start 
-            justify-between mb-2"
-            >
-              <h5 className="text-[13px] whitespace-nowrap">
+            <div className="mb-2 flex items-start justify-between">
+              <h5 className="whitespace-nowrap text-[13px]">
                 <span className="font-bold">{experience?.companyName}</span>
                 <span>
                   {experience?.companyName && experience?.city && ', '}

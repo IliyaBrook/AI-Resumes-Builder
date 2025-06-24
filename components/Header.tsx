@@ -30,29 +30,12 @@ const Header = () => {
   };
 
   return (
-    <div
-      className="shadow-sm w-full sticky
-    top-0 bg-white dark:bg-gray-900 z-[9]
-        "
-    >
-      <div
-        className="w-full mx-auto max-w-7xl
-        py-2 px-5 flex items-center justify-between
-        "
-      >
-        <div
-          className="flex items-center
-            flex-1 gap-9
-            "
-        >
+    <div className="sticky top-0 z-[9] w-full bg-white shadow-sm dark:bg-gray-900">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-2">
+        <div className="flex flex-1 items-center gap-9">
           <div className="flex items-center gap-2">
-            <Home className="w-5 h-5 text-primary" />
-            <Link
-              href="/dashboard"
-              className="font-black text-[20px]
-                      text-primary
-                          "
-            >
+            <Home className="h-5 w-5 text-primary" />
+            <Link href="/dashboard" className="text-[20px] font-black text-primary">
               Home
             </Link>
           </div>
@@ -63,7 +46,7 @@ const Header = () => {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className={`relative flex items-center justify-center h-8 w-8 rounded border transition-colors ${
+                className={`relative flex h-8 w-8 items-center justify-center rounded border transition-colors ${
                   resolvedTheme === 'dark' ? 'border-white' : 'border-gray-300'
                 }`}
               >

@@ -22,25 +22,12 @@ const TopSection = () => {
   return (
     <>
       {resumeInfo?.status === 'archived' && (
-        <div
-          className="
-            absolute z-[9] inset-0 h-6 top-0
-            bg-rose-500 text-center
-            text-base p-2 text-white
-            flex items-center gap-x-2 
-            justify-center font-medium
-            "
-        >
+        <div className="absolute inset-0 top-0 z-[9] flex h-6 items-center justify-center gap-x-2 bg-rose-500 p-2 text-center text-base font-medium text-white">
           <AlertCircle size="16px" />
           This resume is in the trash bin
         </div>
       )}
-      <div
-        className="
-          w-full flex items-center justify-between
-          border-b pb-3
-          "
-      >
+      <div className="flex w-full items-center justify-between border-b pb-3">
         <div className="flex items-center gap-2">
           <ResumeTitle
             isLoading={isLoading || isPending}
@@ -52,11 +39,7 @@ const TopSection = () => {
         <div className="flex items-center gap-2">
           <ThemeColor />
           <PreviewModal />
-          <Download
-            title={resumeInfo?.title || 'Unititled Resume'}
-            status={resumeInfo?.status}
-            isLoading={isLoading}
-          />
+          <Download title={resumeInfo?.title || 'Unititled Resume'} status={resumeInfo?.status} isLoading={isLoading} />
           <MoreOption />
         </div>
       </div>

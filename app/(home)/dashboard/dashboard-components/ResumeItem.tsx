@@ -1,14 +1,6 @@
 'use client';
 // components
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  Tooltip,
-} from '@/components';
+import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Tooltip } from '@/components';
 import { useDeleteDocument } from '@/hooks';
 import { format } from 'date-fns';
 import { Copy, FileText, Trash2 } from 'lucide-react';
@@ -25,14 +17,7 @@ interface PropType {
   onDuplicate?: (documentId: string) => void;
 }
 
-const ResumeItem: FC<PropType> = ({
-  documentId,
-  title,
-  themeColor,
-  thumbnail,
-  updatedAt,
-  onDuplicate,
-}) => {
+const ResumeItem: FC<PropType> = ({ documentId, title, themeColor, thumbnail, updatedAt, onDuplicate }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { mutate: deleteDocument, isPending } = useDeleteDocument();
@@ -68,50 +53,20 @@ const ResumeItem: FC<PropType> = ({
   return (
     <>
       <div
-        className="
-        cursor-pointer max-w-[220px] w-full
-        border 
-        rounded-lg transition-all h-[220px]
-        hover:border-primary
-        hover:shadow-md
-        shadow-primary
-        "
+        className="h-[220px] w-full max-w-[220px] cursor-pointer rounded-lg border shadow-primary transition-all hover:border-primary hover:shadow-md"
         onClick={gotoDoc}
         style={{ borderColor: themeColor || '' }}
       >
-        <div
-          className="flex flex-col w-full
-          h-full items-center rounded-lg
-          justify-center bg-[#fdfdfd] 
-          dark:bg-secondary"
-        >
-          <div
-            className="w-full flex flex-1 px-1
-         pt-2"
-          >
-            <div
-              className="w-full flex flex-1 bg-white
-          dark:bg-gray-700
-          rounded-t-lg justify-center
-           items-center
-          "
-            >
+        <div className="flex h-full w-full flex-col items-center justify-center rounded-lg bg-[#fdfdfd] dark:bg-secondary">
+          <div className="flex w-full flex-1 px-1 pt-2">
+            <div className="flex w-full flex-1 items-center justify-center rounded-t-lg bg-white dark:bg-gray-700">
               {thumbnail ? (
-                <div
-                  className="
-              relative w-full h-full 
-              rounded-t-lg
-              overflow-hidden
-              "
-                >
+                <div className="relative h-full w-full overflow-hidden rounded-t-lg">
                   <Image
                     fill
                     src={thumbnail}
                     alt={title}
-                    className="w-full h-full
-                  object-cover
-                  object-top rounded-t-lg
-                                  "
+                    className="h-full w-full rounded-t-lg object-cover object-top"
                   />
                 </div>
               ) : (
@@ -119,24 +74,20 @@ const ResumeItem: FC<PropType> = ({
               )}
             </div>
           </div>
-          <div className="shrink w-full border-t pt-2 pb-[9px] px-[9px]">
+          <div className="w-full shrink border-t px-[9px] pb-[9px] pt-2">
             <Tooltip content={title} side="top">
-              <h5 className="font-bold text-lg mb-1 truncate block max-w-full text-center cursor-default">
-                {title}
-              </h5>
+              <h5 className="mb-1 block max-w-full cursor-default truncate text-center text-lg font-bold">{title}</h5>
             </Tooltip>
             <div className="flex items-center justify-center gap-2">
-              <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap">
-                {docDate}
-              </span>
+              <span className="whitespace-nowrap text-[12px] font-medium text-muted-foreground">{docDate}</span>
               <button
-                className="text-muted-foreground rounded hover:shadow-[0_0_0_1px_#6b7280] p-1"
+                className="rounded p-1 text-muted-foreground hover:shadow-[0_0_0_1px_#6b7280]"
                 onClick={handleDelete}
               >
                 <Trash2 size="20px" />
               </button>
               <button
-                className="text-muted-foreground rounded hover:shadow-[0_0_0_1px_#6b7280] p-1"
+                className="rounded p-1 text-muted-foreground hover:shadow-[0_0_0_1px_#6b7280]"
                 onClick={e => {
                   e.stopPropagation();
                   onDuplicate?.(documentId);

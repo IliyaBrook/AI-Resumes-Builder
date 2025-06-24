@@ -25,11 +25,7 @@ const TrashListBox = () => {
     router.push(`/dashboard/document/${docId}/edit`);
   };
 
-  const onRestore = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    docId: string,
-    status: string
-  ) => {
+  const onRestore = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, docId: string, status: string) => {
     event.stopPropagation();
     void mutateAsync(
       {
@@ -58,27 +54,14 @@ const TrashListBox = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          className="text-[15px] gap-[2px]
-           items-center"
-          variant="outline"
-        >
+        <Button className="items-center gap-[2px] text-[15px]" variant="outline">
           <Trash2 size="15px" />
           <span>All Trash</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="bg-background
-        w-[22rem] !px-2"
-        align="end"
-        alignOffset={0}
-        forceMount
-      >
+      <PopoverContent className="w-[22rem] bg-background !px-2" align="end" alignOffset={0} forceMount>
         {isLoading ? (
-          <div
-            className="w-full flex flex-col
-          gap-2 pt-3"
-          >
+          <div className="flex w-full flex-col gap-2 pt-3">
             <Skeleton className="h-6" />
             <Skeleton className="h-6" />
             <Skeleton className="h-6" />
@@ -86,56 +69,32 @@ const TrashListBox = () => {
         ) : (
           <div className="text-sm">
             <div className="flex items-center gap-x-1 p-2">
-              <Search className="w-4 h-4" />
+              <Search className="h-4 w-4" />
               <Input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="h-7 px-2 bg-secondary "
+                className="h-7 bg-secondary px-2"
                 placeholder="Filter by resume title"
               />
             </div>
             <div className="mt-2 px-1 pb-1">
-              <p
-                className="hidden last:block text-xs
-            text-center text-muted-foreground
-            "
-              >
-                No documents found
-              </p>
+              <p className="hidden text-center text-xs text-muted-foreground last:block">No documents found</p>
 
               {filteredDocuments?.map((doc: DocumentType) => (
                 <div
                   key={doc.id}
                   role="button"
                   onClick={() => onClick(doc.documentId)}
-                  className="
-                      text-sm rounded-s w-full hover:bg-primary/5
-                      flex items-center justify-between py-1 px-1
-                      "
+                  className="flex w-full items-center justify-between rounded-s px-1 py-1 text-sm hover:bg-primary/5"
                 >
                   <div className="flex items-start gap-1">
                     <FileText size="15px" className="mt-[3px]" />
                     <div className="flex flex-col">
-                      <h5
-                        className="font-semibold text-sm
-                       truncate block w-[200px]"
-                      >
-                        {doc.title}
-                      </h5>
-                      <div
-                        className="flex items-center
-                       !text-[12px]"
-                      >
-                        <span
-                          className="flex items-center
-                        capitalize gap-[2px]"
-                        >
-                          {doc.status}
-                        </span>
+                      <h5 className="block w-[200px] truncate text-sm font-semibold">{doc.title}</h5>
+                      <div className="flex items-center !text-[12px]">
+                        <span className="flex items-center gap-[2px] capitalize">{doc.status}</span>
                         <Dot size="15px" />
-                        <span className="items-center">
-                          {doc.updatedAt && format(doc.updatedAt, 'MMM dd, yyyy')}
-                        </span>
+                        <span className="items-center">{doc.updatedAt && format(doc.updatedAt, 'MMM dd, yyyy')}</span>
                       </div>
                     </div>
                   </div>
@@ -144,17 +103,9 @@ const TrashListBox = () => {
                     <div
                       role="button"
                       onClick={e => onRestore(e, doc.documentId, doc.status || 'private')}
-                      className="rounded-sm
-                               hover:bg-neutral-200
-                       w-6 h-6 flex 
-                      items-center justify-center 
-                       dark:hover:bg-gray-700"
+                      className="flex h-6 w-6 items-center justify-center rounded-sm hover:bg-neutral-200 dark:hover:bg-gray-700"
                     >
-                      {isPending ? (
-                        <Loader className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Undo className="h-4 w-4" />
-                      )}
+                      {isPending ? <Loader className="h-4 w-4 animate-spin" /> : <Undo className="h-4 w-4" />}
                     </div>
                   </div>
                 </div>

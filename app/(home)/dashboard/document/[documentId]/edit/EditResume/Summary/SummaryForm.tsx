@@ -44,9 +44,7 @@ const buildPrompt = (resumeInfo: ResumeDataType, summarySize: string = 'default'
   }
 
   if (Array.isArray(resumeInfo.experiences) && resumeInfo.experiences.length > 0) {
-    const sortedExp = [...resumeInfo.experiences].sort((a, b) =>
-      (b.endDate || '')?.localeCompare(a.endDate || '')
-    );
+    const sortedExp = [...resumeInfo.experiences].sort((a, b) => (b.endDate || '')?.localeCompare(a.endDate || ''));
     const expShort = sortedExp.slice(0, 3).map(exp => {
       return `Title: ${exp.title}, Company: ${exp.companyName}, Summary: ${
         exp.workSummary
@@ -84,9 +82,7 @@ const SummaryForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { isDataLoaded } = useFirstRender();
   const [loading, setLoading] = useState(false);
-  const [aiGeneratedSummary, setAiGeneratedSummary] = useState<AIGeneratedSummariesType | null>(
-    null
-  );
+  const [aiGeneratedSummary, setAiGeneratedSummary] = useState<AIGeneratedSummariesType | null>(null);
   const [localSummary, setLocalSummary] = useState(resumeInfo?.summary || '');
   const [summarySize, setSummarySize] = useState('default');
   const editorRef = React.useRef<RichTextEditorRef>(null);
@@ -130,11 +126,7 @@ const SummaryForm = () => {
       const result = await chat.sendMessage({ message: promptText });
       const responseText = result.text || '';
       const parsed = parseAIResult(responseText);
-      if (
-        parsed &&
-        typeof parsed === 'object' &&
-        (parsed.fresher || parsed.mid || parsed.experienced)
-      ) {
+      if (parsed && typeof parsed === 'object' && (parsed.fresher || parsed.mid || parsed.experienced)) {
         setAiGeneratedSummary({
           fresher: parsed.fresher || '',
           mid: parsed.mid || '',
@@ -168,13 +160,13 @@ const SummaryForm = () => {
   return (
     <div>
       <div className="w-full">
-        <h2 className="font-bold text-lg">Summary</h2>
+        <h2 className="text-lg font-bold">Summary</h2>
         <p className="text-sm">Add summary for your resume</p>
       </div>
-      <div className="mb-2 flex gap-2 items-center">
+      <div className="mb-2 flex items-center gap-2">
         <span className="text-sm">Summary size:</span>
         <select
-          className="border rounded px-2 py-1 text-sm"
+          className="rounded border px-2 py-1 text-sm"
           value={summarySize}
           onChange={e => setSummarySize(e.target.value)}
         >
@@ -213,18 +205,18 @@ const SummaryForm = () => {
           </div>
           {aiGeneratedSummary && (
             <div>
-              <h5 className="font-semibold text-[15px] my-4">Suggestions</h5>
+              <h5 className="my-4 text-[15px] font-semibold">Suggestions</h5>
               {Object.entries(aiGeneratedSummary)
                 .filter(([, summary]) => summary && summary.trim() !== '')
                 .map(([experienceType, summary], index) => (
                   <Card
                     role="button"
                     key={index}
-                    className="my-4 bg-primary/5 shadow-none border-primary/30"
+                    className="my-4 border-primary/30 bg-primary/5 shadow-none"
                     onClick={() => handleSelect(summary)}
                   >
                     <CardHeader className="py-2">
-                      <CardTitle className="font-semibold text-md">
+                      <CardTitle className="text-md font-semibold">
                         {experienceType.charAt(0).toUpperCase() + experienceType.slice(1)}
                       </CardTitle>
                     </CardHeader>

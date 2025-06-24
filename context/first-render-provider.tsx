@@ -41,7 +41,5 @@ export const FirstRenderProvider: React.FC<FirstRenderProviderProps> = ({ childr
     setIsDataLoaded(false);
   }, [documentId]);
 
-  return (
-    <FirstRenderContext.Provider value={{ isDataLoaded }}>{children}</FirstRenderContext.Provider>
-  );
+  return <FirstRenderContext.Provider value={{ isDataLoaded }}>{children}</FirstRenderContext.Provider>;
 };

@@ -111,11 +111,7 @@ export function parseAIResult(value: string): ParsedAIResult {
   } catch {
     // Ignore parsing errors and use empty object
   }
-  if (
-    parsed &&
-    typeof parsed === 'object' &&
-    (parsed.fresher || parsed.mid || parsed.experienced)
-  ) {
+  if (parsed && typeof parsed === 'object' && (parsed.fresher || parsed.mid || parsed.experienced)) {
     return {
       fresher: parsed.fresher || '',
       mid: parsed.mid || '',
@@ -243,12 +239,12 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
 
     return (
       <div>
-        <div className="flex items-center justify-between my-2">
+        <div className="my-2 flex items-center justify-between">
           {title && <Label>{title}</Label>}
           <div className="flex items-center gap-2">
             {showBullets && (
               <select
-                className="border rounded px-2 py-1 text-sm"
+                className="rounded border px-2 py-1 text-sm"
                 value={bulletCount}
                 onChange={e => setBulletCount(Number(e.target.value))}
                 disabled={disabled}
@@ -262,14 +258,14 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
             )}
             {showLineLengthSelector && (
               <select
-                className="border rounded px-2 py-1 text-sm"
+                className="rounded border px-2 py-1 text-sm"
                 value={lineLength}
                 onChange={e => setLineLength(Number(e.target.value))}
                 disabled={disabled}
               >
                 {[
-                  30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200,
-                  210, 220, 230, 240, 250, 260, 270, 280, 290, 300,
+                  30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240,
+                  250, 260, 270, 280, 290, 300,
                 ].map(n => (
                   <option key={n} value={n}>
                     {n} chars/line

@@ -5,17 +5,10 @@ import { ResumeForm, ResumePreview, TopSection } from '@/editResume';
 const EditResume = () => {
   return (
     <div className="relative w-full">
-      <div
-        className="w-full mx-auto max-w-7xl
-       py-4 px-5"
-      >
+      <div className="mx-auto w-full max-w-7xl px-5 py-4">
         <TopSection />
-        <div className="w-full mt-1">
-          <div
-            className="flex flex-col lg:flex-row
-                  items-start w-full py-3 gap-6
-                  "
-          >
+        <div className="mt-1 w-full">
+          <div className="flex w-full flex-col items-start gap-6 py-3 lg:flex-row">
             <ResumeForm />
             <ResumePreview />
           </div>

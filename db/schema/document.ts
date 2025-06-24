@@ -1,14 +1,5 @@
 import { relations } from 'drizzle-orm';
-import {
-  integer,
-  pgEnum,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-  varchar,
-  json,
-} from 'drizzle-orm/pg-core';
+import { integer, pgEnum, pgTable, serial, text, timestamp, varchar, json } from 'drizzle-orm/pg-core';
 import { personalInfoTable, personalInfoTableSchema } from './personal-info';
 import { experienceTable, experienceTableSchema } from './experience';
 import { educationTable, educationTableSchema } from './education';
@@ -35,9 +26,7 @@ export const documentTable = pgTable('document', {
   projectsSectionTitle: varchar('projects_section_title', { length: 255 }).default('Projects'),
   languagesSectionTitle: varchar('languages_section_title', { length: 255 }).default('Languages'),
   skillsDisplayFormat: varchar('skills_display_format', { length: 32 }),
-  personalInfoDisplayFormat: varchar('personal_info_display_format', { length: 32 }).default(
-    'default'
-  ),
+  personalInfoDisplayFormat: varchar('personal_info_display_format', { length: 32 }).default('default'),
   pagesOrder: json('pages_order').$type<string[]>().default(DEFAULT_PAGES_ORDER),
 });
 

@@ -37,19 +37,11 @@ const ResumeList = () => {
   return (
     <Fragment>
       {isLoading ? (
-        <div
-          className="
-    flex items-center mx-5"
-        >
-          <Loader
-            className="animate-spin text-black
-     dark:text-white
-     size-10
-     "
-          />
+        <div className="mx-5 flex items-center">
+          <Loader className="size-10 animate-spin text-black dark:text-white" />
         </div>
       ) : isError ? (
-        <div className="flex flex-col items-center mx-5">
+        <div className="mx-5 flex flex-col items-center">
           <button className="flex items-center gap-1" onClick={handleRefetch}>
             <RotateCw size="1em" />
             <span>Retry</span>

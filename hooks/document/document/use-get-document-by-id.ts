@@ -7,9 +7,7 @@ const useGetDocumentById = (documentId: string, isPublic: boolean = false) => {
   return useBaseQuery({
     queryKey: ['document', documentId],
     queryFn: async () => {
-      const endpoint = !isPublic
-        ? api.document[':documentId']
-        : api.document.public.doc[':documentId'];
+      const endpoint = !isPublic ? api.document[':documentId'] : api.document.public.doc[':documentId'];
 
       const response = await endpoint.$get({
         param: {

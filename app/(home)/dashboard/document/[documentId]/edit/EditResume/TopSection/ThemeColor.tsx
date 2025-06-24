@@ -82,9 +82,7 @@ const ThemeColor = () => {
         <Button
           disabled={resumeInfo?.status === 'archived' ? true : false}
           variant="secondary"
-          className="bg-white border gap-1
-                   dark:bg-gray-800 !p-2
-                    lg:w-auto lg:p-4"
+          className="gap-1 border bg-white !p-2 dark:bg-gray-800 lg:w-auto lg:p-4"
         >
           <div className="flex items-center gap-1">
             <Palette size="17px" />
@@ -93,18 +91,8 @@ const ThemeColor = () => {
           <ChevronDown size="14px" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="
-          bg-background
-          "
-      >
-        <h2
-          className="mb-2 
-                text-sm font-bold"
-        >
-          Select Theme Color
-        </h2>
+      <PopoverContent align="start" className="bg-background">
+        <h2 className="mb-2 text-sm font-bold">Select Theme Color</h2>
 
         <div className="grid grid-cols-5 gap-3">
           {colors.map((item: string, index: number) => (
@@ -112,11 +100,7 @@ const ThemeColor = () => {
               role="button"
               key={index}
               onClick={() => onColorSelect(item)}
-              className={`h-5 w-8 rounded-[5px]
-                            hover:border-black border
-
-                          ${selectedColor === item && 'border border-black'}
-                            `}
+              className={`h-5 w-8 rounded-[5px] border hover:border-black ${selectedColor === item && 'border border-black'} `}
               style={{
                 background: item,
               }}

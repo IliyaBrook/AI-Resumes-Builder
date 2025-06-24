@@ -18,9 +18,7 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 
   const isCompactMode =
     isDoNotShowDates &&
-    resumeInfo?.educations?.every(
-      education => !education.major?.trim() && education.universityName?.trim()
-    );
+    resumeInfo?.educations?.every(education => !education.major?.trim() && education.universityName?.trim());
 
   if (isLoading) {
     return <SkeletonLoader />;
@@ -28,12 +26,12 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 
   if (isCompactMode) {
     return (
-      <div className="w-full my-3">
-        <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
+      <div className="my-3 w-full">
+        <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
           Education
         </h5>
         <hr
-          className="border-[1.5px] mt-2 mb-2"
+          className="mb-2 mt-2 border-[1.5px]"
           style={{
             borderColor: themeColor,
           }}
@@ -54,20 +52,18 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   }
 
   return (
-    <div className="w-full my-3">
-      <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
+    <div className="my-3 w-full">
+      <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
         Education
       </h5>
       <hr
-        className="border-[1.5px] mt-2 mb-2"
+        className="mb-2 mt-2 border-[1.5px]"
         style={{
           borderColor: themeColor,
         }}
       />
 
-      <div
-        className={`min-h-9 ${isDoNotShowDates ? 'grid grid-cols-2 gap-x-4 gap-y-1' : 'flex flex-col gap-2'}`}
-      >
+      <div className={`min-h-9 ${isDoNotShowDates ? 'grid grid-cols-2 gap-x-4 gap-y-1' : 'flex flex-col gap-2'}`}>
         {resumeInfo?.educations?.map((education, index) => (
           <div key={index} className={isDoNotShowDates ? 'mb-1' : ''}>
             <h5 className="text-sm font-bold" style={{ color: themeColor }}>
@@ -79,8 +75,7 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 {education?.degree && education?.major?.trim() && ' in '}
                 {education?.major?.trim() && education?.major}
               </h5>
-              {education?.skipDates === true ||
-              (!education?.startDate && !education?.endDate) ? null : (
+              {education?.skipDates === true || (!education?.startDate && !education?.endDate) ? null : (
                 <span className="text-[13px] font-bold">
                   {education?.yearsOnly
                     ? `${education?.startDate ? new Date(education.startDate).getFullYear() : ''}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : education?.endDate ? new Date(education.endDate).getFullYear() : ''}`
@@ -89,9 +84,7 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               )}
             </div>
             {education?.description?.trim() && (
-              <p className={`text-[13px] ${isDoNotShowDates ? 'my-1' : 'my-2'}`}>
-                {education?.description}
-              </p>
+              <p className={`text-[13px] ${isDoNotShowDates ? 'my-1' : 'my-2'}`}>{education?.description}</p>
             )}
           </div>
         ))}

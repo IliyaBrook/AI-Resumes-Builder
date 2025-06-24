@@ -29,13 +29,8 @@ const MainLayout = ({
     <html lang="en" suppressHydrationWarning={true}>
       <body className={cn('bg-background', open_sans.variable, urbanist.className)}>
         <QueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <div className="w-full h-auto min-h-screen !bg-[#f8f8f8] dark:!bg-background">
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <div className="h-auto min-h-screen w-full !bg-[#f8f8f8] dark:!bg-background">
               <Header />
               <div>{children}</div>
             </div>

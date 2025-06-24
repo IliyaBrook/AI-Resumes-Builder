@@ -35,15 +35,15 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     });
 
     return (
-      <div className="w-full my-3">
-        <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
+      <div className="my-3 w-full">
+        <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
           Skills
         </h5>
-        <hr className="border-[1.5px] mt-2 mb-2" style={{ borderColor: themeColor }} />
+        <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
         <div>
           {sortedCategories.map(categoryName => (
             <div key={categoryName}>
-              <span className="font-bold text-[13px] inline" style={{ color: themeColor }}>
+              <span className="inline text-[13px] font-bold" style={{ color: themeColor }}>
                 {categoryName}:{' '}
               </span>
               <span className="text-[12px] text-gray-700">
@@ -65,20 +65,16 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       columns[idx % 4].push(skill?.name || '');
     });
     return (
-      <div className="w-full my-3">
-        <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
+      <div className="my-3 w-full">
+        <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
           Skills
         </h5>
-        <hr className="border-[1.5px] mt-2 mb-2" style={{ borderColor: themeColor }} />
+        <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
         <div className="grid grid-cols-4 gap-x-4">
           {columns.map((col, colIdx) => (
             <div key={colIdx} className="flex flex-col gap-2">
               {col.map((name, idx) => (
-                <span
-                  key={idx}
-                  className="text-[12px] break-words max-w-full"
-                  style={{ wordBreak: 'break-word' }}
-                >
+                <span key={idx} className="max-w-full break-words text-[12px]" style={{ wordBreak: 'break-word' }}>
                   {name}
                 </span>
               ))}
@@ -93,20 +89,20 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const rightSkills = skills.filter((_, i) => i % 2 !== 0);
 
   return (
-    <div className="w-full my-3">
-      <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
+    <div className="my-3 w-full">
+      <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
         Skills
       </h5>
-      <hr className="border-[1.5px] mt-2 mb-2" style={{ borderColor: themeColor }} />
+      <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
       <div className="grid grid-cols-2 gap-x-8">
         {[leftSkills, rightSkills].map((col, colIdx) => (
           <div key={colIdx} className="flex flex-col gap-2">
             {col.map((skill, idx) => (
-              <div key={idx} className="flex items-center justify-between min-w-0">
-                <span className="text-[13px] mr-2 min-w-[60px]">{skill?.name}</span>
+              <div key={idx} className="flex min-w-0 items-center justify-between">
+                <span className="mr-2 min-w-[60px] text-[13px]">{skill?.name}</span>
                 {skill?.rating && skill?.name ? (
-                  <div className="flex-1 flex items-center">
-                    <div className="w-full bg-gray-200 rounded h-[6px]">
+                  <div className="flex flex-1 items-center">
+                    <div className="h-[6px] w-full rounded bg-gray-200">
                       <div
                         className="h-[6px] rounded"
                         style={{

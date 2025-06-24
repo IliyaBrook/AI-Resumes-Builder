@@ -5,13 +5,7 @@ import { Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 //hooks
-import {
-  useCreateEducation,
-  useDebounce,
-  useUpdateDocument,
-  useGetDocumentById,
-  useDeleteEducation,
-} from '@/hooks';
+import { useCreateEducation, useDebounce, useUpdateDocument, useGetDocumentById, useDeleteEducation } from '@/hooks';
 import { EducationType } from '@/types/resume.type';
 import { useFirstRender } from '@/context/first-render-provider';
 
@@ -32,17 +26,11 @@ const EducationForm = () => {
   const { mutateAsync: createEducation } = useCreateEducation();
   const { isDataLoaded } = useFirstRender();
 
-  const [localEducationList, setLocalEducationList] = React.useState<EducationType[]>(
-    resumeInfo?.educations || []
-  );
+  const [localEducationList, setLocalEducationList] = React.useState<EducationType[]>(resumeInfo?.educations || []);
   const debouncedEducationList = useDebounce(localEducationList, 500);
 
   React.useEffect(() => {
-    if (
-      isDataLoaded &&
-      debouncedEducationList &&
-      debouncedEducationList !== resumeInfo?.educations
-    ) {
+    if (isDataLoaded && debouncedEducationList && debouncedEducationList !== resumeInfo?.educations) {
       const sanitized = debouncedEducationList.map((edu: EducationType) => ({
         ...edu,
         endDate: edu.currentlyStudying ? null : edu.endDate,
@@ -88,14 +76,14 @@ const EducationForm = () => {
   return (
     <div>
       <div className="w-full">
-        <h2 className="font-bold text-lg">Education</h2>
+        <h2 className="text-lg font-bold">Education</h2>
         <p className="text-sm">Add your education details</p>
       </div>
       <form>
-        <div className="border w-full h-auto divide-y-[1px] rounded-md px-3 pb-4 my-3">
+        <div className="my-3 h-auto w-full divide-y-[1px] rounded-md border px-3 pb-4">
           {educations.length === 0 && (
             <Button
-              className="gap-1 mt-1 text-primary border-primary/50"
+              className="mt-1 gap-1 border-primary/50 text-primary"
               variant="outline"
               type="button"
               onClick={handleAddEducation}
@@ -106,13 +94,13 @@ const EducationForm = () => {
           )}
           {educations.map((item, index) => (
             <div key={item.id || index}>
-              <div className="relative grid grid-cols-2 mb-5 pt-4 gap-3">
+              <div className="relative mb-5 grid grid-cols-2 gap-3 pt-4">
                 {educations.length > 1 && (
                   <Button
                     variant="secondary"
                     type="button"
                     disabled={isDeleting}
-                    className="size-[20px] text-center rounded-full absolute -top-3 -right-5 !bg-black dark:!bg-gray-600 text-white"
+                    className="absolute -right-5 -top-3 size-[20px] rounded-full !bg-black text-center text-white dark:!bg-gray-600"
                     size="icon"
                     onClick={() => removeEducation(item.id)}
                   >
@@ -170,11 +158,7 @@ const EducationForm = () => {
                 </div>
                 <div className="col-span-2">
                   <Label className="text-sm">Description</Label>
-                  <Textarea
-                    name="description"
-                    value={item?.description || ''}
-                    onChange={e => handleChange(e, index)}
-                  />
+                  <Textarea name="description" value={item?.description || ''} onChange={e => handleChange(e, index)} />
                 </div>
               </div>
             </div>
@@ -182,7 +166,7 @@ const EducationForm = () => {
           {educations.length > 0 && (
             <div className="flex justify-center">
               <Button
-                className="gap-1 mt-1 text-primary border-primary/50"
+                className="mt-1 gap-1 border-primary/50 text-primary"
                 variant="outline"
                 type="button"
                 onClick={handleAddEducation}

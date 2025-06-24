@@ -9,7 +9,7 @@ interface PropsType {
 
 const SummaryPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   return (
-    <div className="w-full min-h-10">
+    <div className="min-h-10 w-full">
       {isLoading ? (
         <Skeleton className="h-6 w-full" />
       ) : (

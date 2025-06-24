@@ -66,11 +66,7 @@ const PersonalInfoForm = () => {
   }, [debouncedPersonalInfo, personalInfo, setResumeInfo, isDataLoaded]);
 
   useEffect(() => {
-    if (
-      isDataLoaded &&
-      debouncedDisplayFormat &&
-      debouncedDisplayFormat !== resumeInfo?.personalInfoDisplayFormat
-    ) {
+    if (isDataLoaded && debouncedDisplayFormat && debouncedDisplayFormat !== resumeInfo?.personalInfoDisplayFormat) {
       setResumeInfo({ personalInfoDisplayFormat: debouncedDisplayFormat });
     }
   }, [debouncedDisplayFormat, resumeInfo?.personalInfoDisplayFormat, setResumeInfo, isDataLoaded]);
@@ -86,7 +82,7 @@ const PersonalInfoForm = () => {
   return (
     <div>
       <div className="w-full">
-        <h2 className="font-bold text-lg">Personal Information</h2>
+        <h2 className="text-lg font-bold">Personal Information</h2>
         <p className="text-sm">Get Started with the personal information</p>
       </div>
 
@@ -94,18 +90,14 @@ const PersonalInfoForm = () => {
         <Label className="text-sm">Display Format</Label>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full justify-between h-9">
+            <Button variant="outline" className="h-9 w-full justify-between">
               {localDisplayFormat === 'default' ? 'Default' : 'Compact'}
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full">
-            <DropdownMenuItem onClick={() => setLocalDisplayFormat('default')}>
-              Default
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLocalDisplayFormat('compact')}>
-              Compact
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setLocalDisplayFormat('default')}>Default</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setLocalDisplayFormat('compact')}>Compact</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -156,7 +148,7 @@ const PersonalInfoForm = () => {
               <div className="relative">
                 <Label className="text-sm">Phone</Label>
                 <div className="relative">
-                  <Phone className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Phone className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <Input
                     name="phone"
                     required
@@ -164,14 +156,14 @@ const PersonalInfoForm = () => {
                     placeholder=""
                     value={localPersonalInfo.phone || ''}
                     onChange={handleChange}
-                    className="pl-8 h-9"
+                    className="h-9 pl-8"
                   />
                 </div>
               </div>
               <div className="relative">
                 <Label className="text-sm">Email</Label>
                 <div className="relative">
-                  <Mail className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Mail className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <Input
                     name="email"
                     required
@@ -179,7 +171,7 @@ const PersonalInfoForm = () => {
                     placeholder=""
                     value={localPersonalInfo.email || ''}
                     onChange={handleChange}
-                    className="pl-8 h-9"
+                    className="h-9 pl-8"
                   />
                 </div>
               </div>
@@ -189,28 +181,28 @@ const PersonalInfoForm = () => {
               <div className="relative">
                 <Label className="text-sm">Github</Label>
                 <div className="relative">
-                  <Github className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Github className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <Input
                     name="github"
                     autoComplete="off"
                     placeholder="username"
                     value={localPersonalInfo.github || ''}
                     onChange={handleChange}
-                    className="pl-8 h-9"
+                    className="h-9 pl-8"
                   />
                 </div>
               </div>
               <div className="relative">
                 <Label className="text-sm">LinkedIn</Label>
                 <div className="relative">
-                  <Linkedin className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Linkedin className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <Input
                     name="linkedin"
                     autoComplete="off"
                     placeholder="username"
                     value={localPersonalInfo.linkedin || ''}
                     onChange={handleChange}
-                    className="pl-8 h-9"
+                    className="h-9 pl-8"
                   />
                 </div>
               </div>
@@ -219,7 +211,7 @@ const PersonalInfoForm = () => {
             <div className="relative">
               <Label className="text-sm">Address</Label>
               <div className="relative">
-                <MapPin className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                <MapPin className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                 <Input
                   name="address"
                   required
@@ -227,7 +219,7 @@ const PersonalInfoForm = () => {
                   placeholder=""
                   value={localPersonalInfo.address || ''}
                   onChange={handleChange}
-                  className="pl-8 h-9"
+                  className="h-9 pl-8"
                 />
               </div>
             </div>

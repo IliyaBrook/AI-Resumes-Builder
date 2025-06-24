@@ -34,23 +34,12 @@ const ResumeTitle: FC<ResumeTitleProps> = ({ initialTitle, isLoading, status, on
   };
 
   return (
-    <div
-      className="flex items-center
-  gap-1 pr-4
-    "
-    >
+    <div className="flex items-center gap-1 pr-4">
       <FileText className="stroke-primary" size="20px" />
       <h5
-        className={cn(
-          `
-        text-[20px] px-1 text-gray-700
-         dark:text-gray-300 font-semibold
-         opacity-100
-                  `,
-          {
-            '!opacity-70 !pointer-events-none': isLoading || status === 'archived',
-          }
-        )}
+        className={cn(`px-1 text-[20px] font-semibold text-gray-700 opacity-100 dark:text-gray-300`, {
+          '!pointer-events-none !opacity-70': isLoading || status === 'archived',
+        })}
         contentEditable={!(isLoading || status === 'archived')}
         suppressContentEditableWarning={true}
         onBlur={handleBlur}

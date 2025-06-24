@@ -1,19 +1,7 @@
 export { Button } from './button';
 export { Card, CardContent, CardHeader, CardTitle } from './card';
-export {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from './dialog';
-export {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from './dropdown-menu';
+export { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './dialog';
+export { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
 export { Input } from './input';
 export { Label } from './label';
 export { Popover, PopoverContent, PopoverTrigger } from './popover';

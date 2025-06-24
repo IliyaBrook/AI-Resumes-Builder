@@ -21,9 +21,7 @@ export const SECTION_COMPONENTS = {
   languages: LanguagePreview,
 } as const;
 
-const ALL_AVAILABLE_PAGES = Object.keys(SECTION_COMPONENTS) as Array<
-  keyof typeof SECTION_COMPONENTS
->;
+const ALL_AVAILABLE_PAGES = Object.keys(SECTION_COMPONENTS) as Array<keyof typeof SECTION_COMPONENTS>;
 
 export function syncPagesOrder(currentOrder: string[]): string[] {
   const missingPages = ALL_AVAILABLE_PAGES.filter(page => !currentOrder.includes(page));

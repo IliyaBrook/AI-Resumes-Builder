@@ -1,12 +1,6 @@
 'use client';
 // components
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  Button,
-} from '@/components';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Button } from '@/components';
 // hooks
 import { useUpdateDocument, useGetDocumentById, toast } from '@/hooks';
 import { StatusType } from '@/types/resume.type';
@@ -61,7 +55,7 @@ const MoreOption = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" size="icon" className="bg-white border dark:bg-gray-800">
+        <Button variant="secondary" size="icon" className="border bg-white dark:bg-gray-800">
           <MoreHorizontal />
         </Button>
       </DropdownMenuTrigger>
@@ -70,7 +64,7 @@ const MoreOption = () => {
           {resumeInfo?.status === 'archived' ? (
             <Button
               variant="ghost"
-              className="gap-1 !py-2 !cursor-pointer"
+              className="!cursor-pointer gap-1 !py-2"
               disabled={isPending}
               onClick={handleRestore}
             >
@@ -81,7 +75,7 @@ const MoreOption = () => {
           ) : (
             <Button
               variant="ghost"
-              className="gap-1  !py-2 !cursor-pointer"
+              className="!cursor-pointer gap-1 !py-2"
               disabled={isPending}
               onClick={handleArchive}
             >

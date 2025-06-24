@@ -49,30 +49,14 @@ const ResumeForm = () => {
   }, [resumeInfo, setResumeInfo]);
 
   return (
-    <div
-      className="flex-1 w-full lg:sticky
-  lg:top-16
-  "
-    >
-      <div
-        className="shadow-md rounded-md bg-white
-      !border-t-primary !border-t-4 
-      dark:bg-card dark:border
-      dark:border-gray-800
-      "
-      >
-        <div
-          className="
-        flex items-center gap-1
-        px-3 justify-end
-        border-b py-[7px] min-h-10
-        "
-        >
+    <div className="w-full flex-1 lg:sticky lg:top-16">
+      <div className="rounded-md !border-t-4 !border-t-primary bg-white shadow-md dark:border dark:border-gray-800 dark:bg-card">
+        <div className="flex min-h-10 items-center justify-end gap-1 border-b px-3 py-[7px]">
           {activeFormIndex > 1 && (
             <Button
               variant="outline"
               size="default"
-              className="!px-2 !py-1 !h-auto"
+              className="!h-auto !px-2 !py-1"
               onClick={() => setActiveFormIndex(activeFormIndex - 1)}
             >
               <ArrowLeft size="16px" />
@@ -83,7 +67,7 @@ const ResumeForm = () => {
           <Button
             variant="outline"
             size="default"
-            className="!px-2 !py-1 !h-auto"
+            className="!h-auto !px-2 !py-1"
             disabled={activeFormIndex === 7 || resumeInfo?.status === 'archived'}
             onClick={handleNext}
           >

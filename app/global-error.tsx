@@ -2,13 +2,7 @@
 
 import { useEffect } from 'react';
 
-export default function GlobalError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -16,25 +10,25 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div className="h-screen flex flex-col items-center space-y-6 justify-center px-4 bg-background text-foreground">
-          <div className="text-center space-y-4">
+        <div className="flex h-screen flex-col items-center justify-center space-y-6 bg-background px-4 text-foreground">
+          <div className="space-y-4 text-center">
             <div className="text-6xl font-bold text-destructive">⚠️</div>
             <div className="space-y-2">
               <h1 className="text-2xl font-bold">Application Error</h1>
-              <p className="text-muted-foreground max-w-md">
+              <p className="max-w-md text-muted-foreground">
                 A critical error occurred. Please refresh the page or contact support.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col justify-center gap-3 sm:flex-row">
               <button
                 onClick={reset}
-                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 min-w-32"
+                className="inline-flex h-9 min-w-32 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
               >
                 Try again
               </button>
               <button
                 onClick={() => (window.location.href = '/')}
-                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 min-w-32"
+                className="inline-flex h-9 min-w-32 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
               >
                 Go Home
               </button>

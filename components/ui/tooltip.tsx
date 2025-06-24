@@ -65,14 +65,14 @@ const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>(
           <>
             <div
               className={cn(
-                'absolute z-50 px-2 py-1 text-sm text-white bg-gray-900 rounded shadow-lg whitespace-nowrap max-w-xs break-words',
+                'absolute z-50 max-w-xs whitespace-nowrap break-words rounded bg-gray-900 px-2 py-1 text-sm text-white shadow-lg',
                 tooltipSideClasses[side],
                 className
               )}
             >
               {content}
             </div>
-            <div className={cn('absolute w-0 h-0 border-4', arrowClasses[side])} />
+            <div className={cn('absolute h-0 w-0 border-4', arrowClasses[side])} />
           </>
         )}
       </div>

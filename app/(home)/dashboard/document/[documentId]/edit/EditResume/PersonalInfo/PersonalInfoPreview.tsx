@@ -83,17 +83,16 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     }
 
     return (
-      <div className="w-full min-h-14">
+      <div className="min-h-14 w-full">
         <h2
-          className="font-bold text-2xl text-center mb-2"
+          className="mb-2 text-center text-2xl font-bold"
           style={{
             color: themeColor,
           }}
         >
-          {resumeInfo?.personalInfo?.firstName || 'First Name'}{' '}
-          {resumeInfo?.personalInfo?.lastName || 'Last Name'}
+          {resumeInfo?.personalInfo?.firstName || 'First Name'} {resumeInfo?.personalInfo?.lastName || 'Last Name'}
         </h2>
-        <div className="text-center text-sm font-medium mb-2 text-gray-600 w-full">
+        <div className="mb-2 w-full text-center text-sm font-medium text-gray-600">
           <div className="flex flex-col items-center gap-y-1">
             {(() => {
               const totalItems = compactInfo.length;
@@ -133,7 +132,7 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           </div>
         </div>
         <hr
-          className="border-[1px] mt-2 mb-4"
+          className="mb-4 mt-2 border-[1px]"
           style={{
             borderColor: themeColor,
           }}
@@ -143,51 +142,42 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   }
 
   return (
-    <div className="w-full min-h-14">
+    <div className="min-h-14 w-full">
       <h2
-        className="
-        font-bold text-2xl text-center mb-2
-      "
+        className="mb-2 text-center text-2xl font-bold"
         style={{
           color: themeColor,
         }}
       >
-        {resumeInfo?.personalInfo?.firstName || 'First Name'}{' '}
-        {resumeInfo?.personalInfo?.lastName || 'Last Name'}
+        {resumeInfo?.personalInfo?.firstName || 'First Name'} {resumeInfo?.personalInfo?.lastName || 'Last Name'}
       </h2>
-      <div className="text-center text-base font-medium mb-2 text-gray-600 w-full">
+      <div className="mb-2 w-full text-center text-base font-medium text-gray-600">
         <div className="flex justify-center">
           <span className="font-bold">{resumeInfo?.personalInfo?.jobTitle || 'Job Title'}</span>
           <span>
             {resumeInfo?.personalInfo?.address && (
-              <span className="ml-2 flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
-                <MapPin size={15} className="opacity-70 shrink-0" />
+              <span className="ml-2 flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
+                <MapPin size={15} className="shrink-0 opacity-70" />
                 <span className="pdf-position-fix">{resumeInfo.personalInfo.address}</span>
               </span>
             )}
           </span>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center gap-y-1 max-w-[600px] mx-auto pb-3 !text-[13px] text-gray-600 pdf-padding-bottom-0">
+      <div className="pdf-padding-bottom-0 mx-auto flex max-w-[600px] flex-col items-center justify-center gap-y-1 pb-3 !text-[13px] text-gray-600">
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           {resumeInfo?.personalInfo?.phone && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
-              <Phone size={15} className="opacity-70 shrink-0" />
-              <a
-                href={`tel:${resumeInfo.personalInfo.phone}`}
-                className="hover:underline pdf-position-fix"
-              >
+            <span className="flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
+              <Phone size={15} className="shrink-0 opacity-70" />
+              <a href={`tel:${resumeInfo.personalInfo.phone}`} className="pdf-position-fix hover:underline">
                 {resumeInfo.personalInfo.phone}
               </a>
             </span>
           )}
           {resumeInfo?.personalInfo?.email && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
-              <Mail size={15} className="opacity-70 shrink-0" />
-              <a
-                href={`mailto:${resumeInfo.personalInfo.email}`}
-                className="hover:underline pdf-position-fix"
-              >
+            <span className="flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
+              <Mail size={15} className="shrink-0 opacity-70" />
+              <a href={`mailto:${resumeInfo.personalInfo.email}`} className="pdf-position-fix hover:underline">
                 {resumeInfo.personalInfo.email}
               </a>
             </span>
@@ -195,26 +185,26 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         </div>
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           {resumeInfo?.personalInfo?.github && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
-              <Github size={15} className="opacity-70 shrink-0" />
+            <span className="flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
+              <Github size={15} className="shrink-0 opacity-70" />
               <a
                 href={normalizeUrl(resumeInfo.personalInfo.github)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:underline pdf-position-fix"
+                className="pdf-position-fix hover:underline"
               >
                 {resumeInfo.personalInfo.github.replace(/^https?:\/\//, '')}
               </a>
             </span>
           )}
           {resumeInfo?.personalInfo?.linkedin && (
-            <span className="flex items-center gap-1 hover:text-gray-900 transition-colors !text-[13px] whitespace-nowrap">
-              <Linkedin size={15} className="opacity-70 shrink-0" />
+            <span className="flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
+              <Linkedin size={15} className="shrink-0 opacity-70" />
               <a
                 href={normalizeUrl(resumeInfo.personalInfo.linkedin)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:underline pdf-position-fix"
+                className="pdf-position-fix hover:underline"
               >
                 {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, '')}
               </a>
@@ -224,7 +214,7 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       </div>
 
       <hr
-        className="border-[1px] mt-2 mb-4"
+        className="mb-4 mt-2 border-[1px]"
         style={{
           borderColor: themeColor,
         }}
@@ -235,15 +225,15 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 
 const SkeletonLoader = () => {
   return (
-    <div className="w-full min-h-14">
-      <Skeleton className="h-6 w-1/2 mx-auto mb-2" />
-      <Skeleton className="h-6 w-1/4 mx-auto mb-2" />
-      <Skeleton className="h-6 w-1/3 mx-auto mb-2" />
+    <div className="min-h-14 w-full">
+      <Skeleton className="mx-auto mb-2 h-6 w-1/2" />
+      <Skeleton className="mx-auto mb-2 h-6 w-1/4" />
+      <Skeleton className="mx-auto mb-2 h-6 w-1/3" />
       <div className="flex justify-between pt-3">
         <Skeleton className="h-3 w-1/4" />
         <Skeleton className="h-3 w-1/4" />
       </div>
-      <Skeleton className="h-[1.5px] w-full my-2" />
+      <Skeleton className="my-2 h-[1.5px] w-full" />
     </div>
   );
 };

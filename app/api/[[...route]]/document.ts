@@ -103,12 +103,9 @@ const documentRoute = new Hono()
           if (themeColor) resumeUpdate.themeColor = themeColor;
           if (status) resumeUpdate.status = status;
           if (currentPosition) resumeUpdate.currentPosition = currentPosition || 1;
-          if (projectsSectionTitle !== undefined)
-            resumeUpdate.projectsSectionTitle = projectsSectionTitle;
-          if (languagesSectionTitle !== undefined)
-            resumeUpdate.languagesSectionTitle = languagesSectionTitle;
-          if (skillsDisplayFormat !== undefined)
-            resumeUpdate.skillsDisplayFormat = skillsDisplayFormat;
+          if (projectsSectionTitle !== undefined) resumeUpdate.projectsSectionTitle = projectsSectionTitle;
+          if (languagesSectionTitle !== undefined) resumeUpdate.languagesSectionTitle = languagesSectionTitle;
+          if (skillsDisplayFormat !== undefined) resumeUpdate.skillsDisplayFormat = skillsDisplayFormat;
           if (personalInfoDisplayFormat !== undefined)
             resumeUpdate.personalInfoDisplayFormat = personalInfoDisplayFormat;
           if (pagesOrder !== undefined) resumeUpdate.pagesOrder = pagesOrder;
@@ -158,12 +155,7 @@ const documentRoute = new Hono()
                 await trx
                   .update(experienceTable)
                   .set(data)
-                  .where(
-                    and(
-                      eq(experienceTable.docId, existingDocument.documentId),
-                      eq(experienceTable.id, id)
-                    )
-                  );
+                  .where(and(eq(experienceTable.docId, existingDocument.documentId), eq(experienceTable.id, id)));
               } else {
                 await trx.insert(experienceTable).values({
                   docId: existingDocument.documentId,
@@ -187,12 +179,7 @@ const documentRoute = new Hono()
                 await trx
                   .update(educationTable)
                   .set(data)
-                  .where(
-                    and(
-                      eq(educationTable.docId, existingDocument.documentId),
-                      eq(educationTable.id, id)
-                    )
-                  );
+                  .where(and(eq(educationTable.docId, existingDocument.documentId), eq(educationTable.id, id)));
               } else {
                 await trx.insert(educationTable).values({
                   docId: existingDocument.documentId,
@@ -216,9 +203,7 @@ const documentRoute = new Hono()
                 await trx
                   .update(skillsTable)
                   .set(data)
-                  .where(
-                    and(eq(skillsTable.docId, existingDocument.documentId), eq(skillsTable.id, id))
-                  );
+                  .where(and(eq(skillsTable.docId, existingDocument.documentId), eq(skillsTable.id, id)));
               } else {
                 await trx.insert(skillsTable).values({
                   docId: existingDocument.documentId,
@@ -242,12 +227,7 @@ const documentRoute = new Hono()
                 await trx
                   .update(projectTable)
                   .set(data)
-                  .where(
-                    and(
-                      eq(projectTable.docId, existingDocument.documentId),
-                      eq(projectTable.id, id)
-                    )
-                  );
+                  .where(and(eq(projectTable.docId, existingDocument.documentId), eq(projectTable.id, id)));
               } else {
                 await trx.insert(projectTable).values({
                   docId: existingDocument.documentId,
@@ -271,12 +251,7 @@ const documentRoute = new Hono()
                 await trx
                   .update(languageTable)
                   .set(data)
-                  .where(
-                    and(
-                      eq(languageTable.docId, existingDocument.documentId),
-                      eq(languageTable.id, id)
-                    )
-                  );
+                  .where(and(eq(languageTable.docId, existingDocument.documentId), eq(languageTable.id, id)));
               } else {
                 await trx.insert(languageTable).values({
                   docId: existingDocument.documentId,
@@ -332,9 +307,7 @@ const documentRoute = new Hono()
           .set({
             status: 'private',
           })
-          .where(
-            and(eq(documentTable.documentId, documentId), eq(documentTable.status, 'archived'))
-          )
+          .where(and(eq(documentTable.documentId, documentId), eq(documentTable.status, 'archived')))
           .returning();
 
         if (!documentData) {
@@ -517,10 +490,7 @@ const documentRoute = new Hono()
         if (!documentId) {
           return c.json({ error: 'DocumentId is required' }, 400);
         }
-        const deleted = await db
-          .delete(documentTable)
-          .where(eq(documentTable.documentId, documentId))
-          .returning();
+        const deleted = await db.delete(documentTable).where(eq(documentTable.documentId, documentId)).returning();
         if (!deleted.length) {
           return c.json({ error: 'Document not found' }, 404);
         }

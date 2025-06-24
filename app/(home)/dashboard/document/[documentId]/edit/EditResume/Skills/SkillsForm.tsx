@@ -62,9 +62,7 @@ const SkillsForm = () => {
         return aMinOrder - bMinOrder;
       })
       .forEach(categoryName => {
-        sortedGrouped[categoryName] = grouped[categoryName].sort(
-          (a, b) => (a.order || 0) - (b.order || 0)
-        );
+        sortedGrouped[categoryName] = grouped[categoryName].sort((a, b) => (a.order || 0) - (b.order || 0));
       });
 
     return sortedGrouped;
@@ -73,8 +71,7 @@ const SkillsForm = () => {
   useEffect(() => {
     if (
       resumeInfo?.skillsDisplayFormat &&
-      (resumeInfo.skillsDisplayFormat === 'default' ||
-        resumeInfo.skillsDisplayFormat === 'byCategory')
+      (resumeInfo.skillsDisplayFormat === 'default' || resumeInfo.skillsDisplayFormat === 'byCategory')
     ) {
       setFormat(resumeInfo.skillsDisplayFormat);
     }
@@ -108,8 +105,7 @@ const SkillsForm = () => {
         const newInputs: Record<number, string> = {};
         resumeInfo.skills.forEach((skill: SkillType) => {
           if (skill.id) {
-            newInputs[skill.id] =
-              prev[skill.id] !== undefined ? prev[skill.id] : skill.category || '';
+            newInputs[skill.id] = prev[skill.id] !== undefined ? prev[skill.id] : skill.category || '';
           }
         });
         return newInputs;
@@ -256,8 +252,7 @@ const SkillsForm = () => {
   };
 
   const handleRemoveCategory = (categoryName: string) => {
-    const skillsInCategory =
-      resumeInfo?.skills?.filter((skill: SkillType) => skill.category === categoryName) || [];
+    const skillsInCategory = resumeInfo?.skills?.filter((skill: SkillType) => skill.category === categoryName) || [];
     skillsInCategory.forEach((skill: SkillType) => {
       if (skill.id) {
         deleteSkill({ skillId: skill.id });
@@ -279,8 +274,7 @@ const SkillsForm = () => {
   const handleSaveCategoryName = () => {
     if (!editingCategory || !editCategoryName.trim()) return;
 
-    const skillsInCategory =
-      resumeInfo?.skills?.filter((skill: SkillType) => skill.category === editingCategory) || [];
+    const skillsInCategory = resumeInfo?.skills?.filter((skill: SkillType) => skill.category === editingCategory) || [];
 
     for (const skill of skillsInCategory) {
       if (skill.id) {
@@ -303,12 +297,8 @@ const SkillsForm = () => {
   const moveCategorySkills = (fromCategoryName: string, toCategoryName: string) => {
     if (!resumeInfo?.skills) return;
 
-    const fromSkills = resumeInfo.skills.filter(
-      (skill: SkillType) => skill.category === fromCategoryName
-    );
-    const toSkills = resumeInfo.skills.filter(
-      (skill: SkillType) => skill.category === toCategoryName
-    );
+    const fromSkills = resumeInfo.skills.filter((skill: SkillType) => skill.category === fromCategoryName);
+    const toSkills = resumeInfo.skills.filter((skill: SkillType) => skill.category === toCategoryName);
 
     if (fromSkills.length === 0) return;
 
@@ -371,10 +361,10 @@ const SkillsForm = () => {
 
   return (
     <div>
-      <div className="w-full flex items-center gap-4 mb-2">
-        <h2 className="font-bold text-lg">Skills</h2>
+      <div className="mb-2 flex w-full items-center gap-4">
+        <h2 className="text-lg font-bold">Skills</h2>
         <select
-          className="border rounded px-2 py-1 text-sm"
+          className="rounded border px-2 py-1 text-sm"
           value={format}
           onChange={e => handleFormatChange(e.target.value as 'default' | 'byCategory')}
         >
@@ -385,26 +375,22 @@ const SkillsForm = () => {
       <p className="text-sm">Add your skills information</p>
       {format === 'default' && (
         <>
-          <div className="flex items-center gap-2 mb-2 mt-2">
+          <div className="mb-2 mt-2 flex items-center gap-2">
             <input
               type="checkbox"
               id="hideRating"
               checked={hideRating}
               onChange={e => setHideRating(e.target.checked)}
             />
-            <label htmlFor="hideRating" className="text-sm cursor-pointer select-none">
+            <label htmlFor="hideRating" className="cursor-pointer select-none text-sm">
               Hide rating
             </label>
           </div>
           <form>
-            <div
-              className="border w-full h-auto
-                divide-y-[1px] rounded-md px-3
-                pb-4 my-5"
-            >
+            <div className="my-5 h-auto w-full divide-y-[1px] rounded-md border px-3 pb-4">
               {skillsList.length === 0 && (
                 <Button
-                  className="gap-1 mt-1 text-primary border-primary/50"
+                  className="mt-1 gap-1 border-primary/50 text-primary"
                   variant="outline"
                   type="button"
                   disabled={isPending}
@@ -416,11 +402,7 @@ const SkillsForm = () => {
               )}
               {skillsList.map((item, index) => (
                 <div key={item.id || index}>
-                  <div
-                    className="relative flex 
-                    items-center 
-        justify-between mb-5 pt-4 gap-3"
-                  >
+                  <div className="relative mb-5 flex items-center justify-between gap-3 pt-4">
                     {skillsList.length > 1 && (
                       <div className="absolute -left-8 top-4 flex flex-col gap-1">
                         <Button
@@ -449,7 +431,7 @@ const SkillsForm = () => {
                       <Button
                         variant="secondary"
                         type="button"
-                        className="size-[20px] text-center rounded-full absolute -top-3 -right-5 !bg-black dark:!bg-gray-600 text-white"
+                        className="absolute -right-5 -top-3 size-[20px] rounded-full !bg-black text-center text-white dark:!bg-gray-600"
                         size="icon"
                         disabled={isPending || isDeleting}
                         onClick={() => removeSkill(item.id)}
@@ -488,7 +470,7 @@ const SkillsForm = () => {
 
                   {index === skillsList.length - 1 && skillsList.length < 35 && (
                     <Button
-                      className="gap-1 mt-1 text-primary border-primary/50"
+                      className="mt-1 gap-1 border-primary/50 text-primary"
                       variant="outline"
                       type="button"
                       disabled={isPending}
@@ -507,11 +489,9 @@ const SkillsForm = () => {
       {format === 'byCategory' && (
         <div className="mt-4">
           {Object.keys(skillsByCategory).length > 1 && (
-            <div className="text-sm text-muted-foreground mb-2">
-              Use arrows to reorder categories
-            </div>
+            <div className="mb-2 text-sm text-muted-foreground">Use arrows to reorder categories</div>
           )}
-          <div className="flex gap-2 mb-4">
+          <div className="mb-4 flex gap-2">
             <Input
               placeholder="New category name"
               value={newCategoryName}
@@ -524,8 +504,8 @@ const SkillsForm = () => {
           </div>
           <div className="space-y-6">
             {Object.entries(skillsByCategory).map(([categoryName, skills], categoryIndex) => (
-              <div key={categoryName} className="border rounded-md p-3">
-                <div className="flex items-center gap-2 mb-2 relative">
+              <div key={categoryName} className="rounded-md border p-3">
+                <div className="relative mb-2 flex items-center gap-2">
                   {Object.keys(skillsByCategory).length > 1 && (
                     <div className="absolute -left-8 top-0 flex flex-col gap-1">
                       <Button
@@ -570,19 +550,14 @@ const SkillsForm = () => {
                       >
                         Save
                       </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={handleCancelEditCategory}
-                      >
+                      <Button type="button" size="sm" variant="outline" onClick={handleCancelEditCategory}>
                         Cancel
                       </Button>
                     </>
                   ) : (
                     <>
                       <h3
-                        className="font-semibold text-lg cursor-pointer hover:text-blue-600"
+                        className="cursor-pointer text-lg font-semibold hover:text-blue-600"
                         onClick={() => handleStartEditCategory(categoryName)}
                         title="Click to edit category name"
                       >
@@ -619,10 +594,8 @@ const SkillsForm = () => {
                             ? localCategoryInputs[skill.id!]
                             : (getSkillValue(skill, 'category') as string) || categoryName
                         }
-                        onChange={e =>
-                          skill.id && handleSkillCategoryChange(skill.id, e.target.value)
-                        }
-                        className="border rounded px-1 py-0.5 text-xs"
+                        onChange={e => skill.id && handleSkillCategoryChange(skill.id, e.target.value)}
+                        className="rounded border px-1 py-0.5 text-xs"
                       >
                         {Object.keys(skillsByCategory).map(catName => (
                           <option key={catName} value={catName}>
@@ -643,7 +616,7 @@ const SkillsForm = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    className="gap-1 mt-2"
+                    className="mt-2 gap-1"
                     onClick={() => handleAddSkillToCategoryClick(categoryName)}
                   >
                     <Plus size="15px" /> Add skill

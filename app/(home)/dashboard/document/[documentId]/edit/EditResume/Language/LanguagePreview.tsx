@@ -24,12 +24,12 @@ const LanguagePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   }
 
   return (
-    <div className="w-full my-3">
-      <h5 className="text-center font-bold text-[18px]" style={{ color: themeColor }}>
+    <div className="my-3 w-full">
+      <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
         {resumeInfo?.languagesSectionTitle?.trim() || 'Languages'}
       </h5>
-      <hr className="border-[1.5px] mt-2 mb-2" style={{ borderColor: themeColor }} />
-      <div className="grid grid-cols-2 gap-x-8 gap-y-1 min-h-9">
+      <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
+      <div className="grid min-h-9 grid-cols-2 gap-x-8 gap-y-1">
         {languages.map((language, index) => (
           <div key={language.id || index} className="flex items-center justify-between">
             <span className="text-[13px] font-medium">{language.name}</span>

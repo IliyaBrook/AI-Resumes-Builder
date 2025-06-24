@@ -4,25 +4,19 @@ import { TrashListBox, ResumeList, AddResume } from '@/editResume';
 const Page = () => {
   return (
     <div className="w-full">
-      <div className="w-full mx-auto max-w-7xl py-5 px-5">
+      <div className="mx-auto w-full max-w-7xl px-5 py-5">
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl">Resume Builder</h1>
           </div>
-          <div className="shrink-0 flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             <TrashListBox />
           </div>
         </div>
 
         <div className="w-full pt-11">
-          <h5
-            className="text-xl font-semibold dark:text-inherit
-          mb-3
-          "
-          >
-            All Resume
-          </h5>
-          <div className="flex flex-wrap w-full gap-5">
+          <h5 className="mb-3 text-xl font-semibold dark:text-inherit">All Resume</h5>
+          <div className="flex w-full flex-wrap gap-5">
             <AddResume />
             <ResumeList />
           </div>

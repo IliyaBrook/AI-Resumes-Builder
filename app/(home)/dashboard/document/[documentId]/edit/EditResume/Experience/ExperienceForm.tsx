@@ -1,12 +1,6 @@
 'use client';
 //hooks
-import {
-  useDebounce,
-  useUpdateDocument,
-  useGetDocumentById,
-  useDeleteExperience,
-  useCreateExperience,
-} from '@/hooks';
+import { useDebounce, useUpdateDocument, useGetDocumentById, useDeleteExperience, useCreateExperience } from '@/hooks';
 import { ExperienceType, SkillType } from '@/types/resume.type';
 import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
@@ -19,17 +13,13 @@ const ExperienceForm = () => {
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
-  const allSkills = data?.data?.skills
-    ? resumeInfo?.skills.map((skill: SkillType) => skill.name).join(', ')
-    : '';
+  const allSkills = data?.data?.skills ? resumeInfo?.skills.map((skill: SkillType) => skill.name).join(', ') : '';
 
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteExperience, isPending: isDeleting } = useDeleteExperience();
   const { mutateAsync: createExperience } = useCreateExperience();
 
-  const [localExperiences, setLocalExperiences] = React.useState<ExperienceType[]>(
-    resumeInfo?.experiences || []
-  );
+  const [localExperiences, setLocalExperiences] = React.useState<ExperienceType[]>(resumeInfo?.experiences || []);
   const debouncedExperiences = useDebounce(localExperiences, 500);
 
   React.useEffect(() => {
@@ -45,9 +35,7 @@ const ExperienceForm = () => {
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;
-    setLocalExperiences(prev =>
-      prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item))
-    );
+    setLocalExperiences(prev => prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item)));
   };
 
   const addNewExperience = async () => {
@@ -74,9 +62,7 @@ const ExperienceForm = () => {
   };
 
   const handEditor = (value: string, name: string, index: number) => {
-    setLocalExperiences(prev =>
-      prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item))
-    );
+    setLocalExperiences(prev => prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item)));
   };
 
   const moveExperience = (fromIndex: number, toIndex: number) => {
@@ -116,9 +102,9 @@ const ExperienceForm = () => {
   return (
     <div>
       <div className="w-full">
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-bold text-lg">Professional Experience</h2>
+            <h2 className="text-lg font-bold">Professional Experience</h2>
             <p className="text-sm">Add previous job experience</p>
           </div>
           {experiences.length > 1 && (
@@ -127,10 +113,10 @@ const ExperienceForm = () => {
         </div>
       </div>
       <form>
-        <div className="border w-full h-auto divide-y-[1px] rounded-md px-3 pb-4 my-3">
+        <div className="my-3 h-auto w-full divide-y-[1px] rounded-md border px-3 pb-4">
           {experiences.length === 0 && (
             <Button
-              className="gap-1 mt-1 text-primary border-primary/50"
+              className="mt-1 gap-1 border-primary/50 text-primary"
               variant="outline"
               type="button"
               onClick={handleAddExperience}
@@ -141,7 +127,7 @@ const ExperienceForm = () => {
           )}
           {experiences.map((item, index) => (
             <div key={item.id || index}>
-              <div className="relative grid grid-cols-2 mb-5 pt-4 gap-3">
+              <div className="relative mb-5 grid grid-cols-2 gap-3 pt-4">
                 {experiences.length > 1 && (
                   <div className="absolute -left-8 top-4 flex flex-col gap-1">
                     <Button
@@ -170,7 +156,7 @@ const ExperienceForm = () => {
                   <Button
                     variant="secondary"
                     type="button"
-                    className="size-[20px] text-center rounded-full absolute -top-3 -right-5 !bg-black dark:!bg-gray-600 text-white"
+                    className="absolute -right-5 -top-3 size-[20px] rounded-full !bg-black text-center text-white dark:!bg-gray-600"
                     size="icon"
                     disabled={isDeleting}
                     onClick={() => removeExperience(item.id)}
@@ -242,7 +228,7 @@ const ExperienceForm = () => {
                       disabled={item?.currentlyWorking}
                     />
                   </div>
-                  <div className="flex flex-col justify-start h-full mt-6 ml-2 gap-2">
+                  <div className="ml-2 mt-6 flex h-full flex-col justify-start gap-2">
                     <div className="flex items-center">
                       <input
                         type="checkbox"
@@ -263,10 +249,7 @@ const ExperienceForm = () => {
                         }}
                         className="mr-1"
                       />
-                      <Label
-                        htmlFor={`present-checkbox-${index}`}
-                        className="text-xs select-none cursor-pointer"
-                      >
+                      <Label htmlFor={`present-checkbox-${index}`} className="cursor-pointer select-none text-xs">
                         Present
                       </Label>
                     </div>
@@ -289,10 +272,7 @@ const ExperienceForm = () => {
                         }}
                         className="mr-1"
                       />
-                      <Label
-                        htmlFor={`years-only-checkbox-${index}`}
-                        className="text-xs select-none cursor-pointer"
-                      >
+                      <Label htmlFor={`years-only-checkbox-${index}`} className="cursor-pointer select-none text-xs">
                         Years Only
                       </Label>
                     </div>
@@ -316,7 +296,7 @@ const ExperienceForm = () => {
               </div>
               {index === experiences.length - 1 && experiences.length && (
                 <Button
-                  className="gap-1 mt-1 text-primary border-primary/50"
+                  className="mt-1 gap-1 border-primary/50 text-primary"
                   variant="outline"
                   type="button"
                   onClick={handleAddExperience}

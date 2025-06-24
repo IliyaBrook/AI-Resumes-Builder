@@ -23,7 +23,8 @@
       "@/editResume": ["./app/(home)/dashboard/index.ts"],
       "@/components": ["./components/index.ts"],
       "@/hooks/*": ["hooks/index.ts"],
-      "@/context/*": ["context/index.ts"]
+      "@/context/*": ["context/index.ts"],
+      "@/types/*": ["types/index.ts"]
     },
     "target": "ES2017"
   },

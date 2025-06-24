@@ -25,7 +25,6 @@ export const FirstRenderProvider: React.FC<FirstRenderProviderProps> = ({ childr
   const [isLoading, setIsLoading] = useState(true);
   const [firstRender, setFirstRender] = useState<TFirstRenderState>('pending');
   const [hasBeenFirstRender, setHasBeenFirstRender] = useState(false);
-  console.log('**is data loading**', isLoadingData);
   useEffect(() => {
     setIsLoading(false);
     return () => {

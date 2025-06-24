@@ -3,7 +3,7 @@ import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { ProjectType } from '@/types/resume.type';
-import { useFirstRender } from '@/context/first-render-provider';
+import { useFirstRender } from '@/hooks';
 // hooks
 import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
 // components

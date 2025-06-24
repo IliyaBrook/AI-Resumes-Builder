@@ -3,10 +3,8 @@ import type { Metadata } from 'next';
 import { Urbanist, Open_Sans } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-import { ThemeProvider } from '@/context/theme-provider';
-// components
+import { ThemeProvider, QueryProvider } from '@/context';
 import { Toaster, Header } from '@/components';
-import QueryProvider from '@/context/query-provider';
 
 const urbanist = Urbanist({ subsets: ['latin'] });
 const open_sans = Open_Sans({

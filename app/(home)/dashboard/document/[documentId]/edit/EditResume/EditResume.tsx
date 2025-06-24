@@ -1,6 +1,7 @@
 import React from 'react';
 // page components
 import { ResumeForm, ResumePreview, TopSection } from '@/editResume';
+import { FirstRenderProvider } from '@/context';
 
 const EditResume = () => {
   return (
@@ -9,8 +10,10 @@ const EditResume = () => {
         <TopSection />
         <div className="mt-1 w-full">
           <div className="flex w-full flex-col items-start gap-6 py-3 lg:flex-row">
-            <ResumeForm />
-            <ResumePreview />
+            <FirstRenderProvider>
+              <ResumeForm />
+              <ResumePreview />
+            </FirstRenderProvider>
           </div>
         </div>
       </div>

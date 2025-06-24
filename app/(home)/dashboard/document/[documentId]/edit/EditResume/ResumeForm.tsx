@@ -1,10 +1,10 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useParams } from 'next/navigation';
 //hooks
-import { useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { useUpdateDocument, useGetDocumentById, useFirstRender } from '@/hooks';
 import { generateThumbnail } from '@/lib/helper';
 // page components
 import {
@@ -16,15 +16,21 @@ import {
   SkillsForm,
   SummaryForm,
 } from '@/editResume';
-import { FirstRenderProvider } from '@/context/first-render-provider';
 
 const ResumeForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
-  const resumeInfo = data?.data;
   const [activeFormIndex, setActiveFormIndex] = useState(1);
   const { mutate: setResumeInfo } = useUpdateDocument();
+  const { isDataLoaded } = useFirstRender();
+
+  const resumeInfo = data?.data;
+  const thumbnail = resumeInfo?.thumbnail;
+  const resumeInfoStringed = resumeInfo ? JSON.stringify(resumeInfo) : null;
+  const resumeInfoStringedPrev = useRef<string | null>(null);
+  console.log('resumeInfo', resumeInfo);
+  console.log('is first render', isDataLoaded);
 
   const handleNext = () => {
     const newIndex = activeFormIndex + 1;
@@ -32,7 +38,10 @@ const ResumeForm = () => {
   };
 
   useEffect(() => {
-    if (!resumeInfo || resumeInfo.thumbnail) return;
+    if (!resumeInfo || resumeInfoStringed === resumeInfoStringedPrev.current) {
+      resumeInfoStringedPrev.current = resumeInfoStringed;
+      return;
+    }
 
     const generateAndSetThumbnail = async () => {
       try {
@@ -46,7 +55,8 @@ const ResumeForm = () => {
     };
 
     void generateAndSetThumbnail();
-  }, [resumeInfo, setResumeInfo]);
+    resumeInfoStringedPrev.current = resumeInfoStringed;
+  }, [resumeInfo, resumeInfoStringed, setResumeInfo]);
 
   return (
     <div className="w-full flex-1 lg:sticky lg:top-16">
@@ -76,15 +86,13 @@ const ResumeForm = () => {
           </Button>
         </div>
         <div className="px-5 py-3 pb-5">
-          <FirstRenderProvider>
-            {activeFormIndex === 1 && <PersonalInfoForm />}
-            {activeFormIndex === 2 && <SummaryForm />}
-            {activeFormIndex === 3 && <ExperienceForm />}
-            {activeFormIndex === 4 && <EducationForm />}
-            {activeFormIndex === 5 && <ProjectForm />}
-            {activeFormIndex === 6 && <SkillsForm />}
-            {activeFormIndex === 7 && <LanguageForm />}
-          </FirstRenderProvider>
+          {activeFormIndex === 1 && <PersonalInfoForm />}
+          {activeFormIndex === 2 && <SummaryForm />}
+          {activeFormIndex === 3 && <ExperienceForm />}
+          {activeFormIndex === 4 && <EducationForm />}
+          {activeFormIndex === 5 && <ProjectForm />}
+          {activeFormIndex === 6 && <SkillsForm />}
+          {activeFormIndex === 7 && <LanguageForm />}
         </div>
       </div>
     </div>

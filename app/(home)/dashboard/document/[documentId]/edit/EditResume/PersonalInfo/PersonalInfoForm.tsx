@@ -16,7 +16,7 @@ import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { Mail, Phone, MapPin, Github, Linkedin, ChevronDown } from 'lucide-react';
 import { PersonalInfoType } from '@/types/resume.type';
-import { useFirstRender } from '@/context/first-render-provider';
+import { useFirstRender } from '@/hooks';
 
 const PersonalInfoForm = () => {
   const param = useParams();

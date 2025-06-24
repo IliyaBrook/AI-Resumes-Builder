@@ -5,9 +5,15 @@ import { Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 //hooks
-import { useCreateEducation, useDebounce, useUpdateDocument, useGetDocumentById, useDeleteEducation } from '@/hooks';
+import {
+  useCreateEducation,
+  useDebounce,
+  useUpdateDocument,
+  useGetDocumentById,
+  useDeleteEducation,
+  useFirstRender,
+} from '@/hooks';
 import { EducationType } from '@/types/resume.type';
-import { useFirstRender } from '@/context/first-render-provider';
 
 const getToday = () => {
   const d = new Date();

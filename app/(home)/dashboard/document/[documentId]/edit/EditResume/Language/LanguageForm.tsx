@@ -7,7 +7,7 @@ import { LanguageType } from '@/types/resume.type';
 import { Label, Input, Button } from '@/components';
 //hooks
 import { useDeleteLanguage, useUpdateDocument, useGetDocumentById, useDebounce } from '@/hooks';
-import { useFirstRender } from '@/context/first-render-provider';
+import { useFirstRender } from '@/hooks';
 
 const LANGUAGE_LEVELS = [
   { value: '', label: 'Do not specify' },

@@ -16,7 +16,7 @@ import { Sparkles } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 import { AIGeneratedSummariesType, ResumeDataType, SkillType } from '@/types/resume.type';
-import { useFirstRender } from '@/context/first-render-provider';
+import { useFirstRender } from '@/hooks';
 
 const buildPrompt = (resumeInfo: ResumeDataType, summarySize: string = 'default') => {
   const jobTitle = resumeInfo?.personalInfo?.jobTitle || '';

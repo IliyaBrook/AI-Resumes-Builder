@@ -7,21 +7,13 @@ interface FirstRenderContextType {
   isDataLoaded: boolean;
 }
 
-const FirstRenderContext = createContext<FirstRenderContextType>({
-  isDataLoaded: false,
-});
-
-export const useFirstRender = () => {
-  const context = useContext(FirstRenderContext);
-  if (!context) {
-    throw new Error('useFirstRender must be used within FirstRenderProvider');
-  }
-  return context;
-};
-
 interface FirstRenderProviderProps {
   children: React.ReactNode;
 }
+
+export const FirstRenderContext = createContext<FirstRenderContextType>({
+  isDataLoaded: false,
+});
 
 export const FirstRenderProvider: React.FC<FirstRenderProviderProps> = ({ children }) => {
   const param = useParams();

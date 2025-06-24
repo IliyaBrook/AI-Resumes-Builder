@@ -1,3 +1,4 @@
 export * from './document';
+export * from './use-toast';
 export { default as useDebounce } from './use-debounce';
-export { useToast, toast } from './use-toast';
+export { default as useFirstRender } from './use-first-render';

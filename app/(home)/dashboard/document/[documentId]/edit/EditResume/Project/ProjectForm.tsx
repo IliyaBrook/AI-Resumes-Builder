@@ -16,7 +16,7 @@ const ProjectForm = () => {
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteProject } = useDeleteProject();
-  const { isDataLoaded } = useFirstRender();
+  const { firstRender } = useFirstRender();
 
   const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.projectsSectionTitle || 'Projects');
   const [localProjects, setLocalProjects] = React.useState<ProjectType[]>(resumeInfo?.projects || []);
@@ -24,16 +24,16 @@ const ProjectForm = () => {
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
-    if (isDataLoaded && debouncedProjects && debouncedProjects !== resumeInfo?.projects) {
+    if (firstRender === 'notFirstRender' && debouncedProjects && debouncedProjects !== resumeInfo?.projects) {
       setResumeInfo({ projects: debouncedProjects });
     }
-  }, [debouncedProjects, isDataLoaded]);
+  }, [debouncedProjects, firstRender]);
 
   React.useEffect(() => {
-    if (isDataLoaded && debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.projectsSectionTitle) {
+    if (firstRender === 'notFirstRender' && debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.projectsSectionTitle) {
       setResumeInfo({ projectsSectionTitle: debouncedSectionTitle });
     }
-  }, [debouncedSectionTitle, isDataLoaded]);
+  }, [debouncedSectionTitle, firstRender]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;

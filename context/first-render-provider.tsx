@@ -3,8 +3,12 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useGetDocumentById } from '@/hooks';
 
+type TFirstRenderState = 'firstRender' | 'notFirstRender' | 'pending';
+type tSetHasBeenFirstRender = React.Dispatch<React.SetStateAction<TFirstRenderState>>;
+
 interface FirstRenderContextType {
-  isDataLoaded: boolean;
+  firstRender: TFirstRenderState;
+  setFirstRender: tSetHasBeenFirstRender;
 }
 
 interface FirstRenderProviderProps {
@@ -12,26 +16,40 @@ interface FirstRenderProviderProps {
 }
 
 export const FirstRenderContext = createContext<FirstRenderContextType>({
-  isDataLoaded: false,
+  firstRender: 'pending',
+  setFirstRender: () => {},
 });
 
 export const FirstRenderProvider: React.FC<FirstRenderProviderProps> = ({ children }) => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data, isLoading } = useGetDocumentById(documentId);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const { data, isLoading: isLoadingData } = useGetDocumentById(documentId);
+  const [isLoading, setIsLoading] = useState(true);
+  const [firstRender, setFirstRender] = useState<TFirstRenderState>('pending');
+  const [hasBeenFirstRender, setHasBeenFirstRender] = useState(false);
+  console.log('**is data loading**', isLoadingData);
+  useEffect(() => {
+    setIsLoading(false);
+    return () => {
+      setIsLoading(true);
+    };
+  }, []);
 
   useEffect(() => {
-    if (!isLoading && data?.data) {
-      setTimeout(() => {
-        setIsDataLoaded(true);
-      }, 100);
+    if (!isLoadingData && !isLoading && data?.data) {
+      if (!hasBeenFirstRender) {
+        setFirstRender('firstRender');
+        setHasBeenFirstRender(true);
+      } else {
+        setFirstRender('notFirstRender');
+      }
     }
-  }, [isLoading, data]);
+  }, [isLoadingData, data, isLoading]);
 
   useEffect(() => {
-    setIsDataLoaded(false);
+    setFirstRender('pending');
+    setHasBeenFirstRender(false);
   }, [documentId]);
 
-  return <FirstRenderContext.Provider value={{ isDataLoaded }}>{children}</FirstRenderContext.Provider>;
+  return <FirstRenderContext.Provider value={{ firstRender, setFirstRender }}>{children}</FirstRenderContext.Provider>;
 };

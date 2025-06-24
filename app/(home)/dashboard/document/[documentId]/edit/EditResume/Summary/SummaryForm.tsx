@@ -80,7 +80,7 @@ const SummaryForm = () => {
   const { data, isLoading } = useGetDocumentById(documentId);
   const resumeInfo = data?.data as ResumeDataType | undefined;
   const { mutate: setResumeInfo } = useUpdateDocument();
-  const { isDataLoaded } = useFirstRender();
+  const { firstRender } = useFirstRender();
   const [loading, setLoading] = useState(false);
   const [aiGeneratedSummary, setAiGeneratedSummary] = useState<AIGeneratedSummariesType | null>(null);
   const [localSummary, setLocalSummary] = useState(resumeInfo?.summary || '');
@@ -90,10 +90,10 @@ const SummaryForm = () => {
   const debouncedSummary = useDebounce(localSummary, 500);
 
   useEffect(() => {
-    if (isDataLoaded && debouncedSummary && debouncedSummary !== resumeInfo?.summary) {
+    if (firstRender === 'notFirstRender' && debouncedSummary && debouncedSummary !== resumeInfo?.summary) {
       setResumeInfo({ summary: debouncedSummary });
     }
-  }, [debouncedSummary, resumeInfo?.summary, setResumeInfo, isDataLoaded]);
+  }, [debouncedSummary, resumeInfo?.summary, setResumeInfo, firstRender]);
 
   const handleChange = (value: string) => {
     setLocalSummary(value);

@@ -23,14 +23,14 @@ const ResumeForm = () => {
   const { data } = useGetDocumentById(documentId);
   const [activeFormIndex, setActiveFormIndex] = useState(1);
   const { mutate: setResumeInfo } = useUpdateDocument();
-  const { isDataLoaded } = useFirstRender();
+  const { firstRender } = useFirstRender();
 
   const resumeInfo = data?.data;
   const thumbnail = resumeInfo?.thumbnail;
   const resumeInfoStringed = resumeInfo ? JSON.stringify(resumeInfo) : null;
   const resumeInfoStringedPrev = useRef<string | null>(null);
-  console.log('resumeInfo', resumeInfo);
-  console.log('is first render', isDataLoaded);
+
+  console.log('is first render', firstRender);
 
   const handleNext = () => {
     const newIndex = activeFormIndex + 1;

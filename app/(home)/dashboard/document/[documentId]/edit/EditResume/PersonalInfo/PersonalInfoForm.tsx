@@ -25,7 +25,7 @@ const PersonalInfoForm = () => {
   const resumeInfo = data?.data;
   const personalInfo = resumeInfo?.personalInfo;
   const { mutate: setResumeInfo } = useUpdateDocument();
-  const { isDataLoaded } = useFirstRender();
+  const { firstRender } = useFirstRender();
 
   const [localPersonalInfo, setLocalPersonalInfo] = useState<PersonalInfoType>(
     personalInfo || {
@@ -60,16 +60,20 @@ const PersonalInfoForm = () => {
   }, [resumeInfo?.personalInfoDisplayFormat]);
 
   useEffect(() => {
-    if (isDataLoaded && debouncedPersonalInfo && debouncedPersonalInfo !== personalInfo) {
+    if (firstRender === 'notFirstRender' && debouncedPersonalInfo && debouncedPersonalInfo !== personalInfo) {
       setResumeInfo({ personalInfo: debouncedPersonalInfo });
     }
-  }, [debouncedPersonalInfo, personalInfo, setResumeInfo, isDataLoaded]);
+  }, [debouncedPersonalInfo, personalInfo, setResumeInfo, firstRender]);
 
   useEffect(() => {
-    if (isDataLoaded && debouncedDisplayFormat && debouncedDisplayFormat !== resumeInfo?.personalInfoDisplayFormat) {
+    if (
+      firstRender === 'notFirstRender' &&
+      debouncedDisplayFormat &&
+      debouncedDisplayFormat !== resumeInfo?.personalInfoDisplayFormat
+    ) {
       setResumeInfo({ personalInfoDisplayFormat: debouncedDisplayFormat });
     }
-  }, [debouncedDisplayFormat, resumeInfo?.personalInfoDisplayFormat, setResumeInfo, isDataLoaded]);
+  }, [debouncedDisplayFormat, resumeInfo?.personalInfoDisplayFormat, setResumeInfo, firstRender]);
 
   const handleChange = useCallback((e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;

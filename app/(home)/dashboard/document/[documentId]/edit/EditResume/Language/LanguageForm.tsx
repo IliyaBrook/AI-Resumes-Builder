@@ -27,7 +27,7 @@ const LanguageForm = () => {
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteLanguage } = useDeleteLanguage();
-  const { isDataLoaded } = useFirstRender();
+  const { firstRender } = useFirstRender();
 
   const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.languagesSectionTitle || 'Languages');
   const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>(resumeInfo?.languages || []);
@@ -35,16 +35,20 @@ const LanguageForm = () => {
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
-    if (isDataLoaded && debouncedLanguages && debouncedLanguages !== resumeInfo?.languages) {
+    if (firstRender === 'notFirstRender' && debouncedLanguages && debouncedLanguages !== resumeInfo?.languages) {
       setResumeInfo({ languages: debouncedLanguages });
     }
-  }, [debouncedLanguages, isDataLoaded]);
+  }, [debouncedLanguages, firstRender]);
 
   React.useEffect(() => {
-    if (isDataLoaded && debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.languagesSectionTitle) {
+    if (
+      firstRender === 'notFirstRender' &&
+      debouncedSectionTitle &&
+      debouncedSectionTitle !== resumeInfo?.languagesSectionTitle
+    ) {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }
-  }, [debouncedSectionTitle, isDataLoaded]);
+  }, [debouncedSectionTitle, firstRender]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;

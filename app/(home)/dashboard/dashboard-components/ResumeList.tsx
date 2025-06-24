@@ -1,13 +1,17 @@
 'use client';
 import { useGetDocuments } from '@/hooks';
 import { Loader, RotateCw } from 'lucide-react';
-import React, { Fragment, useCallback } from 'react';
+import React, { Fragment, useCallback, useEffect } from 'react';
 import { ResumeItem } from '@/editResume';
 import { DocumentType } from '@/types/resume.type';
 
 const ResumeList = () => {
   const { data, isLoading, isError, refetch } = useGetDocuments();
   const resumes = data?.data ?? [];
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const onDuplicate = useCallback(
     async (documentId: string) => {

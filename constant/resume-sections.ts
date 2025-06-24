@@ -1,4 +1,3 @@
-// components
 import {
   LanguagePreview,
   ProjectPreview,
@@ -7,20 +6,13 @@ import {
   ExperiencePreview,
   SummaryPreview,
   PersonalInfoPreview,
-} from "@/components";
+} from '@/editResume';
+import { DEFAULT_PAGES_ORDER } from './default-pages-order';
 
-export const DEFAULT_PAGES_ORDER = [
-  "personal-info",
-  "summary",
-  "experience",
-  "education",
-  "projects",
-  "skills",
-  "languages",
-];
+export { DEFAULT_PAGES_ORDER };
 
 export const SECTION_COMPONENTS = {
-  "personal-info": PersonalInfoPreview,
+  'personal-info': PersonalInfoPreview,
   summary: SummaryPreview,
   experience: ExperiencePreview,
   education: EducationPreview,
@@ -34,9 +26,7 @@ const ALL_AVAILABLE_PAGES = Object.keys(SECTION_COMPONENTS) as Array<
 >;
 
 export function syncPagesOrder(currentOrder: string[]): string[] {
-  const missingPages = ALL_AVAILABLE_PAGES.filter(
-    (page) => !currentOrder.includes(page)
-  );
+  const missingPages = ALL_AVAILABLE_PAGES.filter(page => !currentOrder.includes(page));
 
   if (missingPages.length === 0) {
     return currentOrder;

@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations } from 'drizzle-orm';
 import {
   integer,
   pgEnum,
@@ -8,37 +8,37 @@ import {
   timestamp,
   varchar,
   json,
-} from "drizzle-orm/pg-core";
-import { personalInfoTable, personalInfoTableSchema } from "./personal-info";
-import { experienceTable, experienceTableSchema } from "./experience";
-import { educationTable, educationTableSchema } from "./education";
-import { skillsTable, skillsTableSchema } from "./skills";
-import { projectTable, projectTableSchema } from "./project";
-import { languageTable, languageTableSchema } from "./language";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
-import { DEFAULT_PAGES_ORDER } from "@/constant/resume-sections";
+} from 'drizzle-orm/pg-core';
+import { personalInfoTable, personalInfoTableSchema } from './personal-info';
+import { experienceTable, experienceTableSchema } from './experience';
+import { educationTable, educationTableSchema } from './education';
+import { skillsTable, skillsTableSchema } from './skills';
+import { projectTable, projectTableSchema } from './project';
+import { languageTable, languageTableSchema } from './language';
+import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
+import { DEFAULT_PAGES_ORDER } from '../../constant/default-pages-order';
 
-export const statusEnum = pgEnum("status", ["archived", "private", "public"]);
+export const statusEnum = pgEnum('status', ['archived', 'private', 'public']);
 
-export const documentTable = pgTable("document", {
-  id: serial("id").notNull().primaryKey(),
-  documentId: varchar("document_id").unique().notNull(),
-  title: varchar("title", { length: 255 }).notNull(),
-  summary: text("summary"),
-  themeColor: varchar("theme_color", { length: 255 })
-    .notNull()
-    .default("#7c3aed"),
-  thumbnail: text("thumbnail"),
-  currentPosition: integer("current_position").notNull().default(1),
-  status: statusEnum("status").notNull().default("private"),
-  createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
-  projectsSectionTitle: varchar("projects_section_title", { length: 255 }).default("Projects"),
-  languagesSectionTitle: varchar("languages_section_title", { length: 255 }).default("Languages"),
-  skillsDisplayFormat: varchar("skills_display_format", { length: 32 }),
-  personalInfoDisplayFormat: varchar("personal_info_display_format", { length: 32 }).default("default"),
-  pagesOrder: json("pages_order").$type<string[]>().default(DEFAULT_PAGES_ORDER),
+export const documentTable = pgTable('document', {
+  id: serial('id').notNull().primaryKey(),
+  documentId: varchar('document_id').unique().notNull(),
+  title: varchar('title', { length: 255 }).notNull(),
+  summary: text('summary'),
+  themeColor: varchar('theme_color', { length: 255 }).notNull().default('#7c3aed'),
+  thumbnail: text('thumbnail'),
+  currentPosition: integer('current_position').notNull().default(1),
+  status: statusEnum('status').notNull().default('private'),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+  projectsSectionTitle: varchar('projects_section_title', { length: 255 }).default('Projects'),
+  languagesSectionTitle: varchar('languages_section_title', { length: 255 }).default('Languages'),
+  skillsDisplayFormat: varchar('skills_display_format', { length: 32 }),
+  personalInfoDisplayFormat: varchar('personal_info_display_format', { length: 32 }).default(
+    'default'
+  ),
+  pagesOrder: json('pages_order').$type<string[]>().default(DEFAULT_PAGES_ORDER),
 });
 
 export const documentRelations = relations(documentTable, ({ one, many }) => {
@@ -53,15 +53,15 @@ export const documentRelations = relations(documentTable, ({ one, many }) => {
 });
 
 export const createDocumentTableSchema = createInsertSchema(documentTable, {
-  title: (schema) => schema.title.min(1),
-  themeColor: (schema) => schema.themeColor.optional(),
-  thumbnail: (schema) => schema.thumbnail.optional(),
-  currentPosition: (schema) => schema.currentPosition.optional(),
-  projectsSectionTitle: (schema) => schema.projectsSectionTitle.optional(),
-  languagesSectionTitle: (schema) => schema.languagesSectionTitle.optional(),
-  skillsDisplayFormat: (schema) => schema.skillsDisplayFormat.optional(),
-  personalInfoDisplayFormat: (schema) => schema.personalInfoDisplayFormat.optional(),
-  pagesOrder: (schema) => schema.pagesOrder.optional(),
+  title: schema => schema.title.min(1),
+  themeColor: schema => schema.themeColor.optional(),
+  thumbnail: schema => schema.thumbnail.optional(),
+  currentPosition: schema => schema.currentPosition.optional(),
+  projectsSectionTitle: schema => schema.projectsSectionTitle.optional(),
+  languagesSectionTitle: schema => schema.languagesSectionTitle.optional(),
+  skillsDisplayFormat: schema => schema.skillsDisplayFormat.optional(),
+  personalInfoDisplayFormat: schema => schema.personalInfoDisplayFormat.optional(),
+  pagesOrder: schema => schema.pagesOrder.optional(),
 }).pick({
   title: true,
   status: true,

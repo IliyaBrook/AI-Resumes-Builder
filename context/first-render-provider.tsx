@@ -4,7 +4,6 @@ import { useParams } from 'next/navigation';
 import { useGetDocumentById } from '@/hooks';
 
 type TFirstRenderState = 'firstRender' | 'notFirstRender' | 'pending';
-type tSetHasBeenFirstRender = React.Dispatch<React.SetStateAction<TFirstRenderState>>;
 
 interface FirstRenderContextType {
   firstRender: TFirstRenderState;

@@ -68,6 +68,44 @@ npm run db:push
 
 You should now be able to use the application locally.
 
+## Database Backup & Restore
+
+Cross-platform commands for creating backups and restoring PostgreSQL database using Makefile.
+Supports Windows (.bat), Linux, and macOS (.sh scripts).
+
+### Create Backup
+```bash
+make db-backup
+```
+Creates backup file with format: `dumps/backup_dd_mm_yy_hh_mm.sql`
+
+### Restore from Backup
+```bash
+make db-restore
+```
+Interactive process shows available files and asks for confirmation.
+
+### List Available Backups
+```bash
+make db-list-dumps
+```
+
+### Help
+```bash
+make help
+```
+Shows available commands and detected operating system.
+
+**⚠️ Warning**: Restore completely overwrites current database data! Always create backup before restoring.
+
+**Note**: The Makefile automatically detects your operating system:
+- **Windows**: Uses `.bat` scripts
+- **Linux/WSL**: Uses `.sh` scripts  
+- **macOS**: Uses `.sh` scripts
+
+**Alternative**: For direct script execution with pause prompts, use:
+- `scripts\backup-interactive.bat` (Windows only)
+
 # AI Resume Builder
 
 ## ❤️ Support

@@ -42,5 +42,7 @@ next-env.d.ts
 .cursor
 .cursorignore
 .history
-cheatsheet
 .vscode
+# custom folder
+cheatsheet
+dumps

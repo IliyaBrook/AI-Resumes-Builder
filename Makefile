@@ -15,33 +15,27 @@ help:
 
 db-backup:
 ifeq ($(UNAME_S),Linux)
-	@chmod +x scripts/backup.sh
-	@./scripts/backup.sh
+	@bash scripts/backup.sh
 else ifeq ($(UNAME_S),Darwin)
-	@chmod +x scripts/backup.sh
-	@./scripts/backup.sh
+	@bash scripts/backup.sh
 else
 	@cmd /c scripts\backup.bat
 endif
 
 db-restore:
 ifeq ($(UNAME_S),Linux)
-	@chmod +x scripts/restore.sh
-	@./scripts/restore.sh
+	@bash scripts/restore.sh
 else ifeq ($(UNAME_S),Darwin)
-	@chmod +x scripts/restore.sh
-	@./scripts/restore.sh
+	@bash scripts/restore.sh
 else
 	@cmd /c scripts\restore.bat
 endif
 
 db-list-dumps:
 ifeq ($(UNAME_S),Linux)
-	@chmod +x scripts/list-dumps.sh
-	@./scripts/list-dumps.sh
+	@bash scripts/list-dumps.sh
 else ifeq ($(UNAME_S),Darwin)
-	@chmod +x scripts/list-dumps.sh
-	@./scripts/list-dumps.sh
+	@bash scripts/list-dumps.sh
 else
 	@cmd /c scripts\list-dumps.bat
 endif 

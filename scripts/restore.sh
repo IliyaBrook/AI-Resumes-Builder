@@ -21,14 +21,16 @@ DB_PASSWORD=""
 if [ -f .env ]; then
     echo "Reading configuration from .env file..."
     while IFS='=' read -r key value; do
-        # Remove quotes and whitespace
-        value=$(echo "$value" | sed 's/^"//; s/"$//; s/^'\''//; s/'\''$//')
+        # Remove quotes, whitespace, and carriage returns
+        value=$(echo "$value" | sed 's/^"//; s/"$//; s/^'\''//; s/'\''$//; s/\r$//')
+        # Also trim any trailing/leading whitespace
+        value=$(echo "$value" | xargs)
         case "$key" in
             POSTGRES_DB) DB_NAME="$value" ;;
             POSTGRES_USER) DB_USER="$value" ;;
             POSTGRES_PASSWORD) DB_PASSWORD="$value" ;;
         esac
-    done < <(grep -E '^(POSTGRES_DB|POSTGRES_USER|POSTGRES_PASSWORD)=' .env)
+    done < <(grep -E '^(POSTGRES_DB|POSTGRES_USER|POSTGRES_PASSWORD)=' .env | tr -d '\r')
 else
     echo "No .env file found, using defaults: DB=$DB_NAME, USER=$DB_USER"
 fi
@@ -52,7 +54,8 @@ fi
 
 echo ""
 echo "WARNING: This will overwrite current database data!"
-echo "Database: $DB_NAME, User: $DB_USER"
+echo "Database: [$DB_NAME], User: [$DB_USER]"
+echo "Debug - DB_NAME length: ${#DB_NAME}, DB_USER length: ${#DB_USER}"
 read -p "Are you sure? (y/N): " confirm
 
 # Convert to lowercase for comparison
@@ -66,13 +69,17 @@ if [ "$confirm" = "y" ] || [ "$confirm" = "yes" ]; then
         export PGPASSWORD="$DB_PASSWORD"
     fi
     
-    # Restore database
-    psql -U "$DB_USER" -d "$DB_NAME" < "dumps/$filename"
+    # Restore database (connect to Docker container on localhost:5432)
+    psql -h localhost -p 5432 -U "$DB_USER" -d "$DB_NAME" < "dumps/$filename" 2>&1
     
     if [ $? -eq 0 ]; then
         echo "Restore completed!"
     else
         echo "Error during restore!"
+        echo "Please check that:"
+        echo "  - Docker container is running"
+        echo "  - Port 5432 is accessible"
+        echo "  - Password is correct"
         exit 1
     fi
 else

@@ -21,14 +21,16 @@ DB_PASSWORD=""
 if [ -f .env ]; then
     echo "Reading configuration from .env file..."
     while IFS='=' read -r key value; do
-        # Remove quotes and whitespace
-        value=$(echo "$value" | sed 's/^"//; s/"$//; s/^'\''//; s/'\''$//')
+        # Remove quotes, whitespace, and carriage returns
+        value=$(echo "$value" | sed 's/^"//; s/"$//; s/^'\''//; s/'\''$//; s/\r$//')
+        # Also trim any trailing/leading whitespace
+        value=$(echo "$value" | xargs)
         case "$key" in
             POSTGRES_DB) DB_NAME="$value" ;;
             POSTGRES_USER) DB_USER="$value" ;;
             POSTGRES_PASSWORD) DB_PASSWORD="$value" ;;
         esac
-    done < <(grep -E '^(POSTGRES_DB|POSTGRES_USER|POSTGRES_PASSWORD)=' .env)
+    done < <(grep -E '^(POSTGRES_DB|POSTGRES_USER|POSTGRES_PASSWORD)=' .env | tr -d '\r')
 else
     echo "No .env file found, using defaults: DB=$DB_NAME, USER=$DB_USER"
 fi
@@ -48,12 +50,12 @@ if [ ! -z "$DB_PASSWORD" ]; then
     export PGPASSWORD="$DB_PASSWORD"
 fi
 
-# Test database connection first
+# Test database connection first (connect to Docker container on localhost:5432)
 echo "Testing database connection..."
 if [ ! -z "$DB_PASSWORD" ]; then
-    PGPASSWORD="$DB_PASSWORD" psql -U "$DB_USER" -d "$DB_NAME" -c "\q" 2>/dev/null
+    PGPASSWORD="$DB_PASSWORD" psql -h localhost -p 5432 -U "$DB_USER" -d "$DB_NAME" -c "\q" 2>/dev/null
 else
-    psql -U "$DB_USER" -d "$DB_NAME" -c "\q" 2>/dev/null
+    psql -h localhost -p 5432 -U "$DB_USER" -d "$DB_NAME" -c "\q" 2>/dev/null
 fi
 
 if [ $? -ne 0 ]; then
@@ -66,8 +68,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Create backup
-pg_dump -U "$DB_USER" -d "$DB_NAME" --no-owner --no-privileges --clean --if-exists > "$FILENAME"
+# Create backup (connect to Docker container on localhost:5432)
+pg_dump -h localhost -p 5432 -U "$DB_USER" -d "$DB_NAME" --no-owner --no-privileges --clean --if-exists > "$FILENAME"
 
 if [ $? -eq 0 ]; then
     echo "Backup created: $FILENAME"

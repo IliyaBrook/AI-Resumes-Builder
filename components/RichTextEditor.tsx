@@ -84,6 +84,7 @@ interface RichTextEditorProps {
   initialValue?: string;
   value?: string;
   onEditorChange: (value: string) => void;
+  onBlur?: (value: string) => void;
   prompt?: string;
   showBullets?: boolean;
   title?: string;
@@ -151,6 +152,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       initialValue = '',
       value: controlledValue,
       onEditorChange,
+      onBlur,
       prompt,
       showBullets = true,
       title,
@@ -296,8 +298,10 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
             containerProps={{
               style: {
                 resize: 'vertical',
-                lineHeight: 1.2,
+                lineHeight: 1.6,
                 fontSize: '13.5px',
+                minHeight: '120px',
+                padding: '8px',
               },
             }}
             onChange={e => {
@@ -305,6 +309,11 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
               if (typeof parsedValue === 'string') {
                 setValue(parsedValue);
                 onEditorChange(parsedValue);
+              }
+            }}
+            onBlur={() => {
+              if (onBlur) {
+                onBlur(value);
               }
             }}
             disabled={disabled}

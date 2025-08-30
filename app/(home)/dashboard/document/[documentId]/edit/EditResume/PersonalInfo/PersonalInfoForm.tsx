@@ -1,18 +1,18 @@
 'use client';
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Button,
-  Label,
   Input,
+  Label,
   PersonalInfoLoader,
 } from '@/components';
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { Mail, Phone, MapPin, Github, Linkedin, ChevronDown } from 'lucide-react';
+import { ChevronDown, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { PersonalInfoType } from '@/types/resume.type';
 
 const PersonalInfoForm = () => {
@@ -53,16 +53,22 @@ const PersonalInfoForm = () => {
     setLocalPersonalInfo((prev: PersonalInfoType) => ({ ...prev, [name]: value }));
   }, []);
 
-  const handleBlur = useCallback((e: { target: { name: string; value: string } }) => {
-    const { name, value } = e.target;
-    const updatedPersonalInfo = { ...localPersonalInfo, [name]: value };
-    setResumeInfo({ personalInfo: updatedPersonalInfo });
-  }, [localPersonalInfo, setResumeInfo]);
+  const handleBlur = useCallback(
+    (e: { target: { name: string; value: string } }) => {
+      const { name, value } = e.target;
+      const updatedPersonalInfo = { ...localPersonalInfo, [name]: value };
+      setResumeInfo({ personalInfo: updatedPersonalInfo });
+    },
+    [localPersonalInfo, setResumeInfo]
+  );
 
-  const handleDisplayFormatChange = useCallback((format: 'default' | 'compact') => {
-    setLocalDisplayFormat(format);
-    setResumeInfo({ personalInfoDisplayFormat: format });
-  }, [setResumeInfo]);
+  const handleDisplayFormatChange = useCallback(
+    (format: 'default' | 'compact') => {
+      setLocalDisplayFormat(format);
+      setResumeInfo({ personalInfoDisplayFormat: format });
+    },
+    [setResumeInfo]
+  );
 
   if (isLoading) {
     return <PersonalInfoLoader />;

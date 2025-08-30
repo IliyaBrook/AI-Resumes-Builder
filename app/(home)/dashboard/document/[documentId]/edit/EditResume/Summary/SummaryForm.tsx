@@ -10,7 +10,7 @@ import {
   RichTextEditorRef,
   parseAIResult,
 } from '@/components';
-import { toast, useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { toast, useUpdateDocument, useGetDocumentById } from '@/hooks';
 import { getAIChatSession } from '@/lib/google-ai-model';
 import { Sparkles } from 'lucide-react';
 import { useParams } from 'next/navigation';
@@ -81,21 +81,25 @@ const SummaryForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const [loading, setLoading] = useState(false);
   const [aiGeneratedSummary, setAiGeneratedSummary] = useState<AIGeneratedSummariesType | null>(null);
-  const [localSummary, setLocalSummary] = useState(resumeInfo?.summary || '');
+  const [localSummary, setLocalSummary] = useState('');
   const [summarySize, setSummarySize] = useState('default');
   const editorRef = React.useRef<RichTextEditorRef>(null);
 
-  const debouncedSummary = useDebounce(localSummary, 500);
-
   useEffect(() => {
-    if (debouncedSummary && debouncedSummary !== resumeInfo?.summary) {
-      setResumeInfo({ summary: debouncedSummary });
+    if (resumeInfo?.summary) {
+      setLocalSummary(resumeInfo.summary);
     }
-  }, [debouncedSummary, resumeInfo?.summary, setResumeInfo]);
+  }, [resumeInfo?.summary]);
 
   const handleChange = (value: string) => {
     setLocalSummary(value);
   };
+
+  const handleBlur = useCallback((value: string) => {
+    if (value !== resumeInfo?.summary) {
+      setResumeInfo({ summary: value });
+    }
+  }, [resumeInfo?.summary, setResumeInfo]);
 
   const GenerateSummaryFromAI = async () => {
     try {
@@ -196,6 +200,7 @@ const SummaryForm = () => {
               initialValue={localSummary}
               value={localSummary}
               onEditorChange={handleChange}
+              onBlur={handleBlur}
               showBullets={false}
               disabled={false}
               showLineLengthSelector={false}

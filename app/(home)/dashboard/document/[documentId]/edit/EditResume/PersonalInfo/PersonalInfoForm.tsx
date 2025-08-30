@@ -1,5 +1,4 @@
 'use client';
-// components
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,13 +9,11 @@ import {
   Input,
   PersonalInfoLoader,
 } from '@/components';
-// hooks
-import { useDebounce, useGetDocumentById, useUpdateDocument } from '@/hooks';
+import { useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { Mail, Phone, MapPin, Github, Linkedin, ChevronDown } from 'lucide-react';
 import { PersonalInfoType } from '@/types/resume.type';
-import { useFirstRender } from '@/hooks';
 
 const PersonalInfoForm = () => {
   const param = useParams();
@@ -25,30 +22,22 @@ const PersonalInfoForm = () => {
   const resumeInfo = data?.data;
   const personalInfo = resumeInfo?.personalInfo;
   const { mutate: setResumeInfo } = useUpdateDocument();
-  const { firstRender } = useFirstRender();
 
-  const [localPersonalInfo, setLocalPersonalInfo] = useState<PersonalInfoType>(
-    personalInfo || {
-      firstName: '',
-      lastName: '',
-      jobTitle: '',
-      address: '',
-      phone: '',
-      email: '',
-      github: '',
-      linkedin: '',
-    }
-  );
+  const [localPersonalInfo, setLocalPersonalInfo] = useState<PersonalInfoType>({
+    firstName: '',
+    lastName: '',
+    jobTitle: '',
+    address: '',
+    phone: '',
+    email: '',
+    github: '',
+    linkedin: '',
+  });
 
-  const [localDisplayFormat, setLocalDisplayFormat] = useState<'default' | 'compact'>(
-    (resumeInfo?.personalInfoDisplayFormat as 'default' | 'compact') || 'default'
-  );
-
-  const debouncedPersonalInfo = useDebounce(localPersonalInfo, 500);
-  const debouncedDisplayFormat = useDebounce(localDisplayFormat, 500);
+  const [localDisplayFormat, setLocalDisplayFormat] = useState<'default' | 'compact'>('default');
 
   useEffect(() => {
-    if (personalInfo && (!localPersonalInfo.firstName || !localPersonalInfo.lastName)) {
+    if (personalInfo) {
       setLocalPersonalInfo(personalInfo);
     }
   }, [personalInfo]);
@@ -59,26 +48,21 @@ const PersonalInfoForm = () => {
     }
   }, [resumeInfo?.personalInfoDisplayFormat]);
 
-  useEffect(() => {
-    if (firstRender === 'notFirstRender' && debouncedPersonalInfo && debouncedPersonalInfo !== personalInfo) {
-      setResumeInfo({ personalInfo: debouncedPersonalInfo });
-    }
-  }, [debouncedPersonalInfo, personalInfo, setResumeInfo, firstRender]);
-
-  useEffect(() => {
-    if (
-      firstRender === 'notFirstRender' &&
-      debouncedDisplayFormat &&
-      debouncedDisplayFormat !== resumeInfo?.personalInfoDisplayFormat
-    ) {
-      setResumeInfo({ personalInfoDisplayFormat: debouncedDisplayFormat });
-    }
-  }, [debouncedDisplayFormat, resumeInfo?.personalInfoDisplayFormat, setResumeInfo, firstRender]);
-
   const handleChange = useCallback((e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setLocalPersonalInfo((prev: PersonalInfoType) => ({ ...prev, [name]: value }));
   }, []);
+
+  const handleBlur = useCallback((e: { target: { name: string; value: string } }) => {
+    const { name, value } = e.target;
+    const updatedPersonalInfo = { ...localPersonalInfo, [name]: value };
+    setResumeInfo({ personalInfo: updatedPersonalInfo });
+  }, [localPersonalInfo, setResumeInfo]);
+
+  const handleDisplayFormatChange = useCallback((format: 'default' | 'compact') => {
+    setLocalDisplayFormat(format);
+    setResumeInfo({ personalInfoDisplayFormat: format });
+  }, [setResumeInfo]);
 
   if (isLoading) {
     return <PersonalInfoLoader />;
@@ -100,8 +84,8 @@ const PersonalInfoForm = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full">
-            <DropdownMenuItem onClick={() => setLocalDisplayFormat('default')}>Default</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLocalDisplayFormat('compact')}>Compact</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDisplayFormatChange('default')}>Default</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDisplayFormatChange('compact')}>Compact</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -118,6 +102,7 @@ const PersonalInfoForm = () => {
                   placeholder=""
                   value={localPersonalInfo.firstName || ''}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   className="h-9"
                 />
               </div>
@@ -130,6 +115,7 @@ const PersonalInfoForm = () => {
                   placeholder=""
                   value={localPersonalInfo.lastName || ''}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   className="h-9"
                 />
               </div>
@@ -144,6 +130,7 @@ const PersonalInfoForm = () => {
                 placeholder=""
                 value={localPersonalInfo.jobTitle || ''}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className="h-9"
               />
             </div>
@@ -160,6 +147,7 @@ const PersonalInfoForm = () => {
                     placeholder=""
                     value={localPersonalInfo.phone || ''}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className="h-9 pl-8"
                   />
                 </div>
@@ -175,6 +163,7 @@ const PersonalInfoForm = () => {
                     placeholder=""
                     value={localPersonalInfo.email || ''}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className="h-9 pl-8"
                   />
                 </div>
@@ -192,6 +181,7 @@ const PersonalInfoForm = () => {
                     placeholder="username"
                     value={localPersonalInfo.github || ''}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className="h-9 pl-8"
                   />
                 </div>
@@ -206,6 +196,7 @@ const PersonalInfoForm = () => {
                     placeholder="username"
                     value={localPersonalInfo.linkedin || ''}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className="h-9 pl-8"
                   />
                 </div>
@@ -223,6 +214,7 @@ const PersonalInfoForm = () => {
                   placeholder=""
                   value={localPersonalInfo.address || ''}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   className="h-9 pl-8"
                 />
               </div>

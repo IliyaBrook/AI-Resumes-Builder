@@ -30,7 +30,7 @@ You can run the database either locally or using Docker.
 1. Copy .env.example to .env and set the variables:
 
 ```shell
-POSTGRES_DB=ai-resumes-builder
+POSTGRES_DB=ai_resumes_builder
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=yourpassword
 ```

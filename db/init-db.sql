@@ -1,4 +1,4 @@
-CREATE DATABASE "ai-resumes-builder"
+CREATE DATABASE "ai_resumes_builder"
     WITH
     OWNER = postgres
     ENCODING = 'UTF8'

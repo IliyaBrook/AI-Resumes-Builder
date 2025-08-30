@@ -99,7 +99,7 @@ export function parseAIResult(value: string): ParsedAIResult {
   const responseText = value;
   let parsed: AIResultObjectType = {};
   try {
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    const jsonMatch = responseText.match(/\{[\s\S]*}/);
     if (jsonMatch) {
       parsed = JSON.parse(jsonMatch[0]);
     } else if (responseText.trim().startsWith('{')) {
@@ -109,9 +109,7 @@ export function parseAIResult(value: string): ParsedAIResult {
     } else {
       parsed = {};
     }
-  } catch {
-    // Ignore parsing errors and use empty object
-  }
+  } catch {}
   if (parsed && typeof parsed === 'object' && (parsed.fresher || parsed.mid || parsed.experienced)) {
     return {
       fresher: parsed.fresher || '',
@@ -216,8 +214,8 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
         const chat = getAIChatSession();
         const result = await chat.sendMessage({ message: usedPrompt });
         const responseText = result.text || '';
-        const resultValue = responseText;
-        const parsedResult = parseAIResult(resultValue);
+
+        const parsedResult = parseAIResult(responseText);
         if (typeof parsedResult === 'string') {
           setValue(parsedResult);
           onEditorChange(parsedResult);

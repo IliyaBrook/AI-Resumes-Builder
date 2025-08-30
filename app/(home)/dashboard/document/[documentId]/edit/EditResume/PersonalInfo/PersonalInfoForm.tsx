@@ -1,3 +1,5 @@
+// noinspection XmlDeprecatedElement,JSDeprecatedSymbols
+
 'use client';
 import {
   Button,

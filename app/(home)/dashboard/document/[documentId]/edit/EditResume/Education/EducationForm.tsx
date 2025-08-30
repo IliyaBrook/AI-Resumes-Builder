@@ -1,11 +1,20 @@
 'use client';
 // components
-import { Textarea, Label, Input, Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components';
-import { Plus, X, ChevronDown } from 'lucide-react';
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Input,
+  Label,
+  Textarea,
+} from '@/components';
+import { ChevronDown, Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 //hooks
-import { useCreateEducation, useDebounce, useUpdateDocument, useGetDocumentById, useDeleteEducation } from '@/hooks';
+import { useCreateEducation, useDebounce, useDeleteEducation, useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { EducationType } from '@/types/resume.type';
 
 const getToday = () => {
@@ -147,9 +156,7 @@ const EducationForm = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-sm">
-                    {item?.educationType === 'course' ? 'Course Name' : 'Degree'}
-                  </Label>
+                  <Label className="text-sm">{item?.educationType === 'course' ? 'Course Name' : 'Degree'}</Label>
                   <Input
                     name="degree"
                     placeholder=""
@@ -198,9 +205,7 @@ const EducationForm = () => {
                     checked={item?.hideDates || false}
                     onChange={e => {
                       setLocalEducationList(prev =>
-                        prev.map((edu, idx) =>
-                          idx === index ? { ...edu, hideDates: e.target.checked } : edu
-                        )
+                        prev.map((edu, idx) => (idx === index ? { ...edu, hideDates: e.target.checked } : edu))
                       );
                     }}
                   />

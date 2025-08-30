@@ -13,17 +13,18 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
 
   const isDoNotShowDates = resumeInfo?.educations?.every(
-    education => education.skipDates === true || education.hideDates === true || (!education.startDate && !education.endDate)
+    education =>
+      education.skipDates === true || education.hideDates === true || (!education.startDate && !education.endDate)
   );
 
-  const isCompactMode =
-    resumeInfo?.educations?.every(education => 
-      education.educationType === 'course' && 
-      education.hideDates === true && 
+  const isCompactMode = resumeInfo?.educations?.every(
+    education =>
+      education.educationType === 'course' &&
+      education.hideDates === true &&
       !education.description?.trim() &&
       education.universityName?.trim() &&
       education.degree?.trim()
-    );
+  );
 
   if (isLoading) {
     return <SkeletonLoader />;
@@ -91,7 +92,9 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                   {education?.degree && education?.major?.trim() && ' in '}
                   {education?.major?.trim() && education?.major}
                 </h5>
-                {education?.skipDates === true || education?.hideDates === true || (!education?.startDate && !education?.endDate) ? null : (
+                {education?.skipDates === true ||
+                education?.hideDates === true ||
+                (!education?.startDate && !education?.endDate) ? null : (
                   <span className="text-[13px] font-bold">
                     {education?.yearsOnly
                       ? `${education?.startDate ? new Date(education.startDate).getFullYear() : ''}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : education?.endDate ? new Date(education.endDate).getFullYear() : ''}`
@@ -100,16 +103,18 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 )}
               </div>
             )}
-            {education?.educationType === 'course' && !education?.hideDates && (education?.startDate || education?.endDate) && (
-              <div className={isDoNotShowDates ? 'block' : 'flex items-start justify-between'}>
-                <span></span>
-                <span className="text-[13px] font-bold">
-                  {education?.yearsOnly
-                    ? `${education?.startDate ? new Date(education.startDate).getFullYear() : ''}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : education?.endDate ? new Date(education.endDate).getFullYear() : ''}`
-                    : `${formatDateByLocale(education?.startDate ?? undefined)}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : formatDateByLocale(education?.endDate ?? undefined)}`}
-                </span>
-              </div>
-            )}
+            {education?.educationType === 'course' &&
+              !education?.hideDates &&
+              (education?.startDate || education?.endDate) && (
+                <div className={isDoNotShowDates ? 'block' : 'flex items-start justify-between'}>
+                  <span></span>
+                  <span className="text-[13px] font-bold">
+                    {education?.yearsOnly
+                      ? `${education?.startDate ? new Date(education.startDate).getFullYear() : ''}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : education?.endDate ? new Date(education.endDate).getFullYear() : ''}`
+                      : `${formatDateByLocale(education?.startDate ?? undefined)}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : formatDateByLocale(education?.endDate ?? undefined)}`}
+                  </span>
+                </div>
+              )}
             {education?.description?.trim() && (
               <p className={`text-[13px] ${isDoNotShowDates ? 'my-1' : 'my-2'}`}>{education?.description}</p>
             )}

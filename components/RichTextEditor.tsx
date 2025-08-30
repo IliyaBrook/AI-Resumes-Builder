@@ -1,18 +1,18 @@
 'use client';
-import React, { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import {
-  EditorProvider,
-  Editor,
-  Toolbar,
   BtnBold,
-  BtnItalic,
-  BtnUnderline,
-  BtnStrikeThrough,
-  Separator,
-  BtnNumberedList,
   BtnBulletList,
+  BtnItalic,
   BtnLink,
+  BtnNumberedList,
+  BtnStrikeThrough,
+  BtnUnderline,
   createButton,
+  Editor,
+  EditorProvider,
+  Separator,
+  Toolbar,
 } from 'react-simple-wysiwyg';
 import { Label } from './ui/label';
 import { Button } from './ui/button';
@@ -170,6 +170,9 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       setValue: (newValue: string) => {
         setValue(newValue);
         onEditorChange(newValue);
+        if (onBlur) {
+          onBlur(newValue);
+        }
       },
     }));
 
@@ -218,10 +221,12 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
         if (typeof parsedResult === 'string') {
           setValue(parsedResult);
           onEditorChange(parsedResult);
+          if (onBlur) onBlur(parsedResult);
           if (onGenerate) onGenerate(parsedResult);
         } else {
           setValue(responseText);
           onEditorChange(responseText);
+          if (onBlur) onBlur(responseText);
           if (onGenerate) onGenerate(responseText);
         }
       } catch (error) {
@@ -298,10 +303,8 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
             containerProps={{
               style: {
                 resize: 'vertical',
-                lineHeight: 1.6,
+                lineHeight: 1.2,
                 fontSize: '13.5px',
-                minHeight: '120px',
-                padding: '8px',
               },
             }}
             onChange={e => {

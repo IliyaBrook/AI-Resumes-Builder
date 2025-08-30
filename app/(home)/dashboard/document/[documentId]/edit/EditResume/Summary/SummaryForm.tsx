@@ -2,15 +2,15 @@
 // components
 import {
   Button,
+  Card,
   CardContent,
   CardHeader,
   CardTitle,
-  Card,
+  parseAIResult,
   RichTextEditor,
   RichTextEditorRef,
-  parseAIResult,
 } from '@/components';
-import { toast, useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { toast, useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { getAIChatSession } from '@/lib/google-ai-model';
 import { Sparkles } from 'lucide-react';
 import { useParams } from 'next/navigation';
@@ -95,11 +95,14 @@ const SummaryForm = () => {
     setLocalSummary(value);
   };
 
-  const handleBlur = useCallback((value: string) => {
-    if (value !== resumeInfo?.summary) {
-      setResumeInfo({ summary: value });
-    }
-  }, [resumeInfo?.summary, setResumeInfo]);
+  const handleBlur = useCallback(
+    (value: string) => {
+      if (value !== resumeInfo?.summary) {
+        setResumeInfo({ summary: value });
+      }
+    },
+    [resumeInfo?.summary, setResumeInfo]
+  );
 
   const GenerateSummaryFromAI = async () => {
     try {
@@ -153,7 +156,8 @@ const SummaryForm = () => {
       editorRef.current.setValue(summary);
     }
     setLocalSummary(summary);
-  }, []);
+    setResumeInfo({ summary });
+  }, [setResumeInfo]);
 
   const handleGenerateAI = useCallback(() => {
     void GenerateSummaryFromAI();

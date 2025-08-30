@@ -11,6 +11,7 @@ export const educationTable = pgTable('education', {
       onDelete: 'cascade',
     })
     .notNull(),
+  educationType: varchar('education_type', { length: 50 }).notNull().default('university'),
   universityName: varchar('university_name', { length: 255 }),
   degree: varchar('degree', { length: 255 }),
   major: varchar('major', { length: 255 }),
@@ -20,6 +21,7 @@ export const educationTable = pgTable('education', {
   currentlyStudying: boolean('currently_studying').notNull().default(false),
   skipDates: boolean('skip_dates').notNull().default(false),
   yearsOnly: boolean('years_only').notNull().default(false),
+  hideDates: boolean('hide_dates').notNull().default(false),
 });
 
 export const educationRelations = relations(educationTable, ({ one }) => ({
@@ -33,6 +35,7 @@ export const educationTableSchema = createInsertSchema(educationTable, {
   id: z.number().optional(),
 }).pick({
   id: true,
+  educationType: true,
   universityName: true,
   degree: true,
   major: true,
@@ -42,4 +45,5 @@ export const educationTableSchema = createInsertSchema(educationTable, {
   currentlyStudying: true,
   skipDates: true,
   yearsOnly: true,
+  hideDates: true,
 });

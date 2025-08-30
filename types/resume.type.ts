@@ -15,6 +15,7 @@ export type ExperienceType = {
 export type EducationType = {
   id?: number;
   docId?: string | null;
+  educationType?: 'university' | 'course';
   universityName: string | null;
   startDate: string | null;
   endDate: string | null;
@@ -24,6 +25,7 @@ export type EducationType = {
   currentlyStudying?: boolean;
   skipDates?: boolean;
   yearsOnly?: boolean;
+  hideDates?: boolean;
 };
 
 export type SkillType = {

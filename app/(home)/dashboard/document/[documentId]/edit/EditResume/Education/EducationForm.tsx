@@ -1,7 +1,7 @@
 'use client';
 // components
-import { Textarea, Label, Input, Button } from '@/components';
-import { Plus, X } from 'lucide-react';
+import { Textarea, Label, Input, Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components';
+import { Plus, X, ChevronDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 //hooks
@@ -45,8 +45,15 @@ const EducationForm = () => {
     );
   };
 
+  const handleEducationTypeChange = (type: 'university' | 'course', index: number) => {
+    setLocalEducationList((prev: EducationType[]) =>
+      prev.map((item, idx) => (idx === index ? { ...item, educationType: type } : item))
+    );
+  };
+
   const addNewEducation = async () => {
     const newEdu = {
+      educationType: 'university' as const,
       universityName: '',
       startDate: getToday(),
       endDate: getToday(),
@@ -54,6 +61,7 @@ const EducationForm = () => {
       major: '',
       description: '',
       yearsOnly: false,
+      hideDates: false,
     };
     const created = await createEducation(newEdu);
     setLocalEducationList((prev: EducationType[]) => [...prev, created]);
@@ -107,7 +115,29 @@ const EducationForm = () => {
                 )}
 
                 <div className="col-span-2">
-                  <Label className="text-sm">University Name</Label>
+                  <Label className="text-sm">Education Type</Label>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-full justify-between">
+                        {item?.educationType === 'course' ? 'Course' : 'University'}
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-full">
+                      <DropdownMenuItem onClick={() => handleEducationTypeChange('university', index)}>
+                        University
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEducationTypeChange('course', index)}>
+                        Course
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                <div className="col-span-2">
+                  <Label className="text-sm">
+                    {item?.educationType === 'course' ? 'Institution Name' : 'University Name'}
+                  </Label>
                   <Input
                     name="universityName"
                     placeholder=""
@@ -117,7 +147,9 @@ const EducationForm = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-sm">Degree</Label>
+                  <Label className="text-sm">
+                    {item?.educationType === 'course' ? 'Course Name' : 'Degree'}
+                  </Label>
                   <Input
                     name="degree"
                     placeholder=""
@@ -126,33 +158,55 @@ const EducationForm = () => {
                     onChange={e => handleChange(e, index)}
                   />
                 </div>
-                <div>
-                  <Label className="text-sm">Major</Label>
-                  <Input
-                    name="major"
-                    placeholder=""
-                    required
-                    value={item?.major || ''}
-                    onChange={e => handleChange(e, index)}
+                {item?.educationType !== 'course' && (
+                  <div>
+                    <Label className="text-sm">Major</Label>
+                    <Input
+                      name="major"
+                      placeholder=""
+                      value={item?.major || ''}
+                      onChange={e => handleChange(e, index)}
+                    />
+                  </div>
+                )}
+                {!item?.hideDates && (
+                  <>
+                    <div className={item?.educationType === 'course' ? 'col-span-1' : ''}>
+                      <Label className="text-sm">Start Date</Label>
+                      <Input
+                        type="date"
+                        name="startDate"
+                        value={item?.startDate || ''}
+                        onChange={e => handleChange(e, index)}
+                      />
+                    </div>
+                    <div className={item?.educationType === 'course' ? 'col-span-1' : ''}>
+                      <Label className="text-sm">End Date</Label>
+                      <Input
+                        type="date"
+                        name="endDate"
+                        value={item?.endDate || ''}
+                        onChange={e => handleChange(e, index)}
+                      />
+                    </div>
+                  </>
+                )}
+                <div className="col-span-2 flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`hide-dates-checkbox-${index}`}
+                    checked={item?.hideDates || false}
+                    onChange={e => {
+                      setLocalEducationList(prev =>
+                        prev.map((edu, idx) =>
+                          idx === index ? { ...edu, hideDates: e.target.checked } : edu
+                        )
+                      );
+                    }}
                   />
-                </div>
-                <div>
-                  <Label className="text-sm">Start Date</Label>
-                  <Input
-                    type="date"
-                    name="startDate"
-                    value={item?.startDate || ''}
-                    onChange={e => handleChange(e, index)}
-                  />
-                </div>
-                <div>
-                  <Label className="text-sm">End Date</Label>
-                  <Input
-                    type="date"
-                    name="endDate"
-                    value={item?.endDate || ''}
-                    onChange={e => handleChange(e, index)}
-                  />
+                  <Label htmlFor={`hide-dates-checkbox-${index}`} className="ml-2 cursor-pointer select-none text-xs">
+                    Hide Dates
+                  </Label>
                 </div>
                 <div className="col-span-2">
                   <Label className="text-sm">Description</Label>

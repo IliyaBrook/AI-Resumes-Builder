@@ -91,6 +91,7 @@ export type ResumeDataType = {
   languagesSectionTitle?: string;
   skillsDisplayFormat?: string;
   personalInfoDisplayFormat?: string;
+  pagesOrder?: string[] | null;
 };
 
 export type Education = {

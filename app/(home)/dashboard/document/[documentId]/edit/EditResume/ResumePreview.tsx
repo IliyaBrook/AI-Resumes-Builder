@@ -1,8 +1,8 @@
 'use client';
-import { DEFAULT_PAGES_ORDER, SECTION_COMPONENTS, syncPagesOrder, type SectionKey } from '@/constant/resume-sections';
+import { DEFAULT_PAGES_ORDER, SECTION_COMPONENTS, type SectionKey, syncPagesOrder } from '@/constant/resume-sections';
 
 //hooks
-import { useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { cn } from '@/lib/utils';
 // components
 import { Button } from '@/components';

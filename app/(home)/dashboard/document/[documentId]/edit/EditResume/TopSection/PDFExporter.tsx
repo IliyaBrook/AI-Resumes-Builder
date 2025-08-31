@@ -91,6 +91,32 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
               box-sizing: border-box;
             }
 
+            /* Fix list styling for PDF - Keep original content bullets, remove CSS bullets */
+            .exp-preview ul {
+              list-style-type: none !important;
+              list-style-position: outside !important;
+              padding-left: 0.85em !important;
+              margin: 0 !important;
+            }
+            
+            .exp-preview li {
+              display: block !important;
+              margin-bottom: 0.2em !important;
+              text-indent: 0 !important;
+              padding-left: 0 !important;
+              list-style-type: none !important;
+            }
+            
+            /* Ensure other lists still work properly */
+            #resume-preview-id ul:not(.exp-preview ul) {
+              list-style-type: disc !important;
+              padding-left: 1.2em !important;
+            }
+            
+            #resume-preview-id li:not(.exp-preview li) {
+              display: list-item !important;
+            }
+
             /* Apply computed styles to resume element */
             #resume-preview-id {
               ${elementStyles}
@@ -103,7 +129,6 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
             .absolute.left-4.top-4,
             .cursor-pointer {
               background: transparent !important;
-              ring: none !important;
               box-shadow: none !important;
               cursor: default !important;
             }

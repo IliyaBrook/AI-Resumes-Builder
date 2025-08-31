@@ -26,7 +26,7 @@ async function getBrowser() {
 
 export async function POST(request: NextRequest) {
   let page = null;
-  
+
   try {
     const { html, title = 'resume' } = await request.json();
 
@@ -36,16 +36,16 @@ export async function POST(request: NextRequest) {
 
     const browserInstance = await getBrowser();
     page = await browserInstance.newPage();
-    
+
     // Set viewport to A4 size
     await page.setViewport({ width: 794, height: 1123 });
-    
+
     // Set the HTML content
-    await page.setContent(html, { 
+    await page.setContent(html, {
       waitUntil: ['domcontentloaded', 'networkidle0'],
-      timeout: 30000 
+      timeout: 30000,
     });
-    
+
     // Wait for fonts and images to load
     await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 2000)));
 
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       preferCSSPageSize: true,
       margin: {
         top: '0mm',
-        bottom: '0mm', 
+        bottom: '0mm',
         left: '0mm',
         right: '0mm',
       },
@@ -68,8 +68,8 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${title}.pdf"`,
         'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
+        Pragma: 'no-cache',
+        Expires: '0',
       },
     });
   } catch (error) {

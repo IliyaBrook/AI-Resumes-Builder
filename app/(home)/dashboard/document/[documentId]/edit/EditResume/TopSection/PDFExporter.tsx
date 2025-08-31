@@ -29,7 +29,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
     try {
       // Get all stylesheets from the document
       const stylesheets: string[] = [];
-      
+
       // Get inline styles
       const styleElements = document.querySelectorAll('style');
       styleElements.forEach(style => {
@@ -54,7 +54,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
       // Get computed styles for the resume element
       const computedStyles = window.getComputedStyle(resumeElement);
       const importantStyles = ['font-family', 'font-size', 'line-height', 'color', 'background-color'];
-      
+
       let elementStyles = '';
       importantStyles.forEach(prop => {
         const value = computedStyles.getPropertyValue(prop);
@@ -185,7 +185,6 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         description: 'PDF downloaded successfully',
         variant: 'default',
       });
-
     } catch (error) {
       console.error('PDF generation error:', error);
       toast({
@@ -198,16 +197,19 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
     }
   }, [title]);
 
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    void generatePDFFromHTML();
-  }, [generatePDFFromHTML]);
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      void generatePDFFromHTML();
+    },
+    [generatePDFFromHTML]
+  );
 
   return (
     <div onClick={handleClick} style={{ cursor: loading ? 'not-allowed' : 'pointer' }}>
-      {React.cloneElement(children as React.ReactElement<any>, { 
-        onClick: handleClick 
+      {React.cloneElement(children as React.ReactElement<any>, {
+        onClick: handleClick,
       })}
     </div>
   );

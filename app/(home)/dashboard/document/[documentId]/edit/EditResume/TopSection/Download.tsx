@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useState } from 'react';
-import { DownloadCloud } from 'lucide-react';
+import { DownloadIcon } from 'lucide-react';
 import { Button } from '@/components';
 import { toast } from '@/hooks';
 import { formatFileName } from '@/lib/helper';
@@ -61,7 +61,7 @@ const Download = (props: { title: string; isLoading: boolean; status?: StatusTyp
       onClick={handleDownloadClick}
     >
       <div className="flex items-center gap-1">
-        <DownloadCloud size="17px" />
+        <DownloadIcon size="17px" />
         <span className="hidden lg:flex">{loading ? 'Generating PDF' : 'Download Resume'}</span>
       </div>
     </Button>

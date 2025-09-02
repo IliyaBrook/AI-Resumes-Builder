@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from 'react';
 import { toast } from '@/hooks';
 import { formatFileName } from '@/lib/helper';
+import { RESUME_STYLES } from '../../shared/ResumeContent';
 
 interface PDFExporterProps {
   title: string;
@@ -13,11 +14,11 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
   const [loading, setLoading] = useState(false);
 
   const generatePDFFromHTML = useCallback(async () => {
-    const resumeElement = document.getElementById('resume-preview-id');
+    const resumeElement = document.getElementById('resume-content');
     if (!resumeElement) {
       toast({
         title: 'Error',
-        description: 'Could not find resume preview',
+        description: 'Could not find resume content',
         variant: 'destructive',
       });
       return;
@@ -63,6 +64,10 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         }
       });
 
+      // Clone the resume element and add pdf-mode class
+      const clonedElement = resumeElement.cloneNode(true) as HTMLElement;
+      clonedElement.classList.add('pdf-mode');
+      
       // Create complete HTML with all styles
       const completeHTML = `
         <!DOCTYPE html>
@@ -73,6 +78,9 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
           <title>Resume</title>
           <style>
             ${stylesheets.join('\n')}
+            
+            /* Shared resume styles */
+            ${RESUME_STYLES}
             
             /* PDF-specific styles */
             body {
@@ -92,32 +100,8 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
             }
 
             /* Apply computed styles to resume element */
-            #resume-preview-id {
+            #resume-content {
               ${elementStyles}
-            }
-
-            /* Hide interactive elements */
-            .section-wrapper:hover,
-            .section-wrapper.bg-blue-50,
-            .absolute.right-2.top-2,
-            .absolute.left-4.top-4,
-            .cursor-pointer {
-              background: transparent !important;
-              ring: none !important;
-              box-shadow: none !important;
-              cursor: default !important;
-            }
-            
-            .absolute.right-2.top-2,
-            .absolute.left-4.top-4 {
-              display: none !important;
-            }
-
-            /* Remove hover effects */
-            button:hover,
-            .hover\\:underline:hover {
-              background: inherit !important;
-              text-decoration: none !important;
             }
 
             /* Ensure proper font rendering */
@@ -147,7 +131,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         </head>
         <body>
           <div class="pdf-export">
-            ${resumeElement.outerHTML}
+            ${clonedElement.outerHTML}
           </div>
         </body>
         </html>

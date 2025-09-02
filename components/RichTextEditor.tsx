@@ -109,7 +109,9 @@ export function parseAIResult(value: string): ParsedAIResult {
     } else {
       parsed = {};
     }
-  } catch {}
+  } catch {
+    // Ignore parsing errors
+  }
   if (parsed && typeof parsed === 'object' && (parsed.fresher || parsed.mid || parsed.experienced)) {
     return {
       fresher: parsed.fresher || '',

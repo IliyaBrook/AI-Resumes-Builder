@@ -90,8 +90,8 @@ export async function POST(request: NextRequest) {
 }
 
 // Cleanup on process exit
-process.on('exit', async () => {
+process.on('exit', () => {
   if (browser) {
-    await browser.close();
+    void browser.close();
   }
 });

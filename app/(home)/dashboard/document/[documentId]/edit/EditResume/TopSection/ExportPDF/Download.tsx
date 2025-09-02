@@ -5,14 +5,15 @@ import { DownloadIcon, Eye } from 'lucide-react';
 import { Button } from '@/components';
 import { StatusType } from '@/types';
 import { PDFExporter } from './PDFExporter';
-// import { PDFDebugPreview } from './PDFDebugPreview';
+import { PDFDebugPreview } from './PDFDebugPreview';
 
 const Download = (props: { title: string; isLoading: boolean; status?: StatusType }) => {
   const { title, status, isLoading } = props;
   const [loading, setLoading] = useState(false);
   const [showDebugPreview, setShowDebugPreview] = useState(false);
 
-  const isDebugMode = process.env.NEXT_PUBLIC_DEBUG_PDF === 'true';
+  // Enable debug mode by default, can be controlled via env variable
+  const isDebugMode = process.env.NEXT_PUBLIC_DEBUG_PDF !== 'false';
 
   return (
     <>
@@ -35,18 +36,19 @@ const Download = (props: { title: string; isLoading: boolean; status?: StatusTyp
         {isDebugMode && (
           <Button
             disabled={isLoading || status === 'archived'}
-            variant="outline"
-            size="sm"
-            className="gap-1"
+            variant="secondary"
+            className="lg:min-w-auto min-w-9 gap-1 border bg-white !p-1 dark:bg-gray-800 lg:p-4"
             onClick={() => setShowDebugPreview(true)}
           >
-            <Eye size="16px" />
-            <span className="hidden lg:flex">Debug PDF</span>
+            <div className="flex items-center gap-1">
+              <Eye size="17px" />
+              <span className="hidden lg:flex">Preview PDF</span>
+            </div>
           </Button>
         )}
       </div>
 
-      {/*<PDFDebugPreview title={title} onClose={() => setShowDebugPreview(false)} />*/}
+      <PDFDebugPreview title={title} isOpen={showDebugPreview} onCloseAction={() => setShowDebugPreview(false)} />
     </>
   );
 };

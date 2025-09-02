@@ -29,7 +29,6 @@ const LanguageForm = () => {
 
   const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.languagesSectionTitle || 'Languages');
   const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>(resumeInfo?.languages || []);
-  const debouncedLanguages = useDebounce(localLanguages, 500);
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {

@@ -48,7 +48,7 @@ const Download = (props: { title: string; isLoading: boolean; status?: StatusTyp
         )}
       </div>
 
-      <PDFDebugPreview title={title} isOpen={showDebugPreview} onCloseAction={() => setShowDebugPreview(false)} />
+      <PDFDebugPreview isOpen={showDebugPreview} onCloseAction={() => setShowDebugPreview(false)} />
     </>
   );
 };

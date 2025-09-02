@@ -1,6 +1,6 @@
 'use client';
 import { DEFAULT_PAGES_ORDER, syncPagesOrder } from '@/constant/resume-sections';
-import { ResumeContent, normalizeResumeData } from './shared/ResumeContent';
+import { normalizeResumeData, ResumeContent } from './shared/ResumeContent';
 
 //hooks
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
@@ -86,7 +86,6 @@ const ResumePreview = () => {
     updatePagesOrder(newOrder);
   };
 
-
   const renderSectionWrapper = (sectionKey: string, component: React.ReactNode, isSelected: boolean) => {
     const currentIndex = currentOrder.indexOf(sectionKey);
     const canMoveUpLocal = currentIndex > 0;
@@ -161,7 +160,7 @@ const ResumePreview = () => {
           Selected section: {selectedSection} (ESC to cancel)
         </div>
       )}
-      
+
       <ResumeContent
         resumeInfo={fixedResumeInfo}
         pagesOrder={currentOrder}
@@ -169,7 +168,7 @@ const ResumePreview = () => {
         isLoading={isLoading}
         isInteractive={true}
         selectedSection={selectedSection}
-        onSectionClick={(sectionKey) => setSelectedSection(selectedSection === sectionKey ? null : sectionKey)}
+        onSectionClick={sectionKey => setSelectedSection(selectedSection === sectionKey ? null : sectionKey)}
         renderSectionWrapper={renderSectionWrapper}
       />
     </div>

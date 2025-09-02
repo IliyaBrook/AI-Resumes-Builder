@@ -87,11 +87,7 @@ interface ResumeContentProps {
   isInteractive?: boolean;
   selectedSection?: string | null;
   onSectionClick?: (sectionKey: string) => void;
-  renderSectionWrapper?: (
-    sectionKey: string,
-    component: React.ReactNode,
-    isSelected: boolean
-  ) => React.ReactNode;
+  renderSectionWrapper?: (sectionKey: string, component: React.ReactNode, isSelected: boolean) => React.ReactNode;
 }
 
 export const ResumeContent: React.FC<ResumeContentProps> = ({
@@ -124,7 +120,7 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
             'section-wrapper relative cursor-pointer rounded-md transition-all duration-200',
             isSelected && 'bg-blue-50 p-2 ring-2 ring-blue-500 ring-opacity-50 dark:bg-blue-950 dark:ring-blue-400'
           )}
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             onSectionClick?.(sectionKey);
           }}

@@ -67,7 +67,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
       // Clone the resume element and add pdf-mode class
       const clonedElement = resumeElement.cloneNode(true) as HTMLElement;
       clonedElement.classList.add('pdf-mode');
-      
+
       // Create complete HTML with all styles
       const completeHTML = `
         <!DOCTYPE html>

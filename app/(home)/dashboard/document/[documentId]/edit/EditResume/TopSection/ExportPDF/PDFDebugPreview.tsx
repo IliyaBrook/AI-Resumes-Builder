@@ -36,7 +36,6 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onClos
             </div>
           </div>
         </div>
-
       </DialogContent>
     </Dialog>
   );

@@ -1,0 +1,78 @@
+#resume-content ul, #resume-content ol {
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+#resume-content ul li {
+    list-style-type: none;
+}
+
+#resume-content ol li {
+    counter-increment: item;
+}
+
+#resume-content ol li::before {
+    content: counter(item) ". ";
+    font-size: 1.1em;
+    margin-right: 6px;
+    color: #333;
+}
+
+#resume-content ol {
+    counter-reset: item;
+}
+
+/* Hide interactive elements in print/PDF mode */
+.pdf-mode .section-wrapper:hover,
+.pdf-mode .section-wrapper.bg-blue-50,
+.pdf-mode .absolute.right-2.top-2,
+.pdf-mode .absolute.left-4.top-4,
+.pdf-mode .cursor-pointer {
+    background: transparent !important;
+    /*noinspection CssUnknownProperty*/
+    ring: none !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
+
+.pdf-mode .absolute.right-2.top-2,
+.pdf-mode .absolute.left-4.top-4 {
+    display: none !important;
+}
+
+.pdf-mode button:hover,
+.pdf-mode .hover\:underline:hover {
+    background: inherit !important;
+    text-decoration: none !important;
+}
+
+@media print {
+    #resume-content ul {
+        list-style-position: inside;
+        padding-left: 18px;
+        margin-left: 0;
+    }
+
+    #resume-content li {
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .section-wrapper:hover,
+    .section-wrapper.bg-blue-50,
+    .absolute.right-2.top-2,
+    .absolute.left-4.top-4,
+    .cursor-pointer {
+        background: transparent !important;
+        /*noinspection CssUnknownProperty*/
+        ring: none !important;
+        box-shadow: none !important;
+        cursor: default !important;
+    }
+
+    .absolute.right-2.top-2,
+    .absolute.left-4.top-4 {
+        display: none !important;
+    }
+}

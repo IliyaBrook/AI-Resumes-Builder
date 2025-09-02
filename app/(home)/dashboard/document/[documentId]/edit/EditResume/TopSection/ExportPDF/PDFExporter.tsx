@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from 'react';
 import { toast } from '@/hooks';
 import { formatFileName } from '@/lib/helper';
-import { RESUME_STYLES } from '../../shared/ResumeContent';
+import RESUME_STYLES from '../../shared/resume-styles.css?inline';
 
 interface PDFExporterProps {
   title: string;

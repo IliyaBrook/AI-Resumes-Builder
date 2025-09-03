@@ -8,5 +8,13 @@ const nextConfig = {
     });
     return config;
   },
+  turbopack: {
+    rules: {
+      '*.html': {
+        loaders: ['raw-loader'],
+        as: '*.js',
+      },
+    },
+  },
 };
 export default nextConfig;

@@ -6,8 +6,7 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "projectService": true,
-    "tsconfigRootDir": "."
+    "project": "./tsconfig.json"
   },
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended-type-checked", "next/core-web-vitals"],
   "rules": {

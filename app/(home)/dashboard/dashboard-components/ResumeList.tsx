@@ -10,7 +10,7 @@ const ResumeList = () => {
   const resumes = data?.data ?? [];
 
   useEffect(() => {
-    refetch();
+    void refetch();
   }, [refetch]);
 
   const onDuplicate = useCallback(

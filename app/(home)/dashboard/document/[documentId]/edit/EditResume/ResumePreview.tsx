@@ -1,5 +1,6 @@
 'use client';
-import { DEFAULT_PAGES_ORDER, SECTION_COMPONENTS, type SectionKey, syncPagesOrder } from '@/constant/resume-sections';
+import { DEFAULT_PAGES_ORDER, syncPagesOrder } from '@/constant/resume-sections';
+import { normalizeResumeData, ResumeContent } from './shared/ResumeContent';
 
 //hooks
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
@@ -9,52 +10,6 @@ import { Button } from '@/components';
 import { MoveDown, MoveUp } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
-
-const RESUME_STYLES = `
-  #resume-preview-id ul, #resume-preview-id ol {
-    list-style: none;
-    padding-left: 0;
-    margin-left: 0;
-  }
-  #resume-preview-id ul li {
-    list-style-type: none;
-  }
- 
-  #resume-preview-id ol li {
-    counter-increment: item;
-  }
-  #resume-preview-id ol li::before {
-    content: counter(item) ". ";
-    font-size: 1.1em;
-    margin-right: 6px;
-    color: #333;
-  }
-  #resume-preview-id ol {
-    counter-reset: item;
-  }
-  @media print {
-    #resume-preview-id ul {
-      list-style-position: inside;
-      padding-left: 18px;
-      margin-left: 0;
-    }
-    #resume-preview-id li {
-      // list-style-type: disc;
-      margin-left: 0;
-      padding-left: 0;
-    }
-  }
-`;
-
-function normalizeResumeData(data: any) {
-  if (!data) return data;
-  if (data.projectsSectionTitle === null) {
-    const { projectsSectionTitle, ...rest } = data;
-    void projectsSectionTitle;
-    return rest;
-  }
-  return data;
-}
 
 const ResumePreview = () => {
   const param = useParams();
@@ -131,14 +86,10 @@ const ResumePreview = () => {
     updatePagesOrder(newOrder);
   };
 
-  const canMoveUp = selectedSection && currentOrder.indexOf(selectedSection) > 0;
-  const canMoveDown = selectedSection && currentOrder.indexOf(selectedSection) < currentOrder.length - 1;
-
-  const renderSection = (sectionKey: string) => {
-    const Component = SECTION_COMPONENTS[sectionKey as SectionKey];
-    if (!Component) return null;
-
-    const isSelected = selectedSection === sectionKey;
+  const renderSectionWrapper = (sectionKey: string, component: React.ReactNode, isSelected: boolean) => {
+    const currentIndex = currentOrder.indexOf(sectionKey);
+    const canMoveUpLocal = currentIndex > 0;
+    const canMoveDownLocal = currentIndex < currentOrder.length - 1;
 
     return (
       <div
@@ -153,7 +104,7 @@ const ResumePreview = () => {
         }}
         title={`Click to select "${sectionKey}" section`}
       >
-        <Component isLoading={isLoading} resumeInfo={fixedResumeInfo} />
+        {component}
 
         {isSelected && (
           <div className="absolute right-2 top-2 flex flex-col gap-1 rounded-md border bg-white p-1 shadow-lg dark:border-gray-600 dark:bg-gray-800">
@@ -163,13 +114,13 @@ const ResumePreview = () => {
               type="button"
               className={cn(
                 'size-6 hover:bg-gray-100 dark:hover:bg-gray-700',
-                !canMoveUp && 'cursor-not-allowed opacity-50'
+                !canMoveUpLocal && 'cursor-not-allowed opacity-50'
               )}
               onClick={e => {
                 e.stopPropagation();
                 moveSection('up');
               }}
-              disabled={!canMoveUp}
+              disabled={!canMoveUpLocal}
               title="Move section up"
             >
               <MoveUp size={14} />
@@ -180,13 +131,13 @@ const ResumePreview = () => {
               type="button"
               className={cn(
                 'size-6 hover:bg-gray-100 dark:hover:bg-gray-700',
-                !canMoveDown && 'cursor-not-allowed opacity-50'
+                !canMoveDownLocal && 'cursor-not-allowed opacity-50'
               )}
               onClick={e => {
                 e.stopPropagation();
                 moveSection('down');
               }}
-              disabled={!canMoveDown}
+              disabled={!canMoveDownLocal}
               title="Move section down"
             >
               <MoveDown size={14} />
@@ -201,23 +152,25 @@ const ResumePreview = () => {
     <div
       ref={containerRef}
       id="resume-preview-id"
-      className={cn(
-        `relative h-full w-full flex-[1.02] bg-white px-10 py-4 !font-open-sans shadow-lg dark:border dark:border-x-gray-800 dark:border-b-gray-800 dark:bg-card`
-      )}
-      style={{
-        borderTop: `13px solid ${fixedResumeInfo?.themeColor}`,
-      }}
+      className="relative h-full w-full flex-[1.02]"
       onClick={() => setSelectedSection(null)}
     >
-      <style dangerouslySetInnerHTML={{ __html: RESUME_STYLES }} />
-
       {selectedSection && (
         <div className="absolute left-4 top-4 z-10 rounded-md bg-white px-2 py-1 text-xs text-gray-500 shadow-sm dark:bg-gray-800">
           Selected section: {selectedSection} (ESC to cancel)
         </div>
       )}
 
-      {currentOrder.map(renderSection)}
+      <ResumeContent
+        resumeInfo={fixedResumeInfo}
+        pagesOrder={currentOrder}
+        themeColor={fixedResumeInfo?.themeColor}
+        isLoading={isLoading}
+        isInteractive={true}
+        selectedSection={selectedSection}
+        onSectionClick={sectionKey => setSelectedSection(selectedSection === sectionKey ? null : sectionKey)}
+        renderSectionWrapper={renderSectionWrapper}
+      />
     </div>
   );
 };

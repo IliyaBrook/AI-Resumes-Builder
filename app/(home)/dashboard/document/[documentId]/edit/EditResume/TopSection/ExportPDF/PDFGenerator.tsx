@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Document, Font, Link, Page, PDFDownloadLink, StyleSheet, Text, View } from '@react-pdf/renderer';
-import { ResumeDataType } from '@/types/resume.type';
+import { ResumeDataType } from '@/types';
 import { formatDateByLocale } from '@/lib/utils';
 
 Font.register({

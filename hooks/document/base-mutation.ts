@@ -60,11 +60,15 @@ export const useBaseMutation = <TData, TVariables>({
     },
     onSuccess: (data, variables) => {
       invalidateQueries.forEach(queryKey => {
-        queryClient.invalidateQueries({
-          queryKey: queryKey.includes('documentId')
-            ? queryKey.map(key => (key === 'documentId' ? documentId : key))
-            : queryKey,
-        });
+        queryClient
+          .invalidateQueries({
+            queryKey: queryKey.includes('documentId')
+              ? queryKey.map(key => (key === 'documentId' ? documentId : key))
+              : queryKey,
+          })
+          .catch(error => {
+            console.error('Error invalidating query:', error);
+          });
       });
 
       if (showSuccessToast) {

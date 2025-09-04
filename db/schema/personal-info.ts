@@ -1,4 +1,4 @@
-import { integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 import { documentTable } from './document';
 import { relations } from 'drizzle-orm';

@@ -1,10 +1,10 @@
 'use client';
-import React, { useEffect, useCallback, useMemo } from 'react';
-import { Input, Button } from '@/components';
-import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Button, Input } from '@/components';
+import { MoveDown, MoveUp, Plus, X } from 'lucide-react';
 import { ResumeDataType, SkillType } from '@/types/resume.type';
-// import { useDebounce, useCreateSkill, useDeleteSkill } from '@/hooks';
-// import { useSkillInputHandler } from './hooks';
+import { useCreateSkill, useDebounce, useDeleteSkill } from '@/hooks';
+import { useSkillInputHandler } from './hooks';
 
 interface CategorySkillsFormProps {
   resumeInfo: ResumeDataType | undefined;
@@ -14,9 +14,8 @@ interface CategorySkillsFormProps {
 const toJsonString = (value: any) => JSON.stringify(value, null);
 
 const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) => {
-  // COMMENTED OUT - Database operations for testing local logic
-  // const { mutate: deleteSkill } = useDeleteSkill();
-  // const { mutateAsync: createSkill, isPending: isCreating } = useCreateSkill();
+  const { mutate: deleteSkill } = useDeleteSkill();
+  const { mutateAsync: createSkill, isPending: isCreating } = useCreateSkill();
 
   const [newCategoryName, setNewCategoryName] = React.useState('');
   const [editingCategory, setEditingCategory] = React.useState<string | null>(null);
@@ -24,16 +23,14 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
   const [localSkillInputs, setLocalSkillInputs] = React.useState<Record<number, string>>({});
   const [localCategoryInputs, setLocalCategoryInputs] = React.useState<Record<number, string>>({});
 
-  // COMMENTED OUT - Database sync for testing local logic
-  // const debouncedSkillInputs = useDebounce(localSkillInputs, 500);
-  // const debouncedCategoryInputs = useDebounce(localCategoryInputs, 500);
+  const debouncedSkillInputs = useDebounce(localSkillInputs, 500);
+  const debouncedCategoryInputs = useDebounce(localCategoryInputs, 500);
 
-  // COMMENTED OUT - Database updates for testing local logic
-  // const { updateSkill } = useSkillInputHandler({
-  //   debouncedSkillInputs,
-  //   debouncedCategoryInputs,
-  //   resumeInfo,
-  // });
+  const { updateSkill } = useSkillInputHandler({
+    debouncedSkillInputs,
+    debouncedCategoryInputs,
+    resumeInfo,
+  });
 
   // LOCAL STATE for testing - simulating skills data
   const [localSkillsData, setLocalSkillsData] = React.useState<SkillType[]>([]);
@@ -47,8 +44,6 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
 
   // Group skills by category with proper sorting - USING LOCAL DATA
   const { skillsByCategory, sortedCategoryKeys } = useMemo(() => {
-    console.log('LOCAL TEST - Recalculating skillsByCategory, localSkillsData:', toJsonString(localSkillsData));
-
     if (!localSkillsData.length) return { skillsByCategory: {}, sortedCategoryKeys: [] };
 
     const grouped: Record<string, SkillType[]> = {};
@@ -61,23 +56,14 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
       });
     });
 
-    console.log('LOCAL TEST - Grouped before sorting:', toJsonString(grouped));
-
     const categoryKeys = Object.keys(grouped);
-
-    console.log('LOCAL TEST - Category keys before sorting:', toJsonString(categoryKeys));
-
     const sortedKeys = categoryKeys.sort((a, b) => {
       const aMinOrder =
         grouped[a].length > 0 ? Math.min(...grouped[a].map((skill: SkillType) => skill.categoryOrder || 0)) : 0;
       const bMinOrder =
         grouped[b].length > 0 ? Math.min(...grouped[b].map((skill: SkillType) => skill.categoryOrder || 0)) : 0;
-
-      console.log(`LOCAL TEST - Sorting categories: ${a}(${aMinOrder}) vs ${b}(${bMinOrder})`);
       return aMinOrder - bMinOrder;
     });
-
-    console.log('LOCAL TEST - Sorted category keys:', toJsonString(sortedKeys));
 
     // Sort skills within each category by skillOrder
     const skillsByCategory: Record<string, SkillType[]> = {};
@@ -85,39 +71,8 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
       skillsByCategory[categoryName] = grouped[categoryName].sort((a, b) => (a.skillOrder || 0) - (b.skillOrder || 0));
     });
 
-    console.log('LOCAL TEST - Final sorted grouped:', toJsonString(skillsByCategory));
-    console.log('LOCAL TEST - Final sortedCategoryKeys:', toJsonString(sortedKeys));
-
     return { skillsByCategory, sortedCategoryKeys: sortedKeys };
   }, [localSkillsData]);
-
-  // COMMENTED OUT - Database sync for testing local logic
-  // useEffect(() => {
-  //   if (resumeInfo?.skills) {
-  //     setLocalSkillInputs(prev => {
-  //       const newInputs: Record<number, string> = {};
-  //       resumeInfo.skills!.forEach((skill: SkillType) => {
-  //         if (skill.id) {
-  //           newInputs[skill.id] = prev[skill.id] !== undefined ? prev[skill.id] : skill.name || '';
-  //         }
-  //       });
-  //       return newInputs;
-  //     });
-
-  //     setLocalCategoryInputs(prev => {
-  //       const newInputs: Record<number, string> = {};
-  //       resumeInfo.skills!.forEach((skill: SkillType) => {
-  //         if (skill.id) {
-  //           // Only set if not already set or if it's actually different
-  //           const currentValue = prev[skill.id];
-  //           const serverValue = skill.category || '';
-  //           newInputs[skill.id] = currentValue !== undefined ? currentValue : serverValue;
-  //         }
-  //       });
-  //       return newInputs;
-  //     });
-  //   }
-  // }, [resumeInfo?.skills?.length]);
 
   // Initialize local inputs from local skills data
   useEffect(() => {
@@ -137,25 +92,20 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
     }
   }, [localSkillsData.length]);
 
-  const handleAddSkillToCategory = (category: string) => {
+  const handleAddSkillToCategory = async (category: string) => {
     const categorySkills = skillsByCategory[category] || [];
     const maxSkillOrder =
       categorySkills.length > 0 ? Math.max(...categorySkills.map(skill => skill.skillOrder || 0)) : -1;
 
-    // For category order, use existing category order if category exists, or create new one
     let categoryOrder = 0;
     if (categorySkills.length > 0) {
       categoryOrder = categorySkills[0].categoryOrder || 0;
     } else {
-      // New category gets highest order
       const allCategories = Object.keys(skillsByCategory);
       categoryOrder = allCategories.length;
     }
 
-    // LOCAL TESTING - Create new skill with random ID
-    const newSkillId = Math.max(...localSkillsData.map(s => s.id || 0), 0) + 1;
-    const newSkill: SkillType = {
-      id: newSkillId,
+    const newSkill = {
       name: '',
       rating: 0,
       hideRating: false,
@@ -164,29 +114,28 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
       category: category || '',
     };
 
-    console.log('LOCAL TEST - Adding skill:', toJsonString(newSkill));
+    try {
+      const created = await createSkill(newSkill);
+      if (created.id) {
+        setLocalSkillsData(prev => [...prev, created]);
 
-    // Add to local data
-    setLocalSkillsData(prev => [...prev, newSkill]);
-
-    // Add to local inputs
-    setLocalSkillInputs(prev => ({
-      ...prev,
-      [newSkillId]: '',
-    }));
-    setLocalCategoryInputs(prev => ({
-      ...prev,
-      [newSkillId]: category || '',
-    }));
+        setLocalSkillInputs(prev => ({
+          ...prev,
+          [created.id!]: created.name || '',
+        }));
+        setLocalCategoryInputs(prev => ({
+          ...prev,
+          [created.id!]: created.category || '',
+        }));
+      }
+    } catch (error) {
+      console.error('Error creating skill:', error);
+    }
   };
 
   const handleRemoveSkillFromCategory = (skillId: number) => {
-    console.log('LOCAL TEST - Removing skill:', toJsonString(skillId));
-
-    // Remove from local data
+    deleteSkill({ skillId });
     setLocalSkillsData(prev => prev.filter(skill => skill.id !== skillId));
-
-    // Remove from local inputs
     setLocalSkillInputs(prev => {
       const newInputs = { ...prev };
       delete newInputs[skillId];
@@ -200,19 +149,11 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
   };
 
   const handleSkillNameChange = (skillId: number, name: string) => {
-    console.log('LOCAL TEST - Skill name change:', skillId, name);
-
-    // Update local data
     setLocalSkillsData(prev => prev.map(skill => (skill.id === skillId ? { ...skill, name } : skill)));
-
-    // Update local inputs
     setLocalSkillInputs(prev => ({ ...prev, [skillId]: name }));
   };
 
   const handleSkillCategoryChange = (skillId: number, category: string) => {
-    console.log('LOCAL TEST - Skill category change:', skillId, category);
-
-    // Update local data with new category and categoryOrder
     setLocalSkillsData(prev => {
       const targetCategorySkills = prev.filter(s => s.category === category);
       const newCategoryOrder =
@@ -222,14 +163,10 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
         skill.id === skillId ? { ...skill, category, categoryOrder: newCategoryOrder } : skill
       );
     });
-
-    // Update local inputs
     setLocalCategoryInputs(prev => ({ ...prev, [skillId]: category }));
   };
 
   const handleRemoveCategory = (categoryName: string) => {
-    console.log('LOCAL TEST - Removing category:', categoryName);
-
     const skillsInCategory = skillsByCategory[categoryName] || [];
     skillsInCategory.forEach((skill: SkillType) => {
       if (skill.id) {
@@ -238,9 +175,9 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
     });
   };
 
-  const handleAddNewCategory = () => {
+  const handleAddNewCategory = async () => {
     if (!newCategoryName.trim()) return;
-    handleAddSkillToCategory(newCategoryName.trim());
+    await handleAddSkillToCategory(newCategoryName.trim());
     setNewCategoryName('');
   };
 
@@ -251,12 +188,16 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
 
   const handleSaveCategoryName = () => {
     if (!editingCategory || !editCategoryName.trim()) return;
-
-    console.log('LOCAL TEST - Saving category name:', editingCategory, '->', editCategoryName.trim());
-
     const skillsInCategory = skillsByCategory[editingCategory] || [];
+    skillsInCategory.forEach(skill => {
+      if (skill.id) {
+        updateSkill({
+          skillId: skill.id,
+          data: { category: editCategoryName.trim() },
+        });
+      }
+    });
 
-    // Update local data
     setLocalSkillsData(prev =>
       prev.map(skill => (skill.category === editingCategory ? { ...skill, category: editCategoryName.trim() } : skill))
     );
@@ -281,18 +222,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
     const sortedCategories = sortedCategoryKeys;
     const currentIndex = sortedCategories.indexOf(categoryName);
 
-    console.log(
-      'LOCAL TEST - Moving category up:',
-      toJsonString({
-        categoryName,
-        currentIndex,
-        sortedCategories,
-        currentSkillsByCategory: skillsByCategory,
-      })
-    );
-
     if (currentIndex <= 0) {
-      console.log('LOCAL TEST - Cannot move up: already at top or not found');
       return;
     }
 
@@ -300,25 +230,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
     const targetCategoryName = sortedCategories[currentIndex - 1];
     const targetCategorySkills = skillsByCategory[targetCategoryName] || [];
 
-    console.log(
-      'LOCAL TEST - Move up details:',
-      toJsonString({
-        currentCategorySkills: currentCategorySkills.map(s => ({
-          id: s.id,
-          name: s.name,
-          categoryOrder: s.categoryOrder,
-        })),
-        targetCategoryName,
-        targetCategorySkills: targetCategorySkills.map(s => ({
-          id: s.id,
-          name: s.name,
-          categoryOrder: s.categoryOrder,
-        })),
-      })
-    );
-
     if (currentCategorySkills.length === 0) {
-      console.log('LOCAL TEST - Cannot move up: no skills in current category');
       return;
     }
 
@@ -329,22 +241,21 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
         : 0;
 
     const newCategoryOrder = targetCategoryOrder - 1;
-
-    console.log(
-      'LOCAL TEST - Move up calculation:',
-      toJsonString({
-        targetCategoryOrder,
-        newCategoryOrder,
-      })
-    );
+    // Update database - all skills in the current category get new categoryOrder
+    currentCategorySkills.forEach((skill: SkillType) => {
+      if (skill.id) {
+        updateSkill({
+          skillId: skill.id,
+          data: { categoryOrder: newCategoryOrder },
+        });
+      }
+    });
 
     // Update local data - all skills in the current category get new categoryOrder
     setLocalSkillsData(prev => {
       const updated = prev.map(skill =>
         skill.category === categoryName ? { ...skill, categoryOrder: newCategoryOrder } : skill
       );
-
-      console.log('LOCAL TEST - Updated localSkillsData after move up:', updated);
       return updated;
     });
   };
@@ -353,18 +264,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
     const sortedCategories = sortedCategoryKeys;
     const currentIndex = sortedCategories.indexOf(categoryName);
 
-    console.log(
-      'LOCAL TEST - Moving category down:',
-      toJsonString({
-        categoryName,
-        currentIndex,
-        sortedCategories,
-        maxIndex: sortedCategories.length - 1,
-      })
-    );
-
     if (currentIndex >= sortedCategories.length - 1) {
-      console.log('LOCAL TEST - Cannot move down: already at bottom or not found');
       return;
     }
 
@@ -372,25 +272,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
     const targetCategoryName = sortedCategories[currentIndex + 1];
     const targetCategorySkills = skillsByCategory[targetCategoryName] || [];
 
-    console.log(
-      'LOCAL TEST - Move down details:',
-      toJsonString({
-        currentCategorySkills: currentCategorySkills.map(s => ({
-          id: s.id,
-          name: s.name,
-          categoryOrder: s.categoryOrder,
-        })),
-        targetCategoryName,
-        targetCategorySkills: targetCategorySkills.map(s => ({
-          id: s.id,
-          name: s.name,
-          categoryOrder: s.categoryOrder,
-        })),
-      })
-    );
-
     if (currentCategorySkills.length === 0) {
-      console.log('LOCAL TEST - Cannot move down: no skills in current category');
       return;
     }
 
@@ -401,23 +283,19 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
         : 0;
 
     const newCategoryOrder = targetCategoryOrder + 1;
+    currentCategorySkills.forEach((skill: SkillType) => {
+      if (skill.id) {
+        updateSkill({
+          skillId: skill.id,
+          data: { categoryOrder: newCategoryOrder },
+        });
+      }
+    });
 
-    console.log(
-      'LOCAL TEST - Move down calculation:',
-      toJsonString({
-        targetCategoryOrder,
-        newCategoryOrder,
-      })
-    );
-
-    // Update local data - all skills in the current category get new categoryOrder
     setLocalSkillsData(prev => {
-      const updated = prev.map(skill =>
+      return prev.map(skill =>
         skill.category === categoryName ? { ...skill, categoryOrder: newCategoryOrder } : skill
       );
-
-      console.log('LOCAL TEST - Updated localSkillsData after move down:', toJsonString(updated));
-      return updated;
     });
   };
 
@@ -426,12 +304,12 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
   };
 
   const handleAddNewCategoryClick = useCallback(() => {
-    handleAddNewCategory();
+    void handleAddNewCategory();
   }, [handleAddNewCategory]);
 
   const handleAddSkillToCategoryClick = useCallback(
     (categoryName: string) => {
-      handleAddSkillToCategory(categoryName);
+      void handleAddSkillToCategory(categoryName);
     },
     [handleAddSkillToCategory]
   );
@@ -574,7 +452,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
                   variant="outline"
                   className="mt-2 gap-1"
                   onClick={() => handleAddSkillToCategoryClick(categoryName)}
-                  disabled={false}
+                  disabled={isCreating}
                 >
                   <Plus size="15px" /> Add skill
                 </Button>
@@ -588,7 +466,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
             variant="outline"
             className="gap-1"
             onClick={() => handleAddSkillToCategoryClick('')}
-            disabled={false}
+            disabled={isCreating}
           >
             <Plus size="15px" /> Add first skill
           </Button>

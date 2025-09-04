@@ -69,9 +69,9 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
     <div
       id="resume-content"
       className={cn(
-        'relative h-full w-full bg-white px-10 py-4 !font-open-sans'
-        // isPdfMode && 'pdf-mode',
-        // !isPdfMode && 'shadow-lg dark:border dark:border-x-gray-800 dark:border-b-gray-800 dark:bg-card'
+        'relative h-full w-full bg-white px-10 py-4 !font-open-sans',
+        isPdfMode && 'pdf-mode',
+        !isPdfMode && 'shadow-lg dark:border dark:border-x-gray-800 dark:border-b-gray-800 dark:bg-card'
       )}
       style={{
         borderTop: `13px solid ${themeColor}`,

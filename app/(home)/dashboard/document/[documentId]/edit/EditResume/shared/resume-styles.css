@@ -24,28 +24,28 @@
 /*}*/
 
 /* Hide interactive elements in print/PDF mode */
-/*.pdf-mode .section-wrapper:hover,*/
-/*.pdf-mode .section-wrapper.bg-blue-50,*/
-/*.pdf-mode .absolute.right-2.top-2,*/
-/*.pdf-mode .absolute.left-4.top-4,*/
-/*.pdf-mode .cursor-pointer {*/
-/*    background: transparent !important;*/
-/*    !*noinspection CssUnknownProperty*!*/
-/*    ring: none !important;*/
-/*    box-shadow: none !important;*/
-/*    cursor: default !important;*/
-/*}*/
+.pdf-mode .section-wrapper:hover,
+.pdf-mode .section-wrapper.bg-blue-50,
+.pdf-mode .absolute.right-2.top-2,
+.pdf-mode .absolute.left-4.top-4,
+.pdf-mode .cursor-pointer {
+    background: transparent !important;
+    /*noinspection CssUnknownProperty*/
+    ring: none !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
 
-/*.pdf-mode .absolute.right-2.top-2,*/
-/*.pdf-mode .absolute.left-4.top-4 {*/
-/*    display: none !important;*/
-/*}*/
+.pdf-mode .absolute.right-2.top-2,
+.pdf-mode .absolute.left-4.top-4 {
+    display: none !important;
+}
 
-/*.pdf-mode button:hover,*/
-/*.pdf-mode .hover\:underline:hover {*/
-/*    background: inherit !important;*/
-/*    text-decoration: none !important;*/
-/*}*/
+.pdf-mode button:hover,
+.pdf-mode .hover\:underline:hover {
+    background: inherit !important;
+    text-decoration: none !important;
+}
 
 @media print {
     #resume-content ul {
@@ -85,7 +85,7 @@ ul {
 ul li,
 ol li {
     position: relative;
-    padding-left: 1em;
+    padding-left: 1em !important;
 }
 
 /*  LI STYLES ADDITIONAL  */

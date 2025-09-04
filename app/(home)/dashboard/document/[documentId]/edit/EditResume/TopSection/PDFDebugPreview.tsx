@@ -38,8 +38,7 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ title, onClose
           const href = (link as HTMLLinkElement).href;
           if (href && (href.startsWith(window.location.origin) || href.startsWith('/'))) {
             const response = await fetch(href);
-            const css = await response.text();
-            return css;
+            return await response.text();
           }
         } catch (e) {
           console.warn('Could not load stylesheet:', e);
@@ -72,7 +71,7 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ title, onClose
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Resume Debug Preview</title>
             <style>
-              ${stylesheets.join('\n')}
+              ${stylesheets.join('\n')};
               
               /* PDF-specific styles */
               body {

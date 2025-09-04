@@ -45,7 +45,7 @@ const SkillsForm = () => {
     if (format !== 'byCategory') return {};
     const grouped: Record<string, SkillType[]> = {};
     (resumeInfo?.skills || []).forEach((skill: SkillType) => {
-      const category = skill.category || 'General';
+      const category = skill.category || '';
       if (!grouped[category]) grouped[category] = [];
       grouped[category].push({
         ...skill,
@@ -629,7 +629,7 @@ const SkillsForm = () => {
                 type="button"
                 variant="outline"
                 className="gap-1"
-                onClick={() => handleAddSkillToCategoryClick('General')}
+                onClick={() => handleAddSkillToCategoryClick('')}
               >
                 <Plus size="15px" /> Add first skill
               </Button>

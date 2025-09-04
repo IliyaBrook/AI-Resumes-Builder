@@ -34,8 +34,16 @@ export type SkillType = {
   name: string | null;
   rating?: number;
   hideRating?: boolean;
-  order?: number;
+  skillOrder?: number;
+  categoryOrder?: number;
   category?: string;
+};
+
+export type SkillCategoryType = {
+  id?: number;
+  docId?: string | null;
+  name: string;
+  displayOrder: number;
 };
 
 export type PersonalInfoType = {

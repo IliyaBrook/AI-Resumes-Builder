@@ -13,7 +13,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   if (isLoading) {
     return <SkeletonLoader />;
   }
-  const skills = (resumeInfo?.skills || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+  const skills = (resumeInfo?.skills || []).slice().sort((a, b) => (a.skillOrder || 0) - (b.skillOrder || 0));
   const hideRating = !!skills[0]?.hideRating;
   const displayFormat = resumeInfo?.skillsDisplayFormat || 'default';
 
@@ -29,8 +29,8 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     );
 
     const sortedCategories = Object.keys(skillsByCategory).sort((a, b) => {
-      const aMinOrder = Math.min(...skillsByCategory[a].map(skill => skill.order || 0));
-      const bMinOrder = Math.min(...skillsByCategory[b].map(skill => skill.order || 0));
+      const aMinOrder = Math.min(...skillsByCategory[a].map(skill => skill.categoryOrder || 0));
+      const bMinOrder = Math.min(...skillsByCategory[b].map(skill => skill.categoryOrder || 0));
       return aMinOrder - bMinOrder;
     });
 
@@ -48,7 +48,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               </span>
               <span className="text-[12px] text-gray-700">
                 {skillsByCategory[categoryName]
-                  .sort((a, b) => (a.order || 0) - (b.order || 0))
+                  .sort((a, b) => (a.skillOrder || 0) - (b.skillOrder || 0))
                   .map(skill => skill.name)
                   .join(', ')}
               </span>

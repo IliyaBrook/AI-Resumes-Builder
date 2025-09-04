@@ -128,7 +128,7 @@ export function parseAIResult(value: string): ParsedAIResult {
   } else if (Array.isArray(parsed)) {
     htmlValue = parsed.filter(x => typeof x === 'string').join('\n');
   }
-  
+
   htmlValue = htmlValue.trim();
   if (htmlValue.startsWith('"') && htmlValue.endsWith('"')) {
     htmlValue = htmlValue.slice(1, -1);

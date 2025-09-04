@@ -1,8 +1,13 @@
 'use client';
 
 import React, { useCallback, useState } from 'react';
-import { toast } from '@/hooks';
+import { createRoot } from 'react-dom/client';
+import { toast, useGetDocumentById } from '@/hooks';
 import { formatFileName } from '@/lib/helper';
+import { useParams } from 'next/navigation';
+import { normalizeResumeData, ResumeContent } from '../../shared/ResumeContent';
+import { DEFAULT_PAGES_ORDER } from '@/constant/resume-sections';
+import RESUME_STYLES from '../../shared/resume-styles.css?inline';
 
 interface PDFExporterProps {
   title: string;
@@ -11,13 +16,18 @@ interface PDFExporterProps {
 
 export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => {
   const [loading, setLoading] = useState(false);
+  const param = useParams();
+  const documentId = param.documentId as string;
+  const { data } = useGetDocumentById(documentId);
+  const fixedResumeInfo = normalizeResumeData(data?.data);
+  const pagesOrder = fixedResumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER;
+  const themeColor = fixedResumeInfo?.themeColor || '#3b82f6';
 
   const generatePDFFromHTML = useCallback(async () => {
-    const resumeElement = document.getElementById('resume-preview-id');
-    if (!resumeElement) {
+    if (!fixedResumeInfo) {
       toast({
         title: 'Error',
-        description: 'Could not find resume preview',
+        description: 'Resume data not available',
         variant: 'destructive',
       });
       return;
@@ -27,14 +37,42 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
     const fileName = formatFileName(title);
 
     try {
+      // Create a temporary container for rendering
+      const tempContainer = document.createElement('div');
+      tempContainer.id = 'pdf-temp-container';
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.width = '210mm';
+      document.body.appendChild(tempContainer);
+
+      // Render the ResumeContent component
+      const root = createRoot(tempContainer);
+      await new Promise<void>((resolve) => {
+        root.render(
+          <ResumeContent
+            resumeInfo={fixedResumeInfo}
+            pagesOrder={pagesOrder}
+            themeColor={themeColor}
+            isLoading={false}
+            isPdfMode={true}
+            isInteractive={false}
+          />
+        );
+        // Give React time to render
+        setTimeout(resolve, 100);
+      });
+
+      // Get the rendered HTML
+      const resumeElement = tempContainer.querySelector('#resume-content');
+      if (!resumeElement) {
+        throw new Error('Could not render resume content');
+      }
+
       // Get all stylesheets from the document
       const stylesheets: string[] = [];
-
-      // Get inline styles
-      const styleElements = document.querySelectorAll('style');
-      styleElements.forEach(style => {
-        stylesheets.push(style.innerHTML);
-      });
+      
+      // Add resume-specific styles
+      stylesheets.push(RESUME_STYLES);
 
       // Get external stylesheets (like Tailwind) - only from same origin
       const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
@@ -51,18 +89,6 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         }
       }
 
-      // Get computed styles for the resume element
-      const computedStyles = window.getComputedStyle(resumeElement);
-      const importantStyles = ['font-family', 'font-size', 'line-height', 'color', 'background-color'];
-
-      let elementStyles = '';
-      importantStyles.forEach(prop => {
-        const value = computedStyles.getPropertyValue(prop);
-        if (value) {
-          elementStyles += `${prop}: ${value} !important; `;
-        }
-      });
-
       // Create complete HTML with all styles
       const completeHTML = `
         <!DOCTYPE html>
@@ -72,7 +98,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Resume</title>
           <style>
-            ${stylesheets.join('\n')}
+            ${stylesheets.join('\\n')}
             
             /* PDF-specific styles */
             body {
@@ -81,6 +107,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
               -webkit-print-color-adjust: exact !important;
               color-adjust: exact !important;
               print-color-adjust: exact !important;
+              font-family: 'Open Sans', sans-serif;
             }
             
             .pdf-export {
@@ -89,60 +116,6 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
               margin: 0;
               padding: 0;
               box-sizing: border-box;
-            }
-
-            /* Fix list styling for PDF - Keep original content bullets, remove CSS bullets */
-            .exp-preview ul {
-              list-style-type: none !important;
-              list-style-position: outside !important;
-              padding-left: 0.85em !important;
-              margin: 0 !important;
-            }
-            
-            .exp-preview li {
-              display: block !important;
-              margin-bottom: 0.2em !important;
-              text-indent: 0 !important;
-              padding-left: 0 !important;
-              list-style-type: none !important;
-            }
-            
-            /* Ensure other lists still work properly */
-            #resume-preview-id ul:not(.exp-preview ul) {
-              list-style-type: disc !important;
-              padding-left: 1.2em !important;
-            }
-            
-            #resume-preview-id li:not(.exp-preview li) {
-              display: list-item !important;
-            }
-
-            /* Apply computed styles to resume element */
-            #resume-preview-id {
-              ${elementStyles}
-            }
-
-            /* Hide interactive elements */
-            .section-wrapper:hover,
-            .section-wrapper.bg-blue-50,
-            .absolute.right-2.top-2,
-            .absolute.left-4.top-4,
-            .cursor-pointer {
-              background: transparent !important;
-              box-shadow: none !important;
-              cursor: default !important;
-            }
-            
-            .absolute.right-2.top-2,
-            .absolute.left-4.top-4 {
-              display: none !important;
-            }
-
-            /* Remove hover effects */
-            button:hover,
-            .hover\\:underline:hover {
-              background: inherit !important;
-              text-decoration: none !important;
             }
 
             /* Ensure proper font rendering */
@@ -177,6 +150,10 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         </body>
         </html>
       `;
+
+      // Clean up the temporary container
+      root.unmount();
+      document.body.removeChild(tempContainer);
 
       // Send to API route for PDF generation
       const response = await fetch('/api/pdf-export', {
@@ -220,7 +197,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
     } finally {
       setLoading(false);
     }
-  }, [title]);
+  }, [title, fixedResumeInfo, pagesOrder, themeColor]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {

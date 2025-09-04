@@ -21,7 +21,7 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onClos
 
   return (
     <Dialog open={isOpen} onOpenChange={onCloseAction}>
-      <DialogContent className="max-h-[90vh] max-w-[900px] p-0">
+      <DialogContent className="max-h-[90vh] max-w-[900px] p-0" aria-describedby="PDF Debug Preview">
         <div className="h-full max-h-[85vh] overflow-y-auto p-6">
           <div className="mx-auto" style={{ width: '210mm', minHeight: '297mm' }}>
             <div className="rounded-lg border bg-white shadow-lg">

@@ -47,7 +47,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
 
       // Render the ResumeContent component
       const root = createRoot(tempContainer);
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         root.render(
           <ResumeContent
             resumeInfo={fixedResumeInfo}
@@ -70,7 +70,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
 
       // Get all stylesheets from the document
       const stylesheets: string[] = [];
-      
+
       // Add resume-specific styles
       stylesheets.push(RESUME_STYLES);
 

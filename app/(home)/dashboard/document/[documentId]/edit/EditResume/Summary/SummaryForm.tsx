@@ -151,13 +151,16 @@ const SummaryForm = () => {
     }
   };
 
-  const handleSelect = useCallback((summary: string) => {
-    if (editorRef.current) {
-      editorRef.current.setValue(summary);
-    }
-    setLocalSummary(summary);
-    setResumeInfo({ summary });
-  }, [setResumeInfo]);
+  const handleSelect = useCallback(
+    (summary: string) => {
+      if (editorRef.current) {
+        editorRef.current.setValue(summary);
+      }
+      setLocalSummary(summary);
+      setResumeInfo({ summary });
+    },
+    [setResumeInfo]
+  );
 
   const handleGenerateAI = useCallback(() => {
     void GenerateSummaryFromAI();

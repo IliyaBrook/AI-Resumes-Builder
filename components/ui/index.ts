@@ -16,6 +16,6 @@ export {
   ToastViewport,
   type ToastProps,
   type ToastActionElement,
-} from './toast';
+} from './toast/toast';
 export { Toaster } from './toaster';
 export { Tooltip } from './tooltip';

@@ -127,16 +127,13 @@ export function parseAIResult(value: string): ParsedAIResult {
     htmlValue = `<ul>${parsed.experience.map((item: string) => `<li>${item}</li>`).join('')}</ul>`;
   } else if (Array.isArray(parsed)) {
     htmlValue = parsed.filter(x => typeof x === 'string').join('\n');
-  } else if (typeof parsed === 'string') {
-    htmlValue = parsed;
   }
-  if (typeof htmlValue === 'string') {
-    htmlValue = htmlValue.trim();
-    if (htmlValue.startsWith('"') && htmlValue.endsWith('"')) {
-      htmlValue = htmlValue.slice(1, -1);
-    }
-    htmlValue = htmlValue.replace(/\\n/g, '').replace(/\n/g, '');
+  
+  htmlValue = htmlValue.trim();
+  if (htmlValue.startsWith('"') && htmlValue.endsWith('"')) {
+    htmlValue = htmlValue.slice(1, -1);
   }
+  htmlValue = htmlValue.replace(/\\n/g, '').replace(/\n/g, '');
 
   return htmlValue;
 }

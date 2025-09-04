@@ -23,7 +23,7 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     return `https://${url}`;
   };
 
-  if (isLoading || !resumeInfo?.personalInfo) {
+  if (isLoading) {
     return <SkeletonLoader />;
   }
 

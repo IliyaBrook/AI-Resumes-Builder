@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { cva, type VariantProps } from 'class-variance-authority';
+import styles from './toast.module.css';
 
 import { cn } from '@/lib/utils';
 
@@ -43,7 +44,9 @@ const Toast = React.forwardRef<
   React.ComponentRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
-  return <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />;
+  return (
+    <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className, styles.toast)} {...props} />
+  );
 });
 Toast.displayName = ToastPrimitives.Root.displayName;
 

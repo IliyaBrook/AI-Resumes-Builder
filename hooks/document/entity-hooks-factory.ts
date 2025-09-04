@@ -100,7 +100,7 @@ export const createEntityHooks = (entityType: keyof typeof entityConfigs) => {
     return useBaseMutation<TData, any>({
       mutationFn: async data => {
         const transformedData = transformData ? transformData(data) : data;
-        const response = await (api.document)[`${config.endpoint}/create`].$post({
+        const response = await api.document[`${config.endpoint}/create`].$post({
           json: transformedData,
         });
         return await response.json();
@@ -114,7 +114,7 @@ export const createEntityHooks = (entityType: keyof typeof entityConfigs) => {
   const useUpdateEntity = <TData = any>() => {
     return useBaseMutation<TData, { id: number; data: any }>({
       mutationFn: async ({ id, data }) => {
-        const response = await (api.document)[config.endpoint][`:${config.name}Id`].$patch({
+        const response = await api.document[config.endpoint][`:${config.name}Id`].$patch({
           param: { [`${config.name}Id`]: id.toString() },
           json: data,
         });
@@ -130,7 +130,7 @@ export const createEntityHooks = (entityType: keyof typeof entityConfigs) => {
   const useDeleteEntity = <TData = any>() => {
     return useBaseMutation<TData, { id: number }>({
       mutationFn: async ({ id }) => {
-        const response = await (api.document)[config.endpoint][`:${config.name}Id`].$delete({
+        const response = await api.document[config.endpoint][`:${config.name}Id`].$delete({
           param: { [`${config.name}Id`]: id.toString() },
         });
         return await response.json();

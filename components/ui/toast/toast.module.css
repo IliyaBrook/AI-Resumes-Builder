@@ -1,0 +1,7 @@
+.toast {
+    /* fix dot in toast */
+
+    &:global(:before) {
+        display: none;
+    }
+}

@@ -60,6 +60,9 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         );
         // Give React time to render
         setTimeout(resolve, 100);
+      }).catch(error => {
+        console.error('Error rendering ResumeContent:', error);
+        throw error;
       });
 
       // Get the rendered HTML

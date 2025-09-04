@@ -6,10 +6,10 @@ import { Button } from '@/components';
 
 interface PDFDebugPreviewProps {
   title: string;
-  onClose: () => void;
+  onCloseAction: () => void;
 }
 
-export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ title, onClose }) => {
+export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ title, onCloseAction }) => {
   const [htmlContent, setHtmlContent] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +33,7 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ title, onClose
 
       // Get external stylesheets (like Tailwind) - only from same origin
       const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
-      const fetchStylesheets = Array.from(linkElements).map(async (link) => {
+      const fetchStylesheets = Array.from(linkElements).map(async link => {
         try {
           const href = (link as HTMLLinkElement).href;
           if (href && (href.startsWith(window.location.origin) || href.startsWith('/'))) {
@@ -47,23 +47,24 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ title, onClose
         return '';
       });
 
-      Promise.all(fetchStylesheets).then((cssArray) => {
-        stylesheets.push(...cssArray.filter(css => css));
+      Promise.all(fetchStylesheets)
+        .then(cssArray => {
+          stylesheets.push(...cssArray.filter(css => css));
 
-        // Get computed styles for the resume element
-        const computedStyles = window.getComputedStyle(resumeElement);
-        const importantStyles = ['font-family', 'font-size', 'line-height', 'color', 'background-color'];
+          // Get computed styles for the resume element
+          const computedStyles = window.getComputedStyle(resumeElement);
+          const importantStyles = ['font-family', 'font-size', 'line-height', 'color', 'background-color'];
 
-        let elementStyles = '';
-        importantStyles.forEach(prop => {
-          const value = computedStyles.getPropertyValue(prop);
-          if (value) {
-            elementStyles += `${prop}: ${value} !important; `;
-          }
-        });
+          let elementStyles = '';
+          importantStyles.forEach(prop => {
+            const value = computedStyles.getPropertyValue(prop);
+            if (value) {
+              elementStyles += `${prop}: ${value} !important; `;
+            }
+          });
 
-        // Create complete HTML with all styles
-        const completeHTML = `
+          // Create complete HTML with all styles
+          const completeHTML = `
           <!DOCTYPE html>
           <html lang="en">
           <head>
@@ -188,9 +189,14 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ title, onClose
           </html>
         `;
 
-        setHtmlContent(completeHTML);
-        setLoading(false);
-      });
+          setHtmlContent(completeHTML);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error('Failed to build debug HTML:', err);
+          setHtmlContent('<div class="p-4 text-red-500">Failed to build debug preview</div>');
+          setLoading(false);
+        });
     };
 
     generateDebugHTML();
@@ -199,9 +205,9 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ title, onClose
   if (loading) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="bg-white rounded-lg p-6">
+        <div className="rounded-lg bg-white p-6">
           <div className="flex items-center gap-3">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-blue-600"></div>
             <span>Loading PDF preview...</span>
           </div>
         </div>
@@ -211,24 +217,15 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ title, onClose
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50">
-      <div className="h-full flex flex-col">
-        <div className="bg-white border-b px-4 py-3 flex items-center justify-between">
+      <div className="flex h-full flex-col">
+        <div className="flex items-center justify-between border-b bg-white px-4 py-3">
           <h2 className="text-lg font-semibold">PDF Debug Preview - {title}</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="p-1 h-8 w-8"
-          >
+          <Button variant="ghost" size="sm" onClick={onCloseAction} className="h-8 w-8 p-1">
             <X size={16} />
           </Button>
         </div>
         <div className="flex-1 overflow-auto bg-gray-100">
-          <iframe
-            srcDoc={htmlContent}
-            className="w-full h-full border-0"
-            title="PDF Debug Preview"
-          />
+          <iframe srcDoc={htmlContent} className="h-full w-full border-0" title="PDF Debug Preview" />
         </div>
       </div>
     </div>

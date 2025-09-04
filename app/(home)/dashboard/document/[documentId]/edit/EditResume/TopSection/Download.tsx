@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { DownloadIcon, Eye } from 'lucide-react';
 import { Button } from '@/components';
 import { StatusType } from '@/types/resume.type';
-import { PDFExporter } from './PDFExporter';
+import { PDFExporter } from './ExportPDF/PDFExporter';
 import { PDFDebugPreview } from './PDFDebugPreview';
 
 const Download = (props: { title: string; isLoading: boolean; status?: StatusType }) => {
@@ -46,12 +46,7 @@ const Download = (props: { title: string; isLoading: boolean; status?: StatusTyp
         )}
       </div>
 
-      {showDebugPreview && (
-        <PDFDebugPreview
-          title={title}
-          onClose={() => setShowDebugPreview(false)}
-        />
-      )}
+      {showDebugPreview && <PDFDebugPreview title={title} onCloseAction={() => setShowDebugPreview(false)} />}
     </>
   );
 };

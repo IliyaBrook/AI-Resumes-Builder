@@ -63,7 +63,6 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
       </div>
     );
   };
-  console.log('is pdf mode:', isPdfMode);
 
   return (
     <div

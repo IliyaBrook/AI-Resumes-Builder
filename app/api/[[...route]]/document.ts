@@ -644,7 +644,8 @@ const documentRoute = new Hono()
         rating: z.number().optional(),
         category: z.string().optional(),
         hideRating: z.number().optional(),
-        order: z.number().optional(),
+        skillOrder: z.number().optional(),
+        categoryOrder: z.number().optional(),
       })
     ),
     async c => {
@@ -672,7 +673,8 @@ const documentRoute = new Hono()
         rating: z.number().optional(),
         category: z.string().optional(),
         hideRating: z.number().optional(),
-        order: z.number().optional(),
+        skillOrder: z.number().optional(),
+        categoryOrder: z.number().optional(),
       })
     ),
     async c => {

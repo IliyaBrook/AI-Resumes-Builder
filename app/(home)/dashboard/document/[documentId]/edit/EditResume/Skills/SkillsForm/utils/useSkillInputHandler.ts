@@ -47,7 +47,7 @@ export const useSkillInputHandler = ({
         prevSkillInputsRef.current[skillIdNum] = name;
         pendingUpdatesRef.current.add(updateKey);
 
-        updateSkill({ skillId: skillIdNum, data: { name } });
+        // updateSkill({ skillId: skillIdNum, data: { name } });
 
         // Clear the pending update after a short delay to allow the mutation to complete
         setTimeout(() => {

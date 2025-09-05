@@ -6,7 +6,7 @@ import '@smastrom/react-rating/style.css';
 import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { ResumeDataType, SkillType } from '@/types/resume.type';
 import { useDebounce, useCreateSkill, useDeleteSkill } from '@/hooks';
-import { useSkillInputHandler } from './hooks';
+import { useSkillInputHandler } from './utils';
 
 interface DefaultSkillsFormProps {
   resumeInfo: ResumeDataType | undefined;

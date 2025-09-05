@@ -4,14 +4,11 @@ import { Button, Input } from '@/components';
 import { MoveDown, MoveUp, Plus, X } from 'lucide-react';
 import { ResumeDataType, SkillType } from '@/types/resume.type';
 import { useCreateSkill, useDebounce, useDeleteSkill } from '@/hooks';
-import { useSkillInputHandler } from './hooks';
+import { useSkillInputHandler, getCategoryOrdersForSwap, swapCategoryOrders } from './utils';
 
 interface CategorySkillsFormProps {
   resumeInfo: ResumeDataType | undefined;
 }
-
-// for test we remove this later
-const toJsonString = (value: any) => JSON.stringify(value, null);
 
 const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) => {
   const { mutate: deleteSkill } = useDeleteSkill();
@@ -32,17 +29,38 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
     resumeInfo,
   });
 
-  // LOCAL STATE for testing - simulating skills data
   const [localSkillsData, setLocalSkillsData] = React.useState<SkillType[]>([]);
 
-  // Initialize local data from resumeInfo once
   useEffect(() => {
     if (resumeInfo?.skills && localSkillsData.length === 0) {
-      setLocalSkillsData(resumeInfo.skills.map(skill => ({ ...skill })));
+      // Fix initial categoryOrder if all are 0
+      const skillsWithFixedOrder = resumeInfo.skills.map(skill => ({ ...skill }));
+
+      // Group skills by category
+      const categoriesMap: Record<string, SkillType[]> = {};
+      skillsWithFixedOrder.forEach(skill => {
+        const category = skill.category || '';
+        if (!categoriesMap[category]) categoriesMap[category] = [];
+        categoriesMap[category].push(skill);
+      });
+
+      // Check if all categoryOrders are 0
+      const allZero = skillsWithFixedOrder.every(skill => skill.categoryOrder === 0);
+
+      if (allZero) {
+        Object.keys(categoriesMap)
+          .sort()
+          .forEach((category, index) => {
+            categoriesMap[category].forEach(skill => {
+              skill.categoryOrder = index;
+            });
+          });
+      }
+
+      setLocalSkillsData(skillsWithFixedOrder);
     }
   }, [resumeInfo?.skills, localSkillsData.length]);
 
-  // Group skills by category with proper sorting - USING LOCAL DATA
   const { skillsByCategory, sortedCategoryKeys } = useMemo(() => {
     if (!localSkillsData.length) return { skillsByCategory: {}, sortedCategoryKeys: [] };
 
@@ -73,7 +91,6 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
 
     return { skillsByCategory, sortedCategoryKeys: sortedKeys };
   }, [localSkillsData]);
-
   // Initialize local inputs from local skills data
   useEffect(() => {
     if (localSkillsData.length > 0) {
@@ -228,36 +245,22 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
 
     const currentCategorySkills = skillsByCategory[categoryName] || [];
     const targetCategoryName = sortedCategories[currentIndex - 1];
-    const targetCategorySkills = skillsByCategory[targetCategoryName] || [];
-
-    if (currentCategorySkills.length === 0) {
+    const orders = getCategoryOrdersForSwap(currentCategorySkills, skillsByCategory, targetCategoryName);
+    if (!orders) {
       return;
     }
 
-    // Get the target category order (the category we want to move above)
-    const targetCategoryOrder =
-      targetCategorySkills.length > 0
-        ? Math.min(...targetCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0))
-        : 0;
-
-    const newCategoryOrder = targetCategoryOrder - 1;
-    // Update database - all skills in the current category get new categoryOrder
-    currentCategorySkills.forEach((skill: SkillType) => {
-      if (skill.id) {
-        updateSkill({
-          skillId: skill.id,
-          data: { categoryOrder: newCategoryOrder },
-        });
-      }
-    });
-
-    // Update local data - all skills in the current category get new categoryOrder
-    setLocalSkillsData(prev => {
-      const updated = prev.map(skill =>
-        skill.category === categoryName ? { ...skill, categoryOrder: newCategoryOrder } : skill
-      );
-      return updated;
-    });
+    const { currentCategoryOrder, targetCategoryOrder } = orders;
+    swapCategoryOrders(
+      currentCategorySkills,
+      skillsByCategory,
+      targetCategoryName,
+      categoryName,
+      currentCategoryOrder,
+      targetCategoryOrder,
+      updateSkill,
+      setLocalSkillsData
+    );
   };
 
   const handleMoveCategoryDown = (categoryName: string) => {
@@ -270,33 +273,22 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
 
     const currentCategorySkills = skillsByCategory[categoryName] || [];
     const targetCategoryName = sortedCategories[currentIndex + 1];
-    const targetCategorySkills = skillsByCategory[targetCategoryName] || [];
-
-    if (currentCategorySkills.length === 0) {
+    const orders = getCategoryOrdersForSwap(currentCategorySkills, skillsByCategory, targetCategoryName);
+    if (!orders) {
       return;
     }
 
-    // Get the target category order (the category we want to move below)
-    const targetCategoryOrder =
-      targetCategorySkills.length > 0
-        ? Math.max(...targetCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0))
-        : 0;
-
-    const newCategoryOrder = targetCategoryOrder + 1;
-    currentCategorySkills.forEach((skill: SkillType) => {
-      if (skill.id) {
-        updateSkill({
-          skillId: skill.id,
-          data: { categoryOrder: newCategoryOrder },
-        });
-      }
-    });
-
-    setLocalSkillsData(prev => {
-      return prev.map(skill =>
-        skill.category === categoryName ? { ...skill, categoryOrder: newCategoryOrder } : skill
-      );
-    });
+    const { currentCategoryOrder, targetCategoryOrder } = orders;
+    swapCategoryOrders(
+      currentCategorySkills,
+      skillsByCategory,
+      targetCategoryName,
+      categoryName,
+      currentCategoryOrder,
+      targetCategoryOrder,
+      updateSkill,
+      setLocalSkillsData
+    );
   };
 
   const getSkillValue = (skill: SkillType, field: keyof SkillType) => {

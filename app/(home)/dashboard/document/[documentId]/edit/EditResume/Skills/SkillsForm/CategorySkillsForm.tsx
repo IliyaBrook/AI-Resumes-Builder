@@ -4,7 +4,7 @@ import { Button, Input } from '@/components';
 import { MoveDown, MoveUp, Plus, X } from 'lucide-react';
 import { ResumeDataType, SkillType } from '@/types/resume.type';
 import { useCreateSkill, useDebounce, useDeleteSkill } from '@/hooks';
-import { useSkillInputHandler, getCategoryOrdersForSwap, swapCategoryOrders } from './utils';
+import { useSkillInputHandler } from './utils';
 
 interface CategorySkillsFormProps {
   resumeInfo: ResumeDataType | undefined;
@@ -59,7 +59,6 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
       return aMinOrder - bMinOrder;
     });
 
-    // Sort skills within each category by skillOrder
     const skillsByCategory: Record<string, SkillType[]> = {};
     sortedKeys.forEach(categoryName => {
       skillsByCategory[categoryName] = grouped[categoryName].sort((a, b) => (a.skillOrder || 0) - (b.skillOrder || 0));
@@ -67,7 +66,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
 
     return { skillsByCategory, sortedCategoryKeys: sortedKeys };
   }, [localSkillsData]);
-  // Initialize local inputs from local skills data
+
   useEffect(() => {
     if (localSkillsData.length > 0) {
       const skillInputs: Record<number, string> = {};
@@ -211,51 +210,33 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
     setEditCategoryName('');
   };
 
-  const handleMoveCategoryUp = (categoryName: string) => {
+  const handleMoveCategory = (categoryName: string, action: 'up' | 'down') => {
     const sortedCategories = sortedCategoryKeys;
     const currentIndex = sortedCategories.indexOf(categoryName);
 
-    if (currentIndex <= 0) {
-      return;
+    if (action === 'up') {
+      if (currentIndex <= 0) {
+        return;
+      }
+    } else {
+      if (currentIndex >= sortedCategories.length - 1) {
+        return;
+      }
     }
 
     const currentCategorySkills = skillsByCategory[categoryName] || [];
+    const targetCategoryName = sortedCategories[action === 'up' ? currentIndex - 1 : currentIndex + 1];
 
-    const targetCategoryName = sortedCategories[currentIndex - 1];
-    //fff
     const targetCategorySkills = skillsByCategory[targetCategoryName] || [];
 
     if (currentCategorySkills.length === 0 || targetCategorySkills.length === 0) {
       return;
     }
-
-    // Get current orders
     const currentCategoryOrder = Math.min(...currentCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
     const targetCategoryOrder = Math.min(...targetCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
-    //fff
-    console.log(
-      'LOCAL TEST - Move UP (SWAP):',
-      JSON.stringify({
-        currentCategory: categoryName,
-        currentOrder: currentCategoryOrder,
-        targetCategory: targetCategoryName,
-        targetOrder: targetCategoryOrder,
-        willSwap: true,
-      })
-    );
 
-    // Swap categoryOrders between the two categories
-    // Current category gets target's order
     currentCategorySkills.forEach((skill: SkillType) => {
       if (skill.id) {
-        console.log(
-          'LOCAL TEST - PATCH for current category UP:',
-          JSON.stringify({
-            skillId: skill.id,
-            category: categoryName,
-            newOrder: targetCategoryOrder,
-          })
-        );
         updateSkill({
           skillId: skill.id,
           data: { categoryOrder: targetCategoryOrder },
@@ -263,17 +244,8 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
       }
     });
 
-    // Target category gets current's order
     targetCategorySkills.forEach((skill: SkillType) => {
       if (skill.id) {
-        console.log(
-          'LOCAL TEST - PATCH for target category UP:',
-          JSON.stringify({
-            skillId: skill.id,
-            category: targetCategoryName,
-            newOrder: currentCategoryOrder,
-          })
-        );
         updateSkill({
           skillId: skill.id,
           data: { categoryOrder: currentCategoryOrder },
@@ -281,89 +253,6 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
       }
     });
 
-    // Update local data - swap orders
-    setLocalSkillsData(prev => {
-      return prev.map(skill => {
-        if (skill.category === categoryName) {
-          return { ...skill, categoryOrder: targetCategoryOrder };
-        } else if (skill.category === targetCategoryName) {
-          return { ...skill, categoryOrder: currentCategoryOrder };
-        }
-        return skill;
-      });
-    });
-  };
-
-  const handleMoveCategoryDown = (categoryName: string) => {
-    const sortedCategories = sortedCategoryKeys;
-    const currentIndex = sortedCategories.indexOf(categoryName);
-
-    if (currentIndex >= sortedCategories.length - 1) {
-      return;
-    }
-
-    const currentCategorySkills = skillsByCategory[categoryName] || [];
-    const targetCategoryName = sortedCategories[currentIndex + 1];
-    //fff
-    const targetCategorySkills = skillsByCategory[targetCategoryName] || [];
-
-    if (currentCategorySkills.length === 0 || targetCategorySkills.length === 0) {
-      return;
-    }
-
-    // Get current orders
-    const currentCategoryOrder = Math.min(...currentCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
-    const targetCategoryOrder = Math.min(...targetCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
-    //fff
-    console.log(
-      'LOCAL TEST - Move DOWN (SWAP):',
-      JSON.stringify({
-        currentCategory: categoryName,
-        currentOrder: currentCategoryOrder,
-        targetCategory: targetCategoryName,
-        targetOrder: targetCategoryOrder,
-        willSwap: true,
-      })
-    );
-
-    // Swap categoryOrders between the two categories
-    // Current category gets target's order
-    currentCategorySkills.forEach((skill: SkillType) => {
-      if (skill.id) {
-        console.log(
-          'LOCAL TEST - PATCH for current category DOWN:',
-          JSON.stringify({
-            skillId: skill.id,
-            category: categoryName,
-            newOrder: targetCategoryOrder,
-          })
-        );
-        updateSkill({
-          skillId: skill.id,
-          data: { categoryOrder: targetCategoryOrder },
-        });
-      }
-    });
-
-    // Target category gets current's order
-    targetCategorySkills.forEach((skill: SkillType) => {
-      if (skill.id) {
-        console.log(
-          'LOCAL TEST - PATCH for target category DOWN:',
-          JSON.stringify({
-            skillId: skill.id,
-            category: targetCategoryName,
-            newOrder: currentCategoryOrder,
-          })
-        );
-        updateSkill({
-          skillId: skill.id,
-          data: { categoryOrder: currentCategoryOrder },
-        });
-      }
-    });
-
-    // Update local data - swap orders
     setLocalSkillsData(prev => {
       return prev.map(skill => {
         if (skill.category === categoryName) {
@@ -424,7 +313,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
                       size="icon"
                       type="button"
                       className="size-6"
-                      onClick={() => handleMoveCategoryUp(categoryName)}
+                      onClick={() => handleMoveCategory(categoryName, 'up')}
                       disabled={categoryIndex === 0}
                     >
                       <MoveUp size={14} />
@@ -434,7 +323,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
                       size="icon"
                       type="button"
                       className="size-6"
-                      onClick={() => handleMoveCategoryDown(categoryName)}
+                      onClick={() => handleMoveCategory(categoryName, 'down')}
                       disabled={categoryIndex === sortedCategoryKeys.length - 1}
                     >
                       <MoveDown size={14} />

@@ -33,31 +33,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
 
   useEffect(() => {
     if (resumeInfo?.skills && localSkillsData.length === 0) {
-      // Fix initial categoryOrder if all are 0
-      const skillsWithFixedOrder = resumeInfo.skills.map(skill => ({ ...skill }));
-
-      // Group skills by category
-      const categoriesMap: Record<string, SkillType[]> = {};
-      skillsWithFixedOrder.forEach(skill => {
-        const category = skill.category || '';
-        if (!categoriesMap[category]) categoriesMap[category] = [];
-        categoriesMap[category].push(skill);
-      });
-
-      // Check if all categoryOrders are 0
-      const allZero = skillsWithFixedOrder.every(skill => skill.categoryOrder === 0);
-
-      if (allZero) {
-        Object.keys(categoriesMap)
-          .sort()
-          .forEach((category, index) => {
-            categoriesMap[category].forEach(skill => {
-              skill.categoryOrder = index;
-            });
-          });
-      }
-
-      setLocalSkillsData(skillsWithFixedOrder);
+      setLocalSkillsData(resumeInfo.skills.map(skill => ({ ...skill })));
     }
   }, [resumeInfo?.skills, localSkillsData.length]);
 
@@ -244,23 +220,78 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
     }
 
     const currentCategorySkills = skillsByCategory[categoryName] || [];
+
     const targetCategoryName = sortedCategories[currentIndex - 1];
-    const orders = getCategoryOrdersForSwap(currentCategorySkills, skillsByCategory, targetCategoryName);
-    if (!orders) {
+    //fff
+    const targetCategorySkills = skillsByCategory[targetCategoryName] || [];
+
+    if (currentCategorySkills.length === 0 || targetCategorySkills.length === 0) {
       return;
     }
 
-    const { currentCategoryOrder, targetCategoryOrder } = orders;
-    swapCategoryOrders(
-      currentCategorySkills,
-      skillsByCategory,
-      targetCategoryName,
-      categoryName,
-      currentCategoryOrder,
-      targetCategoryOrder,
-      updateSkill,
-      setLocalSkillsData
+    // Get current orders
+    const currentCategoryOrder = Math.min(...currentCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
+    const targetCategoryOrder = Math.min(...targetCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
+    //fff
+    console.log(
+      'LOCAL TEST - Move UP (SWAP):',
+      JSON.stringify({
+        currentCategory: categoryName,
+        currentOrder: currentCategoryOrder,
+        targetCategory: targetCategoryName,
+        targetOrder: targetCategoryOrder,
+        willSwap: true,
+      })
     );
+
+    // Swap categoryOrders between the two categories
+    // Current category gets target's order
+    currentCategorySkills.forEach((skill: SkillType) => {
+      if (skill.id) {
+        console.log(
+          'LOCAL TEST - PATCH for current category UP:',
+          JSON.stringify({
+            skillId: skill.id,
+            category: categoryName,
+            newOrder: targetCategoryOrder,
+          })
+        );
+        updateSkill({
+          skillId: skill.id,
+          data: { categoryOrder: targetCategoryOrder },
+        });
+      }
+    });
+
+    // Target category gets current's order
+    targetCategorySkills.forEach((skill: SkillType) => {
+      if (skill.id) {
+        console.log(
+          'LOCAL TEST - PATCH for target category UP:',
+          JSON.stringify({
+            skillId: skill.id,
+            category: targetCategoryName,
+            newOrder: currentCategoryOrder,
+          })
+        );
+        updateSkill({
+          skillId: skill.id,
+          data: { categoryOrder: currentCategoryOrder },
+        });
+      }
+    });
+
+    // Update local data - swap orders
+    setLocalSkillsData(prev => {
+      return prev.map(skill => {
+        if (skill.category === categoryName) {
+          return { ...skill, categoryOrder: targetCategoryOrder };
+        } else if (skill.category === targetCategoryName) {
+          return { ...skill, categoryOrder: currentCategoryOrder };
+        }
+        return skill;
+      });
+    });
   };
 
   const handleMoveCategoryDown = (categoryName: string) => {
@@ -273,22 +304,76 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo }) =
 
     const currentCategorySkills = skillsByCategory[categoryName] || [];
     const targetCategoryName = sortedCategories[currentIndex + 1];
-    const orders = getCategoryOrdersForSwap(currentCategorySkills, skillsByCategory, targetCategoryName);
-    if (!orders) {
+    //fff
+    const targetCategorySkills = skillsByCategory[targetCategoryName] || [];
+
+    if (currentCategorySkills.length === 0 || targetCategorySkills.length === 0) {
       return;
     }
 
-    const { currentCategoryOrder, targetCategoryOrder } = orders;
-    swapCategoryOrders(
-      currentCategorySkills,
-      skillsByCategory,
-      targetCategoryName,
-      categoryName,
-      currentCategoryOrder,
-      targetCategoryOrder,
-      updateSkill,
-      setLocalSkillsData
+    // Get current orders
+    const currentCategoryOrder = Math.min(...currentCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
+    const targetCategoryOrder = Math.min(...targetCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
+    //fff
+    console.log(
+      'LOCAL TEST - Move DOWN (SWAP):',
+      JSON.stringify({
+        currentCategory: categoryName,
+        currentOrder: currentCategoryOrder,
+        targetCategory: targetCategoryName,
+        targetOrder: targetCategoryOrder,
+        willSwap: true,
+      })
     );
+
+    // Swap categoryOrders between the two categories
+    // Current category gets target's order
+    currentCategorySkills.forEach((skill: SkillType) => {
+      if (skill.id) {
+        console.log(
+          'LOCAL TEST - PATCH for current category DOWN:',
+          JSON.stringify({
+            skillId: skill.id,
+            category: categoryName,
+            newOrder: targetCategoryOrder,
+          })
+        );
+        updateSkill({
+          skillId: skill.id,
+          data: { categoryOrder: targetCategoryOrder },
+        });
+      }
+    });
+
+    // Target category gets current's order
+    targetCategorySkills.forEach((skill: SkillType) => {
+      if (skill.id) {
+        console.log(
+          'LOCAL TEST - PATCH for target category DOWN:',
+          JSON.stringify({
+            skillId: skill.id,
+            category: targetCategoryName,
+            newOrder: currentCategoryOrder,
+          })
+        );
+        updateSkill({
+          skillId: skill.id,
+          data: { categoryOrder: currentCategoryOrder },
+        });
+      }
+    });
+
+    // Update local data - swap orders
+    setLocalSkillsData(prev => {
+      return prev.map(skill => {
+        if (skill.category === categoryName) {
+          return { ...skill, categoryOrder: targetCategoryOrder };
+        } else if (skill.category === targetCategoryName) {
+          return { ...skill, categoryOrder: currentCategoryOrder };
+        }
+        return skill;
+      });
+    });
   };
 
   const getSkillValue = (skill: SkillType, field: keyof SkillType) => {

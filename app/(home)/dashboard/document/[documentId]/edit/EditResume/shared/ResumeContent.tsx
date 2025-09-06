@@ -13,14 +13,14 @@ interface ResumeContentProps {
   pagesOrder?: string[];
   themeColor?: string;
   isLoading?: boolean;
-  
+
   // Common props
   isPdfMode?: boolean;
   isInteractive?: boolean;
   selectedSection?: string | null;
   onSectionClick?: (sectionKey: string) => void;
   renderSectionWrapper?: (sectionKey: string, component: React.ReactNode, isSelected: boolean) => React.ReactNode;
-  
+
   // Control whether to fetch data independently
   fetchDataIndependently?: boolean;
 }
@@ -41,41 +41,33 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
   const param = useParams();
   const documentId = param?.documentId as string;
   const shouldFetch = fetchDataIndependently && !!documentId;
-  const { data, isLoading: dataIsLoading } = useGetDocumentById(
-    shouldFetch ? documentId : 'disabled'
-  );
-  
+  const { data, isLoading: dataIsLoading } = useGetDocumentById(shouldFetch ? documentId : 'disabled');
+
   // Determine which data to use
   const documentData = shouldFetch ? (data?.data as DocumentType) : null;
-  const resumeInfo = shouldFetch 
-    ? normalizeResumeData(documentData) 
-    : propsResumeInfo;
-  const pagesOrder = shouldFetch 
-    ? (resumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER)
-    : (propsPagesOrder || DEFAULT_PAGES_ORDER);
-  const themeColor = shouldFetch 
-    ? (resumeInfo?.themeColor || '#3b82f6')
-    : (propsThemeColor || '#3b82f6');
-  const isLoading = shouldFetch 
-    ? dataIsLoading 
-    : (propsIsLoading || false);
+  const resumeInfo = shouldFetch ? normalizeResumeData(documentData) : propsResumeInfo;
+  const pagesOrder = shouldFetch
+    ? resumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER
+    : propsPagesOrder || DEFAULT_PAGES_ORDER;
+  const themeColor = shouldFetch ? resumeInfo?.themeColor || '#3b82f6' : propsThemeColor || '#3b82f6';
+  const isLoading = shouldFetch ? dataIsLoading : propsIsLoading || false;
 
   const renderSection = (sectionKey: string) => {
     const Component = SECTION_COMPONENTS[sectionKey as SectionKey];
     if (!Component) return null;
 
     const isSelected = isInteractive && selectedSection === sectionKey;
-    
+
     // Get padding values for this section
     const sectionPadding = resumeInfo?.sectionPaddings?.[sectionKey as keyof typeof resumeInfo.sectionPaddings];
     const paddingTop = sectionPadding?.paddingTop || 0;
     const paddingBottom = sectionPadding?.paddingBottom || 0;
-    
+
     const sectionComponent = (
-      <div 
-        style={{ 
-          paddingTop: `${paddingTop}px`, 
-          paddingBottom: `${paddingBottom}px` 
+      <div
+        style={{
+          paddingTop: `${paddingTop}px`,
+          paddingBottom: `${paddingBottom}px`,
         }}
       >
         <Component isLoading={isLoading} resumeInfo={resumeInfo} />

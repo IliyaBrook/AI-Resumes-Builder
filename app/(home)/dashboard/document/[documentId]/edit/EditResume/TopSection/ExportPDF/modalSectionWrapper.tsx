@@ -43,7 +43,7 @@ export const modalSectionWrapper = ({
   const [paddingBottom, setPaddingBottom] = useState<number>(
     documentData?.sectionPaddings?.[sectionKey as keyof SectionPaddingsType]?.paddingBottom || 0
   );
-  
+
   useEffect(() => {
     if (documentData?.sectionPaddings) {
       const sectionPadding = documentData.sectionPaddings[sectionKey as keyof SectionPaddingsType];
@@ -53,7 +53,7 @@ export const modalSectionWrapper = ({
       }
     }
   }, [documentData, sectionKey]);
-  
+
   const updatePadding = (type: 'top' | 'bottom', value: number) => {
     const currentPaddings = documentData?.sectionPaddings || {};
     const updatedPaddings = {
@@ -63,11 +63,11 @@ export const modalSectionWrapper = ({
         [type === 'top' ? 'paddingTop' : 'paddingBottom']: value,
       },
     };
-    
+
     updateDocument({
       sectionPaddings: updatedPaddings,
     });
-    
+
     if (type === 'top') {
       setPaddingTop(value);
     } else {
@@ -117,24 +117,16 @@ export const modalSectionWrapper = ({
           <div className="mb-2 border-b border-blue-200 pb-2 text-center text-sm font-bold text-blue-800">
             📝 {sectionKey}
           </div>
-          
+
           {/* Padding Controls */}
-          <div className="border-b border-blue-200 pb-3 mb-3 space-y-2">
-            <div className="text-xs font-semibold text-gray-700 mb-2">Spacing:</div>
-            <PaddingControls
-              label="Top"
-              value={paddingTop}
-              onChange={(value) => updatePadding('top', value)}
-            />
-            <PaddingControls
-              label="Bottom"
-              value={paddingBottom}
-              onChange={(value) => updatePadding('bottom', value)}
-            />
+          <div className="mb-3 space-y-2 border-b border-blue-200 pb-3">
+            <div className="mb-2 text-xs font-semibold text-gray-700">Spacing:</div>
+            <PaddingControls label="Top" value={paddingTop} onChange={value => updatePadding('top', value)} />
+            <PaddingControls label="Bottom" value={paddingBottom} onChange={value => updatePadding('bottom', value)} />
           </div>
-          
+
           {/* Move Controls */}
-          <div className="text-xs font-semibold text-gray-700 mb-2">Order:</div>
+          <div className="mb-2 text-xs font-semibold text-gray-700">Order:</div>
           <Button
             variant="outline"
             size="sm"

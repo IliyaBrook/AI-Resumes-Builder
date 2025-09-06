@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { PagedResumeContent } from './PagedResumeContent';
-import { modalSectionWrapper } from './modalSectionWrapper';
+import { ModalSectionWrapper } from './modalSectionWrapper';
 import { moveSection } from '../../ResumePreview/pageOrderUtils';
 import { usePageOrderSync } from '../../ResumePreview/usePageOrderSync';
 
@@ -70,14 +70,17 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onClos
 
   const handleRenderSectionWrapper = (sectionKey: string, component: React.ReactNode, isSelected: boolean) => {
     console.log('PDFDebugPreview - handleRenderSectionWrapper called for:', sectionKey, 'isSelected:', isSelected);
-    return modalSectionWrapper({
-      sectionKey,
-      component,
-      isSelected,
-      currentOrder,
-      onSectionClick: toggleSection,
-      onMoveSection: handleMoveSection,
-    });
+    return (
+      <ModalSectionWrapper
+        key={sectionKey}
+        sectionKey={sectionKey}
+        component={component}
+        isSelected={isSelected}
+        currentOrder={currentOrder}
+        onSectionClick={toggleSection}
+        onMoveSection={handleMoveSection}
+      />
+    );
   };
 
   return (

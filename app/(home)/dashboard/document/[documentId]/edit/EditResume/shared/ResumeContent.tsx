@@ -70,7 +70,14 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
           paddingBottom: `${paddingBottom}px`,
         }}
       >
-        <Component isLoading={isLoading} resumeInfo={resumeInfo} />
+        <Component 
+          isLoading={isLoading} 
+          resumeInfo={resumeInfo}
+          isInteractive={isInteractive}
+          selectedSection={selectedSection}
+          onSectionClick={onSectionClick}
+          renderSectionWrapper={renderSectionWrapper}
+        />
       </div>
     );
 

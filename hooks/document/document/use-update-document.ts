@@ -41,6 +41,7 @@ type UpdateDocumentRequest = {
   skillsDisplayFormat?: string;
   personalInfoDisplayFormat?: string;
   pagesOrder?: string[];
+  sectionPaddings?: any;
 };
 
 type UpdateDocumentResponse = APIResponseType<{ message: string }>;

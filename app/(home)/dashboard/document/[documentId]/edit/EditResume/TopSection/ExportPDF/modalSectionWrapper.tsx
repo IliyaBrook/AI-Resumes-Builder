@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components';
 import { MoveDown, MoveUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -19,7 +19,7 @@ interface ModalSectionWrapperProps {
   sectionPaddings?: any;
 }
 
-export const modalSectionWrapper = ({
+export const ModalSectionWrapper = ({
   sectionKey,
   component,
   isSelected,
@@ -33,47 +33,84 @@ export const modalSectionWrapper = ({
   const documentData = data?.data as DocumentType;
   const { mutate: updateDocument } = useUpdateDocument();
 
+  // Check if this is an individual experience item
+  const isExperienceItem = sectionKey.startsWith('experience-');
+  const experienceId = isExperienceItem ? sectionKey.replace('experience-', '') : null;
+  
   const currentIndex = currentOrder.indexOf(sectionKey);
   const canMoveUp = currentIndex > 0;
   const canMoveDown = currentIndex < currentOrder.length - 1;
 
-  const [paddingTop, setPaddingTop] = useState<number>(
-    documentData?.sectionPaddings?.[sectionKey as keyof SectionPaddingsType]?.paddingTop || 0
-  );
-  const [paddingBottom, setPaddingBottom] = useState<number>(
-    documentData?.sectionPaddings?.[sectionKey as keyof SectionPaddingsType]?.paddingBottom || 0
-  );
+  // For experience items, get individual padding from experience data
+  const getInitialPadding = () => {
+    if (isExperienceItem && experienceId) {
+      const experience = documentData?.experiences?.find(exp => 
+        exp.id?.toString() === experienceId || exp.order?.toString() === experienceId
+      );
+      return {
+        top: experience?.paddingTop || 0,
+        bottom: experience?.paddingBottom || 0
+      };
+    } else {
+      // For sections, get from sectionPaddings
+      const sectionPadding = documentData?.sectionPaddings?.[sectionKey as keyof SectionPaddingsType];
+      return {
+        top: sectionPadding?.paddingTop || 0,
+        bottom: sectionPadding?.paddingBottom || 0
+      };
+    }
+  };
+
+  const initialPadding = getInitialPadding();
+  const [paddingTop, setPaddingTop] = useState<number>(initialPadding.top);
+  const [paddingBottom, setPaddingBottom] = useState<number>(initialPadding.bottom);
 
   useEffect(() => {
-    if (documentData?.sectionPaddings) {
-      const sectionPadding = documentData.sectionPaddings[sectionKey as keyof SectionPaddingsType];
-      if (sectionPadding) {
-        setPaddingTop(sectionPadding.paddingTop || 0);
-        setPaddingBottom(sectionPadding.paddingBottom || 0);
+    const newPadding = getInitialPadding();
+    setPaddingTop(newPadding.top);
+    setPaddingBottom(newPadding.bottom);
+  }, [documentData, sectionKey, isExperienceItem, experienceId]);
+
+  const updatePadding = useCallback((type: 'top' | 'bottom', value: number) => {
+    if (isExperienceItem && experienceId) {
+      // Update individual experience item padding
+      const experienceIndex = documentData?.experiences?.findIndex(exp => 
+        exp.id?.toString() === experienceId || exp.order?.toString() === experienceId
+      );
+      
+      if (experienceIndex !== -1 && experienceIndex !== undefined && documentData?.experiences) {
+        const updatedExperiences = [...documentData.experiences];
+        updatedExperiences[experienceIndex] = {
+          ...updatedExperiences[experienceIndex],
+          [type === 'top' ? 'paddingTop' : 'paddingBottom']: value,
+        };
+
+        updateDocument({
+          experience: updatedExperiences,
+        });
       }
+    } else {
+      // Update section padding
+      const currentPaddings = documentData?.sectionPaddings || {};
+      const updatedPaddings = {
+        ...currentPaddings,
+        [sectionKey]: {
+          ...currentPaddings[sectionKey as keyof SectionPaddingsType],
+          [type === 'top' ? 'paddingTop' : 'paddingBottom']: value,
+        },
+      };
+
+      updateDocument({
+        sectionPaddings: updatedPaddings,
+      });
     }
-  }, [documentData, sectionKey]);
-
-  const updatePadding = (type: 'top' | 'bottom', value: number) => {
-    const currentPaddings = documentData?.sectionPaddings || {};
-    const updatedPaddings = {
-      ...currentPaddings,
-      [sectionKey]: {
-        ...currentPaddings[sectionKey as keyof SectionPaddingsType],
-        [type === 'top' ? 'paddingTop' : 'paddingBottom']: value,
-      },
-    };
-
-    updateDocument({
-      sectionPaddings: updatedPaddings,
-    });
 
     if (type === 'top') {
       setPaddingTop(value);
     } else {
       setPaddingBottom(value);
     }
-  };
+  }, [documentData, sectionKey, updateDocument, isExperienceItem, experienceId]);
 
   console.log(
     `modalSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`

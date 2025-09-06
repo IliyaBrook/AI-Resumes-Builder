@@ -25,6 +25,8 @@ export const renderSectionWrapper = ({
   const currentIndex = currentOrder.indexOf(sectionKey);
   const canMoveUp = currentIndex > 0;
   const canMoveDown = currentIndex < currentOrder.length - 1;
+  
+  console.log(`renderSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`);
 
   return (
     <div
@@ -42,15 +44,9 @@ export const renderSectionWrapper = ({
       {component}
 
       {isSelected && (
-        <div
+        <div 
           key={`buttons-${sectionKey}`}
           className="absolute right-2 top-2 z-[60] flex flex-col gap-1 rounded-md border bg-white p-1 shadow-lg dark:border-gray-600 dark:bg-gray-800"
-          style={{
-            zIndex: 9999,
-            position: 'absolute',
-            right: '8px',
-            top: '8px',
-          }}
         >
           <Button
             variant="ghost"

@@ -13,13 +13,13 @@ interface PropsType {
   renderSectionWrapper?: (sectionKey: string, component: React.ReactNode, isSelected: boolean) => React.ReactNode;
 }
 
-const ExperiencePreview: FC<PropsType> = ({ 
-  resumeInfo, 
+const ExperiencePreview: FC<PropsType> = ({
+  resumeInfo,
   isLoading,
   isInteractive = false,
   selectedSection = null,
   onSectionClick,
-  renderSectionWrapper
+  renderSectionWrapper,
 }) => {
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
 
@@ -30,9 +30,9 @@ const ExperiencePreview: FC<PropsType> = ({
   const renderExperienceItem = (experience: any, index: number) => {
     const experienceKey = `experience-${experience?.id || index}`;
     const isSelected = isInteractive && selectedSection === experienceKey;
-    
+
     const experienceContent = (
-      <div 
+      <div
         key={index}
         style={{
           paddingTop: `${experience?.paddingTop || 0}px`,
@@ -81,7 +81,7 @@ const ExperiencePreview: FC<PropsType> = ({
           className={`cursor-pointer rounded-md transition-all duration-200 ${
             isSelected ? 'bg-blue-50 p-2 ring-2 ring-blue-500 ring-opacity-50' : ''
           }`}
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             onSectionClick?.(experienceKey);
           }}
@@ -118,9 +118,7 @@ const ExperiencePreview: FC<PropsType> = ({
             text-indent: 0;
           }
         `}</style>
-        {resumeInfo?.experiences?.map((experience, index) => 
-          renderExperienceItem(experience, index)
-        )}
+        {resumeInfo?.experiences?.map((experience, index) => renderExperienceItem(experience, index))}
       </div>
     </div>
   );

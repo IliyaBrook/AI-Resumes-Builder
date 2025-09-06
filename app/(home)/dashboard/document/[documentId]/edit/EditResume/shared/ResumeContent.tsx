@@ -70,8 +70,8 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
           paddingBottom: `${paddingBottom}px`,
         }}
       >
-        <Component 
-          isLoading={isLoading} 
+        <Component
+          isLoading={isLoading}
           resumeInfo={resumeInfo}
           isInteractive={isInteractive}
           selectedSection={selectedSection}
@@ -134,6 +134,6 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
 };
 
 // Backward compatibility export
-export const ResumeContentIndependent: React.FC<Omit<ResumeContentProps, 'fetchDataIndependently'>> = (props) => {
+export const ResumeContentIndependent: React.FC<Omit<ResumeContentProps, 'fetchDataIndependently'>> = props => {
   return <ResumeContent {...props} fetchDataIndependently={true} />;
 };

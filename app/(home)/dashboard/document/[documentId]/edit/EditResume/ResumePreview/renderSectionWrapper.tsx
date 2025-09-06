@@ -42,10 +42,10 @@ export const renderSectionWrapper = ({
       {component}
 
       {isSelected && (
-        <div 
+        <div
           key={`buttons-${sectionKey}`}
           className="absolute right-2 top-2 z-[60] flex flex-col gap-1 rounded-md border bg-white p-1 shadow-lg dark:border-gray-600 dark:bg-gray-800"
-          style={{ 
+          style={{
             zIndex: 9999,
             position: 'absolute',
             right: '8px',

@@ -47,6 +47,7 @@ const ResumePreview = () => {
       )}
 
       <ResumeContent
+        key="main-preview-resume-content"
         resumeInfo={fixedResumeInfo}
         pagesOrder={currentOrder}
         themeColor={fixedResumeInfo?.themeColor}

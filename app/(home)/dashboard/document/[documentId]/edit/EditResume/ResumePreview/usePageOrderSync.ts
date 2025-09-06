@@ -13,10 +13,8 @@ export const usePageOrderSync = () => {
   const documentData = data?.data as DocumentType;
   const fixedResumeInfo = normalizeResumeData(documentData);
   const { updatePagesOrder } = usePageOrderUpdate();
-  
-  const [currentOrder, setCurrentOrder] = useState<string[]>(
-    fixedResumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER
-  );
+
+  const [currentOrder, setCurrentOrder] = useState<string[]>(fixedResumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER);
 
   useEffect(() => {
     if (fixedResumeInfo?.pagesOrder) {

@@ -23,15 +23,9 @@ export const moveSection = (
   const newOrder = [...currentOrder];
 
   if (direction === 'up' && currentIndex > 0) {
-    [newOrder[currentIndex], newOrder[currentIndex - 1]] = [
-      newOrder[currentIndex - 1],
-      newOrder[currentIndex],
-    ];
+    [newOrder[currentIndex], newOrder[currentIndex - 1]] = [newOrder[currentIndex - 1], newOrder[currentIndex]];
   } else if (direction === 'down' && currentIndex < newOrder.length - 1) {
-    [newOrder[currentIndex], newOrder[currentIndex + 1]] = [
-      newOrder[currentIndex + 1],
-      newOrder[currentIndex],
-    ];
+    [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
   } else {
     return null;
   }

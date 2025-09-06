@@ -8,7 +8,7 @@ import CategorySkillsForm from './CategorySkillsForm';
 const SkillsForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
-  const { data } = useGetDocumentById(documentId);
+  const { data, refetch } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
 
@@ -46,7 +46,7 @@ const SkillsForm = () => {
       {format === 'default' ? (
         <DefaultSkillsForm resumeInfo={resumeInfo} />
       ) : (
-        <CategorySkillsForm resumeInfo={resumeInfo} />
+        <CategorySkillsForm resumeInfo={resumeInfo} refetchResumeInfo={refetch} />
       )}
     </div>
   );

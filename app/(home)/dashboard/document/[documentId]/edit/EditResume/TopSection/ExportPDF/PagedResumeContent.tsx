@@ -42,18 +42,18 @@ export const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
     if (contentRef.current) {
       const contentHeight = contentRef.current.scrollHeight;
       const needsMultiplePages = contentHeight > PAGE_CONTENT_HEIGHT_PX;
-      
+
       // Calculate number of pages needed
       const pagesNeeded = Math.ceil(contentHeight / PAGE_CONTENT_HEIGHT_PX);
-      
+
       // Create pages array
       const newPages: PageInfo[] = [];
-      
+
       for (let i = 0; i < Math.min(pagesNeeded, 3); i++) {
         newPages.push({
           pageNumber: i + 1,
           content: (
-            <div 
+            <div
               style={{
                 position: 'absolute',
                 top: `-${i * PAGE_CONTENT_HEIGHT_PX}px`,
@@ -79,7 +79,7 @@ export const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
           isLastPage: i === pagesNeeded - 1,
         });
       }
-      
+
       // If content fits on one page, just show one page
       if (!needsMultiplePages) {
         newPages[0] = {
@@ -102,7 +102,7 @@ export const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
           isLastPage: true,
         };
       }
-      
+
       setPages(newPages);
     }
   }, [resumeInfo, pagesOrder, themeColor, isLoading, selectedSection, onSectionClick, renderSectionWrapper]);
@@ -155,11 +155,7 @@ export const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
   return (
     <div className="space-y-6">
       {/* Hidden container for measuring full content */}
-      <div 
-        ref={contentRef}
-        className="absolute invisible -left-[9999px]" 
-        style={{ width: '180mm' }}
-      >
+      <div ref={contentRef} className="invisible absolute -left-[9999px]" style={{ width: '180mm' }}>
         <ResumeContent
           key="pdf-measure"
           resumeInfo={resumeInfo}

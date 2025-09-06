@@ -83,14 +83,14 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onClos
   return (
     <Dialog open={isOpen} onOpenChange={onCloseAction}>
       <DialogContent className="max-h-[90vh] max-w-[900px] p-0" aria-describedby="PDF Debug Preview">
-        <div className="h-full max-h-[85vh] overflow-y-auto p-6 bg-gray-100">
+        <div className="h-full max-h-[85vh] overflow-y-auto bg-gray-100 p-6">
           <div className="mx-auto" style={{ width: 'fit-content' }}>
             {selectedSection && (
               <div className="fixed left-4 top-4 z-40 rounded-md bg-white px-2 py-1 text-xs text-gray-500 shadow-sm dark:bg-gray-800">
                 Selected section: {selectedSection} (ESC to cancel)
               </div>
             )}
-            
+
             {/* PDF Page Preview */}
             <div ref={containerRef} onClick={() => setSelectedSection(null)}>
               <PagedResumeContent

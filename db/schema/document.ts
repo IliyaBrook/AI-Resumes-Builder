@@ -8,7 +8,7 @@ import { projectTable, projectTableSchema } from './project';
 import { languageTable, languageTableSchema } from './language';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-import { DEFAULT_PAGES_ORDER } from '../../constant/default-pages-order';
+import { DEFAULT_PAGES_ORDER } from '@/constant/default-pages-order';
 
 export const statusEnum = pgEnum('status', ['archived', 'private', 'public']);
 

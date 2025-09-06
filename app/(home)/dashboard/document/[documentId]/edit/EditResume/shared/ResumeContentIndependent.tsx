@@ -36,7 +36,7 @@ export const ResumeContentIndependent: React.FC<ResumeContentIndependentProps> =
   const documentId = param.documentId as string;
   const { data, isLoading: dataIsLoading } = useGetDocumentById(documentId);
   const documentData = data?.data as DocumentType;
-  
+
   const resumeInfo = customResumeInfo || normalizeResumeData(documentData);
   const pagesOrder = customPagesOrder || resumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER;
   const themeColor = customThemeColor || resumeInfo?.themeColor || '#3b82f6';

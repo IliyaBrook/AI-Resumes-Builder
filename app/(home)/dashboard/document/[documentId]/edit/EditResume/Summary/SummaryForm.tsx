@@ -15,9 +15,9 @@ import { getAIChatSession } from '@/lib/google-ai-model';
 import { Sparkles } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
-import { AIGeneratedSummariesType, ResumeDataType, SkillType } from '@/types/resume.type';
+import { AIGeneratedSummariesType, DocumentType, SkillType } from '@/types/resume.type';
 
-const buildPrompt = (resumeInfo: ResumeDataType, summarySize: string = 'default') => {
+const buildPrompt = (resumeInfo: DocumentType, summarySize: string = 'default') => {
   const jobTitle = resumeInfo?.personalInfo?.jobTitle || '';
   const promptParts = [];
   promptParts.push(`Job Title: ${jobTitle}`);
@@ -77,7 +77,7 @@ const SummaryForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
   const { data, isLoading } = useGetDocumentById(documentId);
-  const resumeInfo = data?.data as ResumeDataType | undefined;
+  const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const [loading, setLoading] = useState(false);
   const [aiGeneratedSummary, setAiGeneratedSummary] = useState<AIGeneratedSummariesType | null>(null);
@@ -113,7 +113,7 @@ const SummaryForm = () => {
         projectsSectionTitle === null
           ? {
               ...rest,
-              skills: rest.skills.map((skill: SkillType) => ({
+              skills: rest?.skills?.map((skill: SkillType) => ({
                 ...skill,
                 hideRating: !!skill.hideRating,
               })),
@@ -121,12 +121,12 @@ const SummaryForm = () => {
           : {
               ...rest,
               projectsSectionTitle,
-              skills: rest.skills.map((skill: SkillType) => ({
+              skills: rest?.skills?.map((skill: SkillType) => ({
                 ...skill,
                 hideRating: !!skill.hideRating,
               })),
             };
-      const promptText = buildPrompt(resumeData as ResumeDataType, summarySize);
+      const promptText = buildPrompt(resumeData as DocumentType, summarySize);
       const chat = getAIChatSession();
       const result = await chat.sendMessage({ message: promptText });
       const responseText = result.text || '';

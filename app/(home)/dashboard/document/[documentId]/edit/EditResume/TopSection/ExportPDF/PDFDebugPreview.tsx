@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { useParams } from 'next/navigation';
-import { useGetDocumentById } from '@/hooks';
-import { ResumeContent } from '../../shared/ResumeContent';
-import { DEFAULT_PAGES_ORDER } from '@/constant/resume-sections';
-import { normalizeResumeData } from '@/lib/utils';
+import { ResumeContentIndependent } from '../../shared/ResumeContent';
+import { renderSectionWrapper } from '../../ResumePreview/renderSectionWrapper';
+import { moveSection } from '../../ResumePreview/pageOrderUtils';
+import { useSectionSelection } from '../../ResumePreview/useSectionSelection';
+import { usePageOrderSync } from '../../ResumePreview/usePageOrderSync';
 
 interface PDFDebugPreviewProps {
   isOpen: boolean;
@@ -14,25 +14,72 @@ interface PDFDebugPreviewProps {
 }
 
 export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseAction }) => {
-  const param = useParams();
-  const documentId = param.documentId as string;
-  const { data, isLoading } = useGetDocumentById(documentId);
-  const fixedResumeInfo = normalizeResumeData(data?.data);
-  const pagesOrder = fixedResumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER;
+  const {
+    currentOrder,
+    setCurrentOrder,
+    updatePagesOrder,
+    fixedResumeInfo,
+    isLoading,
+  } = usePageOrderSync();
+  
+  const {
+    selectedSection,
+    setSelectedSection,
+    toggleSection,
+    containerRef,
+  } = useSectionSelection();
+
+  const handleMoveSection = (direction: 'up' | 'down') => {
+    if (!selectedSection) return;
+    
+    const newOrder = moveSection(currentOrder, selectedSection, direction);
+    if (newOrder) {
+      updatePagesOrder(newOrder);
+      setCurrentOrder(newOrder);
+    }
+  };
+
+  const handleRenderSectionWrapper = (
+    sectionKey: string,
+    component: React.ReactNode,
+    isSelected: boolean
+  ) => {
+    return renderSectionWrapper({
+      sectionKey,
+      component,
+      isSelected,
+      currentOrder,
+      onSectionClick: toggleSection,
+      onMoveSection: handleMoveSection,
+    });
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onCloseAction}>
       <DialogContent className="max-h-[90vh] max-w-[900px] p-0" aria-describedby="PDF Debug Preview">
         <div className="h-full max-h-[85vh] overflow-y-auto p-6">
-          <div className="mx-auto" style={{ width: '210mm', minHeight: '297mm' }}>
+          <div 
+            ref={containerRef}
+            className="mx-auto relative" 
+            style={{ width: '210mm', minHeight: '297mm' }}
+            onClick={() => setSelectedSection(null)}
+          >
+            {selectedSection && (
+              <div className="absolute left-4 top-4 z-10 rounded-md bg-white px-2 py-1 text-xs text-gray-500 shadow-sm dark:bg-gray-800">
+                Selected section: {selectedSection} (ESC to cancel)
+              </div>
+            )}
             <div className="rounded-lg border bg-white shadow-lg">
-              <ResumeContent
-                resumeInfo={fixedResumeInfo}
-                pagesOrder={pagesOrder}
-                themeColor={fixedResumeInfo?.themeColor}
-                isLoading={isLoading}
+              <ResumeContentIndependent
+                customResumeInfo={fixedResumeInfo}
+                customPagesOrder={currentOrder}
+                customThemeColor={fixedResumeInfo?.themeColor}
+                customIsLoading={isLoading}
                 isPdfMode={true}
-                isInteractive={false}
+                isInteractive={true}
+                selectedSection={selectedSection}
+                onSectionClick={toggleSection}
+                renderSectionWrapper={handleRenderSectionWrapper}
               />
             </div>
           </div>

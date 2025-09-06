@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { toast, useGetDocumentById } from '@/hooks';
 import { formatFileName } from '@/lib/helper';
 import { useParams } from 'next/navigation';
-import { ResumeContent } from '../../shared/ResumeContent';
+import { ResumeContentIndependent } from '../../shared/ResumeContent';
 import { DEFAULT_PAGES_ORDER } from '@/constant/resume-sections';
 import RESUME_STYLES from '../../shared/resume-styles.css?inline';
 import { normalizeResumeData } from '@/lib/utils';
@@ -50,11 +50,11 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
       const root = createRoot(tempContainer);
       await new Promise<void>(resolve => {
         root.render(
-          <ResumeContent
-            resumeInfo={fixedResumeInfo}
-            pagesOrder={pagesOrder}
-            themeColor={themeColor}
-            isLoading={false}
+          <ResumeContentIndependent
+            customResumeInfo={fixedResumeInfo}
+            customPagesOrder={pagesOrder}
+            customThemeColor={themeColor}
+            customIsLoading={false}
             isPdfMode={true}
             isInteractive={false}
           />

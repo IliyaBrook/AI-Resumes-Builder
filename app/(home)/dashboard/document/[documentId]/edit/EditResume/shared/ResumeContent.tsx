@@ -2,10 +2,18 @@
 import React from 'react';
 import { SECTION_COMPONENTS, type SectionKey } from '@/constant/resume-sections';
 import { cn } from '@/lib/utils';
+import { DocumentType } from '@/types/resume.type';
 import RESUME_STYLES from './resume-styles.css?inline';
 
+export { ResumeContentIndependent } from './ResumeContentIndependent';
+
+export const normalizeResumeData = (data: any) => {
+  if (!data) return null;
+  return data;
+};
+
 interface ResumeContentProps {
-  resumeInfo: any;
+  resumeInfo: DocumentType;
   pagesOrder: string[];
   themeColor?: string;
   isLoading?: boolean;

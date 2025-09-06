@@ -1,12 +1,12 @@
 'use client';
 import { Skeleton } from '@/components';
 import { INITIAL_THEME_COLOR } from '@/lib/helper';
-import { ResumeDataType } from '@/types/resume.type';
+import { DocumentType } from '@/types/resume.type';
 import React, { FC } from 'react';
 import { Mail, Phone, MapPin, Github, Linkedin } from 'lucide-react';
 
 interface PropsType {
-  resumeInfo: ResumeDataType | undefined;
+  resumeInfo: DocumentType | undefined;
   isLoading: boolean;
 }
 

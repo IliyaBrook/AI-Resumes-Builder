@@ -1,11 +1,11 @@
 import { SkeletonLoader } from '@/components';
 import { INITIAL_THEME_COLOR } from '@/lib/helper';
-import { ResumeDataType } from '@/types/resume.type';
+import { DocumentType } from '@/types/resume.type';
 import React, { FC } from 'react';
 import { formatDateByLocale } from '@/lib/utils';
 
 interface PropsType {
-  resumeInfo: ResumeDataType | undefined;
+  resumeInfo: DocumentType | undefined;
   isLoading: boolean;
 }
 

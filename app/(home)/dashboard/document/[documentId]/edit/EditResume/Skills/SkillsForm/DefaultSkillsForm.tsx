@@ -4,12 +4,12 @@ import { Label, Input, Button } from '@/components';
 import { Rating } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
 import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
-import { ResumeDataType, SkillType } from '@/types/resume.type';
+import { DocumentType, SkillType } from '@/types/resume.type';
 import { useDebounce, useCreateSkill, useDeleteSkill } from '@/hooks';
 import { useSkillInputHandler } from './utils';
 
 interface DefaultSkillsFormProps {
-  resumeInfo: ResumeDataType | undefined;
+  resumeInfo: DocumentType | undefined;
 }
 
 const DefaultSkillsForm: React.FC<DefaultSkillsFormProps> = ({ resumeInfo }) => {

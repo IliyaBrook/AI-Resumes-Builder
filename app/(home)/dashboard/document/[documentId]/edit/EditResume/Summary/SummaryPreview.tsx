@@ -1,9 +1,9 @@
 import { Skeleton } from '@/components';
-import { ResumeDataType } from '@/types/resume.type';
 import React, { FC } from 'react';
+import { DocumentType } from '@/types';
 
 interface PropsType {
-  resumeInfo: ResumeDataType | undefined;
+  resumeInfo: DocumentType | undefined;
   isLoading: boolean;
 }
 

@@ -4,7 +4,7 @@ import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger
 
 import { Eye, FileText } from 'lucide-react';
 import React from 'react';
-import ResumePreview from './ResumePreview';
+import { ResumePreview } from './ResumePreview';
 import { useGetDocumentById } from '@/hooks';
 import { useParams } from 'next/navigation';
 

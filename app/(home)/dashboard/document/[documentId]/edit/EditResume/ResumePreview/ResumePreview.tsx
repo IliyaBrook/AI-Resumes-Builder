@@ -1,6 +1,5 @@
 'use client';
 import { DEFAULT_PAGES_ORDER, syncPagesOrder } from '@/constant/resume-sections';
-import { ResumeContent } from './shared/ResumeContent';
 
 //hooks
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
@@ -10,6 +9,7 @@ import { Button } from '@/components';
 import { MoveDown, MoveUp } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
+import { ResumeContent } from '@/shared/ResumeContent';
 
 const ResumePreview = () => {
   const param = useParams();

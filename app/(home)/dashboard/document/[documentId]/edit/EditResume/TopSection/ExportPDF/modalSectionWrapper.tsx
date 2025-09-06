@@ -32,11 +32,11 @@ export const modalSectionWrapper = ({
   const { data } = useGetDocumentById(documentId);
   const documentData = data?.data as DocumentType;
   const { mutate: updateDocument } = useUpdateDocument();
-  
+
   const currentIndex = currentOrder.indexOf(sectionKey);
   const canMoveUp = currentIndex > 0;
   const canMoveDown = currentIndex < currentOrder.length - 1;
-  
+
   const [paddingTop, setPaddingTop] = useState<number>(
     documentData?.sectionPaddings?.[sectionKey as keyof SectionPaddingsType]?.paddingTop || 0
   );

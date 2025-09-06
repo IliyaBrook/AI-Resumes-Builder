@@ -5,7 +5,7 @@ import { Button } from '@/components';
 import { MoveDown, MoveUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface DebugRenderSectionWrapperProps {
+interface ModalSectionWrapperProps {
   sectionKey: string;
   component: React.ReactNode;
   isSelected: boolean;
@@ -14,32 +14,32 @@ interface DebugRenderSectionWrapperProps {
   onMoveSection: (direction: 'up' | 'down') => void;
 }
 
-export const debugRenderSectionWrapper = ({
+export const modalSectionWrapper = ({
   sectionKey,
   component,
   isSelected,
   currentOrder,
   onSectionClick,
   onMoveSection,
-}: DebugRenderSectionWrapperProps) => {
+}: ModalSectionWrapperProps) => {
   const currentIndex = currentOrder.indexOf(sectionKey);
   const canMoveUp = currentIndex > 0;
   const canMoveDown = currentIndex < currentOrder.length - 1;
 
   console.log(
-    `DEBUG renderSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`
+    `modalSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`
   );
 
   return (
     <div
-      key={`debug-section-wrapper-${sectionKey}`}
+      key={`modal-section-wrapper-${sectionKey}`}
       className={cn(
-        'section-wrapper relative cursor-pointer rounded-md transition-all duration-200',
-        isSelected && 'bg-blue-50 p-2 ring-2 ring-blue-500 ring-opacity-50 dark:bg-blue-950 dark:ring-blue-400'
+        'section-wrapper relative cursor-pointer rounded-md transition-all duration-200 border-2 border-transparent',
+        isSelected && 'bg-blue-50 p-2 border-blue-500 shadow-lg ring-2 ring-blue-500 ring-opacity-50 dark:bg-blue-950 dark:border-blue-400 dark:ring-blue-400'
       )}
       onClick={e => {
         e.stopPropagation();
-        console.log('DEBUG: Section clicked:', sectionKey);
+        console.log('Modal: Section clicked:', sectionKey);
         onSectionClick(sectionKey);
       }}
       title={`Click to select "${sectionKey}" section`}
@@ -48,35 +48,39 @@ export const debugRenderSectionWrapper = ({
 
       {isSelected && (
         <div
-          key={`debug-buttons-${sectionKey}`}
-          className="fixed right-4 top-4 flex flex-col gap-2 rounded-md border-4 border-red-500 bg-red-100 p-2 shadow-2xl"
+          key={`modal-buttons-${sectionKey}`}
+          className="fixed left-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 rounded-lg border-2 border-blue-500 bg-white p-4 shadow-2xl backdrop-blur-sm"
           style={{
             zIndex: 99999,
             position: 'fixed',
-            right: '20px',
-            top: '20px',
-            backgroundColor: '#fef2f2',
-            border: '4px solid #ef4444',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            left: '20px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            border: '2px solid #3b82f6',
+            borderRadius: '12px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(8px)',
           }}
         >
-          <div className="mb-1 text-xs font-bold text-red-800">DEBUG: {sectionKey}</div>
+          <div className="mb-2 text-sm font-bold text-blue-800 text-center border-b border-blue-200 pb-2">
+            📝 {sectionKey}
+          </div>
           <Button
             variant="outline"
             size="sm"
             type="button"
             className={cn(
-              'border-green-500 bg-green-200 hover:bg-green-300',
+              'border-emerald-400 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-semibold min-w-[100px] shadow-sm transition-all',
               !canMoveUp && 'cursor-not-allowed opacity-50'
             )}
             onClick={e => {
               e.stopPropagation();
-              console.log('DEBUG: Move up clicked for:', sectionKey);
+              console.log('Modal: Move up clicked for:', sectionKey);
               onMoveSection('up');
             }}
             disabled={!canMoveUp}
             title="Move section up"
-            style={{ backgroundColor: '#bbf7d0', borderColor: '#22c55e' }}
           >
             <MoveUp size={16} />
             <span className="ml-1">UP</span>
@@ -86,17 +90,16 @@ export const debugRenderSectionWrapper = ({
             size="sm"
             type="button"
             className={cn(
-              'border-blue-500 bg-blue-200 hover:bg-blue-300',
+              'border-sky-400 bg-sky-100 hover:bg-sky-200 text-sky-800 font-semibold min-w-[100px] shadow-sm transition-all',
               !canMoveDown && 'cursor-not-allowed opacity-50'
             )}
             onClick={e => {
               e.stopPropagation();
-              console.log('DEBUG: Move down clicked for:', sectionKey);
+              console.log('Modal: Move down clicked for:', sectionKey);
               onMoveSection('down');
             }}
             disabled={!canMoveDown}
             title="Move section down"
-            style={{ backgroundColor: '#bfdbfe', borderColor: '#3b82f6' }}
           >
             <MoveDown size={16} />
             <span className="ml-1">DOWN</span>

@@ -8,24 +8,13 @@ import { useSectionSelection } from './useSectionSelection';
 import { usePageOrderSync } from './usePageOrderSync';
 
 const ResumePreview = () => {
-  const {
-    currentOrder,
-    setCurrentOrder,
-    updatePagesOrder,
-    fixedResumeInfo,
-    isLoading,
-  } = usePageOrderSync();
-  
-  const {
-    selectedSection,
-    setSelectedSection,
-    toggleSection,
-    containerRef,
-  } = useSectionSelection();
+  const { currentOrder, setCurrentOrder, updatePagesOrder, fixedResumeInfo, isLoading } = usePageOrderSync();
+
+  const { selectedSection, setSelectedSection, toggleSection, containerRef } = useSectionSelection();
 
   const handleMoveSection = (direction: 'up' | 'down') => {
     if (!selectedSection) return;
-    
+
     const newOrder = moveSection(currentOrder, selectedSection, direction);
     if (newOrder) {
       updatePagesOrder(newOrder);
@@ -33,11 +22,7 @@ const ResumePreview = () => {
     }
   };
 
-  const handleRenderSectionWrapper = (
-    sectionKey: string,
-    component: React.ReactNode,
-    isSelected: boolean
-  ) => {
+  const handleRenderSectionWrapper = (sectionKey: string, component: React.ReactNode, isSelected: boolean) => {
     return renderSectionWrapper({
       sectionKey,
       component,

@@ -1,3 +1,27 @@
+export type DocumentType = {
+  id?: number;
+  documentId: string;
+  title: string;
+  status: StatusType;
+  thumbnail?: string | null;
+  personalInfo?: PersonalInfoType | null;
+  themeColor?: string | null;
+  currentPosition?: number | null;
+  summary: string | null;
+  experiences?: ExperienceType[] | null;
+  educations?: EducationType[] | null;
+  skills?: SkillType[] | null;
+  projects?: ProjectType[] | null;
+  languages?: LanguageType[] | null;
+  createdAt?: string;
+  updatedAt: string;
+  projectsSectionTitle?: string;
+  languagesSectionTitle?: string;
+  skillsDisplayFormat?: string;
+  personalInfoDisplayFormat?: string;
+  pagesOrder?: string[] | null;
+};
+
 export type ExperienceType = {
   id?: number;
   docId?: string | null;
@@ -79,30 +103,6 @@ export type LanguageType = {
   name: string;
   level?: string | null;
   order?: number;
-};
-
-export type DocumentType = {
-  id?: number;
-  documentId: string;
-  title: string;
-  status: StatusType;
-  thumbnail?: string | null;
-  personalInfo?: PersonalInfoType | null;
-  themeColor?: string | null;
-  currentPosition?: number | null;
-  summary: string | null;
-  experiences?: ExperienceType[] | null;
-  educations?: EducationType[] | null;
-  skills?: SkillType[] | null;
-  projects?: ProjectType[] | null;
-  languages?: LanguageType[] | null;
-  createdAt?: string;
-  updatedAt: string;
-  projectsSectionTitle?: string;
-  languagesSectionTitle?: string;
-  skillsDisplayFormat?: string;
-  personalInfoDisplayFormat?: string;
-  pagesOrder?: string[] | null;
 };
 
 export type Education = {

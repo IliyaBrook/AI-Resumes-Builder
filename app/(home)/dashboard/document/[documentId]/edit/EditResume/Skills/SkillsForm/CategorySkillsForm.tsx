@@ -2,13 +2,13 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { Button, Input } from '@/components';
 import { MoveDown, MoveUp, Plus, X } from 'lucide-react';
-import { ResumeDataType, SkillType } from '@/types/resume.type';
+import { DocumentType, SkillType } from '@/types/resume.type';
 import { useCreateSkill, useDebounce, useDeleteSkill } from '@/hooks';
 import { useSkillInputHandler, groupSkillsByCategory } from './utils';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/query-core';
 
 interface CategorySkillsFormProps {
-  resumeInfo: ResumeDataType | undefined;
+  resumeInfo: DocumentType | undefined;
   refetchResumeInfo: (options?: RefetchOptions) => Promise<
     QueryObserverResult<
       {

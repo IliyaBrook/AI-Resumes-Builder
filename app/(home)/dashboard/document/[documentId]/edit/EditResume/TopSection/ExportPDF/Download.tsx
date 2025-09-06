@@ -12,7 +12,6 @@ const Download = (props: { title: string; isLoading: boolean; status?: StatusTyp
   const [loading, setLoading] = useState(false);
   const [showDebugPreview, setShowDebugPreview] = useState(false);
 
-  // Enable debug mode by default, can be controlled via env variable
   const isDebugMode = process.env.NEXT_PUBLIC_DEBUG_PDF !== 'false';
 
   return (

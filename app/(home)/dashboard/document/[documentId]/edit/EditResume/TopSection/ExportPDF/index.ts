@@ -1,2 +1,5 @@
-export * from './PDFExporter';
-export * from './Download';
+import dynamic from 'next/dynamic';
+
+export const Download = dynamic(() => import('./Download'), {
+  ssr: false,
+});

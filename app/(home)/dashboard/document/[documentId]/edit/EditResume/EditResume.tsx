@@ -1,5 +1,4 @@
 import React from 'react';
-// page components
 import { ResumeForm, ResumePreview, TopSection } from '@/editResume';
 import { FirstRenderProvider } from '@/context';
 

@@ -34,8 +34,9 @@ export const modalSectionWrapper = ({
     <div
       key={`modal-section-wrapper-${sectionKey}`}
       className={cn(
-        'section-wrapper relative cursor-pointer rounded-md transition-all duration-200 border-2 border-transparent',
-        isSelected && 'bg-blue-50 p-2 border-blue-500 shadow-lg ring-2 ring-blue-500 ring-opacity-50 dark:bg-blue-950 dark:border-blue-400 dark:ring-blue-400'
+        'section-wrapper relative cursor-pointer rounded-md border-2 border-transparent transition-all duration-200',
+        isSelected &&
+          'border-blue-500 bg-blue-50 p-2 shadow-lg ring-2 ring-blue-500 ring-opacity-50 dark:border-blue-400 dark:bg-blue-950 dark:ring-blue-400'
       )}
       onClick={e => {
         e.stopPropagation();
@@ -49,12 +50,12 @@ export const modalSectionWrapper = ({
       {isSelected && (
         <div
           key={`modal-buttons-${sectionKey}`}
-          className="fixed left-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 rounded-lg border-2 border-blue-500 bg-white p-4 shadow-2xl backdrop-blur-sm"
+          className="fixed left-4 top-1/2 flex -translate-y-1/2 transform flex-col gap-3 rounded-lg border-2 border-blue-500 bg-white p-4 shadow-2xl backdrop-blur-sm"
           style={{
             zIndex: 99999,
             position: 'fixed',
-            left: '20px',
-            top: '50%',
+            left: '-16%',
+            top: '12%',
             transform: 'translateY(-50%)',
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
             border: '2px solid #3b82f6',
@@ -63,7 +64,7 @@ export const modalSectionWrapper = ({
             backdropFilter: 'blur(8px)',
           }}
         >
-          <div className="mb-2 text-sm font-bold text-blue-800 text-center border-b border-blue-200 pb-2">
+          <div className="mb-2 border-b border-blue-200 pb-2 text-center text-sm font-bold text-blue-800">
             📝 {sectionKey}
           </div>
           <Button
@@ -71,7 +72,7 @@ export const modalSectionWrapper = ({
             size="sm"
             type="button"
             className={cn(
-              'border-emerald-400 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-semibold min-w-[100px] shadow-sm transition-all',
+              'min-w-[100px] border-emerald-400 bg-emerald-100 font-semibold text-emerald-800 shadow-sm transition-all hover:bg-emerald-200',
               !canMoveUp && 'cursor-not-allowed opacity-50'
             )}
             onClick={e => {
@@ -90,7 +91,7 @@ export const modalSectionWrapper = ({
             size="sm"
             type="button"
             className={cn(
-              'border-sky-400 bg-sky-100 hover:bg-sky-200 text-sky-800 font-semibold min-w-[100px] shadow-sm transition-all',
+              'min-w-[100px] border-sky-400 bg-sky-100 font-semibold text-sky-800 shadow-sm transition-all hover:bg-sky-200',
               !canMoveDown && 'cursor-not-allowed opacity-50'
             )}
             onClick={e => {

@@ -34,12 +34,15 @@ export const useSkillInputHandler = ({
         name !== prevValue &&
         currentSkill &&
         currentSkill.name !== name &&
-        name.trim() !== '' &&
-        name.trim() !== currentSkill.name?.trim() &&
         !pendingUpdatesRef.current.has(updateKey)
       ) {
         prevSkillInputsRef.current[skillIdNum] = name;
         pendingUpdatesRef.current.add(updateKey);
+
+        updateSkill({
+          skillId: skillIdNum,
+          data: { name: name.trim() || undefined },
+        });
 
         setTimeout(() => {
           pendingUpdatesRef.current.delete(updateKey);

@@ -32,7 +32,7 @@ const entityConfigs: Record<string, EntityConfig> = {
         error: 'Failed to delete skill',
       },
     },
-    invalidateQueries: [],
+    invalidateQueries: [['document', 'documentId']],
   },
   education: {
     name: 'education',

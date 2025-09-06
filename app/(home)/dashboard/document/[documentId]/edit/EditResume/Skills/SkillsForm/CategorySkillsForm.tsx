@@ -113,7 +113,6 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
     }
 
     const newSkill = {
-      name: '',
       rating: 0,
       hideRating: false,
       skillOrder: maxSkillOrder + 1,
@@ -400,6 +399,14 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
                           : (getSkillValue(skill, 'name') as string) || ''
                       }
                       onChange={e => skill.id && handleSkillNameChange(skill.id, e.target.value)}
+                      onBlur={e => {
+                        if (skill.id && e.target.value.trim()) {
+                          updateSkill({
+                            skillId: skill.id,
+                            data: { name: e.target.value.trim() },
+                          });
+                        }
+                      }}
                       placeholder="Skill name"
                       className="w-64"
                     />

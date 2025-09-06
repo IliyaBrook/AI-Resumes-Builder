@@ -21,17 +21,20 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({
   max = 100,
   step = 5,
 }) => {
-  const handleDecrease = () => {
+  const handleDecrease = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const newValue = Math.max(min, value - step);
     onChange(newValue);
   };
 
-  const handleIncrease = () => {
+  const handleIncrease = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const newValue = Math.min(max, value + step);
     onChange(newValue);
   };
 
-  const handleReset = () => {
+  const handleReset = (e: React.MouseEvent) => {
+    e.stopPropagation();
     onChange(0);
   };
 

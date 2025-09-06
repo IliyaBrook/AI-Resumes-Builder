@@ -137,6 +137,7 @@ export const ModalSectionWrapper = ({
         <div
           key={`modal-buttons-${sectionKey}`}
           className="fixed left-4 top-1/2 flex -translate-y-1/2 transform flex-col gap-3 rounded-lg border-2 border-blue-500 bg-white p-4 shadow-2xl backdrop-blur-sm"
+          onClick={e => e.stopPropagation()}
           style={{
             zIndex: 99999,
             position: 'fixed',

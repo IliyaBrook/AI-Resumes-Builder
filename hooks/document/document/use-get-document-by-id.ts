@@ -2,6 +2,7 @@
 
 import { api } from '@/lib/hono-rpc';
 import { useBaseQuery } from '@/hooks';
+import { APIResponseType, DocumentType } from '@/types';
 
 const useGetDocumentById = (documentId: string, isPublic: boolean = false) => {
   return useBaseQuery({
@@ -19,7 +20,7 @@ const useGetDocumentById = (documentId: string, isPublic: boolean = false) => {
         throw new Error('Failed to get document');
       }
 
-      const { data, success } = await response.json();
+      const { data, success }: APIResponseType<DocumentType> = await response.json();
       return {
         data,
         success,

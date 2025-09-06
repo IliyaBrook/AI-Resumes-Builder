@@ -10,6 +10,7 @@ export type ExperienceType = {
   currentlyWorking: boolean;
   workSummary: string | null;
   yearsOnly?: boolean;
+  order?: number;
 };
 
 export type EducationType = {
@@ -26,6 +27,7 @@ export type EducationType = {
   skipDates?: boolean;
   yearsOnly?: boolean;
   hideDates?: boolean;
+  order?: number;
 };
 
 export type SkillType = {
@@ -79,9 +81,9 @@ export type LanguageType = {
   order?: number;
 };
 
-export type ResumeDataType = {
+export type DocumentType = {
   id?: number;
-  documentId?: string;
+  documentId: string;
   title: string;
   status: StatusType;
   thumbnail?: string | null;
@@ -94,7 +96,8 @@ export type ResumeDataType = {
   skills?: SkillType[] | null;
   projects?: ProjectType[] | null;
   languages?: LanguageType[] | null;
-  updatedAt?: string;
+  createdAt?: string;
+  updatedAt: string;
   projectsSectionTitle?: string;
   languagesSectionTitle?: string;
   skillsDisplayFormat?: string;
@@ -134,16 +137,6 @@ export type AIResultObjectType = {
 export type AIResultType = AIResultObjectType | string[] | string;
 
 export type ParsedAIResult = AIGeneratedSummariesType | string;
-
-export type DocumentType = {
-  id?: number;
-  documentId: string;
-  title: string;
-  status: StatusType;
-  thumbnail?: string | null;
-  themeColor?: string | null;
-  updatedAt: string;
-};
 
 export type APIResponseType<T> = {
   data: T;

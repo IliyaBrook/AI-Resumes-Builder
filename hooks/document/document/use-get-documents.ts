@@ -2,6 +2,7 @@
 
 import { api } from '@/lib/hono-rpc';
 import { useBaseQuery } from '@/hooks';
+import { APIResponseType, DocumentType } from '@/types';
 
 const useGetDocuments = (isTrash: boolean = false) => {
   const queryKey = isTrash ? ['trashDocuments'] : ['documents'];
@@ -16,7 +17,7 @@ const useGetDocuments = (isTrash: boolean = false) => {
         throw new Error('Failed to get documents');
       }
 
-      const { data, success } = await response.json();
+      const { data, success }: APIResponseType<DocumentType[]> = await response.json();
       return { data, success };
     },
   });

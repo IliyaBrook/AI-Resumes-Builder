@@ -198,20 +198,37 @@ const EducationForm = () => {
                     </div>
                   </>
                 )}
-                <div className="col-span-2 flex items-center">
-                  <input
-                    type="checkbox"
-                    id={`hide-dates-checkbox-${index}`}
-                    checked={item?.hideDates || false}
-                    onChange={e => {
-                      setLocalEducationList(prev =>
-                        prev.map((edu, idx) => (idx === index ? { ...edu, hideDates: e.target.checked } : edu))
-                      );
-                    }}
-                  />
-                  <Label htmlFor={`hide-dates-checkbox-${index}`} className="ml-2 cursor-pointer select-none text-xs">
-                    Hide Dates
-                  </Label>
+                <div className="col-span-2 flex items-center gap-6">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`hide-dates-checkbox-${index}`}
+                      checked={item?.hideDates || false}
+                      onChange={e => {
+                        setLocalEducationList(prev =>
+                          prev.map((edu, idx) => (idx === index ? { ...edu, hideDates: e.target.checked } : edu))
+                        );
+                      }}
+                    />
+                    <Label htmlFor={`hide-dates-checkbox-${index}`} className="ml-2 cursor-pointer select-none text-xs">
+                      Hide Dates
+                    </Label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`years-only-checkbox-${index}`}
+                      checked={item?.yearsOnly || false}
+                      onChange={e => {
+                        setLocalEducationList(prev =>
+                          prev.map((edu, idx) => (idx === index ? { ...edu, yearsOnly: e.target.checked } : edu))
+                        );
+                      }}
+                    />
+                    <Label htmlFor={`years-only-checkbox-${index}`} className="ml-2 cursor-pointer select-none text-xs">
+                      Years only
+                    </Label>
+                  </div>
                 </div>
                 <div className="col-span-2">
                   <Label className="text-sm">Description</Label>

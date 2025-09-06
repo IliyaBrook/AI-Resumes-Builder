@@ -81,13 +81,3 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
     </div>
   );
 };
-
-export function normalizeResumeData(data: any) {
-  if (!data) return data;
-  if (data.projectsSectionTitle === null) {
-    const { projectsSectionTitle, ...rest } = data;
-    void projectsSectionTitle;
-    return rest;
-  }
-  return data;
-}

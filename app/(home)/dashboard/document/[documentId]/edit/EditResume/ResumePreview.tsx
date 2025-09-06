@@ -1,10 +1,10 @@
 'use client';
 import { DEFAULT_PAGES_ORDER, syncPagesOrder } from '@/constant/resume-sections';
-import { normalizeResumeData, ResumeContent } from './shared/ResumeContent';
+import { ResumeContent } from './shared/ResumeContent';
 
 //hooks
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
-import { cn } from '@/lib/utils';
+import { cn, normalizeResumeData } from '@/lib/utils';
 // components
 import { Button } from '@/components';
 import { MoveDown, MoveUp } from 'lucide-react';

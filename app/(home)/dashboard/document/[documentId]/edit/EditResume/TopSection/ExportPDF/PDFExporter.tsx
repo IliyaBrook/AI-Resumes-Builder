@@ -5,9 +5,10 @@ import { createRoot } from 'react-dom/client';
 import { toast, useGetDocumentById } from '@/hooks';
 import { formatFileName } from '@/lib/helper';
 import { useParams } from 'next/navigation';
-import { normalizeResumeData, ResumeContent } from '../../shared/ResumeContent';
+import { ResumeContent } from '../../shared/ResumeContent';
 import { DEFAULT_PAGES_ORDER } from '@/constant/resume-sections';
 import RESUME_STYLES from '../../shared/resume-styles.css?inline';
+import { normalizeResumeData } from '@/lib/utils';
 
 interface PDFExporterProps {
   title: string;

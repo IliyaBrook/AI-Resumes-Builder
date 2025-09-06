@@ -4,8 +4,9 @@ import React from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useParams } from 'next/navigation';
 import { useGetDocumentById } from '@/hooks';
-import { normalizeResumeData, ResumeContent } from '../../shared/ResumeContent';
+import { ResumeContent } from '../../shared/ResumeContent';
 import { DEFAULT_PAGES_ORDER } from '@/constant/resume-sections';
+import { normalizeResumeData } from '@/lib/utils';
 
 interface PDFDebugPreviewProps {
   isOpen: boolean;

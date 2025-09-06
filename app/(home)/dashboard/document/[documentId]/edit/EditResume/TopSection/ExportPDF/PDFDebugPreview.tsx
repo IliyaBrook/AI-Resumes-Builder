@@ -13,14 +13,8 @@ interface PDFDebugPreviewProps {
 }
 
 export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseAction }) => {
-  const {
-    currentOrder,
-    setCurrentOrder,
-    updatePagesOrder,
-    fixedResumeInfo,
-    isLoading,
-  } = usePageOrderSync();
-  
+  const { currentOrder, setCurrentOrder, updatePagesOrder, fixedResumeInfo, isLoading } = usePageOrderSync();
+
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -66,7 +60,7 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onClos
 
   const handleMoveSection = (direction: 'up' | 'down') => {
     if (!selectedSection) return;
-    
+
     const newOrder = moveSection(currentOrder, selectedSection, direction);
     if (newOrder) {
       updatePagesOrder(newOrder);
@@ -74,11 +68,7 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onClos
     }
   };
 
-  const handleRenderSectionWrapper = (
-    sectionKey: string,
-    component: React.ReactNode,
-    isSelected: boolean
-  ) => {
+  const handleRenderSectionWrapper = (sectionKey: string, component: React.ReactNode, isSelected: boolean) => {
     console.log('PDFDebugPreview - handleRenderSectionWrapper called for:', sectionKey, 'isSelected:', isSelected);
     return debugRenderSectionWrapper({
       sectionKey,
@@ -94,9 +84,9 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onClos
     <Dialog open={isOpen} onOpenChange={onCloseAction}>
       <DialogContent className="max-h-[90vh] max-w-[900px] p-0" aria-describedby="PDF Debug Preview">
         <div className="h-full max-h-[85vh] overflow-y-auto p-6">
-          <div 
+          <div
             ref={containerRef}
-            className="mx-auto relative" 
+            className="relative mx-auto"
             style={{ width: '210mm', minHeight: '297mm' }}
             onClick={() => setSelectedSection(null)}
           >

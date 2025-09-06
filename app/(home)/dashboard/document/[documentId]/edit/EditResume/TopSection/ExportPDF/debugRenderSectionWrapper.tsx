@@ -25,8 +25,10 @@ export const debugRenderSectionWrapper = ({
   const currentIndex = currentOrder.indexOf(sectionKey);
   const canMoveUp = currentIndex > 0;
   const canMoveDown = currentIndex < currentOrder.length - 1;
-  
-  console.log(`DEBUG renderSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`);
+
+  console.log(
+    `DEBUG renderSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`
+  );
 
   return (
     <div
@@ -45,28 +47,26 @@ export const debugRenderSectionWrapper = ({
       {component}
 
       {isSelected && (
-        <div 
+        <div
           key={`debug-buttons-${sectionKey}`}
           className="fixed right-4 top-4 flex flex-col gap-2 rounded-md border-4 border-red-500 bg-red-100 p-2 shadow-2xl"
-          style={{ 
+          style={{
             zIndex: 99999,
             position: 'fixed',
             right: '20px',
             top: '20px',
             backgroundColor: '#fef2f2',
             border: '4px solid #ef4444',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
           }}
         >
-          <div className="text-xs text-red-800 font-bold mb-1">
-            DEBUG: {sectionKey}
-          </div>
+          <div className="mb-1 text-xs font-bold text-red-800">DEBUG: {sectionKey}</div>
           <Button
             variant="outline"
             size="sm"
             type="button"
             className={cn(
-              'bg-green-200 border-green-500 hover:bg-green-300',
+              'border-green-500 bg-green-200 hover:bg-green-300',
               !canMoveUp && 'cursor-not-allowed opacity-50'
             )}
             onClick={e => {
@@ -86,7 +86,7 @@ export const debugRenderSectionWrapper = ({
             size="sm"
             type="button"
             className={cn(
-              'bg-blue-200 border-blue-500 hover:bg-blue-300',
+              'border-blue-500 bg-blue-200 hover:bg-blue-300',
               !canMoveDown && 'cursor-not-allowed opacity-50'
             )}
             onClick={e => {

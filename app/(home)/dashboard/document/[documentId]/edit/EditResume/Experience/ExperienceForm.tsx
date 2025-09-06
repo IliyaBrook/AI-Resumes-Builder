@@ -13,7 +13,7 @@ const ExperienceForm = () => {
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
-  const allSkills = data?.data?.skills ? resumeInfo?.skills.map((skill: SkillType) => skill.name).join(', ') : '';
+  const allSkills = data?.data?.skills ? resumeInfo?.skills?.map((skill: SkillType) => skill.name).join(', ') : '';
 
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteExperience, isPending: isDeleting } = useDeleteExperience();

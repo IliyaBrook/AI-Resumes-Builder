@@ -28,6 +28,15 @@ export const documentTable = pgTable('document', {
   skillsDisplayFormat: varchar('skills_display_format', { length: 32 }),
   personalInfoDisplayFormat: varchar('personal_info_display_format', { length: 32 }).default('default'),
   pagesOrder: json('pages_order').$type<string[]>().default(DEFAULT_PAGES_ORDER),
+  sectionPaddings: json('section_paddings').$type<{
+    personalInfo?: { paddingTop?: number; paddingBottom?: number };
+    summary?: { paddingTop?: number; paddingBottom?: number };
+    experience?: { paddingTop?: number; paddingBottom?: number };
+    education?: { paddingTop?: number; paddingBottom?: number };
+    skills?: { paddingTop?: number; paddingBottom?: number };
+    projects?: { paddingTop?: number; paddingBottom?: number };
+    languages?: { paddingTop?: number; paddingBottom?: number };
+  }>().default({}),
 });
 
 export const documentRelations = relations(documentTable, ({ one, many }) => {
@@ -51,6 +60,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   skillsDisplayFormat: schema => schema.skillsDisplayFormat.optional(),
   personalInfoDisplayFormat: schema => schema.personalInfoDisplayFormat.optional(),
   pagesOrder: schema => schema.pagesOrder.optional(),
+  sectionPaddings: schema => schema.sectionPaddings.optional(),
 }).pick({
   title: true,
   status: true,
@@ -63,6 +73,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   skillsDisplayFormat: true,
   personalInfoDisplayFormat: true,
   pagesOrder: true,
+  sectionPaddings: true,
 });
 
 export const updateCombinedSchema = z.object({
@@ -77,6 +88,36 @@ export const updateCombinedSchema = z.object({
   skillsDisplayFormat: createDocumentTableSchema.shape.skillsDisplayFormat.optional(),
   personalInfoDisplayFormat: createDocumentTableSchema.shape.personalInfoDisplayFormat.optional(),
   pagesOrder: z.array(z.string()).optional(),
+  sectionPaddings: z.object({
+    personalInfo: z.object({
+      paddingTop: z.number().optional(),
+      paddingBottom: z.number().optional(),
+    }).optional(),
+    summary: z.object({
+      paddingTop: z.number().optional(),
+      paddingBottom: z.number().optional(),
+    }).optional(),
+    experience: z.object({
+      paddingTop: z.number().optional(),
+      paddingBottom: z.number().optional(),
+    }).optional(),
+    education: z.object({
+      paddingTop: z.number().optional(),
+      paddingBottom: z.number().optional(),
+    }).optional(),
+    skills: z.object({
+      paddingTop: z.number().optional(),
+      paddingBottom: z.number().optional(),
+    }).optional(),
+    projects: z.object({
+      paddingTop: z.number().optional(),
+      paddingBottom: z.number().optional(),
+    }).optional(),
+    languages: z.object({
+      paddingTop: z.number().optional(),
+      paddingBottom: z.number().optional(),
+    }).optional(),
+  }).optional(),
   personalInfo: personalInfoTableSchema.optional(),
   education: z.array(educationTableSchema).optional(),
   experience: z.array(experienceTableSchema).optional(),

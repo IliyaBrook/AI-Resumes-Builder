@@ -80,6 +80,7 @@ const documentRoute = new Hono()
           skillsDisplayFormat,
           personalInfoDisplayFormat,
           pagesOrder,
+          sectionPaddings,
         } = c.req.valid('json');
 
         if (!documentId) {
@@ -109,6 +110,7 @@ const documentRoute = new Hono()
           if (personalInfoDisplayFormat !== undefined)
             resumeUpdate.personalInfoDisplayFormat = personalInfoDisplayFormat;
           if (pagesOrder !== undefined) resumeUpdate.pagesOrder = pagesOrder;
+          if (sectionPaddings !== undefined) resumeUpdate.sectionPaddings = sectionPaddings;
 
           if (Object.keys(resumeUpdate)?.length > 0) {
             await trx

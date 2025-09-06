@@ -1,9 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components';
 import { MoveDown, MoveUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { useParams } from 'next/navigation';
+import { PaddingControls } from './PaddingControls';
+import type { DocumentType, SectionPaddingsType } from '@/types/resume.type';
 
 interface ModalSectionWrapperProps {
   sectionKey: string;
@@ -12,6 +16,7 @@ interface ModalSectionWrapperProps {
   currentOrder: string[];
   onSectionClick: (sectionKey: string) => void;
   onMoveSection: (direction: 'up' | 'down') => void;
+  sectionPaddings?: any;
 }
 
 export const modalSectionWrapper = ({
@@ -22,9 +27,53 @@ export const modalSectionWrapper = ({
   onSectionClick,
   onMoveSection,
 }: ModalSectionWrapperProps) => {
+  const params = useParams();
+  const documentId = params.documentId as string;
+  const { data } = useGetDocumentById(documentId);
+  const documentData = data?.data as DocumentType;
+  const { mutate: updateDocument } = useUpdateDocument();
+  
   const currentIndex = currentOrder.indexOf(sectionKey);
   const canMoveUp = currentIndex > 0;
   const canMoveDown = currentIndex < currentOrder.length - 1;
+  
+  const [paddingTop, setPaddingTop] = useState<number>(
+    documentData?.sectionPaddings?.[sectionKey as keyof SectionPaddingsType]?.paddingTop || 0
+  );
+  const [paddingBottom, setPaddingBottom] = useState<number>(
+    documentData?.sectionPaddings?.[sectionKey as keyof SectionPaddingsType]?.paddingBottom || 0
+  );
+  
+  useEffect(() => {
+    if (documentData?.sectionPaddings) {
+      const sectionPadding = documentData.sectionPaddings[sectionKey as keyof SectionPaddingsType];
+      if (sectionPadding) {
+        setPaddingTop(sectionPadding.paddingTop || 0);
+        setPaddingBottom(sectionPadding.paddingBottom || 0);
+      }
+    }
+  }, [documentData, sectionKey]);
+  
+  const updatePadding = (type: 'top' | 'bottom', value: number) => {
+    const currentPaddings = documentData?.sectionPaddings || {};
+    const updatedPaddings = {
+      ...currentPaddings,
+      [sectionKey]: {
+        ...currentPaddings[sectionKey as keyof SectionPaddingsType],
+        [type === 'top' ? 'paddingTop' : 'paddingBottom']: value,
+      },
+    };
+    
+    updateDocument({
+      sectionPaddings: updatedPaddings,
+    });
+    
+    if (type === 'top') {
+      setPaddingTop(value);
+    } else {
+      setPaddingBottom(value);
+    }
+  };
 
   console.log(
     `modalSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`
@@ -54,19 +103,38 @@ export const modalSectionWrapper = ({
           style={{
             zIndex: 99999,
             position: 'fixed',
-            left: '-16%',
-            top: '12%',
+            left: '20px',
+            top: '50%',
             transform: 'translateY(-50%)',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backgroundColor: 'rgba(255, 255, 255, 0.98)',
             border: '2px solid #3b82f6',
             borderRadius: '12px',
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
             backdropFilter: 'blur(8px)',
+            minWidth: '180px',
           }}
         >
           <div className="mb-2 border-b border-blue-200 pb-2 text-center text-sm font-bold text-blue-800">
             📝 {sectionKey}
           </div>
+          
+          {/* Padding Controls */}
+          <div className="border-b border-blue-200 pb-3 mb-3 space-y-2">
+            <div className="text-xs font-semibold text-gray-700 mb-2">Spacing:</div>
+            <PaddingControls
+              label="Top"
+              value={paddingTop}
+              onChange={(value) => updatePadding('top', value)}
+            />
+            <PaddingControls
+              label="Bottom"
+              value={paddingBottom}
+              onChange={(value) => updatePadding('bottom', value)}
+            />
+          </div>
+          
+          {/* Move Controls */}
+          <div className="text-xs font-semibold text-gray-700 mb-2">Order:</div>
           <Button
             variant="outline"
             size="sm"

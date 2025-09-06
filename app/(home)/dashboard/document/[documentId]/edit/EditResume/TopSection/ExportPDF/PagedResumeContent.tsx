@@ -22,7 +22,6 @@ interface PageInfo {
 }
 
 // A4 page height in pixels (approximately)
-const PAGE_HEIGHT_PX = 1123; // ~297mm at 96dpi
 const PAGE_CONTENT_HEIGHT_PX = 950; // Accounting for margins
 
 export const PagedResumeContent: React.FC<PagedResumeContentProps> = ({

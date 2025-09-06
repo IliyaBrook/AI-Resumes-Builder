@@ -20,6 +20,22 @@ export type DocumentType = {
   skillsDisplayFormat?: string;
   personalInfoDisplayFormat?: string;
   pagesOrder?: string[] | null;
+  sectionPaddings?: SectionPaddingsType | null;
+};
+
+export type SectionPaddingsType = {
+  personalInfo?: PaddingType;
+  summary?: PaddingType;
+  experience?: PaddingType;
+  education?: PaddingType;
+  skills?: PaddingType;
+  projects?: PaddingType;
+  languages?: PaddingType;
+};
+
+export type PaddingType = {
+  paddingTop?: number;
+  paddingBottom?: number;
 };
 
 export type ExperienceType = {
@@ -35,6 +51,8 @@ export type ExperienceType = {
   workSummary: string | null;
   yearsOnly?: boolean;
   order?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
 };
 
 export type EducationType = {

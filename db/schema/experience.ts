@@ -19,6 +19,8 @@ export const experienceTable = pgTable('experience', {
   endDate: date('end_date'),
   order: integer('order').notNull().default(0),
   yearsOnly: boolean('years_only').notNull().default(false),
+  paddingTop: integer('padding_top').notNull().default(0),
+  paddingBottom: integer('padding_bottom').notNull().default(0),
 });
 
 export const experienceRelations = relations(experienceTable, ({ one }) => ({
@@ -42,4 +44,6 @@ export const experienceTableSchema = createInsertSchema(experienceTable, {
   endDate: true,
   order: true,
   yearsOnly: true,
+  paddingTop: true,
+  paddingBottom: true,
 });

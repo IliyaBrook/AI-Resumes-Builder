@@ -1,46 +1,86 @@
 'use client';
 import React from 'react';
-import { SECTION_COMPONENTS, type SectionKey } from '@/constant/resume-sections';
-import { cn } from '@/lib/utils';
+import { useParams } from 'next/navigation';
+import { useGetDocumentById } from '@/hooks';
+import { SECTION_COMPONENTS, type SectionKey, DEFAULT_PAGES_ORDER } from '@/constant/resume-sections';
+import { cn, normalizeResumeData } from '@/lib/utils';
 import { DocumentType } from '@/types/resume.type';
 import RESUME_STYLES from './resume-styles.css?inline';
 
-export { ResumeContentIndependent } from './ResumeContentIndependent';
-
-export const normalizeResumeData = (data: any) => {
-  if (!data) return null;
-  return data;
-};
-
 interface ResumeContentProps {
-  resumeInfo: DocumentType;
-  pagesOrder: string[];
+  // Direct data props (used when fetchDataIndependently is false)
+  resumeInfo?: DocumentType;
+  pagesOrder?: string[];
   themeColor?: string;
   isLoading?: boolean;
+  
+  // Common props
   isPdfMode?: boolean;
   isInteractive?: boolean;
   selectedSection?: string | null;
   onSectionClick?: (sectionKey: string) => void;
   renderSectionWrapper?: (sectionKey: string, component: React.ReactNode, isSelected: boolean) => React.ReactNode;
+  
+  // Control whether to fetch data independently
+  fetchDataIndependently?: boolean;
 }
 
 export const ResumeContent: React.FC<ResumeContentProps> = ({
-  resumeInfo,
-  pagesOrder,
-  themeColor = '#3b82f6',
-  isLoading = false,
+  resumeInfo: propsResumeInfo,
+  pagesOrder: propsPagesOrder,
+  themeColor: propsThemeColor,
+  isLoading: propsIsLoading,
   isPdfMode = false,
   isInteractive = false,
   selectedSection = null,
   onSectionClick,
   renderSectionWrapper,
+  fetchDataIndependently = false,
 }) => {
+  // Hooks must be called unconditionally
+  const param = useParams();
+  const documentId = param?.documentId as string;
+  const shouldFetch = fetchDataIndependently && !!documentId;
+  const { data, isLoading: dataIsLoading } = useGetDocumentById(
+    shouldFetch ? documentId : 'disabled'
+  );
+  
+  // Determine which data to use
+  const documentData = shouldFetch ? (data?.data as DocumentType) : null;
+  const resumeInfo = shouldFetch 
+    ? normalizeResumeData(documentData) 
+    : propsResumeInfo;
+  const pagesOrder = shouldFetch 
+    ? (resumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER)
+    : (propsPagesOrder || DEFAULT_PAGES_ORDER);
+  const themeColor = shouldFetch 
+    ? (resumeInfo?.themeColor || '#3b82f6')
+    : (propsThemeColor || '#3b82f6');
+  const isLoading = shouldFetch 
+    ? dataIsLoading 
+    : (propsIsLoading || false);
+
   const renderSection = (sectionKey: string) => {
     const Component = SECTION_COMPONENTS[sectionKey as SectionKey];
     if (!Component) return null;
 
     const isSelected = isInteractive && selectedSection === sectionKey;
-    const sectionComponent = <Component isLoading={isLoading} resumeInfo={resumeInfo} />;
+    
+    // Get padding values for this section
+    const sectionPadding = resumeInfo?.sectionPaddings?.[sectionKey as keyof typeof resumeInfo.sectionPaddings];
+    const paddingTop = sectionPadding?.paddingTop || 0;
+    const paddingBottom = sectionPadding?.paddingBottom || 0;
+    
+    const sectionComponent = (
+      <div 
+        style={{ 
+          paddingTop: `${paddingTop}px`, 
+          paddingBottom: `${paddingBottom}px` 
+        }}
+      >
+        <Component isLoading={isLoading} resumeInfo={resumeInfo} />
+      </div>
+    );
 
     if (renderSectionWrapper && isInteractive) {
       return renderSectionWrapper(sectionKey, sectionComponent, isSelected);
@@ -72,6 +112,10 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
     );
   };
 
+  if (!resumeInfo && !fetchDataIndependently) {
+    return null;
+  }
+
   return (
     <div
       id="resume-content"
@@ -88,4 +132,9 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
       {pagesOrder.map(renderSection)}
     </div>
   );
+};
+
+// Backward compatibility export
+export const ResumeContentIndependent: React.FC<Omit<ResumeContentProps, 'fetchDataIndependently'>> = (props) => {
+  return <ResumeContent {...props} fetchDataIndependently={true} />;
 };

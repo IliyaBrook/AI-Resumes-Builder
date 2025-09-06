@@ -2,6 +2,7 @@ import { SkeletonLoader } from '@/components';
 import { INITIAL_THEME_COLOR } from '@/lib/helper';
 import { ResumeDataType } from '@/types/resume.type';
 import { FC } from 'react';
+import { groupSkillsByCategory } from './SkillsForm/utils';
 
 interface PropsType {
   resumeInfo: ResumeDataType | undefined;
@@ -18,21 +19,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const displayFormat = resumeInfo?.skillsDisplayFormat || 'default';
 
   if (displayFormat === 'byCategory') {
-    const skillsByCategory = skills.reduce(
-      (acc, skill) => {
-        const category = skill.category || 'General';
-        if (!acc[category]) acc[category] = [];
-        acc[category].push(skill);
-        return acc;
-      },
-      {} as Record<string, typeof skills>
-    );
-
-    const sortedCategories = Object.keys(skillsByCategory).sort((a, b) => {
-      const aMinOrder = Math.min(...skillsByCategory[a].map(skill => skill.categoryOrder || 0));
-      const bMinOrder = Math.min(...skillsByCategory[b].map(skill => skill.categoryOrder || 0));
-      return aMinOrder - bMinOrder;
-    });
+    const { skillsByCategory, sortedCategoryKeys } = groupSkillsByCategory(skills);
 
     return (
       <div className="my-3 w-full">
@@ -41,15 +28,15 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         </h5>
         <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
         <div>
-          {sortedCategories.map(categoryName => (
+          {sortedCategoryKeys.map(categoryName => (
             <div key={categoryName}>
               <span className="inline text-[13px] font-bold" style={{ color: themeColor }}>
                 {categoryName}:{' '}
               </span>
               <span className="text-[12px] text-gray-700">
                 {skillsByCategory[categoryName]
-                  .sort((a, b) => (a.skillOrder || 0) - (b.skillOrder || 0))
                   .map(skill => skill.name)
+                  .filter(name => name)
                   .join(', ')}
               </span>
             </div>

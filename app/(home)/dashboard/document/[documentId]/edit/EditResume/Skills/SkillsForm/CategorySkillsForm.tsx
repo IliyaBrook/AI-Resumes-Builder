@@ -4,7 +4,7 @@ import { Button, Input } from '@/components';
 import { MoveDown, MoveUp, Plus, X } from 'lucide-react';
 import { ResumeDataType, SkillType } from '@/types/resume.type';
 import { useCreateSkill, useDebounce, useDeleteSkill } from '@/hooks';
-import { useSkillInputHandler } from './utils';
+import { useSkillInputHandler, groupSkillsByCategory } from './utils';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/query-core';
 
 interface CategorySkillsFormProps {
@@ -53,33 +53,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
   });
 
   const { skillsByCategory, sortedCategoryKeys } = useMemo(() => {
-    if (!skills.length) return { skillsByCategory: {}, sortedCategoryKeys: [] };
-
-    const grouped: Record<string, SkillType[]> = {};
-    skills.forEach((skill: SkillType) => {
-      const category = skill.category || '';
-      if (!grouped[category]) grouped[category] = [];
-      grouped[category].push({
-        ...skill,
-        hideRating: !!skill.hideRating,
-      });
-    });
-
-    const categoryKeys = Object.keys(grouped);
-    const sortedKeys = categoryKeys.sort((a, b) => {
-      const aMinOrder =
-        grouped[a].length > 0 ? Math.min(...grouped[a].map((skill: SkillType) => skill.categoryOrder || 0)) : 0;
-      const bMinOrder =
-        grouped[b].length > 0 ? Math.min(...grouped[b].map((skill: SkillType) => skill.categoryOrder || 0)) : 0;
-      return aMinOrder - bMinOrder;
-    });
-
-    const skillsByCategory: Record<string, SkillType[]> = {};
-    sortedKeys.forEach(categoryName => {
-      skillsByCategory[categoryName] = grouped[categoryName].sort((a, b) => (a.skillOrder || 0) - (b.skillOrder || 0));
-    });
-
-    return { skillsByCategory, sortedCategoryKeys: sortedKeys };
+    return groupSkillsByCategory(skills);
   }, [skills]);
 
   useEffect(() => {

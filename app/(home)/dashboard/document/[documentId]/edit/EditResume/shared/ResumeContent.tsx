@@ -2,10 +2,11 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useGetDocumentById } from '@/hooks';
-import { SECTION_COMPONENTS, type SectionKey, DEFAULT_PAGES_ORDER } from '@/constant/resume-sections';
+import { DEFAULT_PAGES_ORDER, SECTION_COMPONENTS, type SectionKey } from '@/constant/resume-sections';
 import { cn, normalizeResumeData } from '@/lib/utils';
 import { DocumentType } from '@/types/resume.type';
 import RESUME_STYLES from './resume-styles.css?inline';
+import { ResumeContentBase } from './ResumeContentBase';
 
 // A4 page height: 297mm * 3.7795 pixels/mm ≈ 1123px
 // No top/bottom padding in preview, so use full A4 height
@@ -19,7 +20,7 @@ const pagePreviewStyles: {
   style: {
     width: '210mm',
     height: '297mm',
-    padding: '0 15mm',
+    padding: '0',
     boxSizing: 'border-box',
   },
 };
@@ -112,64 +113,6 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
   const themeColor = shouldFetch ? resumeInfo?.themeColor || '#3b82f6' : propsThemeColor || '#3b82f6';
   const isLoading = shouldFetch ? dataIsLoading : propsIsLoading || false;
 
-  const renderSection = (sectionKey: string) => {
-    const Component = SECTION_COMPONENTS[sectionKey as SectionKey];
-    if (!Component) return null;
-
-    const isSelected = isInteractive && selectedSection === sectionKey;
-
-    // Get padding values for this section
-    const sectionPadding = resumeInfo?.sectionPaddings?.[sectionKey as keyof typeof resumeInfo.sectionPaddings];
-    const paddingTop = sectionPadding?.paddingTop || 0;
-    const paddingBottom = sectionPadding?.paddingBottom || 0;
-
-    const sectionComponent = (
-      <div
-        style={{
-          marginTop: `${paddingTop}px`,
-          marginBottom: `${paddingBottom}px`,
-        }}
-      >
-        <Component
-          isLoading={isLoading}
-          resumeInfo={resumeInfo}
-          isInteractive={isInteractive}
-          selectedSection={selectedSection}
-          onSectionClick={onSectionClick}
-          renderSectionWrapper={renderSectionWrapper}
-        />
-      </div>
-    );
-
-    if (renderSectionWrapper && isInteractive) {
-      return renderSectionWrapper(sectionKey, sectionComponent, isSelected);
-    }
-
-    if (isInteractive) {
-      return (
-        <div
-          className={cn(
-            'section-wrapper relative cursor-pointer rounded-md transition-all duration-200',
-            isSelected && 'bg-blue-50 p-2 ring-2 ring-blue-500 ring-opacity-50 dark:bg-blue-950 dark:ring-blue-400'
-          )}
-          onClick={e => {
-            e.stopPropagation();
-            onSectionClick?.(sectionKey);
-          }}
-          title={`Click to select "${sectionKey}" section`}
-        >
-          {sectionComponent}
-        </div>
-      );
-    }
-
-    return (
-      <div key={sectionKey} className="section-wrapper">
-        {sectionComponent}
-      </div>
-    );
-  };
-
   if (!resumeInfo && !fetchDataIndependently) {
     return null;
   }
@@ -202,7 +145,16 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
       }}
     >
       <style dangerouslySetInnerHTML={{ __html: RESUME_STYLES }} />
-      {pagesOrder.map(renderSection)}
+      <ResumeContentBase
+        resumeInfo={resumeInfo}
+        pagesOrder={pagesOrder}
+        themeColor={themeColor}
+        isLoading={isLoading}
+        isInteractive={isInteractive}
+        selectedSection={selectedSection}
+        onSectionClick={onSectionClick}
+        renderSectionWrapper={renderSectionWrapper}
+      />
     </div>
   );
 };

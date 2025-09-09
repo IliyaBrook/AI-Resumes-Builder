@@ -36,7 +36,7 @@ export const ModalSectionWrapper = ({
   // Check if this is an individual experience item
   const isExperienceItem = sectionKey.startsWith('experience-');
   const experienceId = isExperienceItem ? sectionKey.replace('experience-', '') : null;
-  
+
   const currentIndex = currentOrder.indexOf(sectionKey);
   const canMoveUp = currentIndex > 0;
   const canMoveDown = currentIndex < currentOrder.length - 1;
@@ -44,19 +44,19 @@ export const ModalSectionWrapper = ({
   // For experience items, get individual padding from experience data
   const getInitialPadding = () => {
     if (isExperienceItem && experienceId) {
-      const experience = documentData?.experiences?.find(exp => 
-        exp.id?.toString() === experienceId || exp.order?.toString() === experienceId
+      const experience = documentData?.experiences?.find(
+        exp => exp.id?.toString() === experienceId || exp.order?.toString() === experienceId
       );
       return {
         top: experience?.paddingTop || 0,
-        bottom: experience?.paddingBottom || 0
+        bottom: experience?.paddingBottom || 0,
       };
     } else {
       // For sections, get from sectionPaddings
       const sectionPadding = documentData?.sectionPaddings?.[sectionKey as keyof SectionPaddingsType];
       return {
         top: sectionPadding?.paddingTop || 0,
-        bottom: sectionPadding?.paddingBottom || 0
+        bottom: sectionPadding?.paddingBottom || 0,
       };
     }
   };
@@ -71,46 +71,49 @@ export const ModalSectionWrapper = ({
     setPaddingBottom(newPadding.bottom);
   }, [documentData, sectionKey, isExperienceItem, experienceId]);
 
-  const updatePadding = useCallback((type: 'top' | 'bottom', value: number) => {
-    if (isExperienceItem && experienceId) {
-      // Update individual experience item padding
-      const experienceIndex = documentData?.experiences?.findIndex(exp => 
-        exp.id?.toString() === experienceId || exp.order?.toString() === experienceId
-      );
-      
-      if (experienceIndex !== -1 && experienceIndex !== undefined && documentData?.experiences) {
-        const updatedExperiences = [...documentData.experiences];
-        updatedExperiences[experienceIndex] = {
-          ...updatedExperiences[experienceIndex],
-          [type === 'top' ? 'paddingTop' : 'paddingBottom']: value,
+  const updatePadding = useCallback(
+    (type: 'top' | 'bottom', value: number) => {
+      if (isExperienceItem && experienceId) {
+        // Update individual experience item padding
+        const experienceIndex = documentData?.experiences?.findIndex(
+          exp => exp.id?.toString() === experienceId || exp.order?.toString() === experienceId
+        );
+
+        if (experienceIndex !== -1 && experienceIndex !== undefined && documentData?.experiences) {
+          const updatedExperiences = [...documentData.experiences];
+          updatedExperiences[experienceIndex] = {
+            ...updatedExperiences[experienceIndex],
+            [type === 'top' ? 'paddingTop' : 'paddingBottom']: value,
+          };
+
+          updateDocument({
+            experience: updatedExperiences,
+          });
+        }
+      } else {
+        // Update section padding
+        const currentPaddings = documentData?.sectionPaddings || {};
+        const updatedPaddings = {
+          ...currentPaddings,
+          [sectionKey]: {
+            ...currentPaddings[sectionKey as keyof SectionPaddingsType],
+            [type === 'top' ? 'paddingTop' : 'paddingBottom']: value,
+          },
         };
 
         updateDocument({
-          experience: updatedExperiences,
+          sectionPaddings: updatedPaddings,
         });
       }
-    } else {
-      // Update section padding
-      const currentPaddings = documentData?.sectionPaddings || {};
-      const updatedPaddings = {
-        ...currentPaddings,
-        [sectionKey]: {
-          ...currentPaddings[sectionKey as keyof SectionPaddingsType],
-          [type === 'top' ? 'paddingTop' : 'paddingBottom']: value,
-        },
-      };
 
-      updateDocument({
-        sectionPaddings: updatedPaddings,
-      });
-    }
-
-    if (type === 'top') {
-      setPaddingTop(value);
-    } else {
-      setPaddingBottom(value);
-    }
-  }, [documentData, sectionKey, updateDocument, isExperienceItem, experienceId]);
+      if (type === 'top') {
+        setPaddingTop(value);
+      } else {
+        setPaddingBottom(value);
+      }
+    },
+    [documentData, sectionKey, updateDocument, isExperienceItem, experienceId]
+  );
 
   console.log(
     `modalSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`
@@ -118,7 +121,7 @@ export const ModalSectionWrapper = ({
 
   return (
     <div
-      key={`modal-section-wrapper-${sectionKey}`}
+      // key={`modal-section-wrapper-${sectionKey}`}
       className={cn(
         'section-wrapper relative cursor-pointer rounded-md border-2 border-transparent transition-all duration-200',
         isSelected &&
@@ -135,13 +138,13 @@ export const ModalSectionWrapper = ({
 
       {isSelected && (
         <div
-          key={`modal-buttons-${sectionKey}`}
+          // key={`modal-buttons-${sectionKey}`}
           className="fixed left-4 top-1/2 flex -translate-y-1/2 transform flex-col gap-3 rounded-lg border-2 border-blue-500 bg-white p-4 shadow-2xl backdrop-blur-sm"
           onClick={e => e.stopPropagation()}
           style={{
             zIndex: 99999,
             position: 'fixed',
-            left: '20px',
+            left: '-12vw',
             top: '50%',
             transform: 'translateY(-50%)',
             backgroundColor: 'rgba(255, 255, 255, 0.98)',

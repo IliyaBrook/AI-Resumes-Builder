@@ -35,8 +35,8 @@ const ExperiencePreview: FC<PropsType> = ({
       <div
         key={index}
         style={{
-          paddingTop: `${experience?.paddingTop || 0}px`,
-          paddingBottom: `${experience?.paddingBottom || 0}px`,
+          marginTop: `${experience?.paddingTop || 0}px`,
+          marginBottom: `${experience?.paddingBottom || 0}px`,
         }}
       >
         <h5 className="text-[15px] font-bold" style={{ color: themeColor }}>

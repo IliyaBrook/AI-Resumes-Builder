@@ -67,8 +67,8 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
       <div
         key={`${sectionKey}-content`}
         style={{
-          paddingTop: `${paddingTop}px`,
-          paddingBottom: `${paddingBottom}px`,
+          marginTop: `${paddingTop}px`,
+          marginBottom: `${paddingBottom}px`,
         }}
       >
         <Component

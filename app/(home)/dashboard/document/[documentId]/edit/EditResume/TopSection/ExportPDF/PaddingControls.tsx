@@ -9,7 +9,6 @@ interface PaddingControlsProps {
   value: number;
   onChange: (value: number) => void;
   min?: number;
-  max?: number;
   step?: number;
 }
 
@@ -18,7 +17,6 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({
   value,
   onChange,
   min = 0,
-  max = 100,
   step = 5,
 }) => {
   const handleDecrease = (e: React.MouseEvent) => {
@@ -29,7 +27,7 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({
 
   const handleIncrease = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newValue = Math.min(max, value + step);
+    const newValue = value + step;
     onChange(newValue);
   };
 
@@ -62,7 +60,7 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({
           size="icon"
           className="h-6 w-6 p-0"
           onClick={handleIncrease}
-          disabled={value >= max}
+          disabled={false}
           title={`Increase ${label}`}
         >
           <Plus size={12} />

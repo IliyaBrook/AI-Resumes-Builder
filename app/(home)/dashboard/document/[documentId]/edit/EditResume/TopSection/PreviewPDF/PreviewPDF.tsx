@@ -11,17 +11,17 @@ interface PDFDebugPreviewProps {
   onCloseAction: () => void;
 }
 
-export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseAction }) => {
+export const PreviewPDF: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseAction }) => {
   const { currentOrder, setCurrentOrder, updatePagesOrder, fixedResumeInfo, isLoading } = usePageOrderSync();
 
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const toggleSection = (sectionKey: string) => {
-    console.log('PDFDebugPreview - toggleSection called:', sectionKey);
+    console.log('PreviewPDF - toggleSection called:', sectionKey);
     setSelectedSection(prev => {
       const newValue = prev === sectionKey ? null : sectionKey;
-      console.log('PDFDebugPreview - selectedSection changed from', prev, 'to', newValue);
+      console.log('PreviewPDF - selectedSection changed from', prev, 'to', newValue);
       return newValue;
     });
   };
@@ -68,7 +68,7 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onClos
   };
 
   const handleRenderSectionWrapper = (sectionKey: string, component: React.ReactNode, isSelected: boolean) => {
-    console.log('PDFDebugPreview - handleRenderSectionWrapper called for:', sectionKey, 'isSelected:', isSelected);
+    console.log('PreviewPDF - handleRenderSectionWrapper called for:', sectionKey, 'isSelected:', isSelected);
     return (
       <ModalSectionWrapper
         key={sectionKey}

@@ -5,7 +5,7 @@ import { DownloadIcon, Eye } from 'lucide-react';
 import { Button } from '@/components';
 import { StatusType } from '@/types';
 import { PDFExporter } from './PDFExporter';
-import { PDFDebugPreview } from './PDFDebugPreview';
+import { PreviewPDF } from '../PreviewPDF';
 
 const Download = (props: { title: string; isLoading: boolean; status?: StatusType }) => {
   const { title, status, isLoading } = props;
@@ -47,7 +47,7 @@ const Download = (props: { title: string; isLoading: boolean; status?: StatusTyp
         )}
       </div>
 
-      <PDFDebugPreview isOpen={showDebugPreview} onCloseAction={() => setShowDebugPreview(false)} />
+      <PreviewPDF isOpen={showDebugPreview} onCloseAction={() => setShowDebugPreview(false)} />
     </>
   );
 };

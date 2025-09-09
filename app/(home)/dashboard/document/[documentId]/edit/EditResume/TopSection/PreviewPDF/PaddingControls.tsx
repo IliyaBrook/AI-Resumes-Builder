@@ -36,6 +36,19 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({
     onChange(0);
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    const inputValue = e.target.value;
+    if (inputValue === '') {
+      onChange(0);
+      return;
+    }
+    const numValue = parseInt(inputValue, 10);
+    if (!isNaN(numValue) && numValue >= min) {
+      onChange(numValue);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-1">
       <div className="text-xs font-medium text-gray-600">{label}</div>
@@ -52,7 +65,18 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({
           <Minus size={12} />
         </Button>
 
-        <div className="min-w-[40px] text-center font-mono text-xs">{value}px</div>
+        <div className="flex items-center">
+          <input
+            type="number"
+            value={value}
+            onChange={handleInputChange}
+            onClick={e => e.stopPropagation()}
+            className="min-w-[45px] h-6 px-1 text-center font-mono text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+            min={min}
+            title={`Enter ${label} value`}
+          />
+          <span className="text-xs text-gray-500 ml-1">px</span>
+        </div>
 
         <Button
           type="button"

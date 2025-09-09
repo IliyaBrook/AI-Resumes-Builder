@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { useUpdateDocument, useGetDocumentById } from '@/hooks';
 import { useParams } from 'next/navigation';
 import { PaddingControls } from './PaddingControls';
-import type { DocumentType, SectionPaddingsType } from '@/types/resume.type';
+import type { DocumentType, SectionPaddingsType } from '@/types';
 
 interface ModalSectionWrapperProps {
   sectionKey: string;

@@ -76,8 +76,8 @@ export const PreviewPDF: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseActi
         component={component}
         isSelected={isSelected}
         currentOrder={currentOrder}
-        onSectionClick={toggleSection}
-        onMoveSection={handleMoveSection}
+        onSectionAction={toggleSection}
+        onMoveAction={handleMoveSection}
       />
     );
   };

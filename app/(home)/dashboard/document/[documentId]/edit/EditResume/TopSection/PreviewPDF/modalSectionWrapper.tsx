@@ -14,8 +14,8 @@ interface ModalSectionWrapperProps {
   component: React.ReactNode;
   isSelected: boolean;
   currentOrder: string[];
-  onSectionClick: (sectionKey: string) => void;
-  onMoveSection: (direction: 'up' | 'down') => void;
+  onSectionAction: (sectionKey: string) => void;
+  onMoveAction: (direction: 'up' | 'down') => void;
 }
 
 export const ModalSectionWrapper = ({
@@ -23,8 +23,8 @@ export const ModalSectionWrapper = ({
   component,
   isSelected,
   currentOrder,
-  onSectionClick,
-  onMoveSection,
+  onSectionAction,
+  onMoveAction,
 }: ModalSectionWrapperProps) => {
   const params = useParams();
   const documentId = params.documentId as string;
@@ -133,7 +133,7 @@ export const ModalSectionWrapper = ({
       onClick={e => {
         e.stopPropagation();
         console.log('Modal: Section clicked:', sectionKey);
-        onSectionClick(sectionKey);
+        onSectionAction(sectionKey);
       }}
       title={`Click to select "${sectionKey}" section`}
     >
@@ -182,7 +182,7 @@ export const ModalSectionWrapper = ({
             onClick={e => {
               e.stopPropagation();
               console.log('Modal: Move up clicked for:', sectionKey);
-              onMoveSection('up');
+              onMoveAction('up');
             }}
             disabled={!canMoveUp}
             title="Move section up"
@@ -201,7 +201,7 @@ export const ModalSectionWrapper = ({
             onClick={e => {
               e.stopPropagation();
               console.log('Modal: Move down clicked for:', sectionKey);
-              onMoveSection('down');
+              onMoveAction('down');
             }}
             disabled={!canMoveDown}
             title="Move section down"

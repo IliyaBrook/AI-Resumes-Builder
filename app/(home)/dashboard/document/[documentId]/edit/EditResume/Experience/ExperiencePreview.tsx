@@ -32,13 +32,7 @@ const ExperiencePreview: FC<PropsType> = ({
     const isSelected = isInteractive && selectedSection === experienceKey;
 
     const experienceContent = (
-      <div
-        key={index}
-        style={{
-          marginTop: `${experience?.paddingTop || 0}px`,
-          marginBottom: `${experience?.paddingBottom || 0}px`,
-        }}
-      >
+      <div key={index}>
         <h5 className="text-[15px] font-bold" style={{ color: themeColor }}>
           {experience?.title}
         </h5>
@@ -81,6 +75,10 @@ const ExperiencePreview: FC<PropsType> = ({
           className={`cursor-pointer rounded-md transition-all duration-200 ${
             isSelected ? 'bg-blue-50 p-2 ring-2 ring-blue-500 ring-opacity-50' : ''
           }`}
+          style={{
+            marginTop: `${experience?.paddingTop || 0}px`,
+            marginBottom: `${experience?.paddingBottom || 0}px`,
+          }}
           onClick={e => {
             e.stopPropagation();
             onSectionClick?.(experienceKey);
@@ -92,7 +90,17 @@ const ExperiencePreview: FC<PropsType> = ({
       );
     }
 
-    return experienceContent;
+    return (
+      <div
+        key={experienceKey}
+        style={{
+          marginTop: `${experience?.paddingTop || 0}px`,
+          marginBottom: `${experience?.paddingBottom || 0}px`,
+        }}
+      >
+        {experienceContent}
+      </div>
+    );
   };
 
   return (

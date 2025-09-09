@@ -16,7 +16,6 @@ interface ModalSectionWrapperProps {
   currentOrder: string[];
   onSectionClick: (sectionKey: string) => void;
   onMoveSection: (direction: 'up' | 'down') => void;
-  sectionPaddings?: any;
 }
 
 export const ModalSectionWrapper = ({
@@ -127,6 +126,10 @@ export const ModalSectionWrapper = ({
         isSelected &&
           'border-blue-500 bg-blue-50 p-2 shadow-lg ring-2 ring-blue-500 ring-opacity-50 dark:border-blue-400 dark:bg-blue-950 dark:ring-blue-400'
       )}
+      style={{
+        marginTop: `${paddingTop}px`,
+        marginBottom: `${paddingBottom}px`,
+      }}
       onClick={e => {
         e.stopPropagation();
         console.log('Modal: Section clicked:', sectionKey);

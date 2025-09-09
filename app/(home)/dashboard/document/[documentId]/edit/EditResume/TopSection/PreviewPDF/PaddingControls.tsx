@@ -12,13 +12,7 @@ interface PaddingControlsProps {
   step?: number;
 }
 
-export const PaddingControls: React.FC<PaddingControlsProps> = ({
-  label,
-  value,
-  onChange,
-  min = 0,
-  step = 5,
-}) => {
+export const PaddingControls: React.FC<PaddingControlsProps> = ({ label, value, onChange, min = 0, step = 5 }) => {
   const handleDecrease = (e: React.MouseEvent) => {
     e.stopPropagation();
     const newValue = Math.max(min, value - step);
@@ -71,11 +65,11 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({
             value={value}
             onChange={handleInputChange}
             onClick={e => e.stopPropagation()}
-            className="min-w-[45px] h-6 px-1 text-center font-mono text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+            className="h-6 min-w-[45px] rounded border border-gray-300 px-1 text-center font-mono text-xs focus:border-blue-500 focus:outline-none"
             min={min}
             title={`Enter ${label} value`}
           />
-          <span className="text-xs text-gray-500 ml-1">px</span>
+          <span className="ml-1 text-xs text-gray-500">px</span>
         </div>
 
         <Button

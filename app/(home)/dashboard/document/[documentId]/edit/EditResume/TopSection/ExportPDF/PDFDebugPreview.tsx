@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { PagedResumeContent } from './PagedResumeContent';
+import { ResumeContentPaged } from '@/shared/ResumeContentPaged';
 import { ModalSectionWrapper } from './modalSectionWrapper';
-import { moveSection } from '../../ResumePreview/pageOrderUtils';
-import { usePageOrderSync } from '../../ResumePreview/usePageOrderSync';
+import { moveSection, usePageOrderSync } from '@/editResume';
 
 interface PDFDebugPreviewProps {
   isOpen: boolean;
@@ -96,7 +95,7 @@ export const PDFDebugPreview: React.FC<PDFDebugPreviewProps> = ({ isOpen, onClos
 
             {/* PDF Page Preview */}
             <div ref={containerRef} onClick={() => setSelectedSection(null)}>
-              <PagedResumeContent
+              <ResumeContentPaged
                 resumeInfo={fixedResumeInfo}
                 pagesOrder={currentOrder}
                 themeColor={fixedResumeInfo?.themeColor}

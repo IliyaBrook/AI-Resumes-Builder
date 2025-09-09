@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import { ResumeContent } from '@/shared/ResumeContent';
-import type { DocumentType } from '@/types/resume.type';
+import type { DocumentType } from '@/types';
 
 interface PagedResumeContentProps {
   resumeInfo: DocumentType;
@@ -26,7 +26,7 @@ interface PageInfo {
 // 257mm * 3.7795 pixels/mm ≈ 971px
 const PAGE_CONTENT_HEIGHT_PX = 971; // Accounting for margins
 
-export const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
+export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
   resumeInfo,
   pagesOrder,
   themeColor,

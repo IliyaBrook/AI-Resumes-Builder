@@ -70,7 +70,9 @@ export const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
                 isInteractive={true}
                 selectedSection={selectedSection}
                 onSectionClick={onSectionClick}
-                renderSectionWrapper={i === 0 ? renderSectionWrapper : (key, component) => component}
+                renderSectionWrapper={renderSectionWrapper}
+                // TODO check/test render in pdf debug mode
+                // renderSectionWrapper={i === 0 ? renderSectionWrapper : (key, component) => component}
               />
             </div>
           ),

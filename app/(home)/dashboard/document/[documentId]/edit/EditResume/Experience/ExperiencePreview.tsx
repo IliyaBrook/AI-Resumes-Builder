@@ -72,6 +72,7 @@ const ExperiencePreview: FC<PropsType> = ({
       return (
         <div
           key={experienceKey}
+          data-experience-id={experienceKey}
           className={`cursor-pointer rounded-md transition-all duration-200 ${
             isSelected ? 'bg-blue-50 p-2 ring-2 ring-blue-500 ring-opacity-50' : ''
           }`}
@@ -93,6 +94,7 @@ const ExperiencePreview: FC<PropsType> = ({
     return (
       <div
         key={experienceKey}
+        data-experience-id={experienceKey}
         style={{
           marginTop: `${experience?.paddingTop || 0}px`,
           marginBottom: `${experience?.paddingBottom || 0}px`,

@@ -65,7 +65,7 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({ label, value, 
             value={value}
             onChange={handleInputChange}
             onClick={e => e.stopPropagation()}
-            className="h-6 w-[35px] rounded border border-gray-300 px-1 text-center font-mono text-xs focus:border-blue-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="h-6 w-[35px] rounded border border-gray-300 px-1 text-center font-mono text-xs [appearance:textfield] focus:border-blue-500 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             min={min}
             title={`Enter ${label} value`}
           />

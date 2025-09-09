@@ -10,21 +10,30 @@ interface PagedResumeContentProps {
   themeColor: string;
   isLoading: boolean;
   selectedSection: string | null;
-  onSectionClick: (sectionKey: string) => void;
-  renderSectionWrapper: (sectionKey: string, component: React.ReactNode, isSelected: boolean) => React.ReactNode;
+  onSectionClickAction: (sectionKey: string) => void;
+  renderSectionWrapperAction: (sectionKey: string, component: React.ReactNode, isSelected: boolean) => React.ReactNode;
 }
 
 interface PageInfo {
   pageNumber: number;
   content: React.ReactNode;
-  hasOverflow: boolean;
   isLastPage?: boolean;
 }
 
-// A4 page height in pixels (approximately)
-// 297mm - 40mm (top+bottom margins) = 257mm of content area
-// 257mm * 3.7795 pixels/mm ≈ 971px
-const PAGE_CONTENT_HEIGHT_PX = 971; // Accounting for margins
+const PAGE_CONTENT_HEIGHT_PX = 971;
+
+const pagePreviewStyles: {
+  className: string;
+  style?: React.CSSProperties;
+} = {
+  className: 'relative overflow-hidden border border-gray-300 bg-white shadow-2xl',
+  style: {
+    width: '210mm',
+    height: '297mm',
+    padding: '0 15mm',
+    boxSizing: 'border-box',
+  },
+};
 
 export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
   resumeInfo,
@@ -32,8 +41,8 @@ export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
   themeColor,
   isLoading,
   selectedSection,
-  onSectionClick,
-  renderSectionWrapper,
+  onSectionClickAction,
+  renderSectionWrapperAction,
 }) => {
   const [pages, setPages] = useState<PageInfo[]>([]);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -44,13 +53,10 @@ export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
       const contentHeight = contentRef.current.scrollHeight;
       const needsMultiplePages = contentHeight > PAGE_CONTENT_HEIGHT_PX;
 
-      // Calculate number of pages needed
       const pagesNeeded = Math.ceil(contentHeight / PAGE_CONTENT_HEIGHT_PX);
 
-      // Create pages array
       const newPages: PageInfo[] = [];
 
-      // Create pages with proper content distribution
       for (let i = 0; i < Math.min(pagesNeeded, 3); i++) {
         newPages.push({
           pageNumber: i + 1,
@@ -80,18 +86,16 @@ export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
                   isPdfMode={true}
                   isInteractive={true}
                   selectedSection={selectedSection}
-                  onSectionClick={onSectionClick}
-                  renderSectionWrapper={renderSectionWrapper}
+                  onSectionClick={onSectionClickAction}
+                  renderSectionWrapper={renderSectionWrapperAction}
                 />
               </div>
             </div>
           ),
-          hasOverflow: i === 0 && needsMultiplePages,
           isLastPage: i === pagesNeeded - 1,
         });
       }
 
-      // If content fits on one page, just show one page
       if (!needsMultiplePages) {
         newPages[0] = {
           pageNumber: 1,
@@ -105,43 +109,36 @@ export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
               isPdfMode={true}
               isInteractive={true}
               selectedSection={selectedSection}
-              onSectionClick={onSectionClick}
-              renderSectionWrapper={renderSectionWrapper}
+              onSectionClick={onSectionClickAction}
+              renderSectionWrapper={renderSectionWrapperAction}
             />
           ),
-          hasOverflow: false,
           isLastPage: true,
         };
       }
 
       setPages(newPages);
     }
-  }, [resumeInfo, pagesOrder, themeColor, isLoading, selectedSection, onSectionClick, renderSectionWrapper]);
+  }, [
+    resumeInfo,
+    pagesOrder,
+    themeColor,
+    isLoading,
+    selectedSection,
+    onSectionClickAction,
+    renderSectionWrapperAction,
+  ]);
 
   const renderPage = (page: PageInfo, index: number) => {
     return (
       <div key={`page-${page.pageNumber}`} className="relative mx-auto mb-6">
-        {/* Page header */}
         <div className="absolute -top-10 left-0 flex items-center gap-2">
           <div className="text-sm font-semibold text-gray-700">📄 Page {page.pageNumber}</div>
-          {page.hasOverflow && (
-            <div className="rounded-full bg-amber-100 px-2 py-1 text-xs text-amber-600">⚠️ Content overflow</div>
-          )}
         </div>
 
-        {/* Page content */}
-        <div
-          className="relative overflow-hidden border border-gray-300 bg-white shadow-2xl"
-          style={{
-            width: '210mm',
-            height: '297mm',
-            padding: '20mm 15mm',
-            boxSizing: 'border-box',
-          }}
-        >
+        <div {...pagePreviewStyles}>
           <div className="h-full w-full overflow-hidden">{page.content}</div>
 
-          {/* Page break indicator */}
           <div
             className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r opacity-75"
             style={{
@@ -151,11 +148,9 @@ export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
             }}
           />
 
-          {/* Page number */}
           <div className="absolute bottom-2 right-4 text-xs font-medium text-gray-400">{page.pageNumber}</div>
         </div>
 
-        {/* Page info */}
         <div className="mt-2 text-center text-xs text-gray-500">
           A4 (210 × 297 mm) • {index === 0 ? 'Main content' : 'Additional content'}
         </div>
@@ -181,24 +176,13 @@ export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
         />
       </div>
 
-      {/* Render all pages */}
       {pages.map((page, index) => renderPage(page, index))}
 
-      {/* Additional empty pages for preview */}
       {pages.length === 1 && (
         <>
-          {/* Page 2 - Empty */}
           <div className="relative mx-auto mb-6">
             <div className="absolute -top-10 left-0 text-sm font-semibold text-gray-400">📄 Page 2 (Preview)</div>
-            <div
-              className="relative border border-dashed border-gray-200 bg-white shadow-lg"
-              style={{
-                width: '210mm',
-                height: '297mm',
-                padding: '20mm 15mm',
-                boxSizing: 'border-box',
-              }}
-            >
+            <div {...pagePreviewStyles}>
               <div className="flex h-full w-full items-center justify-center text-lg text-gray-400">
                 Additional content will appear here if needed...
               </div>
@@ -212,15 +196,7 @@ export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
           {/* Page 3 - Empty */}
           <div className="relative mx-auto mb-6">
             <div className="absolute -top-10 left-0 text-sm font-semibold text-gray-400">📄 Page 3 (Preview)</div>
-            <div
-              className="relative border border-dashed border-gray-200 bg-white shadow-lg"
-              style={{
-                width: '210mm',
-                height: '297mm',
-                padding: '20mm 15mm',
-                boxSizing: 'border-box',
-              }}
-            >
+            <div {...pagePreviewStyles}>
               <div className="flex h-full w-full items-center justify-center text-lg text-gray-400">
                 Additional content will appear here if needed...
               </div>

@@ -101,8 +101,8 @@ export const PreviewPDF: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseActi
                 themeColor={fixedResumeInfo?.themeColor}
                 isLoading={isLoading}
                 selectedSection={selectedSection}
-                onSectionClick={toggleSection}
-                renderSectionWrapper={handleRenderSectionWrapper}
+                onSectionClickAction={toggleSection}
+                renderSectionWrapperAction={handleRenderSectionWrapper}
               />
             </div>
           </div>

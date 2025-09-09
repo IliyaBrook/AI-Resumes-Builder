@@ -64,14 +64,21 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
     const paddingBottom = sectionPadding?.paddingBottom || 0;
 
     const sectionComponent = (
-      <Component
-        isLoading={isLoading}
-        resumeInfo={resumeInfo}
-        isInteractive={isInteractive}
-        selectedSection={selectedSection}
-        onSectionClick={onSectionClick}
-        renderSectionWrapper={renderSectionWrapper}
-      />
+      <div
+        style={{
+          marginTop: `${paddingTop}px`,
+          marginBottom: `${paddingBottom}px`,
+        }}
+      >
+        <Component
+          isLoading={isLoading}
+          resumeInfo={resumeInfo}
+          isInteractive={isInteractive}
+          selectedSection={selectedSection}
+          onSectionClick={onSectionClick}
+          renderSectionWrapper={renderSectionWrapper}
+        />
+      </div>
     );
 
     if (renderSectionWrapper && isInteractive) {

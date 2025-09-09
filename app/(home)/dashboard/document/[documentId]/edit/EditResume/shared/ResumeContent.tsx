@@ -9,7 +9,11 @@ import RESUME_STYLES from './resume-styles.css?inline';
 import { ResumeContentBase } from './ResumeContentBase';
 import { pagePreviewStyles } from '@/shared/styles';
 
-const PAGE_CONTENT_HEIGHT_PX = 1078;
+// A4 page height calculation:
+// Full page: 297mm * 3.7795 pixels/mm ≈ 1123px
+// This is the full height we should use for page breaks
+// The internal padding/borders are handled by the content itself
+const PAGE_CONTENT_HEIGHT_PX = 1123;
 
 interface PageInfo {
   pageNumber: number;
@@ -78,8 +82,8 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
             <div
               key={sectionKey}
               style={{
-                marginTop: `${paddingTop}px`,
-                marginBottom: `${paddingBottom}px`,
+                marginTop: `${(paddingTop * 0.264583).toFixed(2)}mm`,
+                marginBottom: `${(paddingBottom * 0.264583).toFixed(2)}mm`,
               }}
             >
               <Component resumeInfo={propsResumeInfo} isLoading={false} isInteractive={false} />
@@ -257,7 +261,7 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
           <div className="absolute bottom-2 right-4 text-xs font-medium text-gray-400">{page.pageNumber}</div>
         </div>
 
-        <div className="mt-2 text-center text-xs text-gray-500">
+        <div className="text-center text-xs text-gray-500">
           A4 (210 × 297 mm) • {index === 0 ? 'Main content' : 'Additional content'}
         </div>
       </div>

@@ -127,8 +127,8 @@ export const ModalSectionWrapper = ({
           'border-blue-500 bg-blue-50 p-2 shadow-lg ring-2 ring-blue-500 ring-opacity-50 dark:border-blue-400 dark:bg-blue-950 dark:ring-blue-400'
       )}
       style={{
-        marginTop: `${paddingTop}px`,
-        marginBottom: `${paddingBottom}px`,
+        marginTop: `${(paddingTop * 0.264583).toFixed(2)}mm`,
+        marginBottom: `${(paddingBottom * 0.264583).toFixed(2)}mm`,
       }}
       onClick={e => {
         e.stopPropagation();

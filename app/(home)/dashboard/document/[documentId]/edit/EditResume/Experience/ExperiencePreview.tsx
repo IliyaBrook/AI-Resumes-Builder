@@ -77,8 +77,8 @@ const ExperiencePreview: FC<PropsType> = ({
             isSelected ? 'bg-blue-50 p-2 ring-2 ring-blue-500 ring-opacity-50' : ''
           }`}
           style={{
-            marginTop: `${experience?.paddingTop || 0}px`,
-            marginBottom: `${experience?.paddingBottom || 0}px`,
+            marginTop: `${((experience?.paddingTop || 0) * 0.264583).toFixed(2)}mm`,
+            marginBottom: `${((experience?.paddingBottom || 0) * 0.264583).toFixed(2)}mm`,
           }}
           onClick={e => {
             e.stopPropagation();
@@ -96,8 +96,8 @@ const ExperiencePreview: FC<PropsType> = ({
         key={experienceKey}
         data-experience-id={experienceKey}
         style={{
-          marginTop: `${experience?.paddingTop || 0}px`,
-          marginBottom: `${experience?.paddingBottom || 0}px`,
+          marginTop: `${((experience?.paddingTop || 0) * 0.264583).toFixed(2)}mm`,
+          marginBottom: `${((experience?.paddingBottom || 0) * 0.264583).toFixed(2)}mm`,
         }}
       >
         {experienceContent}

@@ -35,8 +35,9 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
 
     const isSelected = isInteractive && selectedSection === sectionKey;
     const sectionPadding = resumeInfo?.sectionPaddings?.[sectionKey as keyof typeof resumeInfo.sectionPaddings];
-    const paddingTop = sectionPadding?.paddingTop || 0;
-    const paddingBottom = sectionPadding?.paddingBottom || 0;
+    // Convert px to mm: 1px = 0.264583 mm (96 DPI)
+    const paddingTopMm = ((sectionPadding?.paddingTop || 0) * 0.264583).toFixed(2);
+    const paddingBottomMm = ((sectionPadding?.paddingBottom || 0) * 0.264583).toFixed(2);
 
     const sectionComponent = (
       <Component
@@ -57,8 +58,8 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
       <div
         key={sectionKey}
         style={{
-          marginTop: `${paddingTop}px`,
-          marginBottom: `${paddingBottom}px`,
+          marginTop: `${paddingTopMm}mm`,
+          marginBottom: `${paddingBottomMm}mm`,
         }}
       >
         {sectionComponent}

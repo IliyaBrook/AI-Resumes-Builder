@@ -7,23 +7,9 @@ import { cn, normalizeResumeData } from '@/lib/utils';
 import { DocumentType } from '@/types/resume.type';
 import RESUME_STYLES from './resume-styles.css?inline';
 import { ResumeContentBase } from './ResumeContentBase';
+import { pagePreviewStyles } from '@/shared/styles';
 
-// A4 page height: 297mm * 3.7795 pixels/mm ≈ 1123px
-// No top/bottom padding in preview, so use full A4 height
-const PAGE_CONTENT_HEIGHT_PX = 1123;
-
-const pagePreviewStyles: {
-  className: string;
-  style?: React.CSSProperties;
-} = {
-  className: 'relative overflow-hidden border border-gray-300 bg-white shadow-2xl',
-  style: {
-    width: '210mm',
-    height: '297mm',
-    padding: '0',
-    boxSizing: 'border-box',
-  },
-};
+const PAGE_CONTENT_HEIGHT_PX = 1078;
 
 interface PageInfo {
   pageNumber: number;

@@ -9,6 +9,7 @@ import { DEFAULT_PAGES_ORDER } from '@/constant/resume-sections';
 import RESUME_STYLES from '../../shared/resume-styles.css?inline';
 import { normalizeResumeData } from '@/lib/utils';
 import { ResumeContentBase } from '@/shared/ResumeContentBase';
+import { getPagePrintStyles } from '@/shared/styles';
 
 interface PDFExporterProps {
   title: string;
@@ -58,7 +59,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
             isInteractive={false}
             containerProps={{
               id: 'resume-content',
-              className: 'w-full px-10',
+              ...getPagePrintStyles(themeColor),
             }}
           />
         );
@@ -117,12 +118,8 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
               font-family: 'Open Sans', sans-serif;
             }
             
-            .pdf-export {
-              width: 210mm;
-              min-height: 297mm;
+            #resume-content {
               margin: 0;
-              padding: 0;
-              box-sizing: border-box;
             }
 
             /* Ensure proper font rendering */
@@ -151,9 +148,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
           </style>
         </head>
         <body>
-          <div class="pdf-export">
-            ${resumeElement.outerHTML}
-          </div>
+          ${resumeElement.outerHTML}
         </body>
         </html>
       `;

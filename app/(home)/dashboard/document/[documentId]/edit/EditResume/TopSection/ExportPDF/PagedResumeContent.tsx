@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { ResumeContent } from '../../shared/ResumeContent';
+import { ResumeContent } from '@/shared/ResumeContent';
 import type { DocumentType } from '@/types/resume.type';
 
 interface PagedResumeContentProps {
@@ -22,7 +22,9 @@ interface PageInfo {
 }
 
 // A4 page height in pixels (approximately)
-const PAGE_CONTENT_HEIGHT_PX = 950; // Accounting for margins
+// 297mm - 40mm (top+bottom margins) = 257mm of content area
+// 257mm * 3.7795 pixels/mm ≈ 971px
+const PAGE_CONTENT_HEIGHT_PX = 971; // Accounting for margins
 
 export const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
   resumeInfo,
@@ -48,32 +50,40 @@ export const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
       // Create pages array
       const newPages: PageInfo[] = [];
 
+      // Create pages with proper content distribution
       for (let i = 0; i < Math.min(pagesNeeded, 3); i++) {
         newPages.push({
           pageNumber: i + 1,
           content: (
             <div
               style={{
-                position: 'absolute',
-                top: `-${i * PAGE_CONTENT_HEIGHT_PX}px`,
-                left: 0,
-                right: 0,
+                position: 'relative',
+                width: '100%',
+                height: `${PAGE_CONTENT_HEIGHT_PX}px`,
+                overflow: 'hidden',
               }}
             >
-              <ResumeContent
-                key={`pdf-page-${i + 1}`}
-                resumeInfo={resumeInfo}
-                pagesOrder={pagesOrder}
-                themeColor={themeColor}
-                isLoading={isLoading}
-                isPdfMode={true}
-                isInteractive={true}
-                selectedSection={selectedSection}
-                onSectionClick={onSectionClick}
-                renderSectionWrapper={renderSectionWrapper}
-                // TODO check/test render in pdf debug mode
-                // renderSectionWrapper={i === 0 ? renderSectionWrapper : (key, component) => component}
-              />
+              <div
+                style={{
+                  position: 'absolute',
+                  top: `-${i * PAGE_CONTENT_HEIGHT_PX}px`,
+                  left: 0,
+                  right: 0,
+                }}
+              >
+                <ResumeContent
+                  key={`pdf-page-${i + 1}`}
+                  resumeInfo={resumeInfo}
+                  pagesOrder={pagesOrder}
+                  themeColor={themeColor}
+                  isLoading={isLoading}
+                  isPdfMode={true}
+                  isInteractive={true}
+                  selectedSection={selectedSection}
+                  onSectionClick={onSectionClick}
+                  renderSectionWrapper={renderSectionWrapper}
+                />
+              </div>
             </div>
           ),
           hasOverflow: i === 0 && needsMultiplePages,

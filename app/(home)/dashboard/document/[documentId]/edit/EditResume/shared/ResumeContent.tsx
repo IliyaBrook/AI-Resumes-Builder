@@ -65,7 +65,6 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
 
     const sectionComponent = (
       <div
-        key={`${sectionKey}-content`}
         style={{
           marginTop: `${paddingTop}px`,
           marginBottom: `${paddingBottom}px`,
@@ -89,7 +88,6 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
     if (isInteractive) {
       return (
         <div
-          key={sectionKey}
           className={cn(
             'section-wrapper relative cursor-pointer rounded-md transition-all duration-200',
             isSelected && 'bg-blue-50 p-2 ring-2 ring-blue-500 ring-opacity-50 dark:bg-blue-950 dark:ring-blue-400'

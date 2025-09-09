@@ -20,7 +20,9 @@ interface PageInfo {
   isLastPage?: boolean;
 }
 
-const PAGE_CONTENT_HEIGHT_PX = 971;
+// A4 page height: 297mm * 3.7795 pixels/mm ≈ 1123px
+// No top/bottom padding in preview, so use full A4 height
+const PAGE_CONTENT_HEIGHT_PX = 1123;
 
 const pagePreviewStyles: {
   className: string;
@@ -139,14 +141,7 @@ export const ResumeContentPaged: React.FC<PagedResumeContentProps> = ({
         <div {...pagePreviewStyles}>
           <div className="h-full w-full overflow-hidden">{page.content}</div>
 
-          <div
-            className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r opacity-75"
-            style={{
-              backgroundImage: `linear-gradient(90deg, 
-                hsl(${(page.pageNumber - 1) * 60}, 70%, 60%), 
-                hsl(${page.pageNumber * 60}, 70%, 60%))`,
-            }}
-          />
+          <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r opacity-75" />
 
           <div className="absolute bottom-2 right-4 text-xs font-medium text-gray-400">{page.pageNumber}</div>
         </div>

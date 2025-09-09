@@ -9,11 +9,9 @@ import RESUME_STYLES from './resume-styles.css?inline';
 import { ResumeContentBase } from './ResumeContentBase';
 import { pagePreviewStyles } from '@/shared/styles';
 
-// A4 page height calculation:
-// Full page: 297mm * 3.7795 pixels/mm ≈ 1123px
-// This is the full height we should use for page breaks
-// The internal padding/borders are handled by the content itself
-const PAGE_CONTENT_HEIGHT_PX = 1123;
+// A4 page height in millimeters
+// Using mm for exact print correspondence
+const PAGE_CONTENT_HEIGHT_MM = 297; // A4 height in mm
 
 interface PageInfo {
   pageNumber: number;
@@ -176,9 +174,11 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
     // Measure the full content height
     if (contentRef.current) {
       const contentHeight = contentRef.current.scrollHeight;
-      const needsMultiplePages = contentHeight > PAGE_CONTENT_HEIGHT_PX;
+      // Convert px to mm for comparison: 1px = 0.264583mm
+      const contentHeightMm = contentHeight * 0.264583;
+      const needsMultiplePages = contentHeightMm > PAGE_CONTENT_HEIGHT_MM;
 
-      const pagesNeeded = Math.ceil(contentHeight / PAGE_CONTENT_HEIGHT_PX);
+      const pagesNeeded = Math.ceil(contentHeightMm / PAGE_CONTENT_HEIGHT_MM);
 
       const newPages: PageInfo[] = [];
 
@@ -190,14 +190,14 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
               style={{
                 position: 'relative',
                 width: '100%',
-                height: `${PAGE_CONTENT_HEIGHT_PX}px`,
+                height: `${PAGE_CONTENT_HEIGHT_MM}mm`,
                 overflow: 'hidden',
               }}
             >
               <div
                 style={{
                   position: 'absolute',
-                  top: `-${i * PAGE_CONTENT_HEIGHT_PX}px`,
+                  top: `-${i * PAGE_CONTENT_HEIGHT_MM + 6.5}mm`,
                   left: 0,
                   right: 0,
                 }}

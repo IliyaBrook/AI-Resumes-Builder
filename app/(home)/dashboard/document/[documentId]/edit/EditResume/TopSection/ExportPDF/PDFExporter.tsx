@@ -54,10 +54,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
             resumeInfo={fixedResumeInfo}
             pagesOrder={pagesOrder}
             themeColor={themeColor}
-            isLoading={false}
-            isPdfMode={true}
-            isInteractive={false}
-            fetchDataIndependently={false}
+            isPdfExport={true}
           />
         );
         // Give React time to render

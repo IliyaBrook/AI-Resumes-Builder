@@ -20,6 +20,7 @@ export type DocumentType = {
   skillsDisplayFormat?: string;
   personalInfoDisplayFormat?: string;
   pagesOrder?: string[] | null;
+  direction?: string | null;
   sectionPaddings?: SectionPaddingsType | null;
 };
 

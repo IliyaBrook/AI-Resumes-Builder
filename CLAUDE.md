@@ -149,7 +149,7 @@ For large tasks with multiple steps:
 - Do NOT leave code comments unless absolutely necessary for complex logic
 - Use TypeScript for all new code with proper type annotations
 - Follow React best practices and hooks patterns
-- Don't change the *.css?inline files and ignore errors in the linter, if existed, this logic works correctly
+- Don't change the \*.css?inline files and ignore errors in the linter, if existed, this logic works correctly
 
 ### File Organization
 

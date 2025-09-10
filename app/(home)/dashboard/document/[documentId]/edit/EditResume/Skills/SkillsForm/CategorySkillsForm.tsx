@@ -29,7 +29,6 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
     refetchResumeInfo()
       .then(result => {
         const skills: SkillType[] = result.data?.data?.skills;
-        console.log('skills', skills);
         if (skills?.length > 0) {
           setSkills(skills);
         }

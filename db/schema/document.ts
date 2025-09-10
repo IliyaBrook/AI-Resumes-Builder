@@ -28,6 +28,7 @@ export const documentTable = pgTable('document', {
   skillsDisplayFormat: varchar('skills_display_format', { length: 32 }),
   personalInfoDisplayFormat: varchar('personal_info_display_format', { length: 32 }).default('default'),
   pagesOrder: json('pages_order').$type<string[]>().default(DEFAULT_PAGES_ORDER),
+  direction: varchar('direction', { length: 10 }).notNull().default('ltr'),
   sectionPaddings: json('section_paddings')
     .$type<{
       personalInfo?: { paddingTop?: number; paddingBottom?: number };
@@ -62,6 +63,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   skillsDisplayFormat: schema => schema.skillsDisplayFormat.optional(),
   personalInfoDisplayFormat: schema => schema.personalInfoDisplayFormat.optional(),
   pagesOrder: schema => schema.pagesOrder.optional(),
+  direction: schema => schema.direction.optional(),
   sectionPaddings: schema => schema.sectionPaddings.optional(),
 }).pick({
   title: true,
@@ -75,6 +77,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   skillsDisplayFormat: true,
   personalInfoDisplayFormat: true,
   pagesOrder: true,
+  direction: true,
   sectionPaddings: true,
 });
 
@@ -90,6 +93,7 @@ export const updateCombinedSchema = z.object({
   skillsDisplayFormat: createDocumentTableSchema.shape.skillsDisplayFormat.optional(),
   personalInfoDisplayFormat: createDocumentTableSchema.shape.personalInfoDisplayFormat.optional(),
   pagesOrder: z.array(z.string()).optional(),
+  direction: createDocumentTableSchema.shape.direction.optional(),
   sectionPaddings: z
     .object({
       personalInfo: z

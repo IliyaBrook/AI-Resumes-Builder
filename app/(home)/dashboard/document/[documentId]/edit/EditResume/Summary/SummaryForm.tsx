@@ -9,6 +9,7 @@ import {
   parseAIResult,
   RichTextEditor,
   RichTextEditorRef,
+  TranslateSection,
 } from '@/components';
 import { toast, useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { getAIChatSession } from '@/lib/google-ai-model';
@@ -166,6 +167,17 @@ const SummaryForm = () => {
     void GenerateSummaryFromAI();
   }, [GenerateSummaryFromAI]);
 
+  const handleTranslate = useCallback(
+    (translatedText: string) => {
+      if (editorRef.current) {
+        editorRef.current.setValue(translatedText);
+      }
+      setLocalSummary(translatedText);
+      setResumeInfo({ summary: translatedText });
+    },
+    [setResumeInfo]
+  );
+
   return (
     <div>
       <div className="w-full">
@@ -211,6 +223,13 @@ const SummaryForm = () => {
               showBullets={false}
               disabled={false}
               showLineLengthSelector={false}
+            />
+          </div>
+          <div className="mt-3 flex justify-end">
+            <TranslateSection
+              onTranslate={handleTranslate}
+              currentText={localSummary}
+              placeholder="Enter target language (e.g. Spanish, French, Arabic)"
             />
           </div>
           {aiGeneratedSummary && (

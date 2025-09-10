@@ -9,6 +9,7 @@ import {
   Input,
   Label,
   Textarea,
+  TranslateSection,
 } from '@/components';
 import { ChevronDown, Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
@@ -85,6 +86,12 @@ const EducationForm = () => {
   const handleAddEducation = useCallback(() => {
     void addNewEducation();
   }, [addNewEducation]);
+
+  const handleTranslate = useCallback((translatedText: string, index: number) => {
+    setLocalEducationList(prev =>
+      prev.map((edu, idx) => (idx === index ? { ...edu, description: translatedText } : edu))
+    );
+  }, []);
 
   const educations = localEducationList;
 
@@ -233,6 +240,13 @@ const EducationForm = () => {
                 <div className="col-span-2">
                   <Label className="text-sm">Description</Label>
                   <Textarea name="description" value={item?.description || ''} onChange={e => handleChange(e, index)} />
+                  <div className="mt-3 flex justify-end">
+                    <TranslateSection
+                      onTranslate={translatedText => handleTranslate(translatedText, index)}
+                      currentText={item?.description || ''}
+                      placeholder="Enter target language (e.g. Spanish, French, Arabic)"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

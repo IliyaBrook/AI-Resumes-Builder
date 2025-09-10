@@ -6,7 +6,7 @@ import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 // components
-import { parseAIResult, Label, Input, Button, RichTextEditor } from '@/components';
+import { parseAIResult, Label, Input, Button, RichTextEditor, TranslateSection } from '@/components';
 
 const ExperienceForm = () => {
   const param = useParams();
@@ -98,6 +98,12 @@ const ExperienceForm = () => {
   const handleAddExperience = useCallback(() => {
     void addNewExperience();
   }, [addNewExperience]);
+
+  const handleTranslate = useCallback((translatedText: string, index: number) => {
+    setLocalExperiences(prev =>
+      prev.map((exp, idx) => (idx === index ? { ...exp, workSummary: translatedText } : exp))
+    );
+  }, []);
 
   return (
     <div>
@@ -292,6 +298,13 @@ const ExperienceForm = () => {
                     showBullets={true}
                     showLineLengthSelector={true}
                   />
+                  <div className="mt-3 flex justify-end">
+                    <TranslateSection
+                      onTranslate={translatedText => handleTranslate(translatedText, index)}
+                      currentText={item.workSummary || ''}
+                      placeholder="Enter target language (e.g. Spanish, French, Arabic)"
+                    />
+                  </div>
                 </div>
               </div>
               {index === experiences.length - 1 && experiences.length && (

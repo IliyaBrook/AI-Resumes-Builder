@@ -6,7 +6,7 @@ import { ProjectType } from '@/types/resume.type';
 // hooks
 import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
 // components
-import { RichTextEditor, Label, Input, Button } from '@/components';
+import { RichTextEditor, Label, Input, Button, TranslateSection } from '@/components';
 
 const ProjectForm = () => {
   const param = useParams();
@@ -58,6 +58,12 @@ const ProjectForm = () => {
       return newProjects.map((proj, idx) => ({ ...proj, order: idx }));
     });
   };
+
+  const handleTranslate = React.useCallback((translatedText: string, index: number) => {
+    setLocalProjects(prev =>
+      prev.map((proj, idx) => (idx === index ? { ...proj, description: translatedText } : proj))
+    );
+  }, []);
 
   return (
     <div>
@@ -157,6 +163,13 @@ const ProjectForm = () => {
                     onEditorChange={val => handleChange({ target: { name: 'description', value: val } }, index)}
                     placeholder="Project description"
                   />
+                  <div className="mt-3 flex justify-end">
+                    <TranslateSection
+                      onTranslate={translatedText => handleTranslate(translatedText, index)}
+                      currentText={item?.description || ''}
+                      placeholder="Enter target language (e.g. Spanish, French, Arabic)"
+                    />
+                  </div>
                 </div>
               </div>
               {index === localProjects.length - 1 && localProjects.length < 10 && (

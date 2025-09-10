@@ -41,6 +41,7 @@ type UpdateDocumentRequest = {
   skillsDisplayFormat?: string;
   personalInfoDisplayFormat?: string;
   pagesOrder?: string[];
+  direction?: string;
   sectionPaddings?: any;
 };
 

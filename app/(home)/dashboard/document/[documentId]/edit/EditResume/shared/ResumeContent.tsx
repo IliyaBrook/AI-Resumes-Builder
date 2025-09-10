@@ -87,14 +87,18 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
           const paddingBottom = sectionPadding?.paddingBottom || 0;
 
           return (
-            <div
-              key={sectionKey}
-              style={{
-                marginTop: `${(paddingTop * 0.264583).toFixed(2)}mm`,
-                marginBottom: `${(paddingBottom * 0.264583).toFixed(2)}mm`,
-              }}
-            >
+            <div key={sectionKey}>
+              <div
+                style={{
+                  paddingTop: `${(paddingTop * 0.264583).toFixed(2)}mm`,
+                }}
+              />
               <Component resumeInfo={propsResumeInfo} isLoading={false} isInteractive={false} />
+              <div
+                style={{
+                  paddingBottom: `${(paddingBottom * 0.264583).toFixed(2)}mm`,
+                }}
+              />
             </div>
           );
         })}

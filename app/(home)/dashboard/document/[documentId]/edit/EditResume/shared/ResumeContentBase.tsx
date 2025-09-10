@@ -51,28 +51,32 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
     const paddingTopMm = ((sectionPadding?.paddingTop || 0) * 0.264583).toFixed(2);
     const paddingBottomMm = ((sectionPadding?.paddingBottom || 0) * 0.264583).toFixed(2);
 
-    const inner = (
+    const component = (
+      <Component
+        resumeInfo={resumeInfo}
+        isLoading={isLoading}
+        isInteractive={isInteractive}
+        selectedSection={selectedSection}
+        onSectionClick={onSectionClick}
+        renderSectionWrapper={renderSectionWrapper}
+      />
+    );
+
+    if (renderSectionWrapper && isInteractive) {
+      // When using renderSectionWrapper in interactive mode, let the wrapper handle padding
+      // to avoid double margins
+      return renderSectionWrapper(sectionKey, component, isSelected);
+    }
+
+    // Only apply margins when not using interactive wrapper
+    return (
       <div
         key={`section-margin-${sectionKey}`}
         style={{ marginTop: `${paddingTopMm}mm`, marginBottom: `${paddingBottomMm}mm` }}
       >
-        <Component
-          resumeInfo={resumeInfo}
-          isLoading={isLoading}
-          isInteractive={isInteractive}
-          selectedSection={selectedSection}
-          onSectionClick={onSectionClick}
-          renderSectionWrapper={renderSectionWrapper}
-        />
+        {component}
       </div>
     );
-
-    if (renderSectionWrapper && isInteractive) {
-      // Ensure margins are preserved in interactive preview by wrapping the component before passing
-      return renderSectionWrapper(sectionKey, inner, isSelected);
-    }
-
-    return inner;
   };
 
   return <div {...containerProps}>{pagesOrder.map(renderSection)}</div>;

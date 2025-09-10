@@ -114,10 +114,6 @@ export const ModalSectionWrapper = ({
     [documentData, sectionKey, updateDocument, isExperienceItem, experienceId]
   );
 
-  console.log(
-    `modalSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`
-  );
-
   return (
     <div
       // key={`modal-section-wrapper-${sectionKey}`}
@@ -132,7 +128,6 @@ export const ModalSectionWrapper = ({
       }}
       onClick={e => {
         e.stopPropagation();
-        console.log('Modal: Section clicked:', sectionKey);
         onSectionAction(sectionKey);
       }}
       title={`Click to select "${sectionKey}" section`}
@@ -181,7 +176,6 @@ export const ModalSectionWrapper = ({
             )}
             onClick={e => {
               e.stopPropagation();
-              console.log('Modal: Move up clicked for:', sectionKey);
               onMoveAction('up');
             }}
             disabled={!canMoveUp}
@@ -200,7 +194,6 @@ export const ModalSectionWrapper = ({
             )}
             onClick={e => {
               e.stopPropagation();
-              console.log('Modal: Move down clicked for:', sectionKey);
               onMoveAction('down');
             }}
             disabled={!canMoveDown}

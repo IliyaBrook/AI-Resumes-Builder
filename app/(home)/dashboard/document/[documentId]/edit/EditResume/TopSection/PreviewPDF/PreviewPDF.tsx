@@ -65,7 +65,6 @@ export const PreviewPDF: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseActi
   };
 
   const handleRenderSectionWrapper = (sectionKey: string, component: React.ReactNode, isSelected: boolean) => {
-    console.log('PreviewPDF - handleRenderSectionWrapper called for:', sectionKey, 'isSelected:', isSelected);
     return (
       <ModalSectionWrapper
         key={sectionKey}

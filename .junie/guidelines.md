@@ -99,7 +99,6 @@ Demonstrated simple test (verified during preparation of this guideline)
 
        try {
        const parsed = ResumeSchema.parse(sample);
-       console.log('[demo-test] Resume sample is valid:', parsed.personalInfo.fullName);
        process.exit(0);
        } catch (err) {
        console.error('[demo-test] Validation failed:', err);

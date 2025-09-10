@@ -141,6 +141,7 @@ Code style and quality
     - Audit: yarn check:unused
     - Autofix: yarn fix:unused (review changes before committing)
 - Comment cleanup: yarn remove-comments then yarn format
+- Don't change the *.css?inline files and ignore errors in the linter, if existed, this logic works correctly
 
 Database and schema
 

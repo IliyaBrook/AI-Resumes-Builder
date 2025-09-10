@@ -29,42 +29,50 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
   renderSectionWrapper,
   containerProps = {},
 }) => {
+  type PaddingKeys = keyof NonNullable<DocumentType['sectionPaddings']>;
+  const paddingKeyMap: Record<string, PaddingKeys> = {
+    'personal-info': 'personalInfo',
+    summary: 'summary',
+    experience: 'experience',
+    education: 'education',
+    projects: 'projects',
+    skills: 'skills',
+    languages: 'languages',
+  } as const;
+
   const renderSection = (sectionKey: string) => {
     const Component = SECTION_COMPONENTS[sectionKey as SectionKey];
     if (!Component) return null;
 
     const isSelected = isInteractive && selectedSection === sectionKey;
-    const sectionPadding = resumeInfo?.sectionPaddings?.[sectionKey as keyof typeof resumeInfo.sectionPaddings];
+    const paddingKey = paddingKeyMap[sectionKey];
+    const sectionPadding = resumeInfo?.sectionPaddings?.[paddingKey];
     // Convert px to mm: 1px = 0.264583 mm (96 DPI)
     const paddingTopMm = ((sectionPadding?.paddingTop || 0) * 0.264583).toFixed(2);
     const paddingBottomMm = ((sectionPadding?.paddingBottom || 0) * 0.264583).toFixed(2);
 
-    const sectionComponent = (
-      <Component
-        resumeInfo={resumeInfo}
-        isLoading={isLoading}
-        isInteractive={isInteractive}
-        selectedSection={selectedSection}
-        onSectionClick={onSectionClick}
-        renderSectionWrapper={renderSectionWrapper}
-      />
+    const inner = (
+      <div
+        key={`section-margin-${sectionKey}`}
+        style={{ marginTop: `${paddingTopMm}mm`, marginBottom: `${paddingBottomMm}mm` }}
+      >
+        <Component
+          resumeInfo={resumeInfo}
+          isLoading={isLoading}
+          isInteractive={isInteractive}
+          selectedSection={selectedSection}
+          onSectionClick={onSectionClick}
+          renderSectionWrapper={renderSectionWrapper}
+        />
+      </div>
     );
 
     if (renderSectionWrapper && isInteractive) {
-      return renderSectionWrapper(sectionKey, sectionComponent, isSelected);
+      // Ensure margins are preserved in interactive preview by wrapping the component before passing
+      return renderSectionWrapper(sectionKey, inner, isSelected);
     }
 
-    return (
-      <div
-        key={sectionKey}
-        style={{
-          marginTop: `${paddingTopMm}mm`,
-          marginBottom: `${paddingBottomMm}mm`,
-        }}
-      >
-        {sectionComponent}
-      </div>
-    );
+    return inner;
   };
 
   return <div {...containerProps}>{pagesOrder.map(renderSection)}</div>;

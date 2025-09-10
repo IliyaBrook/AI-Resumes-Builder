@@ -65,14 +65,24 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
 
   // For PDF export without fetching
   if (isPdfExport && propsResumeInfo && propsPagesOrder && propsThemeColor) {
+    const paddingKeyMap: Record<string, keyof NonNullable<DocumentType['sectionPaddings']>> = {
+      'personal-info': 'personalInfo',
+      summary: 'summary',
+      experience: 'experience',
+      education: 'education',
+      projects: 'projects',
+      skills: 'skills',
+      languages: 'languages',
+    } as const;
+
     return (
       <div id="resume-content" className="w-full">
         {propsPagesOrder.map(sectionKey => {
           const Component = SECTION_COMPONENTS[sectionKey as SectionKey];
           if (!Component) return null;
 
-          const sectionPadding =
-            propsResumeInfo?.sectionPaddings?.[sectionKey as keyof typeof propsResumeInfo.sectionPaddings];
+          const paddingKey = paddingKeyMap[sectionKey];
+          const sectionPadding = propsResumeInfo?.sectionPaddings?.[paddingKey];
           const paddingTop = sectionPadding?.paddingTop || 0;
           const paddingBottom = sectionPadding?.paddingBottom || 0;
 

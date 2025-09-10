@@ -4,6 +4,7 @@ import { AlertCircle } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { Download, MoreOption, PreviewModal, ResumeTitle, ThemeColor } from '@/editResume';
+import { PreviewPdfButton } from './PreviewPDF';
 
 const TopSection = () => {
   const param = useParams();
@@ -40,6 +41,7 @@ const TopSection = () => {
           <ThemeColor />
           <PreviewModal />
           <Download title={resumeInfo?.title || 'Unititled Resume'} status={resumeInfo?.status} isLoading={isLoading} />
+          <PreviewPdfButton />
           <MoreOption />
         </div>
       </div>

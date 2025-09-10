@@ -39,9 +39,9 @@ const TopSection = () => {
         </div>
         <div className="flex items-center gap-2">
           <ThemeColor />
-          <PreviewModal />
           <Download title={resumeInfo?.title || 'Unititled Resume'} status={resumeInfo?.status} isLoading={isLoading} />
           <PreviewPdfButton />
+          <PreviewModal />
           <MoreOption />
         </div>
       </div>

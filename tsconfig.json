@@ -32,8 +32,14 @@
       "@/components": [
         "./components/index.ts"
       ],
+      "@/hooks": [
+        "./hooks/index.ts"
+      ],
       "@/hooks/*": [
-        "hooks/index.ts"
+        "./hooks/*"
+      ],
+      "@hooks/document/*": [
+        "./hooks/document/*"
       ],
       "@/context/*": [
         "context/index.ts"

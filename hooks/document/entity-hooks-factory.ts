@@ -1,7 +1,7 @@
 'use client';
 
 import { api } from '@/lib/hono-rpc';
-import { useBaseMutation } from '@/hooks';
+import { useBaseMutation } from './base-mutation';
 
 interface EntityConfig {
   name: string;

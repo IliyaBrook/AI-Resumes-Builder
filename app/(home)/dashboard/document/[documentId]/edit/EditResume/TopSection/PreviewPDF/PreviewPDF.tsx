@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ResumeContent } from '@/shared/ResumeContent';
 import { ModalSectionWrapper } from './modalSectionWrapper';
@@ -18,11 +18,8 @@ export const PreviewPDF: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseActi
   const containerRef = useRef<HTMLDivElement>(null);
 
   const toggleSection = (sectionKey: string) => {
-    console.log('PreviewPDF - toggleSection called:', sectionKey);
     setSelectedSection(prev => {
-      const newValue = prev === sectionKey ? null : sectionKey;
-      console.log('PreviewPDF - selectedSection changed from', prev, 'to', newValue);
-      return newValue;
+      return prev === sectionKey ? null : sectionKey;
     });
   };
 

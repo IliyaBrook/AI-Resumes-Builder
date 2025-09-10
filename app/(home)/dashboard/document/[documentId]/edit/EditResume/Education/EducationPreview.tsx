@@ -107,7 +107,6 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               !education?.hideDates &&
               (education?.startDate || education?.endDate) && (
                 <div className={isDoNotShowDates ? 'block' : 'flex items-start justify-between'}>
-                  <span></span>
                   <span className="text-[13px] font-bold">
                     {education?.yearsOnly
                       ? `${education?.startDate ? new Date(education.startDate).getFullYear() : ''}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : education?.endDate ? new Date(education.endDate).getFullYear() : ''}`

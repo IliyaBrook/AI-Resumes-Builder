@@ -3,7 +3,7 @@ import { useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { AlertCircle } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useCallback } from 'react';
-import { Download, MoreOption, PreviewModal, ResumeTitle, ThemeColor } from '@/editResume';
+import { Download, MoreOption, ResumeTitle, ThemeColor } from '@/editResume';
 import { PreviewPdfButton } from './PreviewPDF';
 
 const TopSection = () => {
@@ -41,7 +41,6 @@ const TopSection = () => {
           <ThemeColor />
           <Download title={resumeInfo?.title || 'Unititled Resume'} status={resumeInfo?.status} isLoading={isLoading} />
           <PreviewPdfButton />
-          <PreviewModal />
           <MoreOption />
         </div>
       </div>

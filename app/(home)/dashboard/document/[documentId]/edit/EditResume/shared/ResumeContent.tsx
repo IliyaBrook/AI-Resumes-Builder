@@ -262,7 +262,13 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
         <div className="absolute -top-10 left-0 flex items-center gap-2">
           <div className="text-sm font-semibold text-gray-700">📄 Page {page.pageNumber}</div>
         </div>
-
+        {index === 0 && (
+          <div
+            style={{
+              borderTop: `13px solid ${resumeInfo.themeColor}`,
+            }}
+          />
+        )}
         <div {...pagePreviewStyles}>
           <div className="h-full w-full overflow-hidden">{page.content}</div>
 

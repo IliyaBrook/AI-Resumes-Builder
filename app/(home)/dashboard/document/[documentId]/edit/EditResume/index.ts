@@ -11,5 +11,4 @@ export * from './TopSection';
 export * from './ResumePreview';
 
 export { default as EditResume } from './EditResume';
-export { default as PreviewModal } from './PreviewModal';
 export { default as ResumeForm } from './ResumeForm';

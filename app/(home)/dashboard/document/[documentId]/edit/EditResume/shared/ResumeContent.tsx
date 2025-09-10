@@ -174,7 +174,7 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
     // Measure the full content height
     if (contentRef.current) {
       const contentHeight = contentRef.current.scrollHeight;
-      // Convert px to mm for comparison: 1px = 0.264583mm
+      // Convert px to mm for comparison: 1 px = 0.264583 mm
       const contentHeightMm = contentHeight * 0.264583;
       const needsMultiplePages = contentHeightMm > PAGE_CONTENT_HEIGHT_MM;
 
@@ -197,7 +197,7 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
               <div
                 style={{
                   position: 'absolute',
-                  top: `-${i * PAGE_CONTENT_HEIGHT_MM + (i === 0 ? 0 : 6.5)}mm`,
+                  top: `-${i * PAGE_CONTENT_HEIGHT_MM + 6.5}mm`,
                   left: 0,
                   right: 0,
                 }}

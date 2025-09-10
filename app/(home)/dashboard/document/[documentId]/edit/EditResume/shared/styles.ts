@@ -13,12 +13,11 @@ interface PagePreviewStyles {
 }
 
 export const getPagePrintStyles = (themeColor: string, includeBorderTop: boolean = true): PagePreviewStyles => ({
-  className: 'w-full bg-white !font-open-sans',
+  className: 'w-full bg-white !font-open-sans px-10',
   style: {
     minHeight: '297mm',
     boxSizing: 'border-box',
     ...(includeBorderTop && { borderTop: `13px solid ${themeColor}` }),
-    padding: '1rem 2.5rem',
   },
 });
 

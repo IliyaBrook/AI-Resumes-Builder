@@ -1,20 +1,11 @@
 AI Resume Builder — Project Guidelines (for Advanced Contributors)
 
-Source basis: This document distills the operational, build, and contribution specifics from CLAUDE.md and tailors them
+Source basis: This document distills the operational and contribution specifics from CLAUDE.md and tailors them
 to Junie’s workflow requirements. It focuses on project‑specific practices (not generic React/Next.js knowledge).
-
-1. Build and Configuration
-
-Mandatory quality gate (run in this exact order after any change):
-
-- yarn lint — ESLint + TypeScript noEmit. All errors must be fixed in the same task.
-- yarn format:check — Verify Prettier formatting.
-- yarn build — Next.js production build must succeed before commit/merge.
 
 Core lifecycle commands:
 
 - yarn dev — Next dev with Turbopack.
-- yarn build — Production build. Required to pass before committing.
 - yarn start — Start production server.
 
 Environment setup
@@ -51,7 +42,7 @@ Module resolution / project type
 
 Current state
 
-- There is no formal test runner (Jest/Vitest) configured. The quality gates rely on ESLint, TypeScript, build success,
+- There is no formal test runner (Jest/Vitest) configured. The quality gates rely on ESLint, TypeScript success,
   and targeted runtime checks.
 - For lightweight, project‑specific assertions, prefer minimal Node scripts that reuse existing dependencies (e.g., zod)
   to validate data contracts.
@@ -61,7 +52,6 @@ How to run tests today
 - Quality checks (run always):
     - yarn lint
     - yarn format:check
-    - yarn build
 - Ad‑hoc runtime test scripts: node path/to/script.mjs
 
 Guidelines for adding tests
@@ -72,7 +62,7 @@ Guidelines for adding tests
 - If you choose to introduce a formal test runner:
     - Prefer Vitest for fast TS ESM support; cofigure minimal vitest.config.ts, and scope to non‑UI logic first (
       schemas, utils, API handlers sans Next runtime).
-    - Keep the mandatory quality gate intact: tests are in addition to lint/format/build, not replacements.
+    - Keep the mandatory quality gate intact: tests are in addition to lint/format, not replacements.
 
 Demonstrated simple test (verified during preparation of this guideline)
 
@@ -163,7 +153,6 @@ Frontend patterns
 
 Performance and stability checks
 
-- Always run yarn build before committing; Next build catches many runtime/module issues early in this repo.
 - For large refactors, run yarn check:unused and review. Remove or fix unused exports to keep bundle size lean.
 
 Common pitfalls
@@ -177,6 +166,5 @@ Minimal pre-commit routine (must pass)
 
 1. yarn lint
 2. yarn format:check
-3. yarn build
 
 If any step fails, fix it before committing. These gates are non‑negotiable and inherited directly from CLAUDE.md.

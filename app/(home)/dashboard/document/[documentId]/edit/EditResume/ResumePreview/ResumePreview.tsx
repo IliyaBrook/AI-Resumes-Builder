@@ -40,12 +40,6 @@ const ResumePreview = () => {
       className="relative h-full w-full flex-[1.02]"
       onClick={() => setSelectedSection(null)}
     >
-      {selectedSection && (
-        <div className="absolute left-4 top-4 z-10 rounded-md bg-white px-2 py-1 text-xs text-gray-500 shadow-sm dark:bg-gray-800">
-          Selected section: {selectedSection} (ESC to cancel)
-        </div>
-      )}
-
       <ResumeContent
         key="main-preview-resume-content"
         resumeInfo={fixedResumeInfo}

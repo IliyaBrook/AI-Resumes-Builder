@@ -10,8 +10,8 @@ interface RenderSectionWrapperProps {
   component: React.ReactNode;
   isSelected: boolean;
   currentOrder: string[];
-  onSectionClick: (sectionKey: string) => void;
-  onMoveSection: (direction: 'up' | 'down') => void;
+  onSectionClickAction: (sectionKey: string) => void;
+  onMoveSectionAction: (direction: 'up' | 'down') => void;
 }
 
 export const renderSectionWrapper = ({
@@ -19,16 +19,12 @@ export const renderSectionWrapper = ({
   component,
   isSelected,
   currentOrder,
-  onSectionClick,
-  onMoveSection,
+  onSectionClickAction,
+  onMoveSectionAction,
 }: RenderSectionWrapperProps) => {
   const currentIndex = currentOrder.indexOf(sectionKey);
   const canMoveUp = currentIndex > 0;
   const canMoveDown = currentIndex < currentOrder.length - 1;
-
-  console.log(
-    `renderSectionWrapper: ${sectionKey}, isSelected: ${isSelected}, canMoveUp: ${canMoveUp}, canMoveDown: ${canMoveDown}`
-  );
 
   return (
     <div
@@ -39,7 +35,7 @@ export const renderSectionWrapper = ({
       )}
       onClick={e => {
         e.stopPropagation();
-        onSectionClick(sectionKey);
+        onSectionClickAction(sectionKey);
       }}
       title={`Click to select "${sectionKey}" section`}
     >
@@ -60,7 +56,7 @@ export const renderSectionWrapper = ({
             )}
             onClick={e => {
               e.stopPropagation();
-              onMoveSection('up');
+              onMoveSectionAction('up');
             }}
             disabled={!canMoveUp}
             title="Move section up"
@@ -77,7 +73,7 @@ export const renderSectionWrapper = ({
             )}
             onClick={e => {
               e.stopPropagation();
-              onMoveSection('down');
+              onMoveSectionAction('down');
             }}
             disabled={!canMoveDown}
             title="Move section down"

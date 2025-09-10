@@ -100,7 +100,7 @@ const ResumeItem: FC<PropType> = ({ documentId, title, themeColor, thumbnail, up
         </div>
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent aria-describedby="delete-resume">
           <DialogHeader>
             <DialogTitle>Are you sure you want to delete this resume?</DialogTitle>
           </DialogHeader>

@@ -28,8 +28,8 @@ const ResumePreview = () => {
       component,
       isSelected,
       currentOrder,
-      onSectionClick: toggleSection,
-      onMoveSection: handleMoveSection,
+      onSectionClickAction: toggleSection,
+      onMoveSectionAction: handleMoveSection,
     });
   };
 

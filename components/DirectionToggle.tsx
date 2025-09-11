@@ -18,7 +18,7 @@ export const DirectionToggle: React.FC<DirectionToggleProps> = ({ className = ''
 
   // Initialize direction from database on first render
   useEffect(() => {
-    if (data?.data?.direction) {
+    if (data?.data?.direction !== undefined) {
       const isRtlFromDb = data.data.direction === 'rtl';
       setIsRtl(isRtlFromDb);
     }

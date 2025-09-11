@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 import { Download, MoreOption, ResumeTitle, ThemeColor } from '@/editResume';
 import { PreviewPdfButton } from './PreviewPDF';
 import { DirectionToggle } from '@/components';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const TopSection = () => {
   const param = useParams();
@@ -40,8 +41,9 @@ const TopSection = () => {
         </div>
         <div className="flex items-center gap-2">
           <DirectionToggle />
+          <LanguageSwitcher />
           <ThemeColor />
-          <Download title={resumeInfo?.title || 'Unititled Resume'} status={resumeInfo?.status} isLoading={isLoading} />
+          <Download title={resumeInfo?.title || 'Untitled Resume'} status={resumeInfo?.status} isLoading={isLoading} />
           <PreviewPdfButton />
           <MoreOption />
         </div>

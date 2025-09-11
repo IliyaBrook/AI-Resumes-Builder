@@ -81,6 +81,7 @@ const documentRoute = new Hono()
           personalInfoDisplayFormat,
           pagesOrder,
           direction,
+          locale,
           sectionPaddings,
         } = c.req.valid('json');
 
@@ -112,6 +113,7 @@ const documentRoute = new Hono()
             resumeUpdate.personalInfoDisplayFormat = personalInfoDisplayFormat;
           if (pagesOrder !== undefined) resumeUpdate.pagesOrder = pagesOrder;
           if (direction !== undefined) resumeUpdate.direction = direction;
+          if (locale !== undefined) resumeUpdate.locale = locale;
           if (sectionPaddings !== undefined) resumeUpdate.sectionPaddings = sectionPaddings;
 
           if (Object.keys(resumeUpdate)?.length > 0) {

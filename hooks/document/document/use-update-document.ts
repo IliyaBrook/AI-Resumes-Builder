@@ -42,6 +42,7 @@ type UpdateDocumentRequest = {
   personalInfoDisplayFormat?: string;
   pagesOrder?: string[];
   direction?: string;
+  locale?: string;
   sectionPaddings?: any;
 };
 

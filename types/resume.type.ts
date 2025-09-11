@@ -21,6 +21,7 @@ export type DocumentType = {
   personalInfoDisplayFormat?: string;
   pagesOrder?: string[] | null;
   direction?: string | null;
+  locale?: string | null;
   sectionPaddings?: SectionPaddingsType | null;
 };
 

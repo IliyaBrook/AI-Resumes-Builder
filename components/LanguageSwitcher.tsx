@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, Globe } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { useParams } from 'next/navigation';
 
@@ -19,7 +19,7 @@ export default function LanguageSwitcher({ className = '' }: LanguageSwitcherPro
   const params = useParams();
   const documentId = params.documentId as string;
 
-  const { data: document, isLoading } = useGetDocumentById(documentId);
+  const { data: document } = useGetDocumentById(documentId);
   const { mutate: updateDocument, isPending } = useUpdateDocument();
 
   const currentLocale = document?.data?.locale || 'en';
@@ -32,15 +32,6 @@ export default function LanguageSwitcher({ className = '' }: LanguageSwitcherPro
     setIsOpen(false);
   };
 
-  if (isLoading) {
-    return (
-      <div className={`flex items-center gap-2 px-3 py-2 ${className}`}>
-        <Globe className="h-4 w-4 animate-pulse" />
-        <span className="text-sm">Loading...</span>
-      </div>
-    );
-  }
-
   return (
     <div className={`relative ${className}`}>
       <button
@@ -48,7 +39,6 @@ export default function LanguageSwitcher({ className = '' }: LanguageSwitcherPro
         disabled={isPending}
         className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <Globe className="h-4 w-4" />
         <span className="flex items-center gap-1">
           <span>{currentLanguage.flag}</span>
           <span>{currentLanguage.label}</span>

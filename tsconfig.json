@@ -27,7 +27,7 @@
         "./*"
       ],
       "@/editResume": [
-        "./app/(home)/dashboard/index.ts"
+        "./app/[locale]/(home)/dashboard/index.ts"
       ],
       "@/components": [
         "./components/index.ts"
@@ -48,7 +48,7 @@
         "types/index.ts"
       ],
       "@/shared/*": [
-        "app/(home)/dashboard/document/[documentId]/edit/EditResume/shared/*"
+        "app/[locale]/(home)/dashboard/document/[documentId]/edit/EditResume/shared/*"
       ]
     },
     "target": "ES2017"

@@ -184,7 +184,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       if (controlledValue !== undefined && controlledValue !== value) {
         setValue(controlledValue);
       }
-    }, [controlledValue]);
+    }, [controlledValue, value]);
 
     const handleGenerate = async () => {
       try {

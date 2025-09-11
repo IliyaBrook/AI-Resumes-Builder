@@ -27,6 +27,7 @@ export default function LanguageSwitcher({ className = '' }: LanguageSwitcherPro
 
   const handleLanguageChange = (locale: string) => {
     if (locale !== currentLocale) {
+      // Update database
       updateDocument({ locale });
     }
     setIsOpen(false);

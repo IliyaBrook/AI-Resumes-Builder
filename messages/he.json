@@ -1,0 +1,53 @@
+{
+  "LanguageSwitcher": {
+    "loading": "טוען...",
+    "changeLanguage": "שנה שפה"
+  },
+  "TopSection": {
+    "archivedResume": "קורות החיים נמצאים בפח האשפה"
+  },
+  "Common": {
+    "loading": "טוען...",
+    "save": "שמור",
+    "cancel": "בטל",
+    "delete": "מחק",
+    "edit": "ערוך",
+    "add": "הוסף",
+    "remove": "הסר",
+    "untitledResume": "קורות חיים ללא כותרת"
+  },
+  "Resume": {
+    "sections": {
+      "personalInfo": "מידע אישי",
+      "summary": "תקציר",
+      "experience": "ניסיון",
+      "education": "השכלה",
+      "skills": "כישורים",
+      "projects": "פרויקטים",
+      "languages": "שפות"
+    },
+    "fields": {
+      "firstName": "שם פרטי",
+      "lastName": "שם משפחה",
+      "jobTitle": "תפקיד",
+      "address": "כתובת",
+      "phone": "טלפון",
+      "email": "אימייל",
+      "github": "גיטהאב",
+      "linkedin": "לינקדאין"
+    }
+  },
+  "Dashboard": {
+    "title": "לוח בקרה",
+    "createNew": "צור קורות חיים חדשים",
+    "myResumes": "קורות החיים שלי"
+  },
+  "Actions": {
+    "download": "הורד",
+    "preview": "תצוגה מקדימה",
+    "share": "שתף",
+    "duplicate": "שכפל",
+    "archive": "העבר לארכיון",
+    "restore": "שחזר"
+  }
+}

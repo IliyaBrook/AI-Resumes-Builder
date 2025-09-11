@@ -1,0 +1,53 @@
+{
+  "LanguageSwitcher": {
+    "loading": "Loading...",
+    "changeLanguage": "Change Language"
+  },
+  "TopSection": {
+    "archivedResume": "This resume is in the trash bin"
+  },
+  "Common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "untitledResume": "Untitled Resume"
+  },
+  "Resume": {
+    "sections": {
+      "personalInfo": "Personal Information",
+      "summary": "Summary",
+      "experience": "Experience",
+      "education": "Education",
+      "skills": "Skills",
+      "projects": "Projects",
+      "languages": "Languages"
+    },
+    "fields": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "jobTitle": "Job Title",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    }
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "createNew": "Create New Resume",
+    "myResumes": "My Resumes"
+  },
+  "Actions": {
+    "download": "Download",
+    "preview": "Preview",
+    "share": "Share",
+    "duplicate": "Duplicate",
+    "archive": "Archive",
+    "restore": "Restore"
+  }
+}

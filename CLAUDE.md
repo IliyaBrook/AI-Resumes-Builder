@@ -8,18 +8,6 @@
 - `yarn db:init` — Initialize database with SQL
 - `yarn db:push` — Push Drizzle schema to DB
 
-## Environment Setup
-
-Required variables in `.env`:
-
-```
-POSTGRES_URL=postgresql://...
-POSTGRES_DB=ai_resumes_builder
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=yourpassword
-GOOGLE_AI_API_KEY=your_gemini_api_key
-```
-
 ## Code Quality Rules (NON-NEGOTIABLE)
 
 ### During Development
@@ -64,6 +52,40 @@ GOOGLE_AI_API_KEY=your_gemini_api_key
 - Migrations: `yarn db:migrate`
 - Backup: `make db-backup`
 - Restore: `make db-restore`
+
+## Best Practices (MANDATORY)
+
+### Component Reuse & DRY Principles
+
+1. **ALWAYS check existing components first**:
+    - Search `components/` folder before creating new components
+    - Look for similar UI patterns that can be reused
+    - Check `components/ui/` for base components (buttons, inputs, etc.)
+
+2. **Create reusable components**:
+    - Make components generic with configurable props
+    - Use TypeScript interfaces for clear prop definitions
+    - Extract common patterns into shared components
+    - Add components to appropriate `index.ts` for easy imports
+
+3. **Follow DRY methodology**:
+    - Extract repeated logic into custom hooks (`hooks/` folder)
+    - Create utility functions in `lib/` for shared business logic
+    - Reuse Zod schemas across forms and API validation
+    - Share constants and types across modules
+
+4. **Component organization**:
+    - Form components: Handle input/validation logic
+    - Preview components: Pure rendering, no business logic
+    - UI components: Reusable primitives (buttons, inputs, cards)
+    - Feature components: Business-specific functionality
+
+### Code Reuse Examples
+
+- **Instead of**: Creating new button variants → **Use**: Existing Button component with props
+- **Instead of**: Copying form validation → **Use**: Shared Zod schemas
+- **Instead of**: Duplicating API calls → **Use**: Custom hooks with React Query
+- **Instead of**: Repeating styling → **Use**: Tailwind component classes or CSS variables
 
 ## Key File Patterns
 

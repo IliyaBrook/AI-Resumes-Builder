@@ -75,3 +75,23 @@ ol li::before {
     border-radius: 50%;
     display: inline-block;
 }
+
+/* RTL-specific styles: disable custom bullets and enable native list styling */
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+    list-style: revert;
+    padding-left: 0;
+    padding-right: 15px;
+}
+
+[dir="rtl"] ul li,
+[dir="rtl"] ol li {
+    padding-left: 0 !important;
+    padding-right: 1.2em;
+    list-style-position: outside;
+}
+
+[dir="rtl"] ul li::before,
+[dir="rtl"] ol li::before {
+    display: none;
+}

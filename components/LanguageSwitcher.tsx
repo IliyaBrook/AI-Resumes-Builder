@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 const languages = [
   { code: 'en', label: 'English', flag: '🇺🇸' },
@@ -17,6 +17,7 @@ interface LanguageSwitcherProps {
 export default function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
   const params = useParams();
+  const router = useRouter();
   const documentId = params.documentId as string;
 
   const { data: document } = useGetDocumentById(documentId);
@@ -29,6 +30,21 @@ export default function LanguageSwitcher({ className = '' }: LanguageSwitcherPro
     if (locale !== currentLocale) {
       // Update database
       updateDocument({ locale });
+
+      // Get current path and replace locale parameter
+      const currentPath = window.location.pathname;
+      const pathSegments = currentPath.split('/');
+
+      // Find and replace the locale segment (should be at index that contains current locale)
+      const localeIndex = pathSegments.findIndex(segment => segment === currentLocale);
+      if (localeIndex !== -1) {
+        pathSegments[localeIndex] = locale;
+        const newPath = pathSegments.join('/');
+
+        // Navigate to new path and reload
+        router.push(newPath);
+        // window.location.reload();
+      }
     }
     setIsOpen(false);
   };

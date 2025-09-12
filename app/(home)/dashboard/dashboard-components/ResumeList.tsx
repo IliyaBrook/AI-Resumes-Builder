@@ -2,7 +2,7 @@
 import { useGetDocuments } from '@/hooks';
 import { Loader, RotateCw } from 'lucide-react';
 import React, { Fragment, useCallback, useEffect } from 'react';
-import { ResumeItem } from '@/app/[locale]/(home)/dashboard';
+import { ResumeItem } from '@/app/(home)/dashboard';
 import { DocumentType } from '@/types';
 
 const ResumeList = () => {
@@ -56,6 +56,7 @@ const ResumeList = () => {
           {resumes?.map((resume: DocumentType) => (
             <ResumeItem
               key={resume.documentId}
+              locale={resume.locale}
               documentId={resume.documentId}
               title={resume.title}
               updatedAt={resume.updatedAt}

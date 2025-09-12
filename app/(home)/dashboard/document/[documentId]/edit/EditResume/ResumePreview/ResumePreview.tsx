@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ResumeContent } from '@/app/[locale]/(home)/dashboard/document/[documentId]/edit/EditResume/shared/ResumeContent';
+import { ResumeContent } from '@/app/(home)/dashboard/document/[documentId]/edit/EditResume/shared/ResumeContent';
 import { renderSectionWrapper } from './renderSectionWrapper';
 import { moveSection } from './pageOrderUtils';
 import { useSectionSelection } from './useSectionSelection';

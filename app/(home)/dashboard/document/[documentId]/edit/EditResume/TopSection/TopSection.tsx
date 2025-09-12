@@ -3,7 +3,7 @@ import { useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { AlertCircle } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useCallback } from 'react';
-import { Download, MoreOption, ResumeTitle, ThemeColor } from '@/app/[locale]/(home)/dashboard';
+import { Download, MoreOption, ResumeTitle, ThemeColor } from '@/app/(home)/dashboard';
 import { PreviewPdfButton } from './PreviewPDF';
 import { DirectionToggle } from '@/components';
 import LanguageSwitcher from '@/components/LanguageSwitcher';

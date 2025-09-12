@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrashListBox, ResumeList, AddResume } from '@/app/[locale]/(home)/dashboard/index';
+import { TrashListBox, ResumeList, AddResume } from '@/app/(home)/dashboard/index';
 
 const Page = () => {
   return (

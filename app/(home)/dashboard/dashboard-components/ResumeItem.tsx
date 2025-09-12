@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { Copy, FileText, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FC, useMemo, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 
 interface PropType {
   documentId: string;
@@ -14,6 +14,7 @@ interface PropType {
   themeColor: string | null;
   thumbnail: string | null;
   updatedAt: string;
+  locale?: string | null;
   onDuplicate?: (documentId: string) => void;
 }
 

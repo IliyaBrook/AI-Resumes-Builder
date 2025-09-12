@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResumeForm, ResumePreview, TopSection } from '@/app/[locale]/(home)/dashboard';
+import { ResumeForm, ResumePreview, TopSection } from '@/app/(home)/dashboard';
 import { FirstRenderProvider } from '@/context';
 
 const EditResume = () => {

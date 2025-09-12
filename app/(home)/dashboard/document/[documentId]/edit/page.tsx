@@ -1,5 +1,5 @@
 import React from 'react';
-import { EditResume } from '@/app/[locale]/(home)/dashboard';
+import { EditResume } from '@/app/(home)/dashboard';
 
 const Page = () => {
   return <EditResume />;

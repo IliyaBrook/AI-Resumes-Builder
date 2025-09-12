@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { ResumeContent } from '@/app/[locale]/(home)/dashboard/document/[documentId]/edit/EditResume/shared/ResumeContent';
+import { ResumeContent } from '@/app/(home)/dashboard/document/[documentId]/edit/EditResume/shared/ResumeContent';
 import { ModalSectionWrapper } from './modalSectionWrapper';
-import { moveSection, usePageOrderSync } from '@/app/[locale]/(home)/dashboard';
+import { moveSection, usePageOrderSync } from '@/app/(home)/dashboard';
 
 interface PDFDebugPreviewProps {
   isOpen: boolean;

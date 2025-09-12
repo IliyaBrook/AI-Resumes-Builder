@@ -15,7 +15,7 @@ import {
   ProjectForm,
   SkillsForm,
   SummaryForm,
-} from '@/app/(home)/dashboard';
+} from '@/editResume';
 
 const ResumeForm = () => {
   const param = useParams();

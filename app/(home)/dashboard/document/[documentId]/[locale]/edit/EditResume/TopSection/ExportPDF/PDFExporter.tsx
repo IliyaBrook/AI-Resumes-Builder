@@ -8,8 +8,8 @@ import { useParams } from 'next/navigation';
 import { DEFAULT_PAGES_ORDER } from '@/constant/resume-sections';
 import RESUME_STYLES from '../../shared/resume-styles.css?inline';
 import { normalizeResumeData } from '@/lib/utils';
-import { ResumeContentBase } from '@/app/(home)/dashboard/document/[documentId]/edit/EditResume/shared/ResumeContentBase';
-import { getPagePrintStyles } from '@/app/(home)/dashboard/document/[documentId]/edit/EditResume/shared/styles';
+import { ResumeContentBase } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/shared/ResumeContentBase';
+import { getPagePrintStyles } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/shared/styles';
 
 interface PDFExporterProps {
   title: string;

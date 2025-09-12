@@ -7,7 +7,7 @@ import { cn, normalizeResumeData } from '@/lib/utils';
 import { DocumentType } from '@/types';
 import RESUME_STYLES from './resume-styles.css?inline';
 import { ResumeContentBase } from './ResumeContentBase';
-import { pagePreviewStyles } from '@/app/(home)/dashboard/document/[documentId]/edit/EditResume/shared/styles';
+import { pagePreviewStyles } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/shared/styles';
 
 // A4 page height in millimeters
 // Using mm for exact print correspondence

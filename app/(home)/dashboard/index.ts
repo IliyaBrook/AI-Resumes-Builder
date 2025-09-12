@@ -1,2 +1,2 @@
 export * from './dashboard-components';
-export * from './document/[documentId]/edit/EditResume';
+export * from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume';

@@ -19,6 +19,8 @@ const TopSection = () => {
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 
+  const titleTest = tCommon('untitledResume');
+  console.log('titleTest: ', titleTest);
   const handleTitle = useCallback(
     (title: string) => {
       if (title === tCommon('untitledResume') && !title) return;

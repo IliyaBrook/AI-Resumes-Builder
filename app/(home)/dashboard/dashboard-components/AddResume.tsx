@@ -15,7 +15,8 @@ const AddResume = () => {
       {
         onSuccess: response => {
           const documentId = response.data.documentId;
-          router.push(`/dashboard/document/${documentId}/edit`);
+          const locale = response.data.locale;
+          router.push(`/dashboard/document/${documentId}/${locale}/edit`);
         },
       }
     );

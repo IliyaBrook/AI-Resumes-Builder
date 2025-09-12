@@ -19,8 +19,6 @@ const TopSection = () => {
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo, isPending } = useUpdateDocument();
 
-  const titleTest = tCommon('untitledResume');
-  console.log('titleTest: ', titleTest);
   const handleTitle = useCallback(
     (title: string) => {
       if (title === tCommon('untitledResume') && !title) return;
@@ -28,6 +26,9 @@ const TopSection = () => {
     },
     [setResumeInfo, tCommon]
   );
+
+  const resumeTitle = (resumeInfo?.title === 'Untitled Resume' ? tCommon('untitledResume') : resumeInfo?.title) ?? '';
+
   return (
     <>
       {resumeInfo?.status === 'archived' && (
@@ -40,7 +41,7 @@ const TopSection = () => {
         <div className="flex items-center gap-2">
           <ResumeTitle
             isLoading={isLoading || isPending}
-            initialTitle={resumeInfo?.title || ''}
+            initialTitle={resumeTitle}
             status={resumeInfo?.status}
             onSave={(value: string) => handleTitle(value)}
           />

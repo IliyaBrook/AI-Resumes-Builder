@@ -4,7 +4,8 @@
     "changeLanguage": "Change Language"
   },
   "TopSection": {
-    "archivedResume": "This resume is in the trash bin"
+    "archivedResume": "This resume is in the trash bin",
+    "Download Resume": "Download Resume"
   },
   "Common": {
     "loading": "Loading...",

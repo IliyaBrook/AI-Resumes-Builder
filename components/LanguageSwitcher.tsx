@@ -43,7 +43,9 @@ export default function LanguageSwitcher({ className = '' }: LanguageSwitcherPro
 
         // Navigate to new path and reload
         router.push(newPath);
-        // window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       }
     }
     setIsOpen(false);

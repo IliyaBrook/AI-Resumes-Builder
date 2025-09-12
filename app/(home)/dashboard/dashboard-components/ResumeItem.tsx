@@ -18,7 +18,7 @@ interface PropType {
   onDuplicate?: (documentId: string) => void;
 }
 
-const ResumeItem: FC<PropType> = ({ documentId, title, themeColor, thumbnail, updatedAt, onDuplicate }) => {
+const ResumeItem: FC<PropType> = ({ documentId, title, themeColor, thumbnail, updatedAt, onDuplicate, locale }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { mutate: deleteDocument, isPending } = useDeleteDocument();
@@ -29,7 +29,7 @@ const ResumeItem: FC<PropType> = ({ documentId, title, themeColor, thumbnail, up
   }, [updatedAt]);
 
   const gotoDoc = () => {
-    router.push(`/dashboard/document/${documentId}/edit`);
+    router.push(`/dashboard/document/${documentId}/${locale}/edit`);
   };
 
   const handleDelete = (e: React.MouseEvent) => {

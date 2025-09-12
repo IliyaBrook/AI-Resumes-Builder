@@ -14,6 +14,7 @@
 
 1. **Make your changes**
 2. **Continue coding without running checks** - focus on implementation
+3. Do not use yarn dev or similar commands the server is already running
 
 ### End of Task (MANDATORY)
 

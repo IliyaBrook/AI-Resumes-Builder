@@ -77,21 +77,21 @@ ol li::before {
 }
 
 /* RTL-specific styles: disable custom bullets and enable native list styling */
-[dir="rtl"] ul,
-[dir="rtl"] ol {
+[dir='rtl'] ul,
+[dir='rtl'] ol {
     list-style: revert;
     padding-left: 0;
     padding-right: 15px;
 }
 
-[dir="rtl"] ul li,
-[dir="rtl"] ol li {
+[dir='rtl'] ul li,
+[dir='rtl'] ol li {
     padding-left: 0 !important;
     padding-right: 1.2em;
     list-style-position: outside;
 }
 
-[dir="rtl"] ul li::before,
-[dir="rtl"] ol li::before {
+[dir='rtl'] ul li::before,
+[dir='rtl'] ol li::before {
     display: none;
 }

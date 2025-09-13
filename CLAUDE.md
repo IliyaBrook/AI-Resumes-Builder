@@ -14,6 +14,7 @@
 
 1. **Make your changes**
 2. **Continue coding without running checks** - focus on implementation
+3. Do not use yarn dev or similar commands the server is already running
 
 ### End of Task (MANDATORY)
 
@@ -58,27 +59,27 @@
 ### Component Reuse & DRY Principles
 
 1. **ALWAYS check existing components first**:
-   - Search `components/` folder before creating new components
-   - Look for similar UI patterns that can be reused
-   - Check `components/ui/` for base components (buttons, inputs, etc.)
+    - Search `components/` folder before creating new components
+    - Look for similar UI patterns that can be reused
+    - Check `components/ui/` for base components (buttons, inputs, etc.)
 
 2. **Create reusable components**:
-   - Make components generic with configurable props
-   - Use TypeScript interfaces for clear prop definitions
-   - Extract common patterns into shared components
-   - Add components to appropriate `index.ts` for easy imports
+    - Make components generic with configurable props
+    - Use TypeScript interfaces for clear prop definitions
+    - Extract common patterns into shared components
+    - Add components to appropriate `index.ts` for easy imports
 
 3. **Follow DRY methodology**:
-   - Extract repeated logic into custom hooks (`hooks/` folder)
-   - Create utility functions in `lib/` for shared business logic
-   - Reuse Zod schemas across forms and API validation
-   - Share constants and types across modules
+    - Extract repeated logic into custom hooks (`hooks/` folder)
+    - Create utility functions in `lib/` for shared business logic
+    - Reuse Zod schemas across forms and API validation
+    - Share constants and types across modules
 
 4. **Component organization**:
-   - Form components: Handle input/validation logic
-   - Preview components: Pure rendering, no business logic
-   - UI components: Reusable primitives (buttons, inputs, cards)
-   - Feature components: Business-specific functionality
+    - Form components: Handle input/validation logic
+    - Preview components: Pure rendering, no business logic
+    - UI components: Reusable primitives (buttons, inputs, cards)
+    - Feature components: Business-specific functionality
 
 ### Code Reuse Examples
 

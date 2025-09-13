@@ -102,7 +102,7 @@
     "Suggestions": "הצעות",
     "Enter a brief description of your profession background": "הזן תיאור קצר של הרקע המקצועי שלך.",
     "Failed to generate summary": "נכשל ביצירת תקציר",
-    "Enter target language": "הזן שפת יעד (למשל ספרדית, צרפתית, ערבית)"
+    "Enter target language": "הזן שפת יעד"
   },
   "Experience": {
     "Professional Experience": "ניסיון מקצועי",
@@ -117,7 +117,7 @@
     "End Date": "תאריך סיום",
     "Present": "עד היום",
     "Years Only": "שנים בלבד",
-    "Enter target language": "הזן שפת יעד (למשל ספרדית, צרפתית, ערבית)",
+    "Enter target language": "הזן שפת יעד",
     "Click to select experience item": "לחץ לבחירת פריט ניסיון"
   },
   "Education": {
@@ -140,7 +140,7 @@
     "Add More Education": "הוסף עוד השכלה",
     "Present": "עד היום",
     " in ": " ב-",
-    "Enter target language": "הזן שפת יעד (למשל ספרדית, צרפתית, ערבית)"
+    "Enter target language": "הזן שפת יעד"
   },
   "EntityMessages": {
     "Skill created successfully": "כישור נוצר בהצלחה",
@@ -215,7 +215,7 @@
     "Git Repository": "מאגר Git",
     "Description": "תיאור",
     "Project description": "תיאור הפרויקט",
-    "Enter target language": "הזן שפת יעד (למשל ספרדית, צרפתית, ערבית)"
+    "Enter target language": "הזן שפת יעד"
   },
   "ResumePreview": {
     "Move section up": "הזז מקטע למעלה",

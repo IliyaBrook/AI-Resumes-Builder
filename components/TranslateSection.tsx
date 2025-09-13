@@ -17,7 +17,7 @@ export const TranslateSection: React.FC<TranslateSectionProps> = ({
   onTranslate,
   currentText,
   className = '',
-  placeholder = 'Enter target language (e.g. Spanish, French, Arabic)',
+  placeholder = 'Enter target language',
 }) => {
   const [targetLanguage, setTargetLanguage] = useState('');
   const [loading, setLoading] = useState(false);

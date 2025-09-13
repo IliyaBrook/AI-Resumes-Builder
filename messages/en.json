@@ -102,7 +102,7 @@
     "Suggestions": "Suggestions",
     "Enter a brief description of your profession background": "Enter a brief description of your profession background.",
     "Failed to generate summary": "Failed to generate summary",
-    "Enter target language": "Enter target language (e.g. Spanish, French, Arabic)"
+    "Enter target language": "Enter target language"
   },
   "Experience": {
     "Professional Experience": "Professional Experience",
@@ -117,7 +117,7 @@
     "End Date": "End Date",
     "Present": "Present",
     "Years Only": "Years Only",
-    "Enter target language": "Enter target language (e.g. Spanish, French, Arabic)",
+    "Enter target language": "Enter target language",
     "Click to select experience item": "Click to select experience item"
   },
   "Education": {
@@ -140,7 +140,7 @@
     "Add More Education": "Add More Education",
     "Present": "Present",
     " in ": " in ",
-    "Enter target language": "Enter target language (e.g. Spanish, French, Arabic)"
+    "Enter target language": "Enter target language"
   },
   "EntityMessages": {
     "Skill created successfully": "Skill created successfully",
@@ -215,7 +215,7 @@
     "Git Repository": "Git Repository",
     "Description": "Description",
     "Project description": "Project description",
-    "Enter target language": "Enter target language (e.g. Spanish, French, Arabic)"
+    "Enter target language": "Enter target language"
   },
   "ResumePreview": {
     "Move section up": "Move section up",

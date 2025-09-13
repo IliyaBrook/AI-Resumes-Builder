@@ -13,6 +13,7 @@
     "Restore resume": "Restore resume",
     "Preview PDF": "Preview PDF",
     "Generating PDF": "Generating PDF",
+    "Moved to trash successfully": "Moved to trash successfully",
     "Decrease": "Decrease",
     "Increase": "Increase",
     "Enter": "Enter",
@@ -28,7 +29,11 @@
     "edit": "Edit",
     "add": "Add",
     "remove": "Remove",
-    "untitledResume": "Untitled Resume"
+    "untitledResume": "Untitled Resume",
+    "Success": "Success",
+    "Error": "Error",
+    "No changes": "No changes",
+    "No changes were made to save": "No changes were made to save"
   },
   "Resume": {
     "sections": {
@@ -136,6 +141,34 @@
     "Present": "Present",
     " in ": " in ",
     "Enter target language": "Enter target language (e.g. Spanish, French, Arabic)"
+  },
+  "EntityMessages": {
+    "Skill created successfully": "Skill created successfully",
+    "Failed to create skill": "Failed to create skill",
+    "Skill updated successfully": "Skill updated successfully",
+    "Failed to update skill": "Failed to update skill",
+    "Skill deleted successfully": "Skill deleted successfully",
+    "Failed to delete skill": "Failed to delete skill",
+    "Education created successfully": "Education created successfully",
+    "Failed to create education": "Failed to create education",
+    "Education updated successfully": "Education updated successfully",
+    "Failed to update education": "Failed to update education",
+    "Education deleted successfully": "Education deleted successfully",
+    "Failed to delete education": "Failed to delete education",
+    "Experience created successfully": "Experience created successfully",
+    "Failed to create experience": "Failed to create experience",
+    "Experience updated successfully": "Experience updated successfully",
+    "Failed to update experience": "Failed to update experience",
+    "Experience deleted successfully": "Experience deleted successfully",
+    "Failed to delete experience": "Failed to delete experience",
+    "Project created successfully": "Project created successfully",
+    "Failed to create project": "Failed to create project",
+    "Project updated successfully": "Project updated successfully",
+    "Failed to update project": "Failed to update project",
+    "Project deleted successfully": "Project deleted successfully",
+    "Failed to delete project": "Failed to delete project",
+    "Language deleted successfully": "Language deleted successfully",
+    "Failed to delete language": "Failed to delete language"
   },
   "Skills": {
     "Skills": "Skills",

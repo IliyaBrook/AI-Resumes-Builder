@@ -13,6 +13,7 @@
     "Restore resume": "שחזר קורות חיים",
     "Preview PDF": "תצוגה מקדימה של PDF",
     "Generating PDF": "יוצר PDF",
+    "Moved to trash successfully": "הועבר לפח האשפה בהצלחה",
     "Decrease": "הפחת",
     "Increase": "הגדל",
     "Enter": "הזן",
@@ -28,7 +29,11 @@
     "edit": "ערוך",
     "add": "הוסף",
     "remove": "הסר",
-    "untitledResume": "קורות חיים ללא כותרת"
+    "untitledResume": "קורות חיים ללא כותרת",
+    "Success": "הצלחה",
+    "Error": "שגיאה",
+    "No changes": "אין שינויים",
+    "No changes were made to save": "לא בוצעו שינויים לשמירה"
   },
   "Resume": {
     "sections": {
@@ -136,6 +141,34 @@
     "Present": "עד היום",
     " in ": " ב-",
     "Enter target language": "הזן שפת יעד (למשל ספרדית, צרפתית, ערבית)"
+  },
+  "EntityMessages": {
+    "Skill created successfully": "כישור נוצר בהצלחה",
+    "Failed to create skill": "יצירת כישור נכשלה",
+    "Skill updated successfully": "כישור עודכן בהצלחה",
+    "Failed to update skill": "עדכון כישור נכשל",
+    "Skill deleted successfully": "כישור נמחק בהצלחה",
+    "Failed to delete skill": "מחיקת כישור נכשלה",
+    "Education created successfully": "השכלה נוצרה בהצלחה",
+    "Failed to create education": "יצירת השכלה נכשלה",
+    "Education updated successfully": "השכלה עודכנה בהצלחה",
+    "Failed to update education": "עדכון השכלה נכשל",
+    "Education deleted successfully": "השכלה נמחקה בהצלחה",
+    "Failed to delete education": "מחיקת השכלה נכשלה",
+    "Experience created successfully": "ניסיון נוצר בהצלחה",
+    "Failed to create experience": "יצירת ניסיון נכשלה",
+    "Experience updated successfully": "ניסיון עודכן בהצלחה",
+    "Failed to update experience": "עדכון ניסיון נכשל",
+    "Experience deleted successfully": "ניסיון נמחק בהצלחה",
+    "Failed to delete experience": "מחיקת ניסיון נכשלה",
+    "Project created successfully": "פרויקט נוצר בהצלחה",
+    "Failed to create project": "יצירת פרויקט נכשלה",
+    "Project updated successfully": "פרויקט עודכן בהצלחה",
+    "Failed to update project": "עדכון פרויקט נכשל",
+    "Project deleted successfully": "פרויקט נמחק בהצלחה",
+    "Failed to delete project": "מחיקת פרויקט נכשלה",
+    "Language deleted successfully": "שפה נמחקה בהצלחה",
+    "Failed to delete language": "מחיקת שפה נכשלה"
   },
   "Skills": {
     "Skills": "כישורים",

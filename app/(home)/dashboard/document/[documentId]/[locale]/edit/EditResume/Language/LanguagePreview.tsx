@@ -28,7 +28,9 @@ const LanguagePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   return (
     <div className="my-3 w-full">
       <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
-        {resumeInfo?.languagesSectionTitle?.trim() || t('Languages')}
+        {resumeInfo?.languagesSectionTitle?.trim() === 'Languages'
+          ? t('Languages')
+          : resumeInfo?.languagesSectionTitle?.trim() || t('Languages')}
       </h5>
       <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
       <div className="grid min-h-9 grid-cols-2 gap-x-8 gap-y-1">

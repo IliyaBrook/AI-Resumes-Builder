@@ -21,7 +21,9 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   return (
     <div className="my-3 w-full">
       <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
-        {resumeInfo?.projectsSectionTitle?.trim() || t('Projects')}
+        {resumeInfo?.projectsSectionTitle?.trim() === 'Projects'
+          ? t('Projects')
+          : resumeInfo?.projectsSectionTitle?.trim() || t('Projects')}
       </h5>
       <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
       <div className="flex min-h-9 flex-col gap-2">

@@ -24,6 +24,16 @@ const ProjectForm = () => {
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
+    if (resumeInfo?.projectsSectionTitle) {
+      if (resumeInfo.projectsSectionTitle === 'Projects') {
+        setSectionTitle(t('Projects'));
+      } else {
+        setSectionTitle(resumeInfo.projectsSectionTitle);
+      }
+    }
+  }, [resumeInfo?.projectsSectionTitle, t]);
+
+  React.useEffect(() => {
     if (debouncedProjects && debouncedProjects !== resumeInfo?.projects) {
       setResumeInfo({ projects: debouncedProjects });
     }

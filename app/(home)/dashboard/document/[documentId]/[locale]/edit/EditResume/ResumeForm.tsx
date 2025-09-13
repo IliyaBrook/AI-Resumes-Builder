@@ -23,6 +23,7 @@ const ResumeForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
+  const direction = data?.data?.direction;
   const [activeFormIndex, setActiveFormIndex] = useState(1);
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { firstRender } = useFirstRender();

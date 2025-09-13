@@ -35,6 +35,16 @@ const LanguageForm = () => {
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
+    if (resumeInfo?.languagesSectionTitle) {
+      if (resumeInfo.languagesSectionTitle === 'Languages') {
+        setSectionTitle(t('Languages'));
+      } else {
+        setSectionTitle(resumeInfo.languagesSectionTitle);
+      }
+    }
+  }, [resumeInfo?.languagesSectionTitle, t]);
+
+  React.useEffect(() => {
     if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.languagesSectionTitle) {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }

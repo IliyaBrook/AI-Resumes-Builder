@@ -68,9 +68,15 @@ const buildPrompt = (resumeInfo: DocumentType, summarySize: string = 'default') 
     promptParts.push('Make each summary concise and short, 2-3 lines.');
   }
 
-  promptParts.push(
-    `Based on the provided information, generate three resume summaries for the following experience levels: fresher, mid, and experienced. Return the result as a JSON object with keys 'fresher', 'mid', and 'experienced', where each value is a summary in HTML format. Use any suitable HTML tags (such as <b>, <strong>, <i>, <em>, <u>, <span style>, <p>, etc.) to make the text visually attractive, highlight key skills, technologies, and achievements, and structure the summary. Do not use <ul> or <li> tags and do not use lists. Use only the information provided by the user, do not invent or assume any data, and do not use any hardcoded examples. Each summary should be 3-4 lines (or according to the selected size), personal, engaging, and easy to read. Do not use placeholders. Do not use lists. Each summary should be visually structured, personal, and engaging.`
-  );
+  let basePrompt = `Based on the provided information, generate three resume summaries for the following experience levels: fresher, mid, and experienced. Return the result as a JSON object with keys 'fresher', 'mid', and 'experienced', where each value is a summary in HTML format. Use any suitable HTML tags (such as <b>, <strong>, <i>, <em>, <u>, <span style>, <p>, etc.) to make the text visually attractive, highlight key skills, technologies, and achievements, and structure the summary. Do not use <ul> or <li> tags and do not use lists. Use only the information provided by the user, do not invent or assume any data, and do not use any hardcoded examples. Each summary should be 3-4 lines (or according to the selected size), personal, engaging, and easy to read. Do not use placeholders. Do not use lists. Each summary should be visually structured, personal, and engaging.`;
+
+  // Add Hebrew language instruction if locale is Hebrew
+  if (resumeInfo.locale === 'he') {
+    basePrompt +=
+      ' Generate all content in Hebrew language. Use proper Hebrew grammar, vocabulary, and sentence structure. Ensure the content is natural and professional in Hebrew.';
+  }
+
+  promptParts.push(basePrompt);
 
   return promptParts.join('. ');
 };
@@ -225,6 +231,7 @@ const SummaryForm = () => {
               showBullets={false}
               disabled={false}
               showLineLengthSelector={false}
+              resumeLocale={resumeInfo?.locale || undefined}
             />
           </div>
           <div className="mt-3 flex justify-end">

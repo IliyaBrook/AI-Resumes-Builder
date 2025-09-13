@@ -1,5 +1,11 @@
 # AI Resume Builder — Junie Agent Guidelines
 
+## Communication Rules
+
+- **User Communication**: ALWAYS communicate with users in the Russian language
+- **Code & Files**: ALL code, comments, variable names, file names, and documentation must be in English only
+- **Mixed Content**: When explaining code to users, use Russian explanations but keep code examples in English
+
 ## Core Commands
 
 - `yarn dev` — Start development server with Turbopack

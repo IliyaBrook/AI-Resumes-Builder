@@ -300,6 +300,7 @@ const ExperienceForm = () => {
                     title={undefined}
                     showBullets={true}
                     showLineLengthSelector={true}
+                    resumeLocale={resumeInfo?.locale || undefined}
                   />
                   <div className="mt-3 flex justify-end">
                     <TranslateSection

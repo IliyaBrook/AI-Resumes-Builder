@@ -174,6 +174,7 @@ const ProjectForm = () => {
                     value={item?.description || ''}
                     onEditorChange={val => handleChange({ target: { name: 'description', value: val } }, index)}
                     placeholder={t('Project description')}
+                    resumeLocale={resumeInfo?.locale || undefined}
                   />
                   <div className="mt-3 flex justify-end">
                     <TranslateSection

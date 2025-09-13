@@ -92,6 +92,7 @@ interface RichTextEditorProps {
   placeholder?: string;
   disabled?: boolean;
   showLineLengthSelector?: boolean;
+  resumeLocale?: string;
 }
 
 export function parseAIResult(value: string): ParsedAIResult {
@@ -157,6 +158,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       placeholder: _placeholder = '',
       disabled = false,
       showLineLengthSelector = true,
+      resumeLocale,
     },
     ref
   ) => {
@@ -210,6 +212,13 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
             usedPrompt += ` Each <li> must not exceed ${lineLength} characters. Each <li> should be as close as possible to ${lineLength} characters, but not exceed it. Make each bullet point detailed and use the maximum allowed length.`;
           }
         }
+
+        // Add Hebrew language instruction if locale is Hebrew
+        if (resumeLocale === 'he') {
+          usedPrompt +=
+            ' Generate all content in Hebrew language. Use proper Hebrew grammar, vocabulary, and sentence structure. Ensure the content is natural and professional in Hebrew.';
+        }
+
         const chat = getAIChatSession();
         const result = await chat.sendMessage({ message: usedPrompt });
         const responseText = result.text || '';

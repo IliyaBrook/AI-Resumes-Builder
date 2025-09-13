@@ -3,6 +3,7 @@ import { SkeletonLoader } from '@/components';
 import { INITIAL_THEME_COLOR } from '@/lib/helper';
 import { DocumentType } from '@/types';
 import { formatDateByLocale } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 interface PropsType {
   resumeInfo: DocumentType | undefined;
@@ -10,6 +11,7 @@ interface PropsType {
 }
 
 const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
+  const t = useTranslations('Education');
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
 
   const isDoNotShowDates = resumeInfo?.educations?.every(
@@ -34,7 +36,7 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     return (
       <div className="my-3 w-full">
         <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
-          Education
+          {t('Education')}
         </h5>
         <hr
           className="mb-2 mt-2 border-[1.5px]"
@@ -60,7 +62,7 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   return (
     <div className="my-3 w-full">
       <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
-        Education
+        {t('Education')}
       </h5>
       <hr
         className="mb-2 mt-2 border-[1.5px]"
@@ -89,7 +91,7 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
               <div className={isDoNotShowDates ? 'block' : 'flex items-start justify-between'}>
                 <h5 className="text-[13px]">
                   {education?.degree}
-                  {education?.degree && education?.major?.trim() && ' in '}
+                  {education?.degree && education?.major?.trim() && t(' in ')}
                   {education?.major?.trim() && education?.major}
                 </h5>
                 {education?.skipDates === true ||
@@ -97,8 +99,8 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 (!education?.startDate && !education?.endDate) ? null : (
                   <span className="text-[13px] font-bold">
                     {education?.yearsOnly
-                      ? `${education?.startDate ? new Date(education.startDate).getFullYear() : ''}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : education?.endDate ? new Date(education.endDate).getFullYear() : ''}`
-                      : `${formatDateByLocale(education?.startDate ?? undefined)}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : formatDateByLocale(education?.endDate ?? undefined)}`}
+                      ? `${education?.startDate ? new Date(education.startDate).getFullYear() : ''}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? t('Present') : education?.endDate ? new Date(education.endDate).getFullYear() : ''}`
+                      : `${formatDateByLocale(education?.startDate ?? undefined)}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? t('Present') : formatDateByLocale(education?.endDate ?? undefined)}`}
                   </span>
                 )}
               </div>
@@ -109,8 +111,8 @@ const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 <div className={isDoNotShowDates ? 'block' : 'flex items-start justify-between'}>
                   <span className="text-[13px] font-bold">
                     {education?.yearsOnly
-                      ? `${education?.startDate ? new Date(education.startDate).getFullYear() : ''}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : education?.endDate ? new Date(education.endDate).getFullYear() : ''}`
-                      : `${formatDateByLocale(education?.startDate ?? undefined)}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? 'Present' : formatDateByLocale(education?.endDate ?? undefined)}`}
+                      ? `${education?.startDate ? new Date(education.startDate).getFullYear() : ''}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? t('Present') : education?.endDate ? new Date(education.endDate).getFullYear() : ''}`
+                      : `${formatDateByLocale(education?.startDate ?? undefined)}${education?.startDate ? ' - ' : ''}${education?.currentlyStudying ? t('Present') : formatDateByLocale(education?.endDate ?? undefined)}`}
                   </span>
                 </div>
               )}

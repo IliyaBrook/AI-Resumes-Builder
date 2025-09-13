@@ -6,6 +6,7 @@ import { DocumentType, SkillType } from '@/types';
 import { useCreateSkill, useDebounce, useDeleteSkill } from '@/hooks';
 import { useSkillInputHandler, groupSkillsByCategory } from './utils';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/query-core';
+import { useTranslations } from 'next-intl';
 
 interface CategorySkillsFormProps {
   resumeInfo: DocumentType | undefined;
@@ -21,6 +22,7 @@ interface CategorySkillsFormProps {
 }
 
 const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, refetchResumeInfo }) => {
+  const t = useTranslations('Skills');
   const { mutate: deleteSkill } = useDeleteSkill();
   const { mutateAsync: createSkill, isPending: isCreating } = useCreateSkill();
   const [skills, setSkills] = React.useState<SkillType[] | []>(resumeInfo?.skills || []);
@@ -274,17 +276,17 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
   return (
     <div className="mt-4">
       {sortedCategoryKeys.length > 1 && (
-        <div className="mb-2 text-sm text-muted-foreground">Use arrows to reorder categories</div>
+        <div className="mb-2 text-sm text-muted-foreground">{t('Use arrows to reorder categories')}</div>
       )}
       <div className="mb-4 flex gap-2">
         <Input
-          placeholder="New category name"
+          placeholder={t('New category name')}
           value={newCategoryName}
           onChange={e => setNewCategoryName(e.target.value)}
           className="w-48"
         />
         <Button type="button" onClick={handleAddNewCategoryClick} variant="outline">
-          <Plus size="15px" /> Add category
+          <Plus size="15px" /> {t('Add category')}
         </Button>
       </div>
       <div className="space-y-6">
@@ -335,10 +337,10 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
                       onClick={handleSaveCategoryNameClick}
                       disabled={!editCategoryName.trim()}
                     >
-                      Save
+                      {t('Save')}
                     </Button>
                     <Button type="button" size="sm" variant="outline" onClick={handleCancelEditCategory}>
-                      Cancel
+                      {t('Cancel')}
                     </Button>
                   </>
                 ) : (
@@ -346,7 +348,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
                     <h3
                       className="cursor-pointer text-lg font-semibold hover:text-blue-600"
                       onClick={() => handleStartEditCategory(categoryName)}
-                      title="Click to edit category name"
+                      title={t('Click to edit category name')}
                     >
                       {categoryName}
                     </h3>
@@ -355,7 +357,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
                       size="icon"
                       variant="ghost"
                       onClick={() => handleRemoveCategory(categoryName)}
-                      title="Delete category and all skills"
+                      title={t('Delete category and all skills')}
                     >
                       <X size="15px" />
                     </Button>
@@ -380,7 +382,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
                           });
                         }
                       }}
-                      placeholder="Skill name"
+                      placeholder={t('Skill name')}
                       className="w-64"
                     />
                     <select
@@ -415,7 +417,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
                   onClick={() => handleAddSkillToCategoryClick(categoryName)}
                   disabled={isCreating}
                 >
-                  <Plus size="15px" /> Add skill
+                  <Plus size="15px" /> {t('Add skill')}
                 </Button>
               </div>
             </div>
@@ -429,7 +431,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
             onClick={() => handleAddSkillToCategoryClick('')}
             disabled={isCreating}
           >
-            <Plus size="15px" /> Add first skill
+            <Plus size="15px" /> {t('Add first skill')}
           </Button>
         )}
       </div>

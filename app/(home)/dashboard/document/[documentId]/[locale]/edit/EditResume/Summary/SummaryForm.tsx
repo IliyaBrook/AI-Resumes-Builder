@@ -16,6 +16,7 @@ import { getAIChatSession } from '@/lib/google-ai-model';
 import { Sparkles } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AIGeneratedSummariesType, DocumentType, SkillType } from '@/types';
 
 const buildPrompt = (resumeInfo: DocumentType, summarySize: string = 'default') => {
@@ -75,6 +76,7 @@ const buildPrompt = (resumeInfo: DocumentType, summarySize: string = 'default') 
 };
 
 const SummaryForm = () => {
+  const t = useTranslations('Summary');
   const param = useParams();
   const documentId = param.documentId as string;
   const { data, isLoading } = useGetDocumentById(documentId);
@@ -144,7 +146,7 @@ const SummaryForm = () => {
     } catch (error) {
       console.error('error in summary:', error);
       toast({
-        title: 'Failed to generate summary',
+        title: t('Failed to generate summary'),
         variant: 'destructive',
       });
     } finally {
@@ -181,20 +183,20 @@ const SummaryForm = () => {
   return (
     <div>
       <div className="w-full">
-        <h2 className="text-lg font-bold">Summary</h2>
-        <p className="text-sm">Add summary for your resume</p>
+        <h2 className="text-lg font-bold">{t('Summary')}</h2>
+        <p className="text-sm">{t('Add summary for your resume')}</p>
       </div>
       <div className="mb-2 flex items-center gap-2">
-        <span className="text-sm">Summary size:</span>
+        <span className="text-sm">{t('Summary size:')}</span>
         <select
           className="rounded border px-2 py-1 text-sm"
           value={summarySize}
           onChange={e => setSummarySize(e.target.value)}
         >
-          <option value="default">Default</option>
-          <option value="short">Short</option>
-          <option value="large">Large</option>
-          <option value="extra_large">Extra Large</option>
+          <option value="default">{t('Default')}</option>
+          <option value="short">{t('Short')}</option>
+          <option value="large">{t('Large')}</option>
+          <option value="extra_large">{t('Extra Large')}</option>
         </select>
       </div>
       <div>
@@ -209,7 +211,7 @@ const SummaryForm = () => {
               onClick={handleGenerateAI}
             >
               <Sparkles size="15px" className="text-purple-500" />
-              Generate with AI
+              {t('Generate with AI')}
             </Button>
           </div>
           <div className="mt-5 min-h-36">
@@ -229,12 +231,12 @@ const SummaryForm = () => {
             <TranslateSection
               onTranslate={handleTranslate}
               currentText={localSummary}
-              placeholder="Enter target language (e.g. Spanish, French, Arabic)"
+              placeholder={t('Enter target language')}
             />
           </div>
           {aiGeneratedSummary && (
             <div>
-              <h5 className="my-4 text-[15px] font-semibold">Suggestions</h5>
+              <h5 className="my-4 text-[15px] font-semibold">{t('Suggestions')}</h5>
               {Object.entries(aiGeneratedSummary)
                 .filter(([, summary]) => summary && summary.trim() !== '')
                 .map(([experienceType, summary], index) => (

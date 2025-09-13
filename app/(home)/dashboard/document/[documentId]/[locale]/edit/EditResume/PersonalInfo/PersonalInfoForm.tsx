@@ -16,8 +16,10 @@ import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { ChevronDown, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { PersonalInfoType } from '@/types';
+import { useTranslations } from 'next-intl';
 
 const PersonalInfoForm = () => {
+  const t = useTranslations('PersonalInfo');
   const param = useParams();
   const documentId = param.documentId as string;
   const { data, isLoading } = useGetDocumentById(documentId);
@@ -78,22 +80,22 @@ const PersonalInfoForm = () => {
   return (
     <div>
       <div className="w-full">
-        <h2 className="text-lg font-bold">Personal Information</h2>
-        <p className="text-sm">Get Started with the personal information</p>
+        <h2 className="text-lg font-bold">{t('Personal Information')}</h2>
+        <p className="text-sm">{t('Get Started with the personal information')}</p>
       </div>
 
       <div className="mb-4">
-        <Label className="text-sm">Display Format</Label>
+        <Label className="text-sm">{t('Display Format')}</Label>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="h-9 w-full justify-between">
-              {localDisplayFormat === 'default' ? 'Default' : 'Compact'}
+              {localDisplayFormat === 'default' ? t('Default') : t('Compact')}
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full">
-            <DropdownMenuItem onClick={() => handleDisplayFormatChange('default')}>Default</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDisplayFormatChange('compact')}>Compact</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDisplayFormatChange('default')}>{t('Default')}</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDisplayFormatChange('compact')}>{t('Compact')}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -102,7 +104,7 @@ const PersonalInfoForm = () => {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-sm">First Name</Label>
+                <Label className="text-sm">{t('First Name')}</Label>
                 <Input
                   name="firstName"
                   required
@@ -115,7 +117,7 @@ const PersonalInfoForm = () => {
                 />
               </div>
               <div>
-                <Label className="text-sm">Last Name</Label>
+                <Label className="text-sm">{t('Last Name')}</Label>
                 <Input
                   name="lastName"
                   required
@@ -130,7 +132,7 @@ const PersonalInfoForm = () => {
             </div>
 
             <div>
-              <Label className="text-sm">Job Title</Label>
+              <Label className="text-sm">{t('Job Title')}</Label>
               <Input
                 name="jobTitle"
                 required
@@ -145,7 +147,7 @@ const PersonalInfoForm = () => {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="relative">
-                <Label className="text-sm">Phone</Label>
+                <Label className="text-sm">{t('Phone')}</Label>
                 <div className="relative">
                   <Phone className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <Input
@@ -161,7 +163,7 @@ const PersonalInfoForm = () => {
                 </div>
               </div>
               <div className="relative">
-                <Label className="text-sm">Email</Label>
+                <Label className="text-sm">{t('Email')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <Input
@@ -180,13 +182,13 @@ const PersonalInfoForm = () => {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="relative">
-                <Label className="text-sm">Github</Label>
+                <Label className="text-sm">{t('Github')}</Label>
                 <div className="relative">
                   <Github className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <Input
                     name="github"
                     autoComplete="off"
-                    placeholder="username"
+                    placeholder={t('username')}
                     value={localPersonalInfo.github || ''}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -195,13 +197,13 @@ const PersonalInfoForm = () => {
                 </div>
               </div>
               <div className="relative">
-                <Label className="text-sm">LinkedIn</Label>
+                <Label className="text-sm">{t('LinkedIn')}</Label>
                 <div className="relative">
                   <Linkedin className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <Input
                     name="linkedin"
                     autoComplete="off"
-                    placeholder="username"
+                    placeholder={t('username')}
                     value={localPersonalInfo.linkedin || ''}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -212,7 +214,7 @@ const PersonalInfoForm = () => {
             </div>
 
             <div className="relative">
-              <Label className="text-sm">Address</Label>
+              <Label className="text-sm">{t('Address')}</Label>
               <div className="relative">
                 <MapPin className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                 <Input

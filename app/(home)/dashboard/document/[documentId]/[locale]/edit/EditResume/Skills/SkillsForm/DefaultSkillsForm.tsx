@@ -7,12 +7,14 @@ import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { DocumentType, SkillType } from '@/types';
 import { useDebounce, useCreateSkill, useDeleteSkill } from '@/hooks';
 import { useSkillInputHandler } from './utils';
+import { useTranslations } from 'next-intl';
 
 interface DefaultSkillsFormProps {
   resumeInfo: DocumentType | undefined;
 }
 
 const DefaultSkillsForm: React.FC<DefaultSkillsFormProps> = ({ resumeInfo }) => {
+  const t = useTranslations('Skills');
   const { mutate: deleteSkill, isPending: isDeleting } = useDeleteSkill();
   const { mutateAsync: createSkill, isPending: isCreating } = useCreateSkill();
 
@@ -141,7 +143,7 @@ const DefaultSkillsForm: React.FC<DefaultSkillsFormProps> = ({ resumeInfo }) => 
       <div className="mb-2 mt-2 flex items-center gap-2">
         <input type="checkbox" id="hideRating" checked={hideRating} onChange={e => setHideRating(e.target.checked)} />
         <label htmlFor="hideRating" className="cursor-pointer select-none text-sm">
-          Hide rating
+          {t('Hide rating')}
         </label>
       </div>
       <form>
@@ -155,7 +157,7 @@ const DefaultSkillsForm: React.FC<DefaultSkillsFormProps> = ({ resumeInfo }) => 
               onClick={handleAddSkillClick}
             >
               <Plus size="15px" />
-              Add More Skills
+              {t('Add More Skills')}
             </Button>
           )}
           {skillsList.map((item, index) => (
@@ -199,7 +201,7 @@ const DefaultSkillsForm: React.FC<DefaultSkillsFormProps> = ({ resumeInfo }) => 
                 )}
 
                 <div className="flex-1">
-                  <Label className="text-sm">Name</Label>
+                  <Label className="text-sm">{t('Name')}</Label>
                   <Input
                     name="name"
                     placeholder=""
@@ -233,7 +235,7 @@ const DefaultSkillsForm: React.FC<DefaultSkillsFormProps> = ({ resumeInfo }) => 
                   onClick={handleAddSkillClick}
                 >
                   <Plus size="15px" />
-                  Add More Skills
+                  {t('Add More Skills')}
                 </Button>
               )}
             </div>

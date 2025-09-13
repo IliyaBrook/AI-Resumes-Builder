@@ -3,6 +3,7 @@ import { INITIAL_THEME_COLOR } from '@/lib/helper';
 import { DocumentType } from '@/types';
 import React, { FC } from 'react';
 import { formatDateByLocale } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 interface PropsType {
   resumeInfo: DocumentType | undefined;
@@ -21,6 +22,7 @@ const ExperiencePreview: FC<PropsType> = ({
   onSectionClick,
   renderSectionWrapper,
 }) => {
+  const t = useTranslations('Experience');
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
 
   if (isLoading) {
@@ -50,8 +52,8 @@ const ExperiencePreview: FC<PropsType> = ({
           </h5>
           <span className="text-[13px] font-bold">
             {experience?.yearsOnly
-              ? `${experience?.startDate ? new Date(experience.startDate).getFullYear() : ''}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? 'Present' : experience?.endDate ? new Date(experience.endDate).getFullYear() : ''}`
-              : `${formatDateByLocale(experience?.startDate ?? undefined)}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? 'Present' : formatDateByLocale(experience?.endDate ?? undefined)}`}
+              ? `${experience?.startDate ? new Date(experience.startDate).getFullYear() : ''}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? t('Present') : experience?.endDate ? new Date(experience.endDate).getFullYear() : ''}`
+              : `${formatDateByLocale(experience?.startDate ?? undefined)}${experience?.startDate ? ' - ' : ''}${experience?.currentlyWorking ? t('Present') : formatDateByLocale(experience?.endDate ?? undefined)}`}
           </span>
         </div>
         <div
@@ -84,7 +86,7 @@ const ExperiencePreview: FC<PropsType> = ({
             e.stopPropagation();
             onSectionClick?.(experienceKey);
           }}
-          title={`Click to select experience item`}
+          title={t('Click to select experience item')}
         >
           {experienceContent}
         </div>
@@ -108,7 +110,7 @@ const ExperiencePreview: FC<PropsType> = ({
   return (
     <div className="my-3 w-full">
       <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
-        Professional Experience
+        {t('Professional Experience')}
       </h5>
       <hr
         className="mb-2 mt-2 border-[1.5px]"

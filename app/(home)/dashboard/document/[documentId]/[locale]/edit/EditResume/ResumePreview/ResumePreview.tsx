@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { ResumeContent } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/shared/ResumeContent';
 import { renderSectionWrapper } from './renderSectionWrapper';
 import { moveSection } from './pageOrderUtils';
@@ -8,6 +9,7 @@ import { useSectionSelection } from './useSectionSelection';
 import { usePageOrderSync } from './usePageOrderSync';
 
 const ResumePreview = () => {
+  const t = useTranslations('ResumePreview');
   const { currentOrder, setCurrentOrder, updatePagesOrder, fixedResumeInfo, isLoading } = usePageOrderSync();
 
   const { selectedSection, setSelectedSection, toggleSection, containerRef } = useSectionSelection();
@@ -30,6 +32,10 @@ const ResumePreview = () => {
       currentOrder,
       onSectionClickAction: toggleSection,
       onMoveSectionAction: handleMoveSection,
+      translations: {
+        moveSectionUp: t('Move section up'),
+        moveSectionDown: t('Move section down'),
+      },
     });
   };
 

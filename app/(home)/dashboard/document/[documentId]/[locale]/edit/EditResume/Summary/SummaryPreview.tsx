@@ -1,6 +1,7 @@
 import { Skeleton } from '@/components';
 import React, { FC } from 'react';
 import { DocumentType } from '@/types';
+import { useTranslations } from 'next-intl';
 
 interface PropsType {
   resumeInfo: DocumentType | undefined;
@@ -8,6 +9,7 @@ interface PropsType {
 }
 
 const SummaryPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
+  const t = useTranslations('Summary');
   return (
     <div className="min-h-10 w-full">
       {isLoading ? (
@@ -17,7 +19,7 @@ const SummaryPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           {resumeInfo?.summary ? (
             <div dangerouslySetInnerHTML={{ __html: resumeInfo?.summary }} />
           ) : (
-            'Enter a brief description of your profession baground.'
+            t('Enter a brief description of your profession background')
           )}
         </div>
       )}

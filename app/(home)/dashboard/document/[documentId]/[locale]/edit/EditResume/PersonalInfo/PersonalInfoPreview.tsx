@@ -4,6 +4,7 @@ import { INITIAL_THEME_COLOR } from '@/lib/helper';
 import { DocumentType } from '@/types';
 import React, { FC } from 'react';
 import { Mail, Phone, MapPin, Github, Linkedin } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface PropsType {
   resumeInfo: DocumentType | undefined;
@@ -11,6 +12,7 @@ interface PropsType {
 }
 
 const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
+  const t = useTranslations('PersonalInfo');
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
   const displayFormat = resumeInfo?.personalInfoDisplayFormat || 'default';
   const isCompact = displayFormat === 'compact';
@@ -90,7 +92,8 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
             color: themeColor,
           }}
         >
-          {resumeInfo?.personalInfo?.firstName || 'First Name'} {resumeInfo?.personalInfo?.lastName || 'Last Name'}
+          {resumeInfo?.personalInfo?.firstName || t('First Name')}{' '}
+          {resumeInfo?.personalInfo?.lastName || t('Last Name')}
         </h2>
         <div className="mb-2 w-full text-center text-sm font-medium text-gray-600">
           <div className="flex flex-col items-center gap-y-1">
@@ -153,7 +156,7 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       </h2>
       <div className="mb-2 w-full text-center text-base font-medium text-gray-600">
         <div className="flex justify-center">
-          <span className="font-bold">{resumeInfo?.personalInfo?.jobTitle || 'Job Title'}</span>
+          <span className="font-bold">{resumeInfo?.personalInfo?.jobTitle || t('Job Title')}</span>
           <span>
             {resumeInfo?.personalInfo?.address && (
               <span className="ml-2 flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">

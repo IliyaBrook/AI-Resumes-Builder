@@ -3,6 +3,7 @@ import { INITIAL_THEME_COLOR } from '@/lib/helper';
 import { DocumentType } from '@/types';
 import { FC } from 'react';
 import { groupSkillsByCategory } from './SkillsForm/utils';
+import { useTranslations } from 'next-intl';
 
 interface PropsType {
   resumeInfo: DocumentType | undefined;
@@ -10,6 +11,7 @@ interface PropsType {
 }
 
 const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
+  const t = useTranslations('Skills');
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
   if (isLoading) {
     return <SkeletonLoader />;
@@ -24,7 +26,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     return (
       <div className="my-3 w-full">
         <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
-          Skills
+          {t('Skills')}
         </h5>
         <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
         <div>
@@ -54,7 +56,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     return (
       <div className="my-3 w-full">
         <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
-          Skills
+          {t('Skills')}
         </h5>
         <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
         <div className="grid grid-cols-4 gap-x-4">
@@ -78,7 +80,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   return (
     <div className="my-3 w-full">
       <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
-        Skills
+        {t('Skills')}
       </h5>
       <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
       <div className="grid grid-cols-2 gap-x-8">

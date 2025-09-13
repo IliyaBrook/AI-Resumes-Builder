@@ -14,6 +14,7 @@ import {
 import { ChevronDown, Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 //hooks
 import { useCreateEducation, useDebounce, useDeleteEducation, useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { EducationType } from '@/types';
@@ -26,6 +27,7 @@ const getToday = () => {
 };
 
 const EducationForm = () => {
+  const t = useTranslations('Education');
   const param = useParams();
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
@@ -98,8 +100,8 @@ const EducationForm = () => {
   return (
     <div>
       <div className="w-full">
-        <h2 className="text-lg font-bold">Education</h2>
-        <p className="text-sm">Add your education details</p>
+        <h2 className="text-lg font-bold">{t('Education')}</h2>
+        <p className="text-sm">{t('Add your education details')}</p>
       </div>
       <form>
         <div className="my-3 h-auto w-full divide-y-[1px] rounded-md border px-3 pb-4">
@@ -111,7 +113,7 @@ const EducationForm = () => {
               onClick={handleAddEducation}
             >
               <Plus size="15px" />
-              Add Education
+              {t('Add Education')}
             </Button>
           )}
           {educations.map((item, index) => (
@@ -131,20 +133,20 @@ const EducationForm = () => {
                 )}
 
                 <div className="col-span-2">
-                  <Label className="text-sm">Education Type</Label>
+                  <Label className="text-sm">{t('Education Type')}</Label>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" className="w-full justify-between">
-                        {item?.educationType === 'course' ? 'Course' : 'University'}
+                        {item?.educationType === 'course' ? t('Course') : t('University')}
                         <ChevronDown className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-full">
                       <DropdownMenuItem onClick={() => handleEducationTypeChange('university', index)}>
-                        University
+                        {t('University')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleEducationTypeChange('course', index)}>
-                        Course
+                        {t('Course')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -152,7 +154,7 @@ const EducationForm = () => {
 
                 <div className="col-span-2">
                   <Label className="text-sm">
-                    {item?.educationType === 'course' ? 'Institution Name' : 'University Name'}
+                    {item?.educationType === 'course' ? t('Institution Name') : t('University Name')}
                   </Label>
                   <Input
                     name="universityName"
@@ -163,7 +165,7 @@ const EducationForm = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-sm">{item?.educationType === 'course' ? 'Course Name' : 'Degree'}</Label>
+                  <Label className="text-sm">{item?.educationType === 'course' ? t('Course Name') : t('Degree')}</Label>
                   <Input
                     name="degree"
                     placeholder=""
@@ -174,7 +176,7 @@ const EducationForm = () => {
                 </div>
                 {item?.educationType !== 'course' && (
                   <div>
-                    <Label className="text-sm">Major</Label>
+                    <Label className="text-sm">{t('Major')}</Label>
                     <Input
                       name="major"
                       placeholder=""
@@ -186,7 +188,7 @@ const EducationForm = () => {
                 {!item?.hideDates && (
                   <>
                     <div className={item?.educationType === 'course' ? 'col-span-1' : ''}>
-                      <Label className="text-sm">Start Date</Label>
+                      <Label className="text-sm">{t('Start Date')}</Label>
                       <Input
                         type="date"
                         name="startDate"
@@ -195,7 +197,7 @@ const EducationForm = () => {
                       />
                     </div>
                     <div className={item?.educationType === 'course' ? 'col-span-1' : ''}>
-                      <Label className="text-sm">End Date</Label>
+                      <Label className="text-sm">{t('End Date')}</Label>
                       <Input
                         type="date"
                         name="endDate"
@@ -218,7 +220,7 @@ const EducationForm = () => {
                       }}
                     />
                     <Label htmlFor={`hide-dates-checkbox-${index}`} className="ml-2 cursor-pointer select-none text-xs">
-                      Hide Dates
+                      {t('Hide Dates')}
                     </Label>
                   </div>
                   <div className="flex items-center">
@@ -233,18 +235,18 @@ const EducationForm = () => {
                       }}
                     />
                     <Label htmlFor={`years-only-checkbox-${index}`} className="ml-2 cursor-pointer select-none text-xs">
-                      Years only
+                      {t('Years only')}
                     </Label>
                   </div>
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-sm">Description</Label>
+                  <Label className="text-sm">{t('Description')}</Label>
                   <Textarea name="description" value={item?.description || ''} onChange={e => handleChange(e, index)} />
                   <div className="mt-3 flex justify-end">
                     <TranslateSection
                       onTranslate={translatedText => handleTranslate(translatedText, index)}
                       currentText={item?.description || ''}
-                      placeholder="Enter target language (e.g. Spanish, French, Arabic)"
+                      placeholder={t('Enter target language')}
                     />
                   </div>
                 </div>
@@ -260,7 +262,7 @@ const EducationForm = () => {
                 onClick={handleAddEducation}
               >
                 <Plus size="15px" />
-                Add More Education
+                {t('Add More Education')}
               </Button>
             </div>
           )}

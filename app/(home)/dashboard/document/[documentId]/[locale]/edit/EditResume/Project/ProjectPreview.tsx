@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { INITIAL_THEME_COLOR } from '@/lib/helper';
 import { DocumentType } from '@/types';
 import { Link as LinkIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface PropsType {
   resumeInfo: DocumentType | undefined;
@@ -9,6 +10,7 @@ interface PropsType {
 }
 
 const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
+  const t = useTranslations('Projects');
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
   const projects = (resumeInfo?.projects || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0));
 
@@ -19,7 +21,7 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   return (
     <div className="my-3 w-full">
       <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
-        {resumeInfo?.projectsSectionTitle?.trim() || 'Projects'}
+        {resumeInfo?.projectsSectionTitle?.trim() || t('Projects')}
       </h5>
       <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
       <div className="flex min-h-9 flex-col gap-2">

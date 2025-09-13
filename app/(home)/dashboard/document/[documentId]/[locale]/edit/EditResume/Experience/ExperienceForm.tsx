@@ -5,10 +5,12 @@ import { ExperienceType, SkillType } from '@/types';
 import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 // components
 import { parseAIResult, Label, Input, Button, RichTextEditor, TranslateSection } from '@/components';
 
 const ExperienceForm = () => {
+  const t = useTranslations('Experience');
   const param = useParams();
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
@@ -110,11 +112,11 @@ const ExperienceForm = () => {
       <div className="w-full">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold">Professional Experience</h2>
-            <p className="text-sm">Add previous job experience</p>
+            <h2 className="text-lg font-bold">{t('Professional Experience')}</h2>
+            <p className="text-sm">{t('Add previous job experience')}</p>
           </div>
           {experiences.length > 1 && (
-            <div className="text-sm text-muted-foreground">Use arrows to reorder experiences</div>
+            <div className="text-sm text-muted-foreground">{t('Use arrows to reorder experiences')}</div>
           )}
         </div>
       </div>
@@ -128,7 +130,7 @@ const ExperienceForm = () => {
               onClick={handleAddExperience}
             >
               <Plus size="15px" />
-              Add More Experience
+              {t('Add More Experience')}
             </Button>
           )}
           {experiences.map((item, index) => (
@@ -171,7 +173,7 @@ const ExperienceForm = () => {
                   </Button>
                 )}
                 <div>
-                  <Label className="text-sm">Position title</Label>
+                  <Label className="text-sm">{t('Position title')}</Label>
                   <Input
                     name="title"
                     placeholder=""
@@ -181,7 +183,7 @@ const ExperienceForm = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-sm">Company Name</Label>
+                  <Label className="text-sm">{t('Company Name')}</Label>
                   <Input
                     name="companyName"
                     placeholder=""
@@ -191,7 +193,7 @@ const ExperienceForm = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-sm">City</Label>
+                  <Label className="text-sm">{t('City')}</Label>
                   <Input
                     name="city"
                     placeholder=""
@@ -201,7 +203,7 @@ const ExperienceForm = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-sm">State</Label>
+                  <Label className="text-sm">{t('State')}</Label>
                   <Input
                     name="state"
                     placeholder=""
@@ -211,7 +213,7 @@ const ExperienceForm = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-sm">Start Date</Label>
+                  <Label className="text-sm">{t('Start Date')}</Label>
                   <Input
                     name="startDate"
                     type="date"
@@ -223,7 +225,7 @@ const ExperienceForm = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex-1">
-                    <Label className="text-sm">End Date</Label>
+                    <Label className="text-sm">{t('End Date')}</Label>
                     <Input
                       name="endDate"
                       type="date"
@@ -256,7 +258,7 @@ const ExperienceForm = () => {
                         className="mr-1"
                       />
                       <Label htmlFor={`present-checkbox-${index}`} className="cursor-pointer select-none text-xs">
-                        Present
+                        {t('Present')}
                       </Label>
                     </div>
                     <div className="flex items-center">
@@ -279,7 +281,7 @@ const ExperienceForm = () => {
                         className="mr-1"
                       />
                       <Label htmlFor={`years-only-checkbox-${index}`} className="cursor-pointer select-none text-xs">
-                        Years Only
+                        {t('Years Only')}
                       </Label>
                     </div>
                   </div>
@@ -302,7 +304,7 @@ const ExperienceForm = () => {
                     <TranslateSection
                       onTranslate={translatedText => handleTranslate(translatedText, index)}
                       currentText={item.workSummary || ''}
-                      placeholder="Enter target language (e.g. Spanish, French, Arabic)"
+                      placeholder={t('Enter target language')}
                     />
                   </div>
                 </div>
@@ -315,7 +317,7 @@ const ExperienceForm = () => {
                   onClick={handleAddExperience}
                 >
                   <Plus size="15px" />
-                  Add More Experience
+                  {t('Add More Experience')}
                 </Button>
               )}
             </div>

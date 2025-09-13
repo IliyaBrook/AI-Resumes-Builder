@@ -3,12 +3,14 @@ import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { ProjectType } from '@/types';
+import { useTranslations } from 'next-intl';
 // hooks
 import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
 // components
 import { RichTextEditor, Label, Input, Button, TranslateSection } from '@/components';
 
 const ProjectForm = () => {
+  const t = useTranslations('Projects');
   const param = useParams();
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
@@ -16,7 +18,7 @@ const ProjectForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteProject } = useDeleteProject();
 
-  const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.projectsSectionTitle || 'Projects');
+  const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.projectsSectionTitle || t('Projects'));
   const [localProjects, setLocalProjects] = React.useState<ProjectType[]>(resumeInfo?.projects || []);
   const debouncedProjects = useDebounce(localProjects, 500);
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
@@ -69,7 +71,7 @@ const ProjectForm = () => {
     <div>
       <div className="mb-2 flex items-center gap-2">
         {localProjects.length > 1 && (
-          <div className="text-sm text-muted-foreground">Use arrows to reorder experiences</div>
+          <div className="text-sm text-muted-foreground">{t('Use arrows to reorder experiences')}</div>
         )}
       </div>
       <div className="mb-2 flex w-full items-center gap-2">
@@ -89,7 +91,7 @@ const ProjectForm = () => {
               onClick={addNewProject}
             >
               <Plus size="15px" />
-              Add More Project
+              {t('Add More Project')}
             </Button>
           )}
           {localProjects.map((item, index) => (
@@ -129,17 +131,17 @@ const ProjectForm = () => {
                   <X size="13px" />
                 </Button>
                 <div className="col-span-2">
-                  <Label className="text-sm">Project Name</Label>
+                  <Label className="text-sm">{t('Project Name')}</Label>
                   <Input
                     name="name"
-                    placeholder="Project name"
+                    placeholder={t('Project name')}
                     required
                     value={item?.name || ''}
                     onChange={e => handleChange(e, index)}
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-sm">Project URL</Label>
+                  <Label className="text-sm">{t('Project URL')}</Label>
                   <Input
                     name="url"
                     placeholder="https://project-url.com"
@@ -148,7 +150,7 @@ const ProjectForm = () => {
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-sm">Git Repository</Label>
+                  <Label className="text-sm">{t('Git Repository')}</Label>
                   <Input
                     name="git"
                     placeholder="https://github.com/user/repo"
@@ -157,17 +159,17 @@ const ProjectForm = () => {
                   />
                 </div>
                 <div className="col-span-2 mt-1">
-                  <Label className="text-sm">Description</Label>
+                  <Label className="text-sm">{t('Description')}</Label>
                   <RichTextEditor
                     value={item?.description || ''}
                     onEditorChange={val => handleChange({ target: { name: 'description', value: val } }, index)}
-                    placeholder="Project description"
+                    placeholder={t('Project description')}
                   />
                   <div className="mt-3 flex justify-end">
                     <TranslateSection
                       onTranslate={translatedText => handleTranslate(translatedText, index)}
                       currentText={item?.description || ''}
-                      placeholder="Enter target language (e.g. Spanish, French, Arabic)"
+                      placeholder={t('Enter target language')}
                     />
                   </div>
                 </div>
@@ -180,7 +182,7 @@ const ProjectForm = () => {
                   onClick={addNewProject}
                 >
                   <Plus size="15px" />
-                  Add More Project
+                  {t('Add More Project')}
                 </Button>
               )}
             </div>

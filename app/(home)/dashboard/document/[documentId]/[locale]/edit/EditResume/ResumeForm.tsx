@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 //hooks
 import { useUpdateDocument, useGetDocumentById, useFirstRender } from '@/hooks';
 import { generateThumbnail } from '@/lib/helper';
@@ -18,6 +19,7 @@ import {
 } from '@/editResume';
 
 const ResumeForm = () => {
+  const t = useTranslations('ResumeForm');
   const param = useParams();
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
@@ -41,7 +43,7 @@ const ResumeForm = () => {
           setResumeInfo({ thumbnail });
         }
       } catch (error) {
-        console.error('Failed to generate thumbnail:', error);
+        console.error(t('Failed to generate thumbnail'), error);
       }
     };
 
@@ -65,7 +67,7 @@ const ResumeForm = () => {
               onClick={() => setActiveFormIndex(activeFormIndex - 1)}
             >
               <ArrowLeft size="16px" />
-              Previous
+              {t('Previous')}
             </Button>
           )}
 
@@ -76,7 +78,7 @@ const ResumeForm = () => {
             disabled={activeFormIndex === 7 || resumeInfo?.status === 'archived'}
             onClick={handleNext}
           >
-            Next
+            {t('Next')}
             <ArrowRight size="16px" />
           </Button>
         </div>

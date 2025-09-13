@@ -12,6 +12,10 @@ interface RenderSectionWrapperProps {
   currentOrder: string[];
   onSectionClickAction: (sectionKey: string) => void;
   onMoveSectionAction: (direction: 'up' | 'down') => void;
+  translations?: {
+    moveSectionUp: string;
+    moveSectionDown: string;
+  };
 }
 
 export const renderSectionWrapper = ({
@@ -21,6 +25,7 @@ export const renderSectionWrapper = ({
   currentOrder,
   onSectionClickAction,
   onMoveSectionAction,
+  translations,
 }: RenderSectionWrapperProps) => {
   const currentIndex = currentOrder.indexOf(sectionKey);
   const canMoveUp = currentIndex > 0;
@@ -59,7 +64,7 @@ export const renderSectionWrapper = ({
               onMoveSectionAction('up');
             }}
             disabled={!canMoveUp}
-            title="Move section up"
+            title={translations?.moveSectionUp || 'Move section up'}
           >
             <MoveUp size={14} />
           </Button>
@@ -76,7 +81,7 @@ export const renderSectionWrapper = ({
               onMoveSectionAction('down');
             }}
             disabled={!canMoveDown}
-            title="Move section down"
+            title={translations?.moveSectionDown || 'Move section down'}
           >
             <MoveDown size={14} />
           </Button>

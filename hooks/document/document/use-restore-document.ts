@@ -1,6 +1,6 @@
 'use client';
 import { api } from '@/lib/hono-rpc';
-import { useBaseMutation } from '@hooks/document/base-mutation';
+import { useBaseMutation } from '@/hooks';
 import { APIResponseType } from '@/types/resume.type';
 
 type RestoreDocumentRequest = {

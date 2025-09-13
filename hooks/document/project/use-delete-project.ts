@@ -1,4 +1,4 @@
-import { createEntityHooks } from '@hooks/document/entity-hooks-factory';
+import { createEntityHooks } from '@/hooks';
 
 type DeleteProjectParams = {
   projectId: number;

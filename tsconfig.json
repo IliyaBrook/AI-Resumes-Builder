@@ -38,9 +38,6 @@
       "@/hooks/*": [
         "./hooks/*"
       ],
-      "@hooks/document/*": [
-        "./hooks/document/*"
-      ],
       "@/context/*": [
         "context/index.ts"
       ],

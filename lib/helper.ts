@@ -17,8 +17,7 @@ export const generateThumbnail = async () => {
 
   try {
     const canvas = await html2canvas(resumeElement, { scale: 0.5 });
-    const thumbnailImage = canvas.toDataURL('image/png');
-    return thumbnailImage;
+    return canvas.toDataURL('image/png');
   } catch (error) {
     console.error('Thumbnail generation failed', error);
   }

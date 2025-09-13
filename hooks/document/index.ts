@@ -1,6 +1,6 @@
 export { useBaseMutation } from './base-mutation';
 export { useBaseQuery } from './base-query';
-export { createEntityHooks } from '@hooks/document/entity-hooks-factory';
+export { createEntityHooks } from './entity-hooks-factory';
 
 export * from './skills';
 export * from './education';

@@ -1,5 +1,5 @@
 import { useParams } from 'next/navigation';
-import { createEntityHooks } from '@hooks/document/entity-hooks-factory';
+import { createEntityHooks } from '@/hooks';
 import { ExperienceType } from '@/types/resume.type';
 
 const experienceHooks = createEntityHooks('experience');

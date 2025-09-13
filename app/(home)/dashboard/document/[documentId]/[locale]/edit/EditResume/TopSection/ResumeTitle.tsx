@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils';
 import { FileText, Lock, Globe, Trash2 } from 'lucide-react';
 import React, { FC, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface ResumeTitleProps {
   initialTitle: string;
@@ -12,7 +13,8 @@ interface ResumeTitleProps {
 }
 
 const ResumeTitle: FC<ResumeTitleProps> = ({ initialTitle, isLoading, status, onSave }) => {
-  const [title, setTitle] = useState('Untitled Resume');
+  const tCommon = useTranslations('Common');
+  const [title, setTitle] = useState(tCommon('untitledResume'));
 
   useEffect(() => {
     if (initialTitle) setTitle(initialTitle);

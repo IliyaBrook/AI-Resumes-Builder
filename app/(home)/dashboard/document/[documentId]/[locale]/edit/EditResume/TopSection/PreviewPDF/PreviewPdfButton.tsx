@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 import { Eye } from 'lucide-react';
 import { Button } from '@/components';
 import { PreviewPDF } from './PreviewPDF';
+import { useTranslations } from 'next-intl';
 
 export const PreviewPdfButton = () => {
+  const t = useTranslations('TopSection');
   const [showDebugPreview, setShowDebugPreview] = useState(false);
 
   return (
@@ -18,7 +20,7 @@ export const PreviewPdfButton = () => {
         >
           <div className="flex items-center gap-1">
             <Eye size="17px" />
-            <span className="hidden lg:flex">Preview PDF</span>
+            <span className="hidden lg:flex">{t('Preview PDF')}</span>
           </div>
         </Button>
       </div>

@@ -5,6 +5,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ResumeContent } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/shared/ResumeContent';
 import { ModalSectionWrapper } from './modalSectionWrapper';
 import { moveSection, usePageOrderSync } from '@/editResume';
+import { useTranslations } from 'next-intl';
 
 interface PDFDebugPreviewProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface PDFDebugPreviewProps {
 }
 
 export const PreviewPDF: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseAction }) => {
+  const t = useTranslations('TopSection');
   const { currentOrder, setCurrentOrder, updatePagesOrder, fixedResumeInfo, isLoading } = usePageOrderSync();
 
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
@@ -80,7 +82,7 @@ export const PreviewPDF: React.FC<PDFDebugPreviewProps> = ({ isOpen, onCloseActi
 
   return (
     <Dialog open={isOpen} onOpenChange={onCloseAction}>
-      <DialogContent className="max-h-[90vh] max-w-[900px] p-0" aria-describedby="PDF Debug Preview">
+      <DialogContent className="max-h-[90vh] max-w-[900px] p-0" aria-describedby={t('PDF Debug Preview')}>
         <div className="h-full max-h-[85vh] overflow-y-auto bg-gray-100 p-6">
           <div className="mx-auto" style={{ width: 'fit-content' }}>
             {/* PDF Page Preview */}

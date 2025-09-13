@@ -5,7 +5,20 @@
   },
   "TopSection": {
     "archivedResume": "This resume is in the trash bin",
-    "Download Resume": "Download Resume"
+    "Download Resume": "Download Resume",
+    "Theme": "Theme",
+    "Select Theme Color": "Select Theme Color",
+    "PDF Debug Preview": "PDF Debug Preview",
+    "Move to Trash": "Move to Trash",
+    "Restore resume": "Restore resume",
+    "Preview PDF": "Preview PDF",
+    "Generating PDF": "Generating PDF",
+    "Decrease": "Decrease",
+    "Increase": "Increase",
+    "Enter": "Enter",
+    "value": "value",
+    "px": "px",
+    "Reset to default": "Reset to default"
   },
   "Common": {
     "loading": "Loading...",

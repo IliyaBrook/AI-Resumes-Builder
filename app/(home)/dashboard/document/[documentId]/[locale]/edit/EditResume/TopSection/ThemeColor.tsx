@@ -8,8 +8,12 @@ import { Palette, ChevronDown } from 'lucide-react';
 import { generateThumbnail } from '@/lib/helper';
 // hooks
 import { useDebounce, useGetDocumentById, useUpdateDocument, toast } from '@/hooks';
+import { useTranslations } from 'next-intl';
 
 const ThemeColor = () => {
+  const t = useTranslations('TopSection');
+  const tCommon = useTranslations('Common');
+
   const colors = [
     '#FF6F61',
     '#33B679',
@@ -61,8 +65,8 @@ const ThemeColor = () => {
       {
         onError() {
           toast({
-            title: 'Error',
-            description: 'Failed to update theme',
+            title: tCommon('Error'),
+            description: t('Failed to update theme'),
             variant: 'destructive',
           });
         },
@@ -80,19 +84,19 @@ const ThemeColor = () => {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          disabled={resumeInfo?.status === 'archived' ? true : false}
+          disabled={resumeInfo?.status === 'archived'}
           variant="secondary"
           className="gap-1 border bg-white !p-2 dark:bg-gray-800 lg:w-auto lg:p-4"
         >
           <div className="flex items-center gap-1">
             <Palette size="17px" />
-            <span className="hidden lg:flex">Theme</span>
+            <span className="hidden lg:flex">{t('Theme')}</span>
           </div>
           <ChevronDown size="14px" />
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="bg-background">
-        <h2 className="mb-2 text-sm font-bold">Select Theme Color</h2>
+        <h2 className="mb-2 text-sm font-bold">{t('Select Theme Color')}</h2>
 
         <div className="grid grid-cols-5 gap-3">
           {colors.map((item: string, index: number) => (

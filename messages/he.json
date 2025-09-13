@@ -5,7 +5,20 @@
   },
   "TopSection": {
     "archivedResume": "קורות החיים נמצאים בפח האשפה",
-    "Download Resume": "הורד קורות החיים"
+    "Download Resume": "הורד קורות החיים",
+    "Theme": "ערכת עיצוב",
+    "Select Theme Color": "בחר צבע ערכת עיצוב",
+    "PDF Debug Preview": "תצוגה מקדימה של PDF",
+    "Move to Trash": "העבר לפח האשפה",
+    "Restore resume": "שחזר קורות חיים",
+    "Preview PDF": "תצוגה מקדימה של PDF",
+    "Generating PDF": "יוצר PDF",
+    "Decrease": "הפחת",
+    "Increase": "הגדל",
+    "Enter": "הזן",
+    "value": "ערך",
+    "px": "פיקסל",
+    "Reset to default": "איפוס לברירת מחדל"
   },
   "Common": {
     "loading": "טוען...",

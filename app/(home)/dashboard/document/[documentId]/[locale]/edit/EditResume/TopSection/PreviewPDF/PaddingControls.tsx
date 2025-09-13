@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button } from '@/components';
 import { Minus, Plus, RotateCcw } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface PaddingControlsProps {
   label: string;
@@ -13,6 +14,7 @@ interface PaddingControlsProps {
 }
 
 export const PaddingControls: React.FC<PaddingControlsProps> = ({ label, value, onChange, min = 0, step = 5 }) => {
+  const t = useTranslations('TopSection');
   const handleDecrease = (e: React.MouseEvent) => {
     e.stopPropagation();
     const newValue = Math.max(min, value - step);
@@ -54,7 +56,7 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({ label, value, 
           className="h-6 w-6 p-0"
           onClick={handleDecrease}
           disabled={value <= min}
-          title={`Decrease ${label}`}
+          title={`${t('Decrease')} ${label}`}
         >
           <Minus size={12} />
         </Button>
@@ -67,9 +69,9 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({ label, value, 
             onClick={e => e.stopPropagation()}
             className="h-6 w-[35px] rounded border border-gray-300 px-1 text-center font-mono text-xs [appearance:textfield] focus:border-blue-500 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             min={min}
-            title={`Enter ${label} value`}
+            title={`${t('Enter')} ${label} ${t('value')}`}
           />
-          <span className="ml-1 text-xs text-gray-500">px</span>
+          <span className="ml-1 text-xs text-gray-500">{t('px')}</span>
         </div>
 
         <Button
@@ -79,7 +81,7 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({ label, value, 
           className="h-6 w-6 p-0"
           onClick={handleIncrease}
           disabled={false}
-          title={`Increase ${label}`}
+          title={`${t('Increase')} ${label}`}
         >
           <Plus size={12} />
         </Button>
@@ -91,7 +93,7 @@ export const PaddingControls: React.FC<PaddingControlsProps> = ({ label, value, 
           className="ml-1 h-6 w-6 p-0"
           onClick={handleReset}
           disabled={value === 0}
-          title="Reset to default"
+          title={t('Reset to default')}
         >
           <RotateCcw size={12} />
         </Button>

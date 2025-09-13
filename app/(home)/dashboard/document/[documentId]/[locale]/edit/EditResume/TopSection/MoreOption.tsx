@@ -7,8 +7,12 @@ import { StatusType } from '@/types';
 import { Loader, MoreHorizontal, Redo, Trash2 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 
 const MoreOption = () => {
+  const t = useTranslations('TopSection');
+  const tCommon = useTranslations('Common');
+
   const router = useRouter();
   const param = useParams();
   const documentId = param.documentId as string;
@@ -27,14 +31,14 @@ const MoreOption = () => {
           onSuccess: () => {
             router.replace(`/dashboard/`);
             toast({
-              title: 'Success',
-              description: `Moved to trash successfully`,
+              title: tCommon('Success'),
+              description: t('Moved to trash successfully'),
             });
           },
           onError() {
             toast({
-              title: 'Error',
-              description: 'Failed to update status',
+              title: tCommon('Error'),
+              description: t('Failed to update status'),
               variant: 'destructive',
             });
           },
@@ -69,7 +73,7 @@ const MoreOption = () => {
               onClick={handleRestore}
             >
               <Redo size="15px" />
-              Retore resume
+              {t('Restore resume')}
               {isPending && <Loader size="15px" className="animate-spin" />}
             </Button>
           ) : (
@@ -80,7 +84,7 @@ const MoreOption = () => {
               onClick={handleArchive}
             >
               <Trash2 size="15px" />
-              Move to Trash
+              {t('Move to Trash')}
               {isPending && <Loader size="15px" className="animate-spin" />}
             </Button>
           )}

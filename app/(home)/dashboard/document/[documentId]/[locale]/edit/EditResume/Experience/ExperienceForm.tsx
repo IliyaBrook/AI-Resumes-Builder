@@ -15,6 +15,7 @@ const ExperienceForm = () => {
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
   const resumeInfo = data?.data;
+  const direction = data?.data?.direction;
   const allSkills = data?.data?.skills ? resumeInfo?.skills?.map((skill: SkillType) => skill.name).join(', ') : '';
 
   const { mutate: setResumeInfo } = useUpdateDocument();
@@ -255,7 +256,7 @@ const ExperienceForm = () => {
                             )
                           );
                         }}
-                        className="mr-1"
+                        className={direction === 'rtl' ? 'ml-2' : 'mr-1'}
                       />
                       <Label htmlFor={`present-checkbox-${index}`} className="cursor-pointer select-none text-xs">
                         {t('Present')}
@@ -278,7 +279,7 @@ const ExperienceForm = () => {
                             )
                           );
                         }}
-                        className="mr-1"
+                        className={direction === 'rtl' ? 'ml-2' : 'mr-1'}
                       />
                       <Label htmlFor={`years-only-checkbox-${index}`} className="cursor-pointer select-none text-xs">
                         {t('Years Only')}

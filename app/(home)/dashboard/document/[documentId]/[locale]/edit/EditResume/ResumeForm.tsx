@@ -67,7 +67,7 @@ const ResumeForm = () => {
               className="!h-auto !px-2 !py-1"
               onClick={() => setActiveFormIndex(activeFormIndex - 1)}
             >
-              <ArrowLeft size="16px" />
+              {direction === 'rtl' ? <ArrowRight size="16px" /> : <ArrowLeft size="16px" />}
               {t('Previous')}
             </Button>
           )}
@@ -80,7 +80,7 @@ const ResumeForm = () => {
             onClick={handleNext}
           >
             {t('Next')}
-            <ArrowRight size="16px" />
+            {direction === 'rtl' ? <ArrowLeft size="16px" /> : <ArrowRight size="16px" />}
           </Button>
         </div>
         <div className="px-5 py-3 pb-5">

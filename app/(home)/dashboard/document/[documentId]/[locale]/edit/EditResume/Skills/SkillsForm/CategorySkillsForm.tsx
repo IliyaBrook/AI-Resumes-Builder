@@ -79,7 +79,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
     const maxSkillOrder =
       categorySkills.length > 0 ? Math.max(...categorySkills.map(skill => skill.skillOrder || 0)) : -1;
 
-    let categoryOrder = 0;
+    let categoryOrder;
     if (categorySkills.length > 0) {
       categoryOrder = categorySkills[0].categoryOrder || 0;
     } else {

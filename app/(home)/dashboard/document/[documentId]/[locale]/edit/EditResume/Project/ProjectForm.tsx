@@ -1,12 +1,10 @@
 'use client';
 import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ProjectType } from '@/types';
 import { useTranslations } from 'next-intl';
-// hooks
 import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
-// components
 import { RichTextEditor, Label, Input, Button, TranslateSection } from '@/components';
 
 const ProjectForm = () => {
@@ -18,12 +16,12 @@ const ProjectForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteProject } = useDeleteProject();
 
-  const [sectionTitle, setSectionTitle] = React.useState('');
-  const [localProjects, setLocalProjects] = React.useState<ProjectType[]>(resumeInfo?.projects || []);
+  const [sectionTitle, setSectionTitle] = useState('');
+  const [localProjects, setLocalProjects] = useState<ProjectType[]>(resumeInfo?.projects || []);
   const debouncedProjects = useDebounce(localProjects, 500);
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (resumeInfo?.projectsSectionTitle) {
       if (resumeInfo.projectsSectionTitle === 'Projects' || resumeInfo.projectsSectionTitle === 'פרויקטים') {
         setSectionTitle(t('Projects'));
@@ -35,13 +33,13 @@ const ProjectForm = () => {
     }
   }, [resumeInfo?.projectsSectionTitle, t]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (debouncedProjects && debouncedProjects !== resumeInfo?.projects) {
       setResumeInfo({ projects: debouncedProjects });
     }
   }, [debouncedProjects]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.projectsSectionTitle) {
       setResumeInfo({ projectsSectionTitle: debouncedSectionTitle });
     }
@@ -73,7 +71,7 @@ const ProjectForm = () => {
     });
   };
 
-  const handleTranslate = React.useCallback((translatedText: string, index: number) => {
+  const handleTranslate = useCallback((translatedText: string, index: number) => {
     setLocalProjects(prev =>
       prev.map((proj, idx) => (idx === index ? { ...proj, description: translatedText } : proj))
     );

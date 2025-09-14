@@ -42,9 +42,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'HTML content is required' }, { status: 400 });
     }
 
-    console.log('Attempting to get browser instance');
     const browserInstance = await getBrowser();
-    console.log('Browser instance obtained, creating new page');
     page = await browserInstance.newPage();
 
     // Set viewport to A4 size
@@ -52,18 +50,15 @@ export async function POST(request: NextRequest) {
     await page.setViewport({ width: 794, height: 1123 });
 
     // Set the HTML content
-    console.log('Setting HTML content');
     await page.setContent(html, {
       waitUntil: ['domcontentloaded', 'networkidle0'],
       timeout: 30000,
     });
 
     // Wait for fonts and images to load
-    console.log('Waiting for fonts and images to load');
     await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 2000)));
 
     // Generate PDF
-    console.log('Generating PDF');
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,

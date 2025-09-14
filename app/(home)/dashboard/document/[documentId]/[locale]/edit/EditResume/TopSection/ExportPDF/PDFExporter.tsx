@@ -33,7 +33,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
   const [loading, setLoading] = useState(false);
   const param = useParams();
   const documentId = param.documentId as string;
-  const locale = param.locale as string || 'en';
+  const locale = (param.locale as string) || 'en';
   const { data } = useGetDocumentById(documentId);
   const fixedResumeInfo = normalizeResumeData(data?.data);
   const pagesOrder = fixedResumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER;
@@ -199,7 +199,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
           a.click();
           window.URL.revokeObjectURL(url);
           document.body.removeChild(a);
-          
+
           // Clean up the temporary container after successful server generation
           root.unmount();
           document.body.removeChild(tempContainer);
@@ -217,23 +217,23 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
 
       // Fallback to client-side PDF generation using html2pdf.js
       const html2pdf = (await import('html2pdf.js')).default;
-      
+
       const opt = {
         margin: 0,
         filename: fileName,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
+        html2canvas: {
           scale: 2,
           useCORS: true,
           allowTaint: true,
           width: 794,
-          height: 1123
+          height: 1123,
         },
-        jsPDF: { 
-          unit: 'mm', 
-          format: 'a4', 
-          orientation: 'portrait'
-        }
+        jsPDF: {
+          unit: 'mm',
+          format: 'a4',
+          orientation: 'portrait',
+        },
       };
 
       // Create a temporary container for client-side generation
@@ -246,7 +246,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
 
       // Generate PDF using html2pdf.js
       await html2pdf().set(opt).from(resumeElementClone).save();
-      
+
       // Clean up client-side container
       document.body.removeChild(clientTempContainer);
 

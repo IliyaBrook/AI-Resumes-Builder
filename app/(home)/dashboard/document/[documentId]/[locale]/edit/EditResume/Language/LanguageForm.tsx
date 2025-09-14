@@ -30,17 +30,21 @@ const LanguageForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteLanguage } = useDeleteLanguage();
 
-  const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.languagesSectionTitle || t('Languages'));
+  const [sectionTitle, setSectionTitle] = React.useState('');
   const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>(resumeInfo?.languages || []);
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
     if (resumeInfo?.languagesSectionTitle) {
-      if (resumeInfo.languagesSectionTitle === 'Languages') {
+      // Check for both English and Hebrew default values
+      if (resumeInfo.languagesSectionTitle === 'Languages' || resumeInfo.languagesSectionTitle === 'שפות') {
         setSectionTitle(t('Languages'));
       } else {
         setSectionTitle(resumeInfo.languagesSectionTitle);
       }
+    } else {
+      // Set initial value when resumeInfo is available but languagesSectionTitle is not set
+      setSectionTitle(t('Languages'));
     }
   }, [resumeInfo?.languagesSectionTitle, t]);
 

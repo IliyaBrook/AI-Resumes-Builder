@@ -18,18 +18,20 @@ const ProjectForm = () => {
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteProject } = useDeleteProject();
 
-  const [sectionTitle, setSectionTitle] = React.useState(resumeInfo?.projectsSectionTitle || t('Projects'));
+  const [sectionTitle, setSectionTitle] = React.useState('');
   const [localProjects, setLocalProjects] = React.useState<ProjectType[]>(resumeInfo?.projects || []);
   const debouncedProjects = useDebounce(localProjects, 500);
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
 
   React.useEffect(() => {
     if (resumeInfo?.projectsSectionTitle) {
-      if (resumeInfo.projectsSectionTitle === 'Projects') {
+      if (resumeInfo.projectsSectionTitle === 'Projects' || resumeInfo.projectsSectionTitle === 'פרויקטים') {
         setSectionTitle(t('Projects'));
       } else {
         setSectionTitle(resumeInfo.projectsSectionTitle);
       }
+    } else {
+      setSectionTitle(t('Projects'));
     }
   }, [resumeInfo?.projectsSectionTitle, t]);
 

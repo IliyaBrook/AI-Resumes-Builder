@@ -10,16 +10,30 @@ import RESUME_STYLES from '../../shared/resume-styles.css?inline';
 import { normalizeResumeData } from '@/lib/utils';
 import { ResumeContentBase } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/shared/ResumeContentBase';
 import { getPagePrintStyles } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/shared/styles';
+import { NextIntlClientProvider } from 'next-intl';
 
 interface PDFExporterProps {
   title: string;
   children: React.ReactNode;
 }
 
+// Function to load messages for the current locale
+const loadMessages = async (locale: string) => {
+  try {
+    const messages = await import(`@/messages/${locale}.json`);
+    return messages.default;
+  } catch {
+    // Fallback to English if locale file not found
+    const messages = await import(`@/messages/en.json`);
+    return messages.default;
+  }
+};
+
 export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => {
   const [loading, setLoading] = useState(false);
   const param = useParams();
   const documentId = param.documentId as string;
+  const locale = param.locale as string || 'en';
   const { data } = useGetDocumentById(documentId);
   const fixedResumeInfo = normalizeResumeData(data?.data);
   const pagesOrder = fixedResumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER;
@@ -39,6 +53,9 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
     const fileName = formatFileName(title);
 
     try {
+      // Load messages for current locale
+      const messages = await loadMessages(locale);
+
       // Create a temporary container for rendering
       const tempContainer = document.createElement('div');
       tempContainer.id = 'pdf-temp-container';
@@ -47,21 +64,23 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
       tempContainer.style.width = '210mm';
       document.body.appendChild(tempContainer);
 
-      // Render the ResumeContent component
+      // Render the ResumeContent component with NextIntlClientProvider
       const root = createRoot(tempContainer);
       await new Promise<void>(resolve => {
         root.render(
-          <ResumeContentBase
-            resumeInfo={fixedResumeInfo}
-            pagesOrder={pagesOrder}
-            themeColor={themeColor}
-            isLoading={false}
-            isInteractive={false}
-            containerProps={{
-              id: 'resume-content',
-              ...getPagePrintStyles(themeColor),
-            }}
-          />
+          <NextIntlClientProvider messages={messages} locale={locale}>
+            <ResumeContentBase
+              resumeInfo={fixedResumeInfo}
+              pagesOrder={pagesOrder}
+              themeColor={themeColor}
+              isLoading={false}
+              isInteractive={false}
+              containerProps={{
+                id: 'resume-content',
+                ...getPagePrintStyles(themeColor),
+              }}
+            />
+          </NextIntlClientProvider>
         );
         // Give React time to render
         setTimeout(resolve, 100);
@@ -75,6 +94,9 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
       if (!resumeElement) {
         throw new Error('Could not render resume content');
       }
+
+      // Clone the element for fallback use before cleanup
+      const resumeElementClone = resumeElement.cloneNode(true) as HTMLElement;
 
       // Get all stylesheets from the document
       const stylesheets: string[] = [];
@@ -153,36 +175,80 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         </html>
       `;
 
-      // Clean up the temporary container
+      // Try server-side PDF generation first
+      try {
+        const response = await fetch('/api/pdf-export', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            html: completeHTML,
+            title: fileName.replace('.pdf', ''),
+          }),
+        });
+
+        if (response.ok) {
+          // Download the PDF from server
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+          
+          // Clean up the temporary container after successful server generation
+          root.unmount();
+          document.body.removeChild(tempContainer);
+          return; // Success, exit here
+        } else {
+          console.warn('Server-side PDF generation failed, trying client-side fallback');
+        }
+      } catch (serverError) {
+        console.warn('Server-side PDF generation error:', serverError);
+      }
+
+      // Clean up the temporary container before client-side generation
       root.unmount();
       document.body.removeChild(tempContainer);
 
-      // Send to API route for PDF generation
-      const response = await fetch('/api/pdf-export', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Fallback to client-side PDF generation using html2pdf.js
+      const html2pdf = (await import('html2pdf.js')).default;
+      
+      const opt = {
+        margin: 0,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          width: 794,
+          height: 1123
         },
-        body: JSON.stringify({
-          html: completeHTML,
-          title: fileName.replace('.pdf', ''),
-        }),
-      });
+        jsPDF: { 
+          unit: 'mm', 
+          format: 'a4', 
+          orientation: 'portrait'
+        }
+      };
 
-      if (!response.ok) {
-        throw new Error('Failed to generate PDF');
-      }
+      // Create a temporary container for client-side generation
+      const clientTempContainer = document.createElement('div');
+      clientTempContainer.style.position = 'absolute';
+      clientTempContainer.style.left = '-9999px';
+      clientTempContainer.style.width = '210mm';
+      clientTempContainer.appendChild(resumeElementClone);
+      document.body.appendChild(clientTempContainer);
 
-      // Download the PDF
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      // Generate PDF using html2pdf.js
+      await html2pdf().set(opt).from(resumeElementClone).save();
+      
+      // Clean up client-side container
+      document.body.removeChild(clientTempContainer);
 
       toast({
         title: 'Success',

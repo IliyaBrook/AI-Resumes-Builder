@@ -5,21 +5,27 @@ let browser: Browser | null = null;
 
 async function getBrowser() {
   if (!browser) {
-    browser = await puppeteer.launch({
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu',
-        '--disable-web-security',
-        '--disable-features=VizDisplayCompositor',
-      ],
-      executablePath: process.env.CHROME_EXECUTABLE_PATH || undefined,
-    });
+    try {
+      browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          '--disable-gpu',
+          '--disable-web-security',
+          '--disable-features=VizDisplayCompositor',
+        ],
+        executablePath: process.env.CHROME_EXECUTABLE_PATH || undefined,
+      });
+      console.log('Puppeteer browser launched successfully');
+    } catch (error) {
+      console.error('Failed to launch Puppeteer browser:', error);
+      throw new Error(`Browser launch failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
   return browser;
 }
@@ -28,28 +34,36 @@ export async function POST(request: NextRequest) {
   let page = null;
 
   try {
+    console.log('Starting PDF generation request');
     const { html, title = 'resume' } = await request.json();
 
     if (!html) {
+      console.error('No HTML content provided');
       return NextResponse.json({ error: 'HTML content is required' }, { status: 400 });
     }
 
+    console.log('Attempting to get browser instance');
     const browserInstance = await getBrowser();
+    console.log('Browser instance obtained, creating new page');
     page = await browserInstance.newPage();
 
     // Set viewport to A4 size
+    console.log('Setting viewport');
     await page.setViewport({ width: 794, height: 1123 });
 
     // Set the HTML content
+    console.log('Setting HTML content');
     await page.setContent(html, {
       waitUntil: ['domcontentloaded', 'networkidle0'],
       timeout: 30000,
     });
 
     // Wait for fonts and images to load
+    console.log('Waiting for fonts and images to load');
     await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 2000)));
 
     // Generate PDF
+    console.log('Generating PDF');
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
@@ -62,6 +76,8 @@ export async function POST(request: NextRequest) {
       },
       timeout: 60000,
     });
+
+    console.log('PDF generated successfully');
 
     return new NextResponse(Buffer.from(pdfBuffer), {
       headers: {

@@ -123,6 +123,7 @@ export type LanguageType = {
   name: string;
   level?: string | null;
   order?: number;
+  tempId?: string;
 };
 
 export type Education = {

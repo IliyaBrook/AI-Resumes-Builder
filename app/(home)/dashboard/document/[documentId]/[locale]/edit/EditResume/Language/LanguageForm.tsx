@@ -113,7 +113,8 @@ const LanguageForm = () => {
   };
 
   const addNewLanguage = () => {
-    setLocalLanguages(prev => [...prev, { name: '', level: '', order: prev.length }]);
+    const tempId = `temp-${Date.now()}-${Math.random()}`;
+    setLocalLanguages(prev => [...prev, { name: '', level: '', order: prev.length, tempId }]);
   };
 
   const removeLanguage = (index: number, id?: number) => {
@@ -161,7 +162,7 @@ const LanguageForm = () => {
             </Button>
           )}
           {localLanguages.map((item, index) => (
-            <div key={item.id || index}>
+            <div key={item.id || item.tempId || `language-${index}`}>
               <div className="relative mb-5 grid grid-cols-2 gap-3 pt-4">
                 {localLanguages.length > 1 && (
                   <div className="absolute -left-8 top-4 flex flex-col gap-1">

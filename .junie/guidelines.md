@@ -72,6 +72,7 @@
 2. **Create reusable components**:
     - Make components generic with configurable props
     - Use TypeScript interfaces for clear prop definitions
+    - Don't use type like `any` or `unknown` create type definitions
     - Extract common patterns into shared components
     - Add components to appropriate `index.ts` for easy imports
 

@@ -7,7 +7,14 @@ import { useTranslations } from 'next-intl';
 // components
 import { Label, Input, Button } from '@/components';
 //hooks
-import { useDeleteLanguage, useUpdateDocument, useGetDocumentById, useDebounce } from '@/hooks';
+import {
+  useDeleteLanguage,
+  useCreateLanguage,
+  useUpdateLanguage,
+  useUpdateDocument,
+  useGetDocumentById,
+  useDebounce,
+} from '@/hooks';
 
 // This will be replaced with translation keys
 const LANGUAGE_LEVELS = [
@@ -29,6 +36,8 @@ const LanguageForm = () => {
   const resumeInfo = data?.data;
   const { mutate: setResumeInfo } = useUpdateDocument();
   const { mutate: deleteLanguage } = useDeleteLanguage();
+  const { mutate: createLanguage } = useCreateLanguage();
+  const { mutate: updateLanguage } = useUpdateLanguage();
 
   const [sectionTitle, setSectionTitle] = React.useState('');
   const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>(resumeInfo?.languages || []);
@@ -49,6 +58,12 @@ const LanguageForm = () => {
   }, [resumeInfo?.languagesSectionTitle, t]);
 
   React.useEffect(() => {
+    if (resumeInfo?.languages) {
+      setLocalLanguages(resumeInfo.languages);
+    }
+  }, [resumeInfo?.languages]);
+
+  React.useEffect(() => {
     if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.languagesSectionTitle) {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }
@@ -61,6 +76,40 @@ const LanguageForm = () => {
 
   const handleLevelChange = (value: string, index: number) => {
     setLocalLanguages(prev => prev.map((item, idx) => (idx === index ? { ...item, level: value } : item)));
+  };
+
+  const handleLanguageBlur = (index: number) => {
+    const language = localLanguages[index];
+    if (!language || !language.name?.trim()) return;
+
+    const currentLanguages = resumeInfo?.languages || [];
+
+    if (language.id) {
+      // Update existing language
+      const existingLanguage = currentLanguages.find(l => l.id === language.id);
+      if (
+        existingLanguage &&
+        (existingLanguage.name !== language.name ||
+          existingLanguage.level !== language.level ||
+          existingLanguage.order !== language.order)
+      ) {
+        updateLanguage({
+          id: language.id,
+          data: {
+            name: language.name,
+            level: language.level,
+            order: language.order,
+          },
+        });
+      }
+    } else {
+      // Create new language
+      createLanguage({
+        name: language.name,
+        level: language.level,
+        order: language.order,
+      });
+    }
   };
 
   const addNewLanguage = () => {
@@ -155,6 +204,7 @@ const LanguageForm = () => {
                     required
                     value={item?.name || ''}
                     onChange={e => handleChange(e, index)}
+                    onBlur={() => handleLanguageBlur(index)}
                   />
                 </div>
                 <div>
@@ -163,6 +213,7 @@ const LanguageForm = () => {
                     className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                     value={item?.level || ''}
                     onChange={e => handleLevelChange(e.target.value, index)}
+                    onBlur={() => handleLanguageBlur(index)}
                   >
                     {LANGUAGE_LEVELS.map(level => (
                       <option key={level.value} value={level.value}>

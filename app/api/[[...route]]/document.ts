@@ -753,6 +753,64 @@ const documentRoute = new Hono()
       }
     }
   )
+  .post(
+    '/language/create',
+    zValidator(
+      'json',
+      z.object({
+        docId: z.string(),
+        name: z.string().min(1, 'Name is required'),
+        level: z.string().optional(),
+        order: z.number().optional(),
+      })
+    ),
+    async c => {
+      try {
+        const data = c.req.valid('json');
+        const [created] = await db.insert(languageTable).values(data).returning();
+        return c.json(created, 200);
+      } catch (error) {
+        return c.json({ success: false, message: 'Failed to create language', error }, 500);
+      }
+    }
+  )
+  .patch(
+    '/language/:languageId',
+    zValidator(
+      'param',
+      z.object({
+        languageId: z.string(),
+      })
+    ),
+    zValidator(
+      'json',
+      z.object({
+        name: z.string().optional(),
+        level: z.string().optional(),
+        order: z.number().optional(),
+      })
+    ),
+    async c => {
+      try {
+        const { languageId } = c.req.valid('param');
+        const data = c.req.valid('json');
+        if (!languageId) {
+          return c.json({ error: 'LanguageId is required' }, 400);
+        }
+        const [updated] = await db
+          .update(languageTable)
+          .set(data)
+          .where(eq(languageTable.id, Number(languageId)))
+          .returning();
+        if (!updated) {
+          return c.json({ error: 'Language not found' }, 404);
+        }
+        return c.json(updated, 200);
+      } catch (error) {
+        return c.json({ success: false, message: 'Failed to update language', error }, 500);
+      }
+    }
+  )
   .delete(
     '/language/:languageId',
     zValidator(

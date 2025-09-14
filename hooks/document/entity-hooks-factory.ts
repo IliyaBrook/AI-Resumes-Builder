@@ -91,6 +91,25 @@ const entityConfigs: Record<string, EntityConfig> = {
     },
     invalidateQueries: [['document', 'documentId']],
   },
+  language: {
+    name: 'language',
+    endpoint: 'language',
+    messages: {
+      create: {
+        success: 'Language created successfully',
+        error: 'Failed to create language',
+      },
+      update: {
+        success: 'Language updated successfully',
+        error: 'Failed to update language',
+      },
+      delete: {
+        success: 'Language deleted successfully',
+        error: 'Failed to delete language',
+      },
+    },
+    invalidateQueries: [['document', 'documentId']],
+  },
 };
 
 export const createEntityHooks = (entityType: keyof typeof entityConfigs) => {

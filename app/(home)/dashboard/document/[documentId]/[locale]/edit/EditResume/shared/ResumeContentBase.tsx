@@ -70,7 +70,7 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
 
     // Only apply margins when not using interactive wrapper
     return (
-      <div 
+      <div
         key={`section-margin-${sectionKey}`}
         style={{
           marginTop: `${paddingTopMm}mm`,

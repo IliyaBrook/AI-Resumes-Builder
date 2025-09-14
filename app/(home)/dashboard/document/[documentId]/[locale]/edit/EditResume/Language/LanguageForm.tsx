@@ -42,6 +42,7 @@ const LanguageForm = () => {
   const [sectionTitle, setSectionTitle] = React.useState('');
   const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>(resumeInfo?.languages || []);
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
+  const debouncedLocalLanguages = useDebounce(localLanguages, 500);
 
   React.useEffect(() => {
     if (resumeInfo?.languagesSectionTitle) {
@@ -68,6 +69,12 @@ const LanguageForm = () => {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle]);
+
+  React.useEffect(() => {
+    if (debouncedLocalLanguages && debouncedLocalLanguages !== resumeInfo?.languages) {
+      setResumeInfo({ languages: debouncedLocalLanguages });
+    }
+  }, [debouncedLocalLanguages]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;

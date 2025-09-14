@@ -159,7 +159,6 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
               font-weight: 600 !important;
             }
 
-            /* Print media query */
             @media print {
               * {
                 -webkit-print-color-adjust: exact !important;
@@ -177,6 +176,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
 
       // Try server-side PDF generation first
       try {
+        console.log('Attempting server-side PDF generation...');
         const response = await fetch('/api/pdf-export', {
           method: 'POST',
           headers: {
@@ -189,6 +189,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         });
 
         if (response.ok) {
+          console.log('Server-side PDF generation successful');
           // Download the PDF from server
           const blob = await response.blob();
           const url = window.URL.createObjectURL(blob);
@@ -203,12 +204,22 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
           // Clean up the temporary container after successful server generation
           root.unmount();
           document.body.removeChild(tempContainer);
+          
+          toast({
+            title: 'Success',
+            description: 'PDF downloaded successfully (server-side)',
+            variant: 'default',
+          });
           return; // Success, exit here
         } else {
-          console.warn('Server-side PDF generation failed, trying client-side fallback');
+          const errorText = await response.text();
+          console.warn('Server-side PDF generation failed with status:', response.status);
+          console.warn('Error response:', errorText);
+          console.log('Falling back to client-side PDF generation...');
         }
       } catch (serverError) {
         console.warn('Server-side PDF generation error:', serverError);
+        console.log('Falling back to client-side PDF generation...');
       }
 
       // Clean up the temporary container before client-side generation
@@ -216,45 +227,64 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
       document.body.removeChild(tempContainer);
 
       // Fallback to client-side PDF generation using html2pdf.js
-      const html2pdf = (await import('html2pdf.js')).default;
+      console.log('Starting client-side PDF generation...');
+      
+      try {
+        const html2pdf = (await import('html2pdf.js')).default;
 
-      const opt = {
-        margin: 0,
-        filename: fileName,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          width: 794,
-          height: 1123,
-        },
-        jsPDF: {
-          unit: 'mm',
-          format: 'a4',
-          orientation: 'portrait',
-        },
-      };
+        const opt = {
+          margin: 0,
+          filename: fileName,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            width: 794,
+            height: 1123,
+            logging: false,
+          },
+          jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait',
+          },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        };
 
-      // Create a temporary container for client-side generation
-      const clientTempContainer = document.createElement('div');
-      clientTempContainer.style.position = 'absolute';
-      clientTempContainer.style.left = '-9999px';
-      clientTempContainer.style.width = '210mm';
-      clientTempContainer.appendChild(resumeElementClone);
-      document.body.appendChild(clientTempContainer);
+        // Create a temporary container for client-side generation
+        const clientTempContainer = document.createElement('div');
+        clientTempContainer.style.position = 'absolute';
+        clientTempContainer.style.left = '-9999px';
+        clientTempContainer.style.width = '210mm';
+        clientTempContainer.style.fontFamily = 'Open Sans, sans-serif';
+        clientTempContainer.appendChild(resumeElementClone);
+        document.body.appendChild(clientTempContainer);
 
-      // Generate PDF using html2pdf.js
-      await html2pdf().set(opt).from(resumeElementClone).save();
+        console.log('Generating PDF with html2pdf.js...');
 
-      // Clean up client-side container
-      document.body.removeChild(clientTempContainer);
+        // Generate PDF using html2pdf.js
+        await html2pdf().set(opt).from(resumeElementClone).save();
 
-      toast({
-        title: 'Success',
-        description: 'PDF downloaded successfully',
-        variant: 'default',
-      });
+        console.log('Client-side PDF generation completed successfully');
+
+        // Clean up client-side container
+        document.body.removeChild(clientTempContainer);
+
+        toast({
+          title: 'Success',
+          description: 'PDF downloaded successfully (client-side fallback)',
+          variant: 'default',
+        });
+      } catch (clientError) {
+        console.error('Client-side PDF generation failed:', clientError);
+        toast({
+          title: 'Error',
+          description: 'Both server-side and client-side PDF generation failed',
+          variant: 'destructive',
+        });
+        throw clientError;
+      }
     } catch (error) {
       console.error('PDF generation error:', error);
       toast({

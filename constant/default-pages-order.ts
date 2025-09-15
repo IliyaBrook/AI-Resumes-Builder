@@ -6,4 +6,5 @@ export const DEFAULT_PAGES_ORDER = [
   'projects',
   'skills',
   'languages',
+  'army',
 ];

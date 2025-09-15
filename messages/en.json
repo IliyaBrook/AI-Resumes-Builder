@@ -43,7 +43,8 @@
       "education": "Education",
       "skills": "Skills",
       "projects": "Projects",
-      "languages": "Languages"
+      "languages": "Languages",
+      "army": "Military Service"
     },
     "fields": {
       "firstName": "First Name",
@@ -204,6 +205,12 @@
     "C1 - Advanced": "C1 - Advanced",
     "C2 - Proficient": "C2 - Proficient",
     "Native": "Native"
+  },
+  "Army": {
+    "Military Service": "Military Service",
+    "Add military service details": "Add military service details",
+    "Enter military service details": "Enter military service details",
+    "Enter target language": "Enter target language"
   },
   "Projects": {
     "Projects": "Projects",

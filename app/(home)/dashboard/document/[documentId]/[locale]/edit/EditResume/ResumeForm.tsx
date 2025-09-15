@@ -16,6 +16,7 @@ import {
   ProjectForm,
   SkillsForm,
   SummaryForm,
+  ArmyForm,
 } from '@/editResume';
 
 const ResumeForm = () => {
@@ -76,7 +77,7 @@ const ResumeForm = () => {
             variant="outline"
             size="default"
             className="!h-auto !px-2 !py-1"
-            disabled={activeFormIndex === 7 || resumeInfo?.status === 'archived'}
+            disabled={activeFormIndex === 8 || resumeInfo?.status === 'archived'}
             onClick={handleNext}
           >
             {t('Next')}
@@ -91,6 +92,7 @@ const ResumeForm = () => {
           {activeFormIndex === 5 && <ProjectForm />}
           {activeFormIndex === 6 && <SkillsForm />}
           {activeFormIndex === 7 && <LanguageForm />}
+          {activeFormIndex === 8 && <ArmyForm />}
         </div>
       </div>
     </div>

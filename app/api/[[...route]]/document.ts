@@ -77,6 +77,7 @@ const documentRoute = new Hono()
           languages,
           projectsSectionTitle,
           languagesSectionTitle,
+          armyService,
           skillsDisplayFormat,
           personalInfoDisplayFormat,
           pagesOrder,
@@ -108,6 +109,7 @@ const documentRoute = new Hono()
           if (currentPosition) resumeUpdate.currentPosition = currentPosition || 1;
           if (projectsSectionTitle !== undefined) resumeUpdate.projectsSectionTitle = projectsSectionTitle;
           if (languagesSectionTitle !== undefined) resumeUpdate.languagesSectionTitle = languagesSectionTitle;
+          if (armyService !== undefined) resumeUpdate.armyService = armyService;
           if (skillsDisplayFormat !== undefined) resumeUpdate.skillsDisplayFormat = skillsDisplayFormat;
           if (personalInfoDisplayFormat !== undefined)
             resumeUpdate.personalInfoDisplayFormat = personalInfoDisplayFormat;

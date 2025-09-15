@@ -38,6 +38,7 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
     projects: 'projects',
     skills: 'skills',
     languages: 'languages',
+    army: 'army',
   } as const;
 
   const renderSection = (sectionKey: string) => {

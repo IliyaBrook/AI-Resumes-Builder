@@ -11,18 +11,18 @@ function findChrome() {
   const chromePaths = [
     // Environment variable
     process.env.CHROME_EXECUTABLE_PATH,
-    
+
     // Puppeteer cache locations
     join(homedir(), '.cache/puppeteer/chrome/linux-*/chrome-linux64/chrome'),
     join(homedir(), '.local/share/puppeteer/chrome/linux-*/chrome-linux64/chrome'),
-    
+
     // System Chrome installations
     '/usr/bin/google-chrome-stable',
     '/usr/bin/google-chrome',
     '/usr/bin/chromium-browser',
     '/usr/bin/chromium',
     '/opt/google/chrome/google-chrome',
-    
+
     // Snap installations
     '/snap/bin/chromium',
     '/var/lib/snapd/desktop/applications/chromium_chromium.desktop',
@@ -62,7 +62,7 @@ async function getBrowser() {
     try {
       // Try to find Chrome executable
       let executablePath = findChrome();
-      
+
       if (!executablePath) {
         // Fallback to Puppeteer's own executable path detection
         try {
@@ -74,7 +74,7 @@ async function getBrowser() {
       }
 
       console.log('Attempting to launch browser with executable path:', executablePath || 'default');
-      
+
       const launchOptions: any = {
         headless: true,
         args: [
@@ -95,7 +95,7 @@ async function getBrowser() {
       }
 
       console.log('Launch options:', JSON.stringify(launchOptions, null, 2));
-      
+
       browser = await puppeteer.launch(launchOptions);
       console.log('Puppeteer browser launched successfully');
     } catch (error) {

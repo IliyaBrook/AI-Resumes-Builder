@@ -7,6 +7,7 @@ export * from './Project';
 export * from './Skills';
 export * from './Summary';
 export * from './Education';
+export * from './Army';
 export * from './TopSection';
 export * from './ResumePreview';
 

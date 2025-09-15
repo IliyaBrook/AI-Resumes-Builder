@@ -204,7 +204,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
           // Clean up the temporary container after successful server generation
           root.unmount();
           document.body.removeChild(tempContainer);
-          
+
           toast({
             title: 'Success',
             description: 'PDF downloaded successfully (server-side)',
@@ -228,7 +228,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
 
       // Fallback to client-side PDF generation using html2pdf.js
       console.log('Starting client-side PDF generation...');
-      
+
       try {
         const html2pdf = (await import('html2pdf.js')).default;
 
@@ -249,7 +249,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
             format: 'a4',
             orientation: 'portrait',
           },
-          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
         };
 
         // Create a temporary container for client-side generation

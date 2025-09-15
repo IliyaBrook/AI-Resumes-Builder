@@ -13,6 +13,7 @@ export type DocumentType = {
   skills?: SkillType[] | null;
   projects?: ProjectType[] | null;
   languages?: LanguageType[] | null;
+  armyService?: string | null;
   createdAt?: string;
   updatedAt: string;
   projectsSectionTitle?: string;
@@ -33,6 +34,7 @@ export type SectionPaddingsType = {
   skills?: PaddingType;
   projects?: PaddingType;
   languages?: PaddingType;
+  army?: PaddingType;
 };
 
 export type PaddingType = {

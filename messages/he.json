@@ -43,7 +43,8 @@
       "education": "השכלה",
       "skills": "כישורים",
       "projects": "פרויקטים",
-      "languages": "שפות"
+      "languages": "שפות",
+      "army": "שירות צבאי"
     },
     "fields": {
       "firstName": "שם פרטי",
@@ -204,6 +205,12 @@
     "C1 - Advanced": "C1 - מתקדם",
     "C2 - Proficient": "C2 - שליטה מלאה",
     "Native": "שפת אם"
+  },
+  "Army": {
+    "Military Service": "שירות צבאי",
+    "Add military service details": "הוסף פרטי שירות צבאי",
+    "Enter military service details": "הזן פרטי שירות צבאי",
+    "Enter target language": "הזן שפת יעד"
   },
   "Projects": {
     "Projects": "פרויקטים",

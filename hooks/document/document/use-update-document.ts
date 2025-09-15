@@ -38,6 +38,7 @@ type UpdateDocumentRequest = {
   languages?: LanguageType[];
   projectsSectionTitle?: string;
   languagesSectionTitle?: string;
+  armyService?: string;
   skillsDisplayFormat?: string;
   personalInfoDisplayFormat?: string;
   pagesOrder?: string[];

@@ -6,6 +6,7 @@ import {
   ExperiencePreview,
   SummaryPreview,
   PersonalInfoPreview,
+  ArmyPreview,
 } from '@/editResume';
 import { DEFAULT_PAGES_ORDER } from './default-pages-order';
 
@@ -19,6 +20,7 @@ export const SECTION_COMPONENTS = {
   projects: ProjectPreview,
   skills: SkillPreview,
   languages: LanguagePreview,
+  army: ArmyPreview,
 } as const;
 
 const ALL_AVAILABLE_PAGES = Object.keys(SECTION_COMPONENTS) as Array<keyof typeof SECTION_COMPONENTS>;

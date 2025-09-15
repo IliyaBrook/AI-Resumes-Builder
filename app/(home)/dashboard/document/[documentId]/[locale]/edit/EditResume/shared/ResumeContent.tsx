@@ -342,8 +342,3 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
     </div>
   );
 };
-
-// Backward compatibility export
-export const ResumeContentIndependent: React.FC<Omit<ResumeContentProps, 'fetchDataIndependently'>> = props => {
-  return <ResumeContent {...props} fetchDataIndependently={true} />;
-};

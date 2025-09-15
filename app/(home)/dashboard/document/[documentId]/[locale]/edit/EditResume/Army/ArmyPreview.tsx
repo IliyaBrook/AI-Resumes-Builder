@@ -10,6 +10,7 @@ interface PropsType {
 
 const ArmyPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const t = useTranslations('Army');
+  const themeColor = resumeInfo?.themeColor || '#7c3aed';
 
   // Don't show section if no army service is entered
   if (!isLoading && !resumeInfo?.armyService) {
@@ -17,17 +18,21 @@ const ArmyPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   }
 
   return (
-    <div className="min-h-10 w-full">
-      <h2 className="mb-3 text-[15px] font-bold text-primary">{t('Military Service')}</h2>
+    <div className="my-3 w-full">
+      <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
+        {t('Military Service')}
+      </h5>
+      <hr
+        className="mb-2 mt-2 border-[1.5px]"
+        style={{
+          borderColor: themeColor,
+        }}
+      />
       {isLoading ? (
         <Skeleton className="h-6 w-full" />
       ) : (
         <div className="text-[13px] !leading-4">
-          {resumeInfo?.armyService ? (
-            <div dangerouslySetInnerHTML={{ __html: resumeInfo.armyService }} />
-          ) : (
-            t('Enter military service details')
-          )}
+          <div dangerouslySetInnerHTML={{ __html: resumeInfo?.armyService || '' }} />
         </div>
       )}
     </div>

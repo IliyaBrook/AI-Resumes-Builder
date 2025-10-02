@@ -86,5 +86,17 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
     );
   };
 
-  return <div {...containerProps}>{pagesOrder.map(renderSection)}</div>;
+  const direction = (resumeInfo?.direction || 'ltr') as 'ltr' | 'rtl';
+
+  return (
+    <div
+      {...containerProps}
+      style={{
+        ...containerProps.style,
+        direction,
+      }}
+    >
+      {pagesOrder.map(renderSection)}
+    </div>
+  );
 };

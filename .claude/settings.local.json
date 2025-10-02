@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(psql:*)",
+      "Bash(npm run:*)",
+      "Bash(docker:*)",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_close"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

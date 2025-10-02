@@ -38,6 +38,7 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
   const fixedResumeInfo = normalizeResumeData(data?.data);
   const pagesOrder = fixedResumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER;
   const themeColor = fixedResumeInfo?.themeColor || '#3b82f6';
+  const direction = fixedResumeInfo?.direction || 'ltr';
 
   const generatePDFFromHTML = useCallback(async () => {
     if (!fixedResumeInfo) {
@@ -122,14 +123,14 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
       // Create complete HTML with all styles
       const completeHTML = `
         <!DOCTYPE html>
-        <html lang="en">
+        <html lang="en" dir="${direction}">
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Resume</title>
           <style>
             ${stylesheets.join('\\n')};
-            
+
             /* PDF-specific styles */
             body {
               margin: 0;
@@ -138,10 +139,12 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
               color-adjust: exact !important;
               print-color-adjust: exact !important;
               font-family: 'Open Sans', sans-serif;
+              direction: ${direction};
             }
-            
+
             #resume-content {
               margin: 0;
+              direction: ${direction};
             }
 
             /* Ensure proper font rendering */

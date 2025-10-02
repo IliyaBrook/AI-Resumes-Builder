@@ -17,9 +17,17 @@ const ProjectForm = () => {
   const { mutate: deleteProject } = useDeleteProject();
 
   const [sectionTitle, setSectionTitle] = useState('');
-  const [localProjects, setLocalProjects] = useState<ProjectType[]>(resumeInfo?.projects || []);
+  const [localProjects, setLocalProjects] = useState<ProjectType[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
   const debouncedProjects = useDebounce(localProjects, 500);
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
+
+  useEffect(() => {
+    if (resumeInfo?.projects && !isInitialized) {
+      setLocalProjects(resumeInfo.projects);
+      setIsInitialized(true);
+    }
+  }, [resumeInfo?.projects, isInitialized]);
 
   useEffect(() => {
     if (resumeInfo?.projectsSectionTitle) {
@@ -34,7 +42,7 @@ const ProjectForm = () => {
   }, [resumeInfo?.projectsSectionTitle, t]);
 
   useEffect(() => {
-    if (debouncedProjects && debouncedProjects !== resumeInfo?.projects) {
+    if (isInitialized && debouncedProjects) {
       setResumeInfo({ projects: debouncedProjects });
     }
   }, [debouncedProjects]);

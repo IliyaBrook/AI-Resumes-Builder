@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const languages = [
-  { code: 'en', label: 'English', flag: '🇺🇸' },
-  { code: 'he', label: 'עברית', flag: '🇮🇱' },
+  { code: 'en', label: 'English', flag: '/flags/us.svg' },
+  { code: 'he', label: 'עברית', flag: '/flags/il.svg' },
 ];
 
 interface LanguageSwitcherProps {
@@ -59,7 +60,7 @@ export default function LanguageSwitcher({ className = '' }: LanguageSwitcherPro
         className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className="flex items-center gap-1">
-          <span>{currentLanguage.flag}</span>
+          <Image src={currentLanguage.flag} alt={currentLanguage.label} width={20} height={20} />
           <span>{currentLanguage.label}</span>
         </span>
         <ChevronDown className="h-4 w-4" />
@@ -76,7 +77,7 @@ export default function LanguageSwitcher({ className = '' }: LanguageSwitcherPro
                   currentLocale === language.code ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700'
                 }`}
               >
-                <span>{language.flag}</span>
+                <Image src={language.flag} alt={language.label} width={20} height={20} />
                 <span>{language.label}</span>
                 {currentLocale === language.code && <span className="ml-auto text-indigo-500">✓</span>}
               </button>

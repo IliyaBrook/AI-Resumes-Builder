@@ -6,9 +6,7 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
   webpack: (config, { isServer }) => {
     // Find the existing CSS rule
-    const oneOf = config.module.rules.find(
-      rule => typeof rule === 'object' && rule.oneOf,
-    );
+    const oneOf = config.module.rules.find(rule => typeof rule === 'object' && rule.oneOf);
 
     if (oneOf) {
       // Insert our custom rule at the beginning to handle ?inline and ?raw
@@ -22,7 +20,7 @@ const nextConfig = {
           test: /\.css$/,
           resourceQuery: /raw/,
           type: 'asset/source',
-        },
+        }
       );
     }
 

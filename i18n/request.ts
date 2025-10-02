@@ -8,17 +8,21 @@ export default getRequestConfig(async ({ requestLocale }) => {
   let locale = routing.defaultLocale;
 
   try {
-    const headersList = await headers();
-    const middlewareLocale = headersList.get('x-next-intl-locale');
-
-    // Use locale from middleware if available and valid
-    if (middlewareLocale && hasLocale(routing.locales, middlewareLocale)) {
-      locale = middlewareLocale;
+    // Try to get locale from requestLocale first (works for both static and dynamic)
+    const requested = await requestLocale;
+    if (requested && hasLocale(routing.locales, requested)) {
+      locale = requested;
     } else {
-      // Fallback to requestLocale for standard next-intl routing
-      const requested = await requestLocale;
-      if (requested && hasLocale(routing.locales, requested)) {
-        locale = requested;
+      // Try headers only if requestLocale is not available
+      try {
+        const headersList = await headers();
+        const middlewareLocale = headersList.get('x-next-intl-locale');
+
+        if (middlewareLocale && hasLocale(routing.locales, middlewareLocale)) {
+          locale = middlewareLocale;
+        }
+      } catch {
+        // Headers not available during static generation, use default locale
       }
     }
   } catch (error) {

@@ -1,6 +1,8 @@
 import React from 'react';
 import { TrashListBox, ResumeList, AddResume } from '@/app/(home)/dashboard/index';
 
+export const dynamic = 'force-dynamic';
+
 const Page = () => {
   return (
     <div className="w-full">

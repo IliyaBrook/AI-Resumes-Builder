@@ -2,6 +2,10 @@
 
 echo "Creating database backup..."
 
+# Find project root directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
 # Check if pg_dump is available
 if ! command -v pg_dump &> /dev/null; then
     echo "Error: pg_dump not found!"
@@ -17,7 +21,7 @@ DB_NAME="ai_resumes_builder"
 DB_USER="postgres"
 DB_PASSWORD=""
 
-# Read from .env file if it exists
+# Read from .env file if it exists (check current dir first, then project root)
 if [ -f .env ]; then
     echo "Reading configuration from .env file..."
     while IFS='=' read -r key value; do
@@ -31,16 +35,36 @@ if [ -f .env ]; then
             POSTGRES_PASSWORD) DB_PASSWORD="$value" ;;
         esac
     done < <(grep -E '^(POSTGRES_DB|POSTGRES_USER|POSTGRES_PASSWORD)=' .env | tr -d '\r')
+elif [ -f "$PROJECT_ROOT/.env" ]; then
+    echo "Reading configuration from .env file..."
+    while IFS='=' read -r key value; do
+        # Remove quotes, whitespace, and carriage returns
+        value=$(echo "$value" | sed 's/^"//; s/"$//; s/^'\''//; s/'\''$//; s/\r$//')
+        # Also trim any trailing/leading whitespace
+        value=$(echo "$value" | xargs)
+        case "$key" in
+            POSTGRES_DB) DB_NAME="$value" ;;
+            POSTGRES_USER) DB_USER="$value" ;;
+            POSTGRES_PASSWORD) DB_PASSWORD="$value" ;;
+        esac
+    done < <(grep -E '^(POSTGRES_DB|POSTGRES_USER|POSTGRES_PASSWORD)=' "$PROJECT_ROOT/.env" | tr -d '\r')
 else
     echo "No .env file found, using defaults: DB=$DB_NAME, USER=$DB_USER"
 fi
 
+# Determine dumps directory location (prefer current dir, fallback to project root)
+if [ -d "dumps" ]; then
+    DUMPS_DIR="dumps"
+else
+    DUMPS_DIR="$PROJECT_ROOT/dumps"
+fi
+
 # Create dumps directory if it doesn't exist
-mkdir -p dumps
+mkdir -p "$DUMPS_DIR"
 
 # Get current date and time
 DATE=$(date +"%d_%m_%y_%H_%M")
-FILENAME="dumps/backup_${DATE}.sql"
+FILENAME="$DUMPS_DIR/backup_${DATE}.sql"
 
 echo "Creating backup file: $FILENAME"
 echo "Database: $DB_NAME, User: $DB_USER"

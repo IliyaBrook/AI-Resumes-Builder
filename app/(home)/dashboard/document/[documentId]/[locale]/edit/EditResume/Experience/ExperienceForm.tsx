@@ -1,13 +1,13 @@
 'use client';
 //hooks
-import { useDebounce, useUpdateDocument, useGetDocumentById, useDeleteExperience, useCreateExperience } from '@/hooks';
+import { useCreateExperience, useDebounce, useDeleteExperience, useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { ExperienceType, SkillType } from '@/types';
-import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
+import { MoveDown, MoveUp, Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 // components
-import { parseAIResult, Label, Input, Button, RichTextEditor, TranslateSection } from '@/components';
+import { Button, Input, Label, parseAIResult, RichTextEditor, TranslateSection } from '@/components';
 
 const ExperienceForm = () => {
   const t = useTranslations('Experience');
@@ -83,13 +83,10 @@ const ExperienceForm = () => {
       const newExperiences = [...prev];
       const [movedItem] = newExperiences.splice(fromIndex, 1);
       newExperiences.splice(toIndex, 0, movedItem);
-
-      const result = newExperiences.map((exp, idx) => ({
+      return newExperiences.map((exp, idx) => ({
         ...exp,
         order: idx,
       }));
-
-      return result;
     });
   };
 

@@ -41,6 +41,9 @@ interface ResumeContentProps {
 
   // Paged preview mode
   isPagedPreview?: boolean;
+
+  // Allow clicking on individual experience items (for PDF modal)
+  allowItemSelection?: boolean;
 }
 
 export const ResumeContent: React.FC<ResumeContentProps> = ({
@@ -56,6 +59,7 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
   fetchDataIndependently = false,
   isPdfExport = false,
   isPagedPreview = false,
+  allowItemSelection = false,
 }) => {
   // Hooks must be called unconditionally
   const param = useParams();
@@ -156,6 +160,7 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
         selectedSection={selectedSection}
         onSectionClick={onSectionClick}
         renderSectionWrapper={renderSectionWrapper}
+        allowItemSelection={allowItemSelection}
       />
     </div>
   );
@@ -227,6 +232,7 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
                   selectedSection={selectedSection}
                   onSectionClick={onSectionClick}
                   renderSectionWrapper={renderSectionWrapper}
+                  allowItemSelection={true}
                 />
               </div>
             </div>
@@ -250,6 +256,7 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
               selectedSection={selectedSection}
               onSectionClick={onSectionClick}
               renderSectionWrapper={renderSectionWrapper}
+              allowItemSelection={true}
             />
           ),
           isLastPage: true,

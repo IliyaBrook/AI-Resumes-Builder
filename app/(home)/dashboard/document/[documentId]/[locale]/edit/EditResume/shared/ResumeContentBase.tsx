@@ -12,6 +12,7 @@ interface ResumeContentBaseProps {
   selectedSection?: string | null;
   onSectionClick?: (sectionKey: string) => void;
   renderSectionWrapper?: (sectionKey: string, component: React.ReactNode, isSelected: boolean) => React.ReactNode;
+  allowItemSelection?: boolean;
   containerProps?: {
     id?: string;
     className?: string;
@@ -27,6 +28,7 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
   selectedSection = null,
   onSectionClick,
   renderSectionWrapper,
+  allowItemSelection = false,
   containerProps = {},
 }) => {
   type PaddingKeys = keyof NonNullable<DocumentType['sectionPaddings']>;
@@ -60,6 +62,7 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
         selectedSection={selectedSection}
         onSectionClick={onSectionClick}
         renderSectionWrapper={renderSectionWrapper}
+        allowItemSelection={allowItemSelection}
       />
     );
 

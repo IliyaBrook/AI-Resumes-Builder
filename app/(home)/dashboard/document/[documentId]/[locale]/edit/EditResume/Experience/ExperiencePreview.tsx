@@ -12,9 +12,17 @@ interface PropsType {
   selectedSection?: string | null;
   onSectionClick?: (sectionKey: string) => void;
   renderSectionWrapper?: (sectionKey: string, component: React.ReactNode, isSelected: boolean) => React.ReactNode;
+  allowItemSelection?: boolean;
 }
 
-const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
+const ExperiencePreview: FC<PropsType> = ({
+  resumeInfo,
+  isLoading,
+  isInteractive = false,
+  selectedSection = null,
+  renderSectionWrapper,
+  allowItemSelection = false,
+}) => {
   const t = useTranslations('Experience');
   const themeColor = resumeInfo?.themeColor || INITIAL_THEME_COLOR;
 
@@ -24,6 +32,7 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 
   const renderExperienceItem = (experience: any, index: number) => {
     const experienceKey = `experience-${experience?.id || index}`;
+    const isSelected = allowItemSelection && isInteractive && selectedSection === experienceKey;
 
     const experienceContent = (
       <div key={index}>
@@ -57,6 +66,11 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         />
       </div>
     );
+
+    // Only use renderSectionWrapper when allowItemSelection is true (PDF modal)
+    if (renderSectionWrapper && allowItemSelection && isInteractive) {
+      return renderSectionWrapper(experienceKey, experienceContent, isSelected);
+    }
 
     return (
       <div

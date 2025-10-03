@@ -40,9 +40,17 @@ const LanguageForm = () => {
   const { mutate: updateLanguage } = useUpdateLanguage();
 
   const [sectionTitle, setSectionTitle] = React.useState('');
-  const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>(resumeInfo?.languages || []);
+  const [localLanguages, setLocalLanguages] = React.useState<LanguageType[]>([]);
+  const [isInitialized, setIsInitialized] = React.useState(false);
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
   const debouncedLocalLanguages = useDebounce(localLanguages, 500);
+
+  React.useEffect(() => {
+    if (resumeInfo?.languages && !isInitialized) {
+      setLocalLanguages(resumeInfo.languages);
+      setIsInitialized(true);
+    }
+  }, [resumeInfo?.languages, isInitialized]);
 
   React.useEffect(() => {
     if (resumeInfo?.languagesSectionTitle) {
@@ -59,22 +67,16 @@ const LanguageForm = () => {
   }, [resumeInfo?.languagesSectionTitle, t]);
 
   React.useEffect(() => {
-    if (resumeInfo?.languages) {
-      setLocalLanguages(resumeInfo.languages);
-    }
-  }, [resumeInfo?.languages]);
-
-  React.useEffect(() => {
     if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.languagesSectionTitle) {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle]);
 
   React.useEffect(() => {
-    if (debouncedLocalLanguages && debouncedLocalLanguages !== resumeInfo?.languages) {
+    if (isInitialized && debouncedLocalLanguages.length >= 0) {
       setResumeInfo({ languages: debouncedLocalLanguages });
     }
-  }, [debouncedLocalLanguages]);
+  }, [debouncedLocalLanguages, isInitialized]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;

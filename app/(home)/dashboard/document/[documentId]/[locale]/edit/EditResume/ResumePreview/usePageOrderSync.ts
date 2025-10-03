@@ -14,10 +14,11 @@ export const usePageOrderSync = () => {
   const fixedResumeInfo = normalizeResumeData(documentData);
   const { updatePagesOrder } = usePageOrderUpdate();
 
-  const [currentOrder, setCurrentOrder] = useState<string[]>(fixedResumeInfo?.pagesOrder || DEFAULT_PAGES_ORDER);
+  const [currentOrder, setCurrentOrder] = useState<string[]>(DEFAULT_PAGES_ORDER);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    if (fixedResumeInfo?.pagesOrder) {
+    if (fixedResumeInfo?.pagesOrder && !isInitialized) {
       const currentPagesOrder = fixedResumeInfo.pagesOrder;
       const syncedOrder = syncPagesOrder(currentPagesOrder);
 
@@ -27,8 +28,9 @@ export const usePageOrderSync = () => {
       } else {
         setCurrentOrder(currentPagesOrder);
       }
+      setIsInitialized(true);
     }
-  }, [fixedResumeInfo?.pagesOrder]);
+  }, [fixedResumeInfo?.pagesOrder, isInitialized]);
 
   return {
     currentOrder,

@@ -179,7 +179,6 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
 
       // Try server-side PDF generation first
       try {
-        console.log('Attempting server-side PDF generation...');
         const response = await fetch('/api/pdf-export', {
           method: 'POST',
           headers: {
@@ -192,7 +191,6 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         });
 
         if (response.ok) {
-          console.log('Server-side PDF generation successful');
           // Download the PDF from server
           const blob = await response.blob();
           const url = window.URL.createObjectURL(blob);
@@ -218,20 +216,14 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
           const errorText = await response.text();
           console.warn('Server-side PDF generation failed with status:', response.status);
           console.warn('Error response:', errorText);
-          console.log('Falling back to client-side PDF generation...');
         }
       } catch (serverError) {
         console.warn('Server-side PDF generation error:', serverError);
-        console.log('Falling back to client-side PDF generation...');
       }
 
       // Clean up the temporary container before client-side generation
       root.unmount();
       document.body.removeChild(tempContainer);
-
-      // Fallback to client-side PDF generation using html2pdf.js
-      console.log('Starting client-side PDF generation...');
-
       try {
         const html2pdf = (await import('html2pdf.js')).default;
 
@@ -264,12 +256,8 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
         clientTempContainer.appendChild(resumeElementClone);
         document.body.appendChild(clientTempContainer);
 
-        console.log('Generating PDF with html2pdf.js...');
-
         // Generate PDF using html2pdf.js
         await html2pdf().set(opt).from(resumeElementClone).save();
-
-        console.log('Client-side PDF generation completed successfully');
 
         // Clean up client-side container
         document.body.removeChild(clientTempContainer);

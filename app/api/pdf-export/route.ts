@@ -30,7 +30,6 @@ function findChrome() {
 
   for (const path of chromePaths) {
     if (path && existsSync(path)) {
-      console.log('Found Chrome at:', path);
       return path;
     }
   }
@@ -44,7 +43,6 @@ function findChrome() {
         if (dir.startsWith('linux-')) {
           const chromePath = join(puppeteerCacheBase, dir, 'chrome-linux64', 'chrome');
           if (existsSync(chromePath)) {
-            console.log('Found Chrome in Puppeteer cache at:', chromePath);
             return chromePath;
           }
         }
@@ -73,8 +71,6 @@ async function getBrowser() {
         }
       }
 
-      console.log('Attempting to launch browser with executable path:', executablePath || 'default');
-
       const launchOptions: any = {
         headless: true,
         args: [
@@ -94,10 +90,7 @@ async function getBrowser() {
         launchOptions.executablePath = executablePath;
       }
 
-      console.log('Launch options:', JSON.stringify(launchOptions, null, 2));
-
       browser = await puppeteer.launch(launchOptions);
-      console.log('Puppeteer browser launched successfully');
     } catch (error) {
       console.error('Failed to launch Puppeteer browser:', error);
       throw new Error(`Browser launch failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -110,7 +103,6 @@ export async function POST(request: NextRequest) {
   let page = null;
 
   try {
-    console.log('Starting PDF generation request');
     const { html, title = 'resume' } = await request.json();
 
     if (!html) {
@@ -120,9 +112,6 @@ export async function POST(request: NextRequest) {
 
     const browserInstance = await getBrowser();
     page = await browserInstance.newPage();
-
-    // Set viewport to A4 size
-    console.log('Setting viewport');
     await page.setViewport({ width: 794, height: 1123 });
 
     // Set the HTML content
@@ -147,8 +136,6 @@ export async function POST(request: NextRequest) {
       },
       timeout: 60000,
     });
-
-    console.log('PDF generated successfully');
 
     return new NextResponse(Buffer.from(pdfBuffer), {
       headers: {

@@ -42,10 +42,10 @@ const ProjectForm = () => {
   }, [resumeInfo?.projectsSectionTitle, t]);
 
   useEffect(() => {
-    if (isInitialized && debouncedProjects) {
+    if (isInitialized && debouncedProjects.length >= 0) {
       setResumeInfo({ projects: debouncedProjects });
     }
-  }, [debouncedProjects]);
+  }, [debouncedProjects, isInitialized]);
 
   useEffect(() => {
     if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.projectsSectionTitle) {

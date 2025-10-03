@@ -36,11 +36,19 @@ const EducationForm = () => {
   const { mutate: deleteEducation, isPending: isDeleting } = useDeleteEducation();
   const { mutateAsync: createEducation } = useCreateEducation();
 
-  const [localEducationList, setLocalEducationList] = React.useState<EducationType[]>(resumeInfo?.educations || []);
+  const [localEducationList, setLocalEducationList] = React.useState<EducationType[]>([]);
+  const [isInitialized, setIsInitialized] = React.useState(false);
   const debouncedEducationList = useDebounce(localEducationList, 500);
 
   React.useEffect(() => {
-    if (debouncedEducationList && debouncedEducationList !== resumeInfo?.educations) {
+    if (resumeInfo?.educations && !isInitialized) {
+      setLocalEducationList(resumeInfo.educations);
+      setIsInitialized(true);
+    }
+  }, [resumeInfo?.educations, isInitialized]);
+
+  React.useEffect(() => {
+    if (isInitialized && debouncedEducationList.length >= 0) {
       const sanitized = debouncedEducationList.map((edu: EducationType) => ({
         ...edu,
         endDate: edu.currentlyStudying ? null : edu.endDate,
@@ -48,7 +56,7 @@ const EducationForm = () => {
       }));
       setResumeInfo({ education: sanitized });
     }
-  }, [debouncedEducationList]);
+  }, [debouncedEducationList, isInitialized]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;

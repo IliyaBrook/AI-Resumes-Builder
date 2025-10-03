@@ -21,6 +21,7 @@ const DefaultSkillsForm: React.FC<DefaultSkillsFormProps> = ({ resumeInfo }) => 
   const [skillsList, setSkillsList] = React.useState<SkillType[]>([]);
   const [hideRating, setHideRating] = React.useState<boolean>(false);
   const [localSkillInputs, setLocalSkillInputs] = React.useState<Record<number, string>>({});
+  const [isInitialized, setIsInitialized] = React.useState(false);
 
   const debouncedSkillInputs = useDebounce(localSkillInputs, 500);
 
@@ -37,7 +38,7 @@ const DefaultSkillsForm: React.FC<DefaultSkillsFormProps> = ({ resumeInfo }) => 
   }, [resumeInfo?.skills]);
 
   useEffect(() => {
-    if (sortedSkills.length > 0) {
+    if (sortedSkills.length > 0 && !isInitialized) {
       setSkillsList(
         sortedSkills.map((skill: SkillType) => ({
           ...skill,
@@ -55,8 +56,9 @@ const DefaultSkillsForm: React.FC<DefaultSkillsFormProps> = ({ resumeInfo }) => 
         });
         return newInputs;
       });
+      setIsInitialized(true);
     }
-  }, [sortedSkills]);
+  }, [sortedSkills, isInitialized]);
 
   const handleChange = (value: string | number, name: string, index: number) => {
     const skill = skillsList[index];

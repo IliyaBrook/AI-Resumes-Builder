@@ -22,11 +22,19 @@ const ExperienceForm = () => {
   const { mutate: deleteExperience, isPending: isDeleting } = useDeleteExperience();
   const { mutateAsync: createExperience } = useCreateExperience();
 
-  const [localExperiences, setLocalExperiences] = React.useState<ExperienceType[]>(resumeInfo?.experiences || []);
+  const [localExperiences, setLocalExperiences] = React.useState<ExperienceType[]>([]);
+  const [isInitialized, setIsInitialized] = React.useState(false);
   const debouncedExperiences = useDebounce(localExperiences, 500);
 
   React.useEffect(() => {
-    if (debouncedExperiences && debouncedExperiences !== resumeInfo?.experiences) {
+    if (resumeInfo?.experiences && !isInitialized) {
+      setLocalExperiences(resumeInfo.experiences);
+      setIsInitialized(true);
+    }
+  }, [resumeInfo?.experiences, isInitialized]);
+
+  React.useEffect(() => {
+    if (isInitialized && debouncedExperiences.length >= 0) {
       const sanitized = debouncedExperiences.map(exp => ({
         ...exp,
         endDate: exp.currentlyWorking ? null : exp.endDate,
@@ -34,7 +42,7 @@ const ExperienceForm = () => {
       }));
       setResumeInfo({ experience: sanitized });
     }
-  }, [debouncedExperiences]);
+  }, [debouncedExperiences, isInitialized]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;
@@ -76,10 +84,12 @@ const ExperienceForm = () => {
       const [movedItem] = newExperiences.splice(fromIndex, 1);
       newExperiences.splice(toIndex, 0, movedItem);
 
-      return newExperiences.map((exp, idx) => ({
+      const result = newExperiences.map((exp, idx) => ({
         ...exp,
         order: idx,
       }));
+
+      return result;
     });
   };
 
@@ -144,7 +154,11 @@ const ExperienceForm = () => {
                       size="icon"
                       type="button"
                       className="size-6"
-                      onClick={() => moveExperience(index, index - 1)}
+                      onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        moveExperience(index, index - 1);
+                      }}
                       disabled={index === 0}
                     >
                       <MoveUp size={14} />
@@ -154,7 +168,11 @@ const ExperienceForm = () => {
                       size="icon"
                       type="button"
                       className="size-6"
-                      onClick={() => moveExperience(index, index + 1)}
+                      onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        moveExperience(index, index + 1);
+                      }}
                       disabled={index === experiences.length - 1}
                     >
                       <MoveDown size={14} />

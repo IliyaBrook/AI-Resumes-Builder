@@ -13,7 +13,7 @@ import {
 } from '@/components';
 import { ChevronDown, Plus, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 //hooks
 import { useCreateEducation, useDebounce, useDeleteEducation, useGetDocumentById, useUpdateDocument } from '@/hooks';
@@ -40,14 +40,14 @@ const EducationForm = () => {
   const [isInitialized, setIsInitialized] = React.useState(false);
   const debouncedEducationList = useDebounce(localEducationList, 500);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (resumeInfo?.educations && !isInitialized) {
       setLocalEducationList(resumeInfo.educations);
       setIsInitialized(true);
     }
   }, [resumeInfo?.educations, isInitialized]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isInitialized && debouncedEducationList.length >= 0) {
       const sanitized = debouncedEducationList.map((edu: EducationType) => ({
         ...edu,

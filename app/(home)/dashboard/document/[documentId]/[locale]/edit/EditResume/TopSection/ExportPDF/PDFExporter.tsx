@@ -214,7 +214,6 @@ export const PDFExporter: React.FC<PDFExporterProps> = ({ title, children }) => 
           return; // Success, exit here
         } else {
           const errorText = await response.text();
-          console.warn('Server-side PDF generation failed with status:', response.status);
           console.warn('Error response:', errorText);
         }
       } catch (serverError) {

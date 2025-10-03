@@ -1,7 +1,7 @@
 'use client';
 import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LanguageType } from '@/types';
 import { useTranslations } from 'next-intl';
 // components
@@ -45,14 +45,14 @@ const LanguageForm = () => {
   const debouncedSectionTitle = useDebounce(sectionTitle, 500);
   const debouncedLocalLanguages = useDebounce(localLanguages, 500);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (resumeInfo?.languages && !isInitialized) {
       setLocalLanguages(resumeInfo.languages);
       setIsInitialized(true);
     }
   }, [resumeInfo?.languages, isInitialized]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (resumeInfo?.languagesSectionTitle) {
       // Check for both English and Hebrew default values
       if (resumeInfo.languagesSectionTitle === 'Languages' || resumeInfo.languagesSectionTitle === 'שפות') {
@@ -66,13 +66,13 @@ const LanguageForm = () => {
     }
   }, [resumeInfo?.languagesSectionTitle, t]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.languagesSectionTitle) {
       setResumeInfo({ languagesSectionTitle: debouncedSectionTitle });
     }
   }, [debouncedSectionTitle]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isInitialized && debouncedLocalLanguages.length >= 0) {
       setResumeInfo({ languages: debouncedLocalLanguages });
     }

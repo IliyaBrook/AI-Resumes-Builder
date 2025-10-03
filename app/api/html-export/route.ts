@@ -133,6 +133,7 @@ export async function POST(request: NextRequest) {
       padding: 0;
     }
 
+
     /* Extracted CSS from page */
     ${css}
   </style>

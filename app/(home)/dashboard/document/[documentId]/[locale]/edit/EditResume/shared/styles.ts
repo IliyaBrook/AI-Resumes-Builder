@@ -15,7 +15,7 @@ interface PagePreviewStyles {
 export const getPagePrintStyles = (themeColor: string, includeBorderTop: boolean = true): PagePreviewStyles => ({
   className: 'w-full bg-white !font-open-sans px-10',
   style: {
-    minHeight: '297mm',
+    minHeight: pageStyles.height,
     boxSizing: 'border-box',
     ...(includeBorderTop && { borderTop: `13px solid ${themeColor}` }),
   },

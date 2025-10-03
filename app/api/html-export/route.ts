@@ -15,28 +15,66 @@ export async function POST(request: NextRequest) {
     page = await preparePage(html);
 
     // Extract the resume content and all CSS rules
-    const { content, css } = await page.evaluate(() => {
+    const { content, css, utilityClasses } = await page.evaluate(() => {
       const resumeContent = document.getElementById('resume-content');
       if (!resumeContent) {
         throw new Error('Resume content not found');
       }
 
+      // Clone content to modify it
+      const clonedContent = resumeContent.cloneNode(true) as HTMLElement;
+
+      // Collect inline styles and find duplicates
+      const styleMap = new Map<string, HTMLElement[]>();
+      const allElements = [clonedContent, ...Array.from(clonedContent.querySelectorAll('*'))];
+
+      allElements.forEach(el => {
+        if (el instanceof HTMLElement && el.hasAttribute('style')) {
+          const styleValue = el.getAttribute('style') || '';
+          if (styleValue) {
+            if (!styleMap.has(styleValue)) {
+              styleMap.set(styleValue, []);
+            }
+            styleMap.get(styleValue)!.push(el);
+          }
+        }
+      });
+
+      // Create utility classes for styles that appear 3+ times
+      const generatedClasses: string[] = [];
+      let classCounter = 0;
+
+      styleMap.forEach((elements, styleValue) => {
+        if (elements.length >= 3) {
+          const className = `gen-${classCounter++}`;
+          generatedClasses.push(`.${className} { ${styleValue} }`);
+
+          // Replace inline styles with class
+          elements.forEach(el => {
+            el.removeAttribute('style');
+            const existingClasses = el.getAttribute('class') || '';
+            el.setAttribute('class', existingClasses ? `${existingClasses} ${className}` : className);
+          });
+        }
+      });
+
       // Collect all CSS rules from stylesheets
       const allCSSRules: string[] = [];
       const usedSelectors = new Set<string>();
 
-      // Get all classes used in resume content
+      // Get all classes used in cloned content
       const collectClasses = (element: Element) => {
         if (element.className && typeof element.className === 'string') {
           element.className.split(/\s+/).forEach(cls => {
-            if (cls) {
+            if (cls && !cls.startsWith('gen-')) {
+              // Skip generated classes
               usedSelectors.add(`.${cls}`);
             }
           });
         }
         Array.from(element.children).forEach(collectClasses);
       };
-      collectClasses(resumeContent);
+      collectClasses(clonedContent);
 
       // Extract CSS rules from all stylesheets
       for (const sheet of Array.from(document.styleSheets)) {
@@ -100,8 +138,9 @@ export async function POST(request: NextRequest) {
       }
 
       return {
-        content: resumeContent.outerHTML,
+        content: clonedContent.outerHTML,
         css: allCSSRules.join('\n'),
+        utilityClasses: generatedClasses.join('\n'),
       };
     });
 
@@ -119,7 +158,6 @@ export async function POST(request: NextRequest) {
 
     body {
       margin: 0;
-      padding: 20px 0;
       font-family: 'Open Sans', Arial, sans-serif;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
@@ -133,6 +171,8 @@ export async function POST(request: NextRequest) {
       padding: 0;
     }
 
+    /* Generated utility classes from repeated inline styles */
+    ${utilityClasses}
 
     /* Extracted CSS from page */
     ${css}

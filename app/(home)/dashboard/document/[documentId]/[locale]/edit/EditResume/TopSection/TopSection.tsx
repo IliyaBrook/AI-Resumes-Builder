@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 import { Download, MoreOption, ResumeTitle, ThemeColor } from '@/editResume';
 import { PreviewPdfButton } from './PreviewPDF';
 import { DirectionToggle } from '@/components';
+import { ExportHTML } from './ExportToHTML';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslations } from 'next-intl';
 
@@ -51,6 +52,11 @@ const TopSection = () => {
           <LanguageSwitcher />
           <ThemeColor />
           <Download
+            title={resumeInfo?.title || tCommon('untitledResume')}
+            status={resumeInfo?.status}
+            isLoading={isLoading}
+          />
+          <ExportHTML
             title={resumeInfo?.title || tCommon('untitledResume')}
             status={resumeInfo?.status}
             isLoading={isLoading}

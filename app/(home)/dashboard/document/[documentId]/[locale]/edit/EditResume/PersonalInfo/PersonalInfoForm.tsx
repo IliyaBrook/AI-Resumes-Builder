@@ -23,19 +23,20 @@ const PersonalInfoForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
   const { data, isLoading } = useGetDocumentById(documentId);
-  const resumeInfo = data?.data;
-  const personalInfo = resumeInfo?.personalInfo;
+  const { personalInfoDisplayFormat = null, personalInfo = null } = data?.data ?? {};
+  console.log('personalInfo:', personalInfo);
+
   const { mutate: setResumeInfo } = useUpdateDocument();
 
   const [localPersonalInfo, setLocalPersonalInfo] = useState<PersonalInfoType>({
-    firstName: '',
-    lastName: '',
-    jobTitle: '',
-    address: '',
-    phone: '',
-    email: '',
-    github: '',
-    linkedin: '',
+    firstName: personalInfo?.firstName ?? '',
+    lastName: personalInfo?.lastName ?? '',
+    jobTitle: personalInfo?.jobTitle ?? '',
+    address: personalInfo?.address ?? '',
+    phone: personalInfo?.phone ?? '',
+    email: personalInfo?.email ?? '',
+    github: personalInfo?.github ?? '',
+    linkedin: personalInfo?.linkedin ?? '',
   });
 
   const [localDisplayFormat, setLocalDisplayFormat] = useState<'default' | 'compact'>('default');
@@ -54,10 +55,10 @@ const PersonalInfoForm = () => {
   }, [personalInfo]);
 
   useEffect(() => {
-    if (resumeInfo?.personalInfoDisplayFormat) {
-      setLocalDisplayFormat(resumeInfo.personalInfoDisplayFormat as 'default' | 'compact');
+    if (personalInfoDisplayFormat) {
+      setLocalDisplayFormat(personalInfoDisplayFormat as 'default' | 'compact');
     }
-  }, [resumeInfo?.personalInfoDisplayFormat]);
+  }, [personalInfoDisplayFormat]);
 
   const handleChange = useCallback((e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;

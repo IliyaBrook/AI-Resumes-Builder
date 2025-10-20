@@ -43,6 +43,7 @@ next-env.d.ts
 .cursorignore
 .history
 .vscode
+tsconfig.tsbuildinfo
 # custom folder
 cheatsheet
 dumps

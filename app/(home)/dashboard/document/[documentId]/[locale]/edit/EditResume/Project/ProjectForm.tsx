@@ -1,10 +1,10 @@
 'use client';
 import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { ProjectType } from '@/types';
 import { useTranslations } from 'next-intl';
-import { useDeleteProject, useUpdateDocument, useGetDocumentById, useDebounce } from '@/hooks';
+import { useCreateProject, useDeleteProject, useUpdateDocument, useGetDocumentById } from '@/hooks';
 import { RichTextEditor, Label, Input, Button, TranslateSection } from '@/components';
 
 const ProjectForm = () => {
@@ -12,42 +12,33 @@ const ProjectForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
   const { data } = useGetDocumentById(documentId);
-  const resumeInfo = data?.data;
+  const { projects = [], projectsSectionTitle = null, locale = undefined } = data?.data ?? {};
+
   const { mutate: setResumeInfo } = useUpdateDocument();
+  const { mutateAsync: createProject } = useCreateProject();
   const { mutate: deleteProject } = useDeleteProject();
 
-  const [sectionTitle, setSectionTitle] = useState('');
-  const [localProjects, setLocalProjects] = useState<ProjectType[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const debouncedProjects = useDebounce(localProjects, 500);
-
-  // Initialize local state from server data once
+  const [sectionTitle, setSectionTitle] = useState(projectsSectionTitle || t('Projects'));
+  const [localProjects, setLocalProjects] = useState<ProjectType[]>(projects || []);
+  useEffect(() => {
+    if (projects && projects.length > 0) {
+      setLocalProjects(projects);
+    }
+  }, [JSON.stringify(projects)]);
 
   useEffect(() => {
-    if (resumeInfo?.projects && !isInitialized) {
-      setLocalProjects(resumeInfo.projects);
-      setIsInitialized(true);
+    if (projectsSectionTitle) {
+      setSectionTitle(projectsSectionTitle);
     }
-  }, [resumeInfo?.projects, isInitialized]);
-
-  // Sync debounced changes back to server
-  useEffect(() => {
-    if (isInitialized && debouncedProjects.length >= 0) {
-      setResumeInfo({ projects: debouncedProjects });
-    }
-  }, [debouncedProjects, isInitialized]);
-
-  useEffect(() => {
-    if (resumeInfo?.projectsSectionTitle) {
-      setSectionTitle(resumeInfo.projectsSectionTitle);
-    } else {
-      setSectionTitle(t('Projects'));
-    }
-  }, [resumeInfo?.projectsSectionTitle, t]);
+  }, [projectsSectionTitle]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;
     setLocalProjects(prev => prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item)));
+  };
+
+  const handleBlur = () => {
+    setResumeInfo({ projects: localProjects });
   };
 
   const handleSectionTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,9 +49,10 @@ const ProjectForm = () => {
     setResumeInfo({ projectsSectionTitle: sectionTitle });
   };
 
-  const addNewProject = () => {
+  const addNewProject = async () => {
     const newProject = { name: '', url: '', git: '', description: '', order: localProjects.length };
-    setLocalProjects(prev => [...prev, newProject]);
+    const created = await createProject(newProject);
+    setLocalProjects(prev => [...prev, created]);
   };
 
   const removeProject = (index: number, id?: number) => {
@@ -71,12 +63,12 @@ const ProjectForm = () => {
 
   const moveProject = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= localProjects.length) return;
-    setLocalProjects(prev => {
-      const newProjects = [...prev];
-      const [movedItem] = newProjects.splice(fromIndex, 1);
-      newProjects.splice(toIndex, 0, movedItem);
-      return newProjects.map((proj, idx) => ({ ...proj, order: idx }));
-    });
+    const newProjects = [...localProjects];
+    const [movedItem] = newProjects.splice(fromIndex, 1);
+    newProjects.splice(toIndex, 0, movedItem);
+    const reordered = newProjects.map((proj, idx) => ({ ...proj, order: idx }));
+    setLocalProjects(reordered);
+    setResumeInfo({ projects: reordered });
   };
 
   const handleTranslate = (translatedText: string, index: number) => {
@@ -84,6 +76,10 @@ const ProjectForm = () => {
       prev.map((proj, idx) => (idx === index ? { ...proj, description: translatedText } : proj))
     );
   };
+
+  const handleAddProject = useCallback(() => {
+    void addNewProject();
+  }, [addNewProject]);
 
   return (
     <div>
@@ -107,7 +103,7 @@ const ProjectForm = () => {
               className="mt-1 gap-1 border-primary/50 text-primary"
               variant="outline"
               type="button"
-              onClick={addNewProject}
+              onClick={handleAddProject}
             >
               <Plus size="15px" />
               {t('Add More Project')}
@@ -157,6 +153,7 @@ const ProjectForm = () => {
                     required
                     value={item?.name || ''}
                     onChange={e => handleChange(e, index)}
+                    onBlur={handleBlur}
                   />
                 </div>
                 <div className="col-span-2">
@@ -166,6 +163,7 @@ const ProjectForm = () => {
                     placeholder="https://project-url.com"
                     value={item?.url || ''}
                     onChange={e => handleChange(e, index)}
+                    onBlur={handleBlur}
                   />
                 </div>
                 <div className="col-span-2">
@@ -175,6 +173,7 @@ const ProjectForm = () => {
                     placeholder="https://github.com/user/repo"
                     value={item?.git || ''}
                     onChange={e => handleChange(e, index)}
+                    onBlur={handleBlur}
                   />
                 </div>
                 <div className="col-span-2 mt-1">
@@ -184,12 +183,16 @@ const ProjectForm = () => {
                     onEditorChange={val => {
                       handleChange({ target: { name: 'description', value: val } }, index);
                     }}
+                    onBlur={handleBlur}
                     placeholder={t('Project description')}
-                    resumeLocale={resumeInfo?.locale || undefined}
+                    resumeLocale={locale || ''}
                   />
                   <div className="mt-3 flex justify-end">
                     <TranslateSection
-                      onTranslate={translatedText => handleTranslate(translatedText, index)}
+                      onTranslate={translatedText => {
+                        handleTranslate(translatedText, index);
+                        handleBlur();
+                      }}
                       currentText={item?.description || ''}
                       placeholder={t('Enter target language')}
                     />
@@ -201,7 +204,7 @@ const ProjectForm = () => {
                   className="mt-1 gap-1 border-primary/50 text-primary"
                   variant="outline"
                   type="button"
-                  onClick={addNewProject}
+                  onClick={handleAddProject}
                 >
                   <Plus size="15px" />
                   {t('Add More Project')}

@@ -13,7 +13,7 @@ import {
 } from '@/components';
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronDown, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { PersonalInfoType } from '@/types';
 import { useTranslations } from 'next-intl';
@@ -40,6 +40,13 @@ const PersonalInfoForm = () => {
 
   const [localDisplayFormat, setLocalDisplayFormat] = useState<'default' | 'compact'>('default');
 
+  // Use ref to always have the latest localPersonalInfo value in handleBlur
+  const localPersonalInfoRef = useRef(localPersonalInfo);
+
+  useEffect(() => {
+    localPersonalInfoRef.current = localPersonalInfo;
+  }, [localPersonalInfo]);
+
   useEffect(() => {
     if (personalInfo) {
       setLocalPersonalInfo(personalInfo);
@@ -60,10 +67,11 @@ const PersonalInfoForm = () => {
   const handleBlur = useCallback(
     (e: { target: { name: string; value: string } }) => {
       const { name, value } = e.target;
-      const updatedPersonalInfo = { ...localPersonalInfo, [name]: value };
+      // Use ref to get the latest value instead of stale closure value
+      const updatedPersonalInfo = { ...localPersonalInfoRef.current, [name]: value };
       setResumeInfo({ personalInfo: updatedPersonalInfo });
     },
-    [localPersonalInfo, setResumeInfo]
+    [setResumeInfo]
   );
 
   const handleDisplayFormatChange = useCallback(
@@ -130,7 +138,6 @@ const PersonalInfoForm = () => {
                 />
               </div>
             </div>
-
             <div>
               <Label className="text-sm">{t('Job Title')}</Label>
               <Input

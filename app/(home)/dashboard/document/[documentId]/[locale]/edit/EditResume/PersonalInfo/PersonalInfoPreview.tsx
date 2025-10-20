@@ -17,14 +17,6 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const displayFormat = resumeInfo?.personalInfoDisplayFormat || 'default';
   const isCompact = displayFormat === 'compact';
 
-  const normalizeUrl = (url: string) => {
-    if (!url) return url;
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
-    return `https://${url}`;
-  };
-
   if (isLoading) {
     return <SkeletonLoader />;
   }
@@ -50,37 +42,25 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
 
     if (resumeInfo?.personalInfo?.email) {
       compactInfo.push(
-        <a key="email" href={`mailto:${resumeInfo.personalInfo.email}`} className="hover:underline">
+        <p key="email" className="hover:underline">
           {resumeInfo.personalInfo.email}
-        </a>
+        </p>
       );
     }
 
     if (resumeInfo?.personalInfo?.github) {
       compactInfo.push(
-        <a
-          key="github"
-          href={normalizeUrl(resumeInfo.personalInfo.github)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          {resumeInfo.personalInfo.github.replace(/^https?:\/\//, '')}
-        </a>
+        <p key="github" className="hover:underline">
+          {resumeInfo.personalInfo.github}
+        </p>
       );
     }
 
     if (resumeInfo?.personalInfo?.linkedin) {
       compactInfo.push(
-        <a
-          key="linkedin"
-          href={normalizeUrl(resumeInfo.personalInfo.linkedin)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, '')}
-        </a>
+        <p key="linkedin" className="hover:underline">
+          {resumeInfo.personalInfo.linkedin}
+        </p>
       );
     }
 
@@ -147,7 +127,7 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   return (
     <div className="min-h-14 w-full">
       <h2
-        className="mb-2 text-center text-2xl font-bold"
+        className="mb-2 cursor-default text-center text-2xl font-bold"
         style={{
           color: themeColor,
         }}
@@ -156,12 +136,12 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       </h2>
       <div className="mb-2 w-full text-center text-base font-medium text-gray-600">
         <div className="flex justify-center">
-          <span className="font-bold">{resumeInfo?.personalInfo?.jobTitle || t('Job Title')}</span>
+          <span className="cursor-default font-bold">{resumeInfo?.personalInfo?.jobTitle || t('Job Title')}</span>
           <span>
             {resumeInfo?.personalInfo?.address && (
-              <span className="ml-2 flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
+              <span className="ml-2 flex cursor-default items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
                 <MapPin size={15} className="shrink-0 opacity-70" />
-                <span className="pdf-position-fix">{resumeInfo.personalInfo.address}</span>
+                <span className="pdf-position-fix cursor-default">{resumeInfo.personalInfo.address}</span>
               </span>
             )}
           </span>
@@ -172,17 +152,13 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           {resumeInfo?.personalInfo?.phone && (
             <span className="flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
               <Phone size={15} className="shrink-0 opacity-70" />
-              <a href={`tel:${resumeInfo.personalInfo.phone}`} className="pdf-position-fix hover:underline">
-                {resumeInfo.personalInfo.phone}
-              </a>
+              <p className="pdf-position-fix cursor-default">{resumeInfo.personalInfo.phone}</p>
             </span>
           )}
           {resumeInfo?.personalInfo?.email && (
             <span className="flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
               <Mail size={15} className="shrink-0 opacity-70" />
-              <a href={`mailto:${resumeInfo.personalInfo.email}`} className="pdf-position-fix hover:underline">
-                {resumeInfo.personalInfo.email}
-              </a>
+              <p className="pdf-position-fix cursor-default">{resumeInfo.personalInfo.email}</p>
             </span>
           )}
         </div>
@@ -190,27 +166,13 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           {resumeInfo?.personalInfo?.github && (
             <span className="flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
               <Github size={15} className="shrink-0 opacity-70" />
-              <a
-                href={normalizeUrl(resumeInfo.personalInfo.github)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pdf-position-fix hover:underline"
-              >
-                {resumeInfo.personalInfo.github.replace(/^https?:\/\//, '')}
-              </a>
+              <p className="pdf-position-fix cursor-default">{resumeInfo.personalInfo.github}</p>
             </span>
           )}
           {resumeInfo?.personalInfo?.linkedin && (
             <span className="flex items-center gap-1 whitespace-nowrap !text-[13px] transition-colors hover:text-gray-900">
               <Linkedin size={15} className="shrink-0 opacity-70" />
-              <a
-                href={normalizeUrl(resumeInfo.personalInfo.linkedin)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pdf-position-fix hover:underline"
-              >
-                {resumeInfo.personalInfo.linkedin.replace(/^https?:\/\//, '')}
-              </a>
+              <p className="pdf-position-fix cursor-default">{resumeInfo.personalInfo.linkedin}</p>
             </span>
           )}
         </div>

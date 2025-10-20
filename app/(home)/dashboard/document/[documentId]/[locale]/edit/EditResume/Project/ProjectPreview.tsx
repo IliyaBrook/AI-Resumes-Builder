@@ -44,15 +44,9 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
             {project.git && (
               <div className="pdf-margin-bottom-0 mb-2 flex items-center gap-1 text-[13px]">
                 <LinkIcon size={15} className="opacity-60" />
-                <a
-                  href={project.git}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pdf-position-fix"
-                  style={{ color: themeColor }}
-                >
+                <p className="pdf-position-fix" style={{ color: themeColor }}>
                   {project.git}
-                </a>
+                </p>
               </div>
             )}
           </div>

@@ -23,7 +23,7 @@ const PersonalInfoForm = () => {
   const param = useParams();
   const documentId = param.documentId as string;
   const { data, isLoading } = useGetDocumentById(documentId);
-  const { personalInfoDisplayFormat = null, personalInfo = null } = data?.data ?? {};
+  const { personalInfoDisplayFormat = 'default', personalInfo = null } = data?.data ?? {};
   console.log('personalInfo:', personalInfo);
 
   const { mutate: setResumeInfo } = useUpdateDocument();
@@ -38,50 +38,28 @@ const PersonalInfoForm = () => {
     github: personalInfo?.github ?? '',
     linkedin: personalInfo?.linkedin ?? '',
   });
+  console.log('personalInfoDisplayFormat:', personalInfoDisplayFormat);
 
-  const [localDisplayFormat, setLocalDisplayFormat] = useState<'default' | 'compact'>('default');
+  const [localDisplayFormat, setDisplayFormat] = useState<'default' | 'compact'>(
+    personalInfoDisplayFormat as 'default' | 'compact'
+  );
 
-  // Use ref to always have the latest localPersonalInfo value in handleBlur
-  const localPersonalInfoRef = useRef(localPersonalInfo);
-
-  useEffect(() => {
-    localPersonalInfoRef.current = localPersonalInfo;
-  }, [localPersonalInfo]);
-
-  useEffect(() => {
-    if (personalInfo) {
-      setLocalPersonalInfo(personalInfo);
-    }
-  }, [personalInfo]);
-
-  useEffect(() => {
-    if (personalInfoDisplayFormat) {
-      setLocalDisplayFormat(personalInfoDisplayFormat as 'default' | 'compact');
-    }
-  }, [personalInfoDisplayFormat]);
-
-  const handleChange = useCallback((e: { target: { name: string; value: string } }) => {
+  const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setLocalPersonalInfo((prev: PersonalInfoType) => ({ ...prev, [name]: value }));
-  }, []);
+  };
 
-  const handleBlur = useCallback(
-    (e: { target: { name: string; value: string } }) => {
-      const { name, value } = e.target;
-      // Use ref to get the latest value instead of stale closure value
-      const updatedPersonalInfo = { ...localPersonalInfoRef.current, [name]: value };
-      setResumeInfo({ personalInfo: updatedPersonalInfo });
-    },
-    [setResumeInfo]
-  );
+  const handleBlur = (e: { target: { name: string; value: string } }) => {
+    const { name, value } = e.target;
+    // Use ref to get the latest value instead of stale closure value
+    const updatedPersonalInfo = { ...localPersonalInfo, [name]: value };
+    setResumeInfo({ personalInfo: updatedPersonalInfo });
+  };
 
-  const handleDisplayFormatChange = useCallback(
-    (format: 'default' | 'compact') => {
-      setLocalDisplayFormat(format);
-      setResumeInfo({ personalInfoDisplayFormat: format });
-    },
-    [setResumeInfo]
-  );
+  const handleDisplayFormatChange = (format: 'default' | 'compact') => {
+    setDisplayFormat(format);
+    setResumeInfo({ personalInfoDisplayFormat: format });
+  };
 
   if (isLoading) {
     return <PersonalInfoLoader />;

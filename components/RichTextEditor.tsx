@@ -4,7 +4,6 @@ import {
   BtnBold,
   BtnBulletList,
   BtnItalic,
-  BtnLink,
   BtnNumberedList,
   BtnStrikeThrough,
   BtnUnderline,
@@ -44,6 +43,26 @@ const applyLineHeight = (height: string) => {
   }
 };
 
+// Apply paragraph spacing (margin between paragraphs)
+const applyParagraphSpacing = (spacing: string) => {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
+  const range = selection.getRangeAt(0);
+  if (range.collapsed) return;
+
+  // Get the common ancestor container
+  let container = range.commonAncestorContainer;
+  if (container.nodeType === Node.TEXT_NODE) {
+    container = container.parentNode as Node;
+  }
+
+  // Apply margin to the element
+  if (container && container.nodeType === Node.ELEMENT_NODE) {
+    (container as HTMLElement).style.marginTop = spacing;
+    (container as HTMLElement).style.marginBottom = spacing;
+  }
+};
+
 // Font size buttons using execCommand with values 1-7
 const BtnFontSizeSmall = createButton('Small text', 'A-', () => {
   document.execCommand('fontSize', false, '1');
@@ -56,18 +75,23 @@ const BtnFontSizeLarge = createButton('Large text', 'A+', () => {
 });
 
 // Line height buttons
-const BtnLineHeightTight = createButton('Tight spacing', 'LH-', () => applyLineHeight('1.2'));
-const BtnLineHeightNormal = createButton('Normal spacing', 'LH', () => applyLineHeight('1.5'));
-const BtnLineHeightLoose = createButton('Loose spacing', 'LH+', () => applyLineHeight('2.0'));
+const BtnLineHeightTight = createButton('Tight line spacing', 'LH-', () => applyLineHeight('1.2'));
+const BtnLineHeightNormal = createButton('Normal line spacing', 'LH', () => applyLineHeight('1.5'));
+const BtnLineHeightLoose = createButton('Loose line spacing', 'LH+', () => applyLineHeight('2.0'));
+
+// Paragraph spacing buttons
+const BtnParagraphSpacingTight = createButton('Tight paragraph spacing', 'PS-', () => applyParagraphSpacing('2px'));
+const BtnParagraphSpacingNormal = createButton('Normal paragraph spacing', 'PS', () => applyParagraphSpacing('8px'));
+const BtnParagraphSpacingLoose = createButton('Loose paragraph spacing', 'PS+', () => applyParagraphSpacing('16px'));
 
 // Text color buttons using foreColor command
-const BtnTextColorBlack = createButton('Black text', 'Black', () => {
+const BtnTextColorBlack = createButton('Black text', 'B', () => {
   document.execCommand('foreColor', false, '#000000');
 });
-const BtnTextColorRed = createButton('Red text', 'Red', () => {
+const BtnTextColorRed = createButton('Red text', 'R', () => {
   document.execCommand('foreColor', false, '#ff0000');
 });
-const BtnTextColorBlue = createButton('Blue text', 'Blue', () => {
+const BtnTextColorBlue = createButton('Blue text', 'B', () => {
   document.execCommand('foreColor', false, '#0000ff');
 });
 
@@ -328,8 +352,6 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
               <BtnNumberedList />
               <BtnBulletList />
               <Separator />
-              <BtnLink />
-              <Separator />
               <BtnAlignLeft />
               <BtnAlignCenter />
               <BtnAlignRight />
@@ -341,6 +363,10 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
               <BtnLineHeightTight />
               <BtnLineHeightNormal />
               <BtnLineHeightLoose />
+              <Separator />
+              <BtnParagraphSpacingTight />
+              <BtnParagraphSpacingNormal />
+              <BtnParagraphSpacingLoose />
               <Separator />
               <BtnTextColorBlack />
               <BtnTextColorRed />

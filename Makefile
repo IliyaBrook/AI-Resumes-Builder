@@ -19,7 +19,7 @@ ifeq ($(UNAME_S),Linux)
 else ifeq ($(UNAME_S),Darwin)
 	@bash scripts/backup.sh
 else
-	@scripts\restore.bat
+	@scripts\backup.bat
 endif
 
 db-restore:

@@ -25,59 +25,51 @@ const BtnAlignLeft = createButton('Align left', 'L', 'justifyLeft');
 const BtnAlignCenter = createButton('Align center', 'C', 'justifyCenter');
 const BtnAlignRight = createButton('Align right', 'R', 'justifyRight');
 
-const applyFontSize = (size: string) => {
+// Apply line height using custom function
+const applyLineHeight = (height: string) => {
   const selection = window.getSelection();
   if (!selection || selection.rangeCount === 0) return;
   const range = selection.getRangeAt(0);
   if (range.collapsed) return;
 
-  const wrapTextNodes = (node: Node) => {
-    if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
-      const span = document.createElement('span');
-      span.style.fontSize = size;
-      span.textContent = node.textContent;
-      node.parentNode?.replaceChild(span, node);
-    } else if (node.nodeType === Node.ELEMENT_NODE) {
-      const children = Array.from(node.childNodes);
-      for (const child of children) {
-        wrapTextNodes(child);
-      }
-    }
-  };
+  // Get the common ancestor container
+  let container = range.commonAncestorContainer;
+  if (container.nodeType === Node.TEXT_NODE) {
+    container = container.parentNode as Node;
+  }
 
-  const contents = range.cloneContents();
-  wrapTextNodes(contents);
-
-  range.deleteContents();
-  range.insertNode(contents);
+  // Apply line-height to the element
+  if (container && container.nodeType === Node.ELEMENT_NODE) {
+    (container as HTMLElement).style.lineHeight = height;
+  }
 };
 
-const applyHeading = (tag: string) => {
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return;
-  const range = selection.getRangeAt(0);
-  if (range.collapsed) return;
-  const el = document.createElement(tag);
-  range.surroundContents(el);
-};
+// Font size buttons using execCommand with values 1-7
+const BtnFontSizeSmall = createButton('Small text', 'A-', () => {
+  document.execCommand('fontSize', false, '1');
+});
+const BtnFontSizeNormal = createButton('Normal text', 'A', () => {
+  document.execCommand('fontSize', false, '3');
+});
+const BtnFontSizeLarge = createButton('Large text', 'A+', () => {
+  document.execCommand('fontSize', false, '5');
+});
 
-const applyTextColor = (color: string) => {
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return;
-  const range = selection.getRangeAt(0);
-  if (range.collapsed) return;
-  const span = document.createElement('span');
-  span.style.color = color;
-  range.surroundContents(span);
-};
+// Line height buttons
+const BtnLineHeightTight = createButton('Tight spacing', 'LH-', () => applyLineHeight('1.2'));
+const BtnLineHeightNormal = createButton('Normal spacing', 'LH', () => applyLineHeight('1.5'));
+const BtnLineHeightLoose = createButton('Loose spacing', 'LH+', () => applyLineHeight('2.0'));
 
-const BtnFontSizeSmall = createButton('Small text', 'A-', () => applyFontSize('12px'));
-const BtnFontSizeNormal = createButton('Normal text', 'A', () => applyFontSize('16px'));
-const BtnFontSizeLarge = createButton('Large text', 'A+', () => applyFontSize('20px'));
-const BtnHeading1 = createButton('Heading 1', 'H1', () => applyHeading('h1'));
-const BtnHeading2 = createButton('Heading 2', 'H2', () => applyHeading('h2'));
-const BtnTextColorRed = createButton('Red text', 'Red', () => applyTextColor('red'));
-const BtnTextColorBlue = createButton('Blue text', 'Blue', () => applyTextColor('blue'));
+// Text color buttons using foreColor command
+const BtnTextColorBlack = createButton('Black text', 'Black', () => {
+  document.execCommand('foreColor', false, '#000000');
+});
+const BtnTextColorRed = createButton('Red text', 'Red', () => {
+  document.execCommand('foreColor', false, '#ff0000');
+});
+const BtnTextColorBlue = createButton('Blue text', 'Blue', () => {
+  document.execCommand('foreColor', false, '#0000ff');
+});
 
 interface RichTextEditorProps {
   jobTitle?: string | null;
@@ -346,9 +338,11 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
               <BtnFontSizeNormal />
               <BtnFontSizeLarge />
               <Separator />
-              <BtnHeading1 />
-              <BtnHeading2 />
+              <BtnLineHeightTight />
+              <BtnLineHeightNormal />
+              <BtnLineHeightLoose />
               <Separator />
+              <BtnTextColorBlack />
               <BtnTextColorRed />
               <BtnTextColorBlue />
             </Toolbar>

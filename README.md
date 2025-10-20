@@ -186,10 +186,11 @@ automatically detects your operating system and uses the appropriate scripts.
 # Show all available commands
 make help
 
-# Create a database backup
+# Create a database backup, all backups are stored in dumps/ directory
 make db-backup
 
-# Restore database from a backup file
+# Restore database from backup
+# The command lists all available dump files from ./dumps/ directory  - just copy/paste the filename when prompted
 make db-restore
 
 # List all available backup files

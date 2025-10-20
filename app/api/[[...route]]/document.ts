@@ -127,9 +127,15 @@ const documentRoute = new Hono()
           }
 
           if (personalInfo) {
-            if (!personalInfo?.firstName && !personalInfo?.lastName) {
+            // Check if personalInfo has any meaningful data
+            const hasData = Object.values(personalInfo).some(
+              value => value !== null && value !== undefined && value !== ''
+            );
+
+            if (!hasData) {
               return;
             }
+
             const exists = await trx
               .select()
               .from(personalInfoTable)

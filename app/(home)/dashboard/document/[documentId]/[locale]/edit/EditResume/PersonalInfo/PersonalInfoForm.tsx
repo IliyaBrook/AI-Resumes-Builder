@@ -13,7 +13,7 @@ import {
 } from '@/components';
 import { useGetDocumentById, useUpdateDocument } from '@/hooks';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { PersonalInfoType } from '@/types';
 import { useTranslations } from 'next-intl';
@@ -24,11 +24,10 @@ const PersonalInfoForm = () => {
   const documentId = param.documentId as string;
   const { data, isLoading } = useGetDocumentById(documentId);
   const { personalInfoDisplayFormat = 'default', personalInfo = null } = data?.data ?? {};
-  console.log('personalInfo:', personalInfo);
 
   const { mutate: setResumeInfo } = useUpdateDocument();
 
-  const [localPersonalInfo, setLocalPersonalInfo] = useState<PersonalInfoType>({
+  const [personalInfoState, setPersonalInfoState] = useState<PersonalInfoType>({
     firstName: personalInfo?.firstName ?? '',
     lastName: personalInfo?.lastName ?? '',
     jobTitle: personalInfo?.jobTitle ?? '',
@@ -38,7 +37,12 @@ const PersonalInfoForm = () => {
     github: personalInfo?.github ?? '',
     linkedin: personalInfo?.linkedin ?? '',
   });
-  console.log('personalInfoDisplayFormat:', personalInfoDisplayFormat);
+
+  useEffect(() => {
+    if (personalInfo && !Object.values(personalInfo).every(value => !value)) {
+      setPersonalInfoState(personalInfo);
+    }
+  }, [JSON.stringify(personalInfo)]);
 
   const [localDisplayFormat, setDisplayFormat] = useState<'default' | 'compact'>(
     personalInfoDisplayFormat as 'default' | 'compact'
@@ -46,13 +50,13 @@ const PersonalInfoForm = () => {
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-    setLocalPersonalInfo((prev: PersonalInfoType) => ({ ...prev, [name]: value }));
+    setPersonalInfoState((prev: PersonalInfoType) => ({ ...prev, [name]: value }));
   };
 
   const handleBlur = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     // Use ref to get the latest value instead of stale closure value
-    const updatedPersonalInfo = { ...localPersonalInfo, [name]: value };
+    const updatedPersonalInfo = { ...personalInfoState, [name]: value };
     setResumeInfo({ personalInfo: updatedPersonalInfo });
   };
 
@@ -97,7 +101,7 @@ const PersonalInfoForm = () => {
                   required
                   autoComplete="off"
                   placeholder=""
-                  value={localPersonalInfo.firstName || ''}
+                  value={personalInfoState.firstName || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className="h-9"
@@ -110,7 +114,7 @@ const PersonalInfoForm = () => {
                   required
                   autoComplete="off"
                   placeholder=""
-                  value={localPersonalInfo.lastName || ''}
+                  value={personalInfoState.lastName || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className="h-9"
@@ -124,7 +128,7 @@ const PersonalInfoForm = () => {
                 required
                 autoComplete="off"
                 placeholder=""
-                value={localPersonalInfo.jobTitle || ''}
+                value={personalInfoState.jobTitle || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className="h-9"
@@ -141,7 +145,7 @@ const PersonalInfoForm = () => {
                     required
                     autoComplete="off"
                     placeholder=""
-                    value={localPersonalInfo.phone || ''}
+                    value={personalInfoState.phone || ''}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="h-9 pl-8"
@@ -157,7 +161,7 @@ const PersonalInfoForm = () => {
                     required
                     autoComplete="off"
                     placeholder=""
-                    value={localPersonalInfo.email || ''}
+                    value={personalInfoState.email || ''}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="h-9 pl-8"
@@ -175,7 +179,7 @@ const PersonalInfoForm = () => {
                     name="github"
                     autoComplete="off"
                     placeholder={t('username')}
-                    value={localPersonalInfo.github || ''}
+                    value={personalInfoState.github || ''}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="h-9 pl-8"
@@ -190,7 +194,7 @@ const PersonalInfoForm = () => {
                     name="linkedin"
                     autoComplete="off"
                     placeholder={t('username')}
-                    value={localPersonalInfo.linkedin || ''}
+                    value={personalInfoState.linkedin || ''}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="h-9 pl-8"
@@ -208,7 +212,7 @@ const PersonalInfoForm = () => {
                   required
                   autoComplete="off"
                   placeholder=""
-                  value={localPersonalInfo.address || ''}
+                  value={personalInfoState.address || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className="h-9 pl-8"

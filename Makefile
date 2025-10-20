@@ -19,7 +19,7 @@ ifeq ($(UNAME_S),Linux)
 else ifeq ($(UNAME_S),Darwin)
 	@bash scripts/backup.sh
 else
-	@cmd /c scripts\backup.bat
+	@scripts\restore.bat
 endif
 
 db-restore:
@@ -28,7 +28,7 @@ ifeq ($(UNAME_S),Linux)
 else ifeq ($(UNAME_S),Darwin)
 	@bash scripts/restore.sh
 else
-	@cmd /c scripts\restore.bat
+	@scripts\restore.bat
 endif
 
 db-list-dumps:
@@ -37,5 +37,5 @@ ifeq ($(UNAME_S),Linux)
 else ifeq ($(UNAME_S),Darwin)
 	@bash scripts/list-dumps.sh
 else
-	@cmd /c scripts\list-dumps.bat
+	@scripts\restore.bat
 endif 

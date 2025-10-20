@@ -38,7 +38,6 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
       .catch(console.error);
   }, []);
 
-  const [newCategoryName, setNewCategoryName] = React.useState('');
   const [editingCategory, setEditingCategory] = React.useState<string | null>(null);
   const [editCategoryName, setEditCategoryName] = React.useState('');
   const [localSkillInputs, setLocalSkillInputs] = React.useState<Record<number, string>>({});
@@ -156,12 +155,6 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
     });
   };
 
-  const handleAddNewCategory = async () => {
-    if (!newCategoryName.trim()) return;
-    await handleAddSkillToCategory(newCategoryName.trim());
-    setNewCategoryName('');
-  };
-
   const handleStartEditCategory = (categoryName: string) => {
     setEditingCategory(categoryName);
     setEditCategoryName(categoryName);
@@ -258,9 +251,14 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
     return skill[field];
   };
 
-  const handleAddNewCategoryClick = useCallback(() => {
-    void handleAddNewCategory();
-  }, [handleAddNewCategory]);
+  const handleAddNewCategoryClick = () => {
+    const existingNewCategories = Object.keys(skillsByCategory).filter(name =>
+      name.startsWith('new-category')
+    );
+    const nextNumber = existingNewCategories.length + 1;
+    const newName = existingNewCategories.length === 0 ? 'new-category' : `new-category-${nextNumber}`;
+    handleAddSkillToCategory(newName);
+  };
 
   const handleAddSkillToCategoryClick = useCallback(
     (categoryName: string) => {
@@ -279,12 +277,6 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
         <div className="mb-2 text-sm text-muted-foreground">{t('Use arrows to reorder categories')}</div>
       )}
       <div className="mb-4 flex gap-2">
-        <Input
-          placeholder={t('New category name')}
-          value={newCategoryName}
-          onChange={e => setNewCategoryName(e.target.value)}
-          className="w-48"
-        />
         <Button type="button" onClick={handleAddNewCategoryClick} variant="outline">
           <Plus size="15px" /> {t('Add category')}
         </Button>

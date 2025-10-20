@@ -25,64 +25,89 @@ const BtnAlignCenter = createButton('Align center', 'C', 'justifyCenter');
 const BtnAlignRight = createButton('Align right', 'R', 'justifyRight');
 
 // Apply line height using custom function
-const applyLineHeight = (height: string) => {
+const applyLineHeight = (height: string) => () => {
   const selection = window.getSelection();
   if (!selection || selection.rangeCount === 0) return;
   const range = selection.getRangeAt(0);
   if (range.collapsed) return;
 
-  // Get the common ancestor container
-  let container = range.commonAncestorContainer;
-  if (container.nodeType === Node.TEXT_NODE) {
-    container = container.parentNode as Node;
-  }
+  // Extract contents and wrap in span
+  const contents = range.extractContents();
+  const span = document.createElement('span');
+  span.style.lineHeight = height;
+  span.appendChild(contents);
+  range.insertNode(span);
 
-  // Apply line-height to the element
-  if (container && container.nodeType === Node.ELEMENT_NODE) {
-    (container as HTMLElement).style.lineHeight = height;
-  }
+  // Restore selection
+  selection.removeAllRanges();
+  const newRange = document.createRange();
+  newRange.selectNodeContents(span);
+  selection.addRange(newRange);
 };
 
 // Apply paragraph spacing (margin between paragraphs)
-const applyParagraphSpacing = (spacing: string) => {
+const applyParagraphSpacing = (spacing: string) => () => {
   const selection = window.getSelection();
   if (!selection || selection.rangeCount === 0) return;
   const range = selection.getRangeAt(0);
   if (range.collapsed) return;
 
-  // Get the common ancestor container
-  let container = range.commonAncestorContainer;
-  if (container.nodeType === Node.TEXT_NODE) {
-    container = container.parentNode as Node;
-  }
+  // Extract contents and wrap in div with margin
+  const contents = range.extractContents();
+  const div = document.createElement('div');
+  div.style.marginTop = spacing;
+  div.style.marginBottom = spacing;
+  div.appendChild(contents);
+  range.insertNode(div);
 
-  // Apply margin to the element
-  if (container && container.nodeType === Node.ELEMENT_NODE) {
-    (container as HTMLElement).style.marginTop = spacing;
-    (container as HTMLElement).style.marginBottom = spacing;
-  }
+  // Restore selection
+  selection.removeAllRanges();
+  const newRange = document.createRange();
+  newRange.selectNodeContents(div);
+  selection.addRange(newRange);
 };
 
-// Font size buttons using execCommand with values 1-7
-const BtnFontSizeSmall = createButton('Small text', 'A-', () => {
-  document.execCommand('fontSize', false, '1');
-});
-const BtnFontSizeNormal = createButton('Normal text', 'A', () => {
-  document.execCommand('fontSize', false, '3');
-});
-const BtnFontSizeLarge = createButton('Large text', 'A+', () => {
-  document.execCommand('fontSize', false, '5');
-});
+// Apply exact font size in pixels
+const applyFontSizePixels = (size: string) => () => {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
+  const range = selection.getRangeAt(0);
+  if (range.collapsed) return;
+
+  // Extract contents and wrap in span
+  const contents = range.extractContents();
+  const span = document.createElement('span');
+  span.style.fontSize = size;
+  span.appendChild(contents);
+  range.insertNode(span);
+
+  // Restore selection
+  selection.removeAllRanges();
+  const newRange = document.createRange();
+  newRange.selectNodeContents(span);
+  selection.addRange(newRange);
+};
+
+// Font size buttons with exact pixel values
+const BtnFontSize10 = createButton('Font size 10px', '10', applyFontSizePixels('10px'));
+const BtnFontSize11 = createButton('Font size 11px', '11', applyFontSizePixels('11px'));
+const BtnFontSize12 = createButton('Font size 12px', '12', applyFontSizePixels('12px'));
+const BtnFontSize13 = createButton('Font size 13px', '13', applyFontSizePixels('13px'));
+const BtnFontSize14 = createButton('Font size 14px', '14', applyFontSizePixels('14px'));
+const BtnFontSize15 = createButton('Font size 15px', '15', applyFontSizePixels('15px'));
+const BtnFontSize16 = createButton('Font size 16px', '16', applyFontSizePixels('16px'));
+const BtnFontSize18 = createButton('Font size 18px', '18', applyFontSizePixels('18px'));
+const BtnFontSize20 = createButton('Font size 20px', '20', applyFontSizePixels('20px'));
 
 // Line height buttons
-const BtnLineHeightTight = createButton('Tight line spacing', 'LH-', () => applyLineHeight('1.2'));
-const BtnLineHeightNormal = createButton('Normal line spacing', 'LH', () => applyLineHeight('1.5'));
-const BtnLineHeightLoose = createButton('Loose line spacing', 'LH+', () => applyLineHeight('2.0'));
+const BtnLineHeightTight = createButton('Tight line spacing', 'LH-', applyLineHeight('1.2'));
+const BtnLineHeightNormal = createButton('Normal line spacing', 'LH', applyLineHeight('1.5'));
+const BtnLineHeightLoose = createButton('Loose line spacing', 'LH+', applyLineHeight('2.0'));
 
 // Paragraph spacing buttons
-const BtnParagraphSpacingTight = createButton('Tight paragraph spacing', 'PS-', () => applyParagraphSpacing('2px'));
-const BtnParagraphSpacingNormal = createButton('Normal paragraph spacing', 'PS', () => applyParagraphSpacing('8px'));
-const BtnParagraphSpacingLoose = createButton('Loose paragraph spacing', 'PS+', () => applyParagraphSpacing('16px'));
+const BtnParagraphSpacingTight = createButton('Tight paragraph spacing', 'PS-', applyParagraphSpacing('2px'));
+const BtnParagraphSpacingNormal = createButton('Normal paragraph spacing', 'PS', applyParagraphSpacing('8px'));
+const BtnParagraphSpacingLoose = createButton('Loose paragraph spacing', 'PS+', applyParagraphSpacing('16px'));
 
 // Text color buttons using foreColor command
 const BtnTextColorBlack = createButton('Black text', 'B', () => {
@@ -356,9 +381,15 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
               <BtnAlignCenter />
               <BtnAlignRight />
               <Separator />
-              <BtnFontSizeSmall />
-              <BtnFontSizeNormal />
-              <BtnFontSizeLarge />
+              <BtnFontSize10 />
+              <BtnFontSize11 />
+              <BtnFontSize12 />
+              <BtnFontSize13 />
+              <BtnFontSize14 />
+              <BtnFontSize15 />
+              <BtnFontSize16 />
+              <BtnFontSize18 />
+              <BtnFontSize20 />
               <Separator />
               <BtnLineHeightTight />
               <BtnLineHeightNormal />

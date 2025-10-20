@@ -16,10 +16,7 @@ export async function POST(request: NextRequest) {
 
     // Add meta tag to disable automatic detection of email/phone numbers
     if (!html.includes('format-detection')) {
-      html = html.replace(
-        '<head>',
-        '<head><meta name="format-detection" content="telephone=no, email=no">'
-      );
+      html = html.replace('<head>', '<head><meta name="format-detection" content="telephone=no, email=no">');
     }
 
     page = await preparePage(html);
@@ -27,7 +24,7 @@ export async function POST(request: NextRequest) {
     // Remove auto-detected mailto: and tel: links that Chrome creates
     await page.evaluate(() => {
       const autoLinks = document.querySelectorAll('a[href^="mailto:"], a[href^="tel:"]');
-      autoLinks.forEach((link) => {
+      autoLinks.forEach(link => {
         const span = document.createElement('span');
         span.textContent = link.textContent || '';
         span.className = link.className;

@@ -178,7 +178,7 @@ const PersonalInfoForm = () => {
                   <Input
                     name="github"
                     autoComplete="off"
-                    placeholder={t('username')}
+                    placeholder={'https://github.com/your-username'}
                     value={personalInfoState.github || ''}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -193,7 +193,7 @@ const PersonalInfoForm = () => {
                   <Input
                     name="linkedin"
                     autoComplete="off"
-                    placeholder={t('username')}
+                    placeholder={'https://www.linkedin.com/in/your-username'}
                     value={personalInfoState.linkedin || ''}
                     onChange={handleChange}
                     onBlur={handleBlur}

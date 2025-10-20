@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
+    "db:push": "drizzle-kit push --force",
     "db:init": "dotenv -e .env -- sh -c 'psql \"$POSTGRES_URL\" -f ./db/init-db.sql'",
     "db:run": "docker-compose up -d postgres",
     "remove-comments": "node remove-comments.cjs && npm run format",

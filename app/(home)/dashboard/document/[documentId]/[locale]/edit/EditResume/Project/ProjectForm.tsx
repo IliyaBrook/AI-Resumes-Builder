@@ -1,10 +1,10 @@
 'use client';
 import { Plus, X, MoveUp, MoveDown } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProjectType } from '@/types';
 import { useTranslations } from 'next-intl';
-import { useDeleteProject, useDebounce, useUpdateDocument, useGetDocumentById } from '@/hooks';
+import { useDeleteProject, useUpdateDocument, useGetDocumentById, useDebounce } from '@/hooks';
 import { RichTextEditor, Label, Input, Button, TranslateSection } from '@/components';
 
 const ProjectForm = () => {
@@ -20,7 +20,8 @@ const ProjectForm = () => {
   const [localProjects, setLocalProjects] = useState<ProjectType[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const debouncedProjects = useDebounce(localProjects, 500);
-  const debouncedSectionTitle = useDebounce(sectionTitle, 500);
+
+  // Initialize local state from server data once
 
   useEffect(() => {
     if (resumeInfo?.projects && !isInitialized) {
@@ -29,18 +30,7 @@ const ProjectForm = () => {
     }
   }, [resumeInfo?.projects, isInitialized]);
 
-  useEffect(() => {
-    if (resumeInfo?.projectsSectionTitle) {
-      if (resumeInfo.projectsSectionTitle === 'Projects' || resumeInfo.projectsSectionTitle === 'פרויקטים') {
-        setSectionTitle(t('Projects'));
-      } else {
-        setSectionTitle(resumeInfo.projectsSectionTitle);
-      }
-    } else {
-      setSectionTitle(t('Projects'));
-    }
-  }, [resumeInfo?.projectsSectionTitle, t]);
-
+  // Sync debounced changes back to server
   useEffect(() => {
     if (isInitialized && debouncedProjects.length >= 0) {
       setResumeInfo({ projects: debouncedProjects });
@@ -48,24 +38,34 @@ const ProjectForm = () => {
   }, [debouncedProjects, isInitialized]);
 
   useEffect(() => {
-    if (debouncedSectionTitle && debouncedSectionTitle !== resumeInfo?.projectsSectionTitle) {
-      setResumeInfo({ projectsSectionTitle: debouncedSectionTitle });
+    if (resumeInfo?.projectsSectionTitle) {
+      setSectionTitle(resumeInfo.projectsSectionTitle);
+    } else {
+      setSectionTitle(t('Projects'));
     }
-  }, [debouncedSectionTitle]);
+  }, [resumeInfo?.projectsSectionTitle, t]);
 
   const handleChange = (e: { target: { name: string; value: string } }, index: number) => {
     const { name, value } = e.target;
     setLocalProjects(prev => prev.map((item, idx) => (idx === index ? { ...item, [name]: value } : item)));
   };
 
+  const handleSectionTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSectionTitle(e.target.value);
+  };
+
+  const handleSectionTitleBlur = () => {
+    setResumeInfo({ projectsSectionTitle: sectionTitle });
+  };
+
   const addNewProject = () => {
-    setLocalProjects(prev => [...prev, { name: '', url: '', description: '', order: prev.length }]);
+    const newProject = { name: '', url: '', git: '', description: '', order: localProjects.length };
+    setLocalProjects(prev => [...prev, newProject]);
   };
 
   const removeProject = (index: number, id?: number) => {
-    if (id) {
-      deleteProject({ projectId: id });
-    }
+    if (!id) return;
+    deleteProject({ projectId: id });
     setLocalProjects(prev => prev.filter((_, idx) => idx !== index));
   };
 
@@ -79,11 +79,11 @@ const ProjectForm = () => {
     });
   };
 
-  const handleTranslate = useCallback((translatedText: string, index: number) => {
+  const handleTranslate = (translatedText: string, index: number) => {
     setLocalProjects(prev =>
       prev.map((proj, idx) => (idx === index ? { ...proj, description: translatedText } : proj))
     );
-  }, []);
+  };
 
   return (
     <div>
@@ -96,7 +96,8 @@ const ProjectForm = () => {
         <Input
           className="flex-1 text-lg font-bold"
           value={sectionTitle}
-          onChange={e => setSectionTitle(e.target.value)}
+          onChange={handleSectionTitleChange}
+          onBlur={handleSectionTitleBlur}
         />
       </div>
       <form>
@@ -180,7 +181,9 @@ const ProjectForm = () => {
                   <Label className="text-sm">{t('Description')}</Label>
                   <RichTextEditor
                     value={item?.description || ''}
-                    onEditorChange={val => handleChange({ target: { name: 'description', value: val } }, index)}
+                    onEditorChange={val => {
+                      handleChange({ target: { name: 'description', value: val } }, index);
+                    }}
                     placeholder={t('Project description')}
                     resumeLocale={resumeInfo?.locale || undefined}
                   />

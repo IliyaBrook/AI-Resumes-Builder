@@ -252,12 +252,10 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
   };
 
   const handleAddNewCategoryClick = () => {
-    const existingNewCategories = Object.keys(skillsByCategory).filter(name =>
-      name.startsWith('new-category')
-    );
+    const existingNewCategories = Object.keys(skillsByCategory).filter(name => name.startsWith('new-category'));
     const nextNumber = existingNewCategories.length + 1;
     const newName = existingNewCategories.length === 0 ? 'new-category' : `new-category-${nextNumber}`;
-    handleAddSkillToCategory(newName);
+    void handleAddSkillToCategory(newName);
   };
 
   const handleAddSkillToCategoryClick = useCallback(

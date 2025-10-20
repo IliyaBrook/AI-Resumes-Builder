@@ -5,14 +5,36 @@ export async function POST(request: NextRequest) {
   let page = null;
 
   try {
-    const { html, title = 'resume' } = await request.json();
+    const requestData = await request.json();
+    let html = requestData.html;
+    const title = requestData.title || 'resume';
 
     if (!html) {
       console.error('No HTML content provided');
       return NextResponse.json({ error: 'HTML content is required' }, { status: 400 });
     }
 
+    // Add meta tag to disable automatic detection of email/phone numbers
+    if (!html.includes('format-detection')) {
+      html = html.replace(
+        '<head>',
+        '<head><meta name="format-detection" content="telephone=no, email=no">'
+      );
+    }
+
     page = await preparePage(html);
+
+    // Remove auto-detected mailto: and tel: links that Chrome creates
+    await page.evaluate(() => {
+      const autoLinks = document.querySelectorAll('a[href^="mailto:"], a[href^="tel:"]');
+      autoLinks.forEach((link) => {
+        const span = document.createElement('span');
+        span.textContent = link.textContent || '';
+        span.className = link.className;
+        span.style.cssText = window.getComputedStyle(link).cssText;
+        link.parentNode?.replaceChild(span, link);
+      });
+    });
 
     // Generate PDF
     const pdfBuffer = await page.pdf({

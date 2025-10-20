@@ -41,27 +41,15 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     }
 
     if (resumeInfo?.personalInfo?.email) {
-      compactInfo.push(
-        <p key="email" className="hover:underline">
-          {resumeInfo.personalInfo.email}
-        </p>
-      );
+      compactInfo.push(<span key="email">{resumeInfo.personalInfo.email}</span>);
     }
 
     if (resumeInfo?.personalInfo?.github) {
-      compactInfo.push(
-        <p key="github" className="hover:underline">
-          {resumeInfo.personalInfo.github}
-        </p>
-      );
+      compactInfo.push(<span key="github">{resumeInfo.personalInfo.github}</span>);
     }
 
     if (resumeInfo?.personalInfo?.linkedin) {
-      compactInfo.push(
-        <p key="linkedin" className="hover:underline">
-          {resumeInfo.personalInfo.linkedin}
-        </p>
-      );
+      compactInfo.push(<span key="linkedin">{resumeInfo.personalInfo.linkedin}</span>);
     }
 
     return (
@@ -91,13 +79,14 @@ const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                 return (
                   <div key={rowIndex} className="flex flex-wrap justify-center gap-x-1">
                     {rowItems.map((item, index) => {
-                      const isLast = index === rowItems.length - 1;
+                      const globalIndex = startIndex + index;
+                      const isLastInRow = index === rowItems.length - 1;
                       return (
-                        <span key={startIndex + index} className="whitespace-nowrap">
+                        <span key={globalIndex} className="whitespace-nowrap">
                           {item}
-                          {!isLast && (
+                          {!isLastInRow && (
                             <span
-                              className="mx-[1px] font-bold"
+                              className="mx-1 font-bold"
                               style={{
                                 color: themeColor,
                               }}

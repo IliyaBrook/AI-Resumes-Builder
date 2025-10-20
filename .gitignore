@@ -49,3 +49,5 @@ cheatsheet
 dumps
 .output.txt
 tmp
+playwright-profile
+.playwright-mcp

@@ -38,10 +38,14 @@ if exist dumps (
 
 if not exist "%DUMPS_DIR%" mkdir "%DUMPS_DIR%"
 
-rem Get current date and time
-for /f "tokens=2 delims==" %%a in ('wmic OS Get localdatetime /value') do set "dt=%%a"
-set "YY=%dt:~2,2%" & set "MM=%dt:~4,2%" & set "DD=%dt:~6,2%"
-set "HH=%dt:~8,2%" & set "MIN=%dt:~10,2%"
+rem Get current date and time using PowerShell (wmic is deprecated)
+for /f "tokens=1-5 delims=/ " %%a in ('powershell -Command "Get-Date -Format 'dd/MM/yy/HH/mm'"') do (
+    set "DD=%%a"
+    set "MM=%%b"
+    set "YY=%%c"
+    set "HH=%%d"
+    set "MIN=%%e"
+)
 set "filename=%DUMPS_DIR%\backup_%DD%_%MM%_%YY%_%HH%_%MIN%.sql"
 
 echo Creating backup file: %filename%

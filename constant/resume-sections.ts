@@ -1,13 +1,11 @@
-import {
-  LanguagePreview,
-  ProjectPreview,
-  SkillPreview,
-  EducationPreview,
-  ExperiencePreview,
-  SummaryPreview,
-  PersonalInfoPreview,
-  ArmyPreview,
-} from '@/editResume';
+import { LanguagePreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/Language';
+import { ProjectPreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/Project';
+import { SkillPreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/Skills';
+import { EducationPreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/Education';
+import { ExperiencePreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/Experience';
+import { SummaryPreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/Summary';
+import { PersonalInfoPreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/PersonalInfo';
+import { ArmyPreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/Army';
 import { DEFAULT_PAGES_ORDER } from './default-pages-order';
 
 export { DEFAULT_PAGES_ORDER };

@@ -8,8 +8,13 @@ let browser: Browser | null = null;
 function findChrome(): string | null {
   // Common Chrome paths for different platforms and installations
   const chromePaths = [
-    // Environment variable
+    // Environment variable (highest priority)
     process.env.CHROME_EXECUTABLE_PATH,
+    process.env.PUPPETEER_EXECUTABLE_PATH,
+
+    // Alpine Linux / Docker Chromium
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium',
 
     // Puppeteer cache locations
     join(homedir(), '.cache/puppeteer/chrome/linux-*/chrome-linux64/chrome'),
@@ -18,8 +23,6 @@ function findChrome(): string | null {
     // System Chrome installations
     '/usr/bin/google-chrome-stable',
     '/usr/bin/google-chrome',
-    '/usr/bin/chromium-browser',
-    '/usr/bin/chromium',
     '/opt/google/chrome/google-chrome',
 
     // Snap installations
@@ -29,6 +32,7 @@ function findChrome(): string | null {
 
   for (const path of chromePaths) {
     if (path && existsSync(path)) {
+      console.log('Found Chrome at:', path);
       return path;
     }
   }
@@ -42,6 +46,7 @@ function findChrome(): string | null {
         if (dir.startsWith('linux-')) {
           const chromePath = join(puppeteerCacheBase, dir, 'chrome-linux64', 'chrome');
           if (existsSync(chromePath)) {
+            console.log('Found Chrome in Puppeteer cache:', chromePath);
             return chromePath;
           }
         }
@@ -51,6 +56,7 @@ function findChrome(): string | null {
     }
   }
 
+  console.warn('Chrome executable not found in any known location');
   return null;
 }
 

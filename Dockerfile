@@ -37,8 +37,22 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Install postgresql-client for database operations and bash for scripts
-RUN apk add --no-cache postgresql-client bash
+# Install postgresql-client for database operations, bash for scripts, and Chrome dependencies
+RUN apk add --no-cache \
+    postgresql-client \
+    bash \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    font-noto-emoji
+
+# Set Chrome executable path for Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
+    CHROME_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 # Enable Corepack for Yarn
 RUN corepack enable

@@ -1,5 +1,5 @@
 'use client';
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
+import React, { CSSProperties, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import {
   BtnBold,
   BtnBulletList,
@@ -122,6 +122,13 @@ const BtnTextColorBlue = createButton('Blue text', 'B', () => {
   document.execCommand('foreColor', false, '#0000ff');
 });
 
+interface ImproveFormattingOptions {
+  list?: boolean;
+  font_size?: number;
+  button_styles?: CSSProperties | undefined;
+  button_text?: string | undefined;
+}
+
 interface RichTextEditorProps {
   jobTitle?: string | null;
   initialValue?: string;
@@ -136,6 +143,7 @@ interface RichTextEditorProps {
   disabled?: boolean;
   showLineLengthSelector?: boolean;
   resumeLocale?: string;
+  improve_formatting_options?: ImproveFormattingOptions;
 }
 
 export function parseAIResult(value: string): ParsedAIResult {
@@ -202,6 +210,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       disabled = false,
       showLineLengthSelector = true,
       resumeLocale,
+      improve_formatting_options,
     },
     ref
   ) => {
@@ -309,6 +318,22 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
         setIsFormattingLoading(true);
         setIsFormattingDialogOpen(false);
 
+        // Determine list formatting instruction based on improve_formatting_options
+        let listInstruction = '';
+        if (improve_formatting_options?.list === false) {
+          listInstruction =
+            '2. Do NOT add or use bullet lists (<ul>, <li>). If bullet lists already exist in the content, remove them and convert the content to regular paragraphs or text';
+        } else if (improve_formatting_options?.list === true) {
+          listInstruction =
+            '2. You MUST add bullet lists (<ul>, <li>) to structure the content appropriately. Convert existing text into well-organized bullet points where applicable';
+        } else {
+          listInstruction =
+            '2. Add or improve bullet lists (<ul>, <li>) where it makes logical sense based on the context';
+        }
+
+        // Determine font size to use
+        const fontSize = improve_formatting_options?.font_size ?? 13;
+
         let improvementPrompt = `You are a professional resume formatting expert. Your task is to improve ONLY the formatting and styling of the following HTML content WITHOUT changing the actual text content or meaning.
 
 Current HTML content:
@@ -316,7 +341,7 @@ ${value}
 
 Instructions:
 1. Fix any incorrect indentation and spacing
-2. Add or improve bullet lists (<ul>, <li>) where it makes logical sense based on the context
+${listInstruction}
 3. Highlight key words and phrases in bold (<strong> or <b>) that would stand out in a resume, such as:
    - Job titles and positions
    - Company names
@@ -324,10 +349,11 @@ Instructions:
    - Achievements and metrics
    - Years of experience
    - Certifications
-4. Ensure proper HTML structure and formatting
-5. Keep the exact same text content - do not add, remove, or modify any words
-6. Return ONLY the improved HTML without any explanations or wrapper text
-7. Do not use JSON format, return only raw HTML`;
+4. Set the default font size to ${fontSize}px for all text (using inline styles or span tags with style="font-size: ${fontSize}px") unless user specifies a different size in additional instructions
+5. Ensure proper HTML structure and formatting
+6. Keep the exact same text content - do not add, remove, or modify any words
+7. Return ONLY the improved HTML without any explanations or wrapper text
+8. Do not use JSON format, return only raw HTML`;
 
         if (additionalPrompt && additionalPrompt.trim().length > 0) {
           improvementPrompt += `\n\nAdditional formatting instructions from user:\n${additionalPrompt}`;
@@ -441,9 +467,10 @@ Instructions:
               className="gap-1"
               disabled={isFormattingLoading || disabled || !value || value.trim().length === 0}
               onClick={handleOpenFormattingDialog}
+              style={improve_formatting_options?.button_styles ?? {}}
             >
               <Wand2 size="15px" className="text-blue-500" />
-              Improve Formatting
+              {improve_formatting_options?.button_text ?? 'Improve Formatting'}
               {isFormattingLoading && <Loader size="13px" className="animate-spin" />}
             </Button>
           </div>

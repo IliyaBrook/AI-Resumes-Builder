@@ -179,6 +179,7 @@ const ProjectForm = () => {
                 <div className="col-span-2 mt-1">
                   <Label className="text-sm">{t('Description')}</Label>
                   <RichTextEditor
+                    improve_formatting_options={{ list: false }}
                     value={item?.description || ''}
                     onEditorChange={val => {
                       handleChange({ target: { name: 'description', value: val } }, index);

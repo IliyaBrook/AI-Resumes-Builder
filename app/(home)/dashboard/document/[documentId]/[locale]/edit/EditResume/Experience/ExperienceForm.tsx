@@ -304,6 +304,7 @@ const ExperienceForm = () => {
                 </div>
                 <div className="col-span-2 mt-1">
                   <RichTextEditor
+                    improve_formatting_options={{ list: true, button_text: 'formatting' }}
                     jobTitle={item.title}
                     initialValue={item.workSummary || ''}
                     onEditorChange={value => {

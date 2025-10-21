@@ -222,6 +222,7 @@ const SummaryForm = () => {
           </div>
           <div className="mt-5 min-h-36">
             <RichTextEditor
+              improve_formatting_options={{ list: false }}
               ref={editorRef}
               jobTitle={resumeInfo?.personalInfo?.jobTitle || null}
               initialValue={localSummary}

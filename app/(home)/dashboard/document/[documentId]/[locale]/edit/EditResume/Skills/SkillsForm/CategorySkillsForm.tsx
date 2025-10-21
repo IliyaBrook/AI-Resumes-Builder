@@ -192,58 +192,29 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
     setEditCategoryName('');
   };
 
-  const handleMoveCategory = (categoryName: string, action: 'up' | 'down') => {
-    const sortedCategories = sortedCategoryKeys;
-    const currentIndex = sortedCategories.indexOf(categoryName);
+  const handleMoveCategory = (categoryIndex: number, direction: 'up' | 'down') => {
+    const toIndex = direction === 'up' ? categoryIndex - 1 : categoryIndex + 1;
 
-    if (action === 'up') {
-      if (currentIndex <= 0) {
-        return;
-      }
-    } else {
-      if (currentIndex >= sortedCategories.length - 1) {
-        return;
-      }
-    }
+    if (toIndex < 0 || toIndex >= sortedCategoryKeys.length) return;
 
-    const currentCategorySkills = skillsByCategory[categoryName] || [];
-    const targetCategoryName = sortedCategories[action === 'up' ? currentIndex - 1 : currentIndex + 1];
+    const newCategoryKeys = [...sortedCategoryKeys];
+    const [movedCategory] = newCategoryKeys.splice(categoryIndex, 1);
+    newCategoryKeys.splice(toIndex, 0, movedCategory);
 
-    const targetCategorySkills = skillsByCategory[targetCategoryName] || [];
-
-    if (currentCategorySkills.length === 0 || targetCategorySkills.length === 0) {
-      return;
-    }
-    const currentCategoryOrder = Math.min(...currentCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
-    const targetCategoryOrder = Math.min(...targetCategorySkills.map((skill: SkillType) => skill.categoryOrder || 0));
-
-    currentCategorySkills.forEach((skill: SkillType) => {
-      if (skill.id) {
-        updateSkill({
-          skillId: skill.id,
-          data: { categoryOrder: targetCategoryOrder },
-        });
-      }
+    const updatedSkills = skills.map(skill => {
+      const newCategoryIndex = newCategoryKeys.indexOf(skill.category || '');
+      return { ...skill, categoryOrder: newCategoryIndex };
     });
 
-    targetCategorySkills.forEach((skill: SkillType) => {
-      if (skill.id) {
+    setSkills(updatedSkills);
+
+    updatedSkills.forEach(skill => {
+      if (skill.id !== undefined) {
         updateSkill({
           skillId: skill.id,
-          data: { categoryOrder: currentCategoryOrder },
+          data: { categoryOrder: skill.categoryOrder },
         });
       }
-    });
-
-    setSkills(prev => {
-      return prev.map(skill => {
-        if (skill.category === categoryName) {
-          return { ...skill, categoryOrder: targetCategoryOrder };
-        } else if (skill.category === targetCategoryName) {
-          return { ...skill, categoryOrder: currentCategoryOrder };
-        }
-        return skill;
-      });
     });
   };
 
@@ -292,7 +263,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
                       size="icon"
                       type="button"
                       className="size-6"
-                      onClick={() => handleMoveCategory(categoryName, 'up')}
+                      onClick={() => handleMoveCategory(categoryIndex, 'up')}
                       disabled={categoryIndex === 0}
                     >
                       <MoveUp size={14} />
@@ -302,7 +273,7 @@ const CategorySkillsForm: React.FC<CategorySkillsFormProps> = ({ resumeInfo, ref
                       size="icon"
                       type="button"
                       className="size-6"
-                      onClick={() => handleMoveCategory(categoryName, 'down')}
+                      onClick={() => handleMoveCategory(categoryIndex, 'down')}
                       disabled={categoryIndex === sortedCategoryKeys.length - 1}
                     >
                       <MoveDown size={14} />

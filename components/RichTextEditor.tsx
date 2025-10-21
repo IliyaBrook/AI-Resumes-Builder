@@ -15,10 +15,12 @@ import {
 } from 'react-simple-wysiwyg';
 import { Label } from './ui/label';
 import { Button } from './ui/button';
-import { Loader, Sparkles } from 'lucide-react';
+import { Loader, Sparkles, Wand2 } from 'lucide-react';
 import { toast } from '@/hooks';
 import { getAIChatSession } from '@/lib/google-ai-model';
 import { AIResultObjectType, ParsedAIResult } from '@/types/resume.type';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
+import { Textarea } from './ui/textarea';
 
 const BtnAlignLeft = createButton('Align left', 'L', 'justifyLeft');
 const BtnAlignCenter = createButton('Align center', 'C', 'justifyCenter');
@@ -205,6 +207,9 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
   ) => {
     const [value, setValue] = useState(initialValue || '');
     const [loading, setLoading] = useState(false);
+    const [isFormattingDialogOpen, setIsFormattingDialogOpen] = useState(false);
+    const [additionalPrompt, setAdditionalPrompt] = useState('');
+    const [isFormattingLoading, setIsFormattingLoading] = useState(false);
 
     useImperativeHandle(ref, () => ({
       setValue: (newValue: string) => {
@@ -291,6 +296,96 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       void handleGenerate();
     }, [handleGenerate]);
 
+    const handleImproveFormatting = async () => {
+      try {
+        if (!value || value.trim().length === 0) {
+          toast({
+            title: 'No content to improve',
+            variant: 'destructive',
+          });
+          return;
+        }
+
+        setIsFormattingLoading(true);
+        setIsFormattingDialogOpen(false);
+
+        let improvementPrompt = `You are a professional resume formatting expert. Your task is to improve ONLY the formatting and styling of the following HTML content WITHOUT changing the actual text content or meaning.
+
+Current HTML content:
+${value}
+
+Instructions:
+1. Fix any incorrect indentation and spacing
+2. Add or improve bullet lists (<ul>, <li>) where it makes logical sense based on the context
+3. Highlight key words and phrases in bold (<strong> or <b>) that would stand out in a resume, such as:
+   - Job titles and positions
+   - Company names
+   - Skills and technologies
+   - Achievements and metrics
+   - Years of experience
+   - Certifications
+4. Ensure proper HTML structure and formatting
+5. Keep the exact same text content - do not add, remove, or modify any words
+6. Return ONLY the improved HTML without any explanations or wrapper text
+7. Do not use JSON format, return only raw HTML`;
+
+        if (additionalPrompt && additionalPrompt.trim().length > 0) {
+          improvementPrompt += `\n\nAdditional formatting instructions from user:\n${additionalPrompt}`;
+        }
+
+        // Add Hebrew language instruction if locale is Hebrew
+        if (resumeLocale === 'he') {
+          improvementPrompt += ' Maintain Hebrew text direction and ensure proper RTL formatting.';
+        }
+
+        const chat = getAIChatSession();
+        const result = await chat.sendMessage({ message: improvementPrompt });
+        let responseText = result.text || '';
+
+        // Clean up the response - remove any JSON wrapper if present
+        responseText = responseText.trim();
+        if (responseText.startsWith('```html')) {
+          responseText = responseText.replace(/```html\n?/, '').replace(/```$/, '');
+        } else if (responseText.startsWith('```')) {
+          responseText = responseText.replace(/```\n?/, '').replace(/```$/, '');
+        }
+
+        // Remove any JSON wrapper
+        const jsonMatch = responseText.match(/\{[\s\S]*"html"[\s\S]*:[\s\S]*"([\s\S]*)"[\s\S]*\}/);
+        if (jsonMatch && jsonMatch[1]) {
+          responseText = jsonMatch[1];
+        }
+
+        responseText = responseText.trim();
+
+        setValue(responseText);
+        onEditorChange(responseText);
+        if (onBlur) onBlur(responseText);
+
+        setAdditionalPrompt('');
+        toast({
+          title: 'Formatting improved successfully',
+          variant: 'default',
+        });
+      } catch (error) {
+        console.error('error in handleImproveFormatting:', error);
+        toast({
+          title: 'Failed to improve formatting',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsFormattingLoading(false);
+      }
+    };
+
+    const handleOpenFormattingDialog = () => {
+      setIsFormattingDialogOpen(true);
+    };
+
+    const handleFormattingDialogSubmit = useCallback(() => {
+      void handleImproveFormatting();
+    }, [handleImproveFormatting]);
+
     return (
       <div>
         <div className="my-2 flex items-center justify-between">
@@ -335,13 +430,22 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
                 disabled={loading || disabled}
                 onClick={handleGenerateClick}
               >
-                <>
-                  <Sparkles size="15px" className="text-purple-500" />
-                  Generate with AI
-                </>
+                <Sparkles size="15px" className="text-purple-500" />
+                Generate with AI
                 {loading && <Loader size="13px" className="animate-spin" />}
               </Button>
             )}
+            <Button
+              variant="outline"
+              type="button"
+              className="gap-1"
+              disabled={isFormattingLoading || disabled || !value || value.trim().length === 0}
+              onClick={handleOpenFormattingDialog}
+            >
+              <Wand2 size="15px" className="text-blue-500" />
+              Improve Formatting
+              {isFormattingLoading && <Loader size="13px" className="animate-spin" />}
+            </Button>
           </div>
         </div>
         <EditorProvider>
@@ -405,6 +509,35 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
             </Toolbar>
           </Editor>
         </EditorProvider>
+
+        <Dialog open={isFormattingDialogOpen} onOpenChange={setIsFormattingDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Improve Text Formatting</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="additional-prompt">Additional Instructions (Optional)</Label>
+                <Textarea
+                  id="additional-prompt"
+                  placeholder="Add any specific formatting instructions here..."
+                  value={additionalPrompt}
+                  onChange={e => setAdditionalPrompt(e.target.value)}
+                  className="mt-2 min-h-[100px]"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsFormattingDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleFormattingDialogSubmit} disabled={isFormattingLoading}>
+                {isFormattingLoading && <Loader size="13px" className="mr-2 animate-spin" />}
+                {isFormattingLoading ? 'Processing...' : 'Improve'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }

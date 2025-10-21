@@ -340,7 +340,7 @@ Current HTML content:
 ${value}
 
 Instructions:
-1. Fix any incorrect indentation and spacing
+1. Don't add extra spaces, there should be only one space between words, no more.
 ${listInstruction}
 3. Highlight key words and phrases in bold (<strong> or <b>) that would stand out in a resume, such as:
    - Job titles and positions

@@ -11,7 +11,7 @@ interface PropsType {
 const SummaryPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
   const t = useTranslations('Summary');
   return (
-    <div className="min-h-10 w-full">
+    <div className="min-h-10 w-full" id="summary-preview">
       {isLoading ? (
         <Skeleton className="h-6 w-full" />
       ) : (

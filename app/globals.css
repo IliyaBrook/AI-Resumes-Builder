@@ -79,3 +79,11 @@ body {
         @apply bg-background text-foreground;
     }
 }
+
+/*Rich text editor styles*/
+#rich-text-editor {
+    p, span {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}

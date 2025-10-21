@@ -477,6 +477,7 @@ ${listInstruction}
         </div>
         <EditorProvider>
           <Editor
+            id="rich-text-editor"
             value={value}
             containerProps={{
               style: {

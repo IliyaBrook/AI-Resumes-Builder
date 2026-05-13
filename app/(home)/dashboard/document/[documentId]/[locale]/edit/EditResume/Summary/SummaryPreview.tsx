@@ -1,0 +1,30 @@
+import { Skeleton } from '@/components';
+import React, { FC } from 'react';
+import { DocumentType } from '@/types';
+import { useTranslations } from 'next-intl';
+
+interface PropsType {
+  resumeInfo: DocumentType | undefined;
+  isLoading: boolean;
+}
+
+const SummaryPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
+  const t = useTranslations('Summary');
+  return (
+    <div className="min-h-10 w-full" id="summary-preview">
+      {isLoading ? (
+        <Skeleton className="h-6 w-full" />
+      ) : (
+        <div className="text-[13px] !leading-4">
+          {resumeInfo?.summary ? (
+            <div dangerouslySetInnerHTML={{ __html: resumeInfo?.summary }} />
+          ) : (
+            t('Enter a brief description of your profession background')
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SummaryPreview;

@@ -1,0 +1,88 @@
+---
+#-------------------------------------------------------------------------------#
+#               Qodana analysis is configured by qodana.yaml file               #
+#             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
+#-------------------------------------------------------------------------------#
+version: '1.0'
+
+# Specify inspection profile for code analysis
+profile:
+  name: qodana.recommended
+
+# Specify Qodana linter for analysis (Applied in CI/CD pipeline)
+linter: jetbrains/qodana-js:2025.2
+
+# Enable specific inspections useful for Next.js/React projects
+include:
+  - name: ES6MissingAwait
+  - name: JSUnusedLocalSymbols
+  - name: TypeScriptValidateTypes
+  - name: JSUnresolvedReference
+  - name: ReactHookInspection
+  - name: ES6ShorthandObjectProperty
+  - name: JSUnnecessaryLocalVariable
+
+# Exclude paths and inspections
+exclude:
+  # Exclude paths from analysis scope
+  - name: All
+    paths:
+      # Build and generated files
+      - .next/**
+      - out/**
+      - dist/**
+      - build/**
+
+      # Dependencies and package managers
+      - node_modules/**
+      - .pnpm-store/**
+      - .pnp.*
+
+      # Database and backups
+      - dumps/**
+      - '*.sql'
+      - drizzle/**
+
+      # Environment and configuration files that shouldn't be analyzed
+      - '.env*'
+      - .claude/**
+      - .idea/**
+
+      # Other generated or temporary files
+      - tsconfig.tsbuildinfo
+      - '*.log'
+      - .DS_Store
+      - Thumbs.db
+
+      # Documentation and non-code files
+      - README.md
+      - CLAUDE.md
+      - TECHWITHEMMA-LICENSE.md
+      - cheatsheet/**
+
+  # Disable inspections that may conflict with Next.js/React patterns
+  - name: RequireExplicitType
+    paths:
+      - '**/*.tsx'
+      - '**/*.jsx'
+  - name: ImplicitReturnType
+    paths:
+      - 'components/**'
+      - 'app/**'
+  - name: UnnecessaryLocalVariable
+    paths:
+      - '**/*.config.*'
+
+# Quality gate - fail CI/CD if thresholds exceeded
+failureConditions:
+  severityThresholds:
+    any: 25 # Maximum total issues
+    critical: 3 # Maximum critical issues
+    high: 8 # Maximum high severity issues
+    moderate: 15 # Maximum moderate issues
+
+# Execute commands before Qodana analysis
+bootstrap: |
+  echo "Starting Qodana analysis for Next.js Resume Builder project..."
+  echo "TypeScript version: $(npx tsc --version)"
+  echo "Next.js project structure detected"

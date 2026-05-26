@@ -1,18 +1,18 @@
 {
-	"hooks": {
-		"PostToolUse": [
-			{
-				"matcher": "apply_patch|Edit|Write",
-				"hooks": [
-					{
-						"type": "command",
-						"command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/check-ts-eslint.mjs\"",
-						"commandWindows": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/check-ts-eslint.mjs\"",
-						"timeout": 180,
-						"statusMessage": "Checking edited file diagnostics"
-					}
-				]
-			}
-		]
-	}
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/check-ts-eslint.mjs\"",
+            "commandWindows": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/check-ts-eslint.mjs\"",
+            "timeout": 180,
+            "statusMessage": "Checking edited file diagnostics"
+          }
+        ]
+      }
+    ]
+  }
 }

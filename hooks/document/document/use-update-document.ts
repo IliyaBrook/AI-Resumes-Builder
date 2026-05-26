@@ -39,6 +39,7 @@ type UpdateDocumentRequest = {
   projectsSectionTitle?: string;
   languagesSectionTitle?: string;
   armyService?: string;
+  drivingLicense?: string;
   skillsDisplayFormat?: string;
   personalInfoDisplayFormat?: string;
   pagesOrder?: string[];

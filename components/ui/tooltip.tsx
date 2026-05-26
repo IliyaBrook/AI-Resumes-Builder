@@ -65,7 +65,7 @@ const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>(
           <>
             <div
               className={cn(
-                'absolute z-50 max-w-xs whitespace-nowrap break-words rounded bg-gray-900 px-2 py-1 text-sm text-white shadow-lg',
+                'absolute z-50 max-w-xs rounded bg-gray-900 px-2 py-1 text-sm break-words whitespace-nowrap text-white shadow-lg',
                 tooltipSideClasses[side],
                 className
               )}

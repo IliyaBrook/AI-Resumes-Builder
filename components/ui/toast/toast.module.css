@@ -1,7 +1,7 @@
 .toast {
-    /* fix dot in toast */
+  /* fix dot in toast */
 
-    &:global(:before) {
-        display: none;
-    }
+  &:global(:before) {
+    display: none;
+  }
 }

@@ -281,7 +281,8 @@ const ImportResumeDialog: React.FC<PropTypes> = ({ open, onOpenChange }) => {
             id="import-title"
             aria-label="Resume title"
             value={title}
-            onChange={e => setTitle(e.target.value)} placeholder="Resume title"
+            onChange={e => setTitle(e.target.value)}
+            placeholder="Resume title"
           />
         </div>
 

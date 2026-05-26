@@ -120,7 +120,7 @@ export const ModalSectionWrapper = ({
       className={cn(
         'section-wrapper relative cursor-pointer rounded-md border-2 border-transparent transition-all duration-200',
         isSelected &&
-          'border-blue-500 bg-blue-50 p-2 shadow-lg ring-2 ring-blue-500 ring-opacity-50 dark:border-blue-400 dark:bg-blue-950 dark:ring-blue-400'
+          'ring-opacity-50 border-blue-500 bg-blue-50 p-2 shadow-lg ring-2 ring-blue-500 dark:border-blue-400 dark:bg-blue-950 dark:ring-blue-400'
       )}
       style={{
         marginTop: `${(paddingTop * 0.264583).toFixed(2)}mm`,
@@ -137,7 +137,7 @@ export const ModalSectionWrapper = ({
       {isSelected && (
         <div
           // key={`modal-buttons-${sectionKey}`}
-          className="fixed left-4 top-1/2 flex -translate-y-1/2 transform flex-col gap-3 rounded-lg border-2 border-blue-500 bg-white p-4 shadow-2xl backdrop-blur-sm"
+          className="fixed top-1/2 left-4 flex -translate-y-1/2 transform flex-col gap-3 rounded-lg border-2 border-blue-500 bg-white p-4 shadow-2xl backdrop-blur-sm"
           onClick={e => e.stopPropagation()}
           style={{
             zIndex: 99999,

@@ -1,6 +1,6 @@
 {
-  "id": "8ee4286b-b0bb-4fd7-b8db-2df6d9231dc4",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "2eb9bb8a-aebd-49a5-93a5-0bf595d13d48",
+  "prevId": "8ee4286b-b0bb-4fd7-b8db-2df6d9231dc4",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -94,6 +94,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "driving_license": {
+          "name": "driving_license",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "skills_display_format": {
           "name": "skills_display_format",
           "type": "varchar(32)",
@@ -112,7 +118,7 @@
           "type": "json",
           "primaryKey": false,
           "notNull": false,
-          "default": "'[\"personal-info\",\"summary\",\"experience\",\"education\",\"projects\",\"skills\",\"languages\",\"army\"]'::json"
+          "default": "'[\"personal-info\",\"summary\",\"experience\",\"education\",\"projects\",\"skills\",\"languages\",\"driving-license\",\"army\"]'::json"
         },
         "direction": {
           "name": "direction",

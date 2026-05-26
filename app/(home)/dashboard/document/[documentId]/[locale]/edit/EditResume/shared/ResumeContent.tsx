@@ -65,7 +65,7 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
   const param = useParams();
   const documentId = param?.documentId as string;
   const shouldFetch = fetchDataIndependently && !!documentId;
-  const { data, isLoading: dataIsLoading } = useGetDocumentById(shouldFetch ? documentId : 'disabled');
+  const { data, isLoading: dataIsLoading } = useGetDocumentById(documentId || 'disabled', false, shouldFetch);
 
   // For PDF export without fetching
   if (isPdfExport && propsResumeInfo && propsPagesOrder && propsThemeColor) {
@@ -77,6 +77,7 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
       projects: 'projects',
       skills: 'skills',
       languages: 'languages',
+      'driving-license': 'drivingLicense',
     } as const;
 
     return (
@@ -142,9 +143,9 @@ export const ResumeContent: React.FC<ResumeContentProps> = ({
     <div
       id="resume-content"
       className={cn(
-        'relative h-full w-full bg-white px-10 py-4 !font-open-sans',
+        '!font-open-sans relative h-full w-full bg-white px-10 py-4',
         isPdfMode && 'pdf-mode',
-        !isPdfMode && 'shadow-lg dark:border dark:border-x-gray-800 dark:border-b-gray-800 dark:bg-card'
+        !isPdfMode && 'dark:bg-card shadow-lg dark:border dark:border-x-gray-800 dark:border-b-gray-800'
       )}
       style={{
         borderTop: `13px solid ${themeColor}`,
@@ -283,9 +284,9 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
         <div {...pagePreviewStyles}>
           <div className="h-full w-full overflow-hidden">{page.content}</div>
 
-          <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r opacity-75" />
+          <div className="absolute right-0 bottom-0 left-0 h-2 bg-gradient-to-r opacity-75" />
 
-          <div className="absolute bottom-2 right-4 text-xs font-medium text-gray-400">{page.pageNumber}</div>
+          <div className="absolute right-4 bottom-2 text-xs font-medium text-gray-400">{page.pageNumber}</div>
         </div>
 
         <div className="text-center text-xs text-gray-500">
@@ -326,8 +327,8 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
                 Additional content will appear here if needed...
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-gray-300 to-gray-400 opacity-50" />
-              <div className="absolute bottom-2 right-4 text-xs font-medium text-gray-300">2</div>
+              <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-gray-300 to-gray-400 opacity-50" />
+              <div className="absolute right-4 bottom-2 text-xs font-medium text-gray-300">2</div>
             </div>
             <div className="mt-2 text-center text-xs text-gray-400">A4 (210 × 297 mm) • Empty page</div>
           </div>
@@ -339,8 +340,8 @@ const PagedResumeContent: React.FC<PagedResumeContentProps> = ({
                 Additional content will appear here if needed...
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-gray-300 to-gray-400 opacity-50" />
-              <div className="absolute bottom-2 right-4 text-xs font-medium text-gray-300">3</div>
+              <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-gray-300 to-gray-400 opacity-50" />
+              <div className="absolute right-4 bottom-2 text-xs font-medium text-gray-300">3</div>
             </div>
             <div className="mt-2 text-center text-xs text-gray-400">A4 (210 × 297 mm) • Empty page</div>
           </div>

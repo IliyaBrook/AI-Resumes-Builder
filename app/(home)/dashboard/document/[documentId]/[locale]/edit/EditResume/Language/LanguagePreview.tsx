@@ -32,7 +32,7 @@ const LanguagePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           ? t('Languages')
           : resumeInfo?.languagesSectionTitle?.trim() || t('Languages')}
       </h5>
-      <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
+      <hr className="mt-2 mb-2 border-[1.5px]" style={{ borderColor: themeColor }} />
       <div className="grid min-h-9 grid-cols-2 gap-x-8 gap-y-1">
         {languages.map((language, index) => (
           <div key={language.id || index} className="flex items-center justify-between">

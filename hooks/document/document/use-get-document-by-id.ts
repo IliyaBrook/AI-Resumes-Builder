@@ -4,7 +4,7 @@ import { api } from '@/lib/hono-rpc';
 import { useBaseQuery } from '@/hooks';
 import { APIResponseType, DocumentType } from '@/types';
 
-const useGetDocumentById = (documentId: string, isPublic: boolean = false) => {
+const useGetDocumentById = (documentId: string, isPublic: boolean = false, enabled: boolean = true) => {
   return useBaseQuery({
     queryKey: ['document', documentId],
     queryFn: async () => {
@@ -26,6 +26,7 @@ const useGetDocumentById = (documentId: string, isPublic: boolean = false) => {
         success,
       };
     },
+    enabled,
     retry: isPublic ? false : 3,
   });
 };

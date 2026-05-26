@@ -40,6 +40,7 @@ export const ResumeContentBase: React.FC<ResumeContentBaseProps> = ({
     projects: 'projects',
     skills: 'skills',
     languages: 'languages',
+    'driving-license': 'drivingLicense',
     army: 'army',
   } as const;
 

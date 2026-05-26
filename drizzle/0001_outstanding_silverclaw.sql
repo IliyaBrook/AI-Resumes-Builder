@@ -1,0 +1,2 @@
+ALTER TABLE "document" ALTER COLUMN "pages_order" SET DEFAULT '["personal-info","summary","experience","education","projects","skills","languages","driving-license","army"]'::json;--> statement-breakpoint
+ALTER TABLE "document" ADD COLUMN "driving_license" text;

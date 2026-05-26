@@ -40,7 +40,7 @@ const ExperiencePreview: FC<PropsType> = ({
           {experience?.title}
         </h5>
         <div className="mb-2 flex items-start justify-between">
-          <h5 className="whitespace-nowrap text-[13px]">
+          <h5 className="text-[13px] whitespace-nowrap">
             <span className="font-bold">{experience?.companyName}</span>
             <span>
               {experience?.companyName && experience?.city && ', '}
@@ -92,7 +92,7 @@ const ExperiencePreview: FC<PropsType> = ({
         {t('Professional Experience')}
       </h5>
       <hr
-        className="mb-2 mt-2 border-[1.5px]"
+        className="mt-2 mb-2 border-[1.5px]"
         style={{
           borderColor: themeColor,
         }}

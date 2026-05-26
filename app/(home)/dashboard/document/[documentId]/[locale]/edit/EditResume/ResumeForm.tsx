@@ -17,6 +17,7 @@ import {
   SkillsForm,
   SummaryForm,
   ArmyForm,
+  DrivingLicenseForm,
 } from '@/editResume';
 
 const ResumeForm = () => {
@@ -59,7 +60,7 @@ const ResumeForm = () => {
 
   return (
     <div className="w-full flex-1 lg:sticky lg:top-16">
-      <div className="rounded-md !border-t-4 !border-t-primary bg-white shadow-md dark:border dark:border-gray-800 dark:bg-card">
+      <div className="!border-t-primary dark:bg-card rounded-md !border-t-4 bg-white shadow-md dark:border dark:border-gray-800">
         <div className="flex min-h-10 items-center justify-end gap-1 border-b px-3 py-[7px]">
           {activeFormIndex > 1 && (
             <Button
@@ -77,7 +78,7 @@ const ResumeForm = () => {
             variant="outline"
             size="default"
             className="!h-auto !px-2 !py-1"
-            disabled={activeFormIndex === 8 || resumeInfo?.status === 'archived'}
+            disabled={activeFormIndex === 9 || resumeInfo?.status === 'archived'}
             onClick={handleNext}
           >
             {t('Next')}
@@ -92,7 +93,8 @@ const ResumeForm = () => {
           {activeFormIndex === 5 && <ProjectForm />}
           {activeFormIndex === 6 && <SkillsForm />}
           {activeFormIndex === 7 && <LanguageForm />}
-          {activeFormIndex === 8 && <ArmyForm />}
+          {activeFormIndex === 8 && <DrivingLicenseForm />}
+          {activeFormIndex === 9 && <ArmyForm />}
         </div>
       </div>
     </div>

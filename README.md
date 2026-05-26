@@ -29,9 +29,9 @@ assistance.
 - **Flexible Layouts** - Customize personal information display format
 - **Smart Summary Generation** - AI summaries with size options (Short, Large, Extra Large)
 - **Professional Experience Tools**:
-    - Mark end date as "Present"
-    - Option to hide dates
-    - Rich text editor for descriptions
+  - Mark end date as "Present"
+  - Option to hide dates
+  - Rich text editor for descriptions
 - **Data Reordering** - Drag and reorder sections and entries
 - **Projects Section** - Optional showcase for your portfolio with customizable title
 - **Section Management** - Reorder all resume sections with intuitive controls
@@ -128,14 +128,14 @@ from an existing file in seconds.
 
 1. Click **AI Import Resume** on `/dashboard` and either drop a file onto the modal or browse to one.
 2. The file is sent to `POST /api/import/resume`:
-    - **PDF** → forwarded to the AI as a native document content block (preserving layout, lists, bold, italic).
-    - **DOCX** → converted to HTML via `mammoth.convertToHtml` so styling survives, then sent as a text prompt.
+   - **PDF** → forwarded to the AI as a native document content block (preserving layout, lists, bold, italic).
+   - **DOCX** → converted to HTML via `mammoth.convertToHtml` so styling survives, then sent as a text prompt.
 3. The selected AI provider (Gemini or Claude Code) maps every section to the builder's schema and returns a
    structured JSON object plus a list of notes about anything it could not map cleanly.
 4. The review modal lets you:
-    - Edit the title (prefilled from the file name), personal info and summary inline
-    - See per-section previews (experiences, educations, skills, projects, languages) with date ranges
-    - Decide what to do with each AI note: dismiss it, or append unsupported content (Certifications, Awards, etc.) to the summary
+   - Edit the title (prefilled from the file name), personal info and summary inline
+   - See per-section previews (experiences, educations, skills, projects, languages) with date ranges
+   - Decide what to do with each AI note: dismiss it, or append unsupported content (Certifications, Awards, etc.) to the summary
 5. Clicking **Import Resume** creates the document in the database, populates every section in one transaction,
    invalidates the dashboard query and opens the new resume in the editor.
 
@@ -329,9 +329,9 @@ docker compose down -v
 
 1. **During Development**: Focus on implementation without running checks
 2. **End of Task**:
-    - Run `pnpm lint` and fix ALL errors (non-negotiable)
-    - Run `pnpm format:check` and fix if needed with `pnpm format`
-    - Only then consider the task complete
+   - Run `pnpm lint` and fix ALL errors (non-negotiable)
+   - Run `pnpm format:check` and fix if needed with `pnpm format`
+   - Only then consider the task complete
 
 ### Best Practices
 

@@ -23,7 +23,7 @@ const ArmyPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         {t('Military Service')}
       </h5>
       <hr
-        className="mb-2 mt-2 border-[1.5px]"
+        className="mt-2 mb-2 border-[1.5px]"
         style={{
           borderColor: themeColor,
         }}

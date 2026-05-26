@@ -25,7 +25,7 @@ const ProjectPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
           ? t('Projects')
           : resumeInfo?.projectsSectionTitle?.trim() || t('Projects')}
       </h5>
-      <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
+      <hr className="mt-2 mb-2 border-[1.5px]" style={{ borderColor: themeColor }} />
       <div className="flex min-h-9 flex-col gap-2">
         {projects.map((project, index) => (
           <div key={project.id || index}>

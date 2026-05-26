@@ -1,10 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -23,41 +19,17 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@/editResume": [
-        "./app/(home)/dashboard/index.ts"
-      ],
-      "@/components": [
-        "./components/index.ts"
-      ],
-      "@/hooks": [
-        "./hooks/index.ts"
-      ],
-      "@/hooks/*": [
-        "./hooks/*"
-      ],
-      "@/context/*": [
-        "context/index.ts"
-      ],
-      "@/types/*": [
-        "types/index.ts"
-      ],
-      "@/shared/*": [
-        "app/(home)/dashboard/document/[documentId]/edit/EditResume/shared/*"
-      ]
+      "@/*": ["./*"],
+      "@/editResume": ["./app/(home)/dashboard/index.ts"],
+      "@/components": ["./components/index.ts"],
+      "@/hooks": ["./hooks/index.ts"],
+      "@/hooks/*": ["./hooks/*"],
+      "@/context/*": ["context/index.ts"],
+      "@/types/*": ["types/index.ts"],
+      "@/shared/*": ["app/(home)/dashboard/document/[documentId]/edit/EditResume/shared/*"]
     },
     "target": "ES2017"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

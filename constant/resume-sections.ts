@@ -6,6 +6,7 @@ import { ExperiencePreview } from '@/app/(home)/dashboard/document/[documentId]/
 import { SummaryPreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/Summary';
 import { PersonalInfoPreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/PersonalInfo';
 import { ArmyPreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/Army';
+import { DrivingLicensePreview } from '@/app/(home)/dashboard/document/[documentId]/[locale]/edit/EditResume/DrivingLicense';
 import { DEFAULT_PAGES_ORDER } from './default-pages-order';
 
 export { DEFAULT_PAGES_ORDER };
@@ -18,6 +19,7 @@ export const SECTION_COMPONENTS = {
   projects: ProjectPreview,
   skills: SkillPreview,
   languages: LanguagePreview,
+  'driving-license': DrivingLicensePreview,
   army: ArmyPreview,
 } as const;
 

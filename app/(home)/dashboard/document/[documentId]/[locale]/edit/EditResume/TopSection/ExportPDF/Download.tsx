@@ -18,7 +18,7 @@ const Download = (props: { title: string; isLoading: boolean; status?: StatusTyp
         <Button
           disabled={isLoading || loading || status === 'archived'}
           variant="secondary"
-          className="lg:min-w-auto min-w-9 gap-1 border bg-white !p-1 dark:bg-gray-800 lg:p-4"
+          className="min-w-9 gap-1 border bg-white !p-1 lg:min-w-auto lg:p-4 dark:bg-gray-800"
           onClick={() => setLoading(true)}
           onMouseUp={() => setTimeout(() => setLoading(false), 100)}
         >

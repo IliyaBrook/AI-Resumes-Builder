@@ -10,25 +10,25 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
   return (
     <html>
       <body>
-        <div className="flex h-screen flex-col items-center justify-center space-y-6 bg-background px-4 text-foreground">
+        <div className="bg-background text-foreground flex h-screen flex-col items-center justify-center space-y-6 px-4">
           <div className="space-y-4 text-center">
-            <div className="text-6xl font-bold text-destructive">⚠️</div>
+            <div className="text-destructive text-6xl font-bold">⚠️</div>
             <div className="space-y-2">
               <h1 className="text-2xl font-bold">Application Error</h1>
-              <p className="max-w-md text-muted-foreground">
+              <p className="text-muted-foreground max-w-md">
                 A critical error occurred. Please refresh the page or contact support.
               </p>
             </div>
             <div className="flex flex-col justify-center gap-3 sm:flex-row">
               <button
                 onClick={reset}
-                className="inline-flex h-9 min-w-32 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 min-w-32 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap shadow transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
               >
                 Try again
               </button>
               <button
                 onClick={() => (window.location.href = '/')}
-                className="inline-flex h-9 min-w-32 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                className="border-input bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-9 min-w-32 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-medium whitespace-nowrap shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
               >
                 Go Home
               </button>

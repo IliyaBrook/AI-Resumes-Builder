@@ -26,6 +26,7 @@ export const documentTable = pgTable('document', {
   projectsSectionTitle: varchar('projects_section_title', { length: 255 }).default('Projects'),
   languagesSectionTitle: varchar('languages_section_title', { length: 255 }).default('Languages'),
   armyService: text('army_service'),
+  drivingLicense: text('driving_license'),
   skillsDisplayFormat: varchar('skills_display_format', { length: 32 }),
   personalInfoDisplayFormat: varchar('personal_info_display_format', { length: 32 }).default('default'),
   pagesOrder: json('pages_order').$type<string[]>().default(DEFAULT_PAGES_ORDER),
@@ -40,6 +41,7 @@ export const documentTable = pgTable('document', {
       skills?: { paddingTop?: number; paddingBottom?: number };
       projects?: { paddingTop?: number; paddingBottom?: number };
       languages?: { paddingTop?: number; paddingBottom?: number };
+      drivingLicense?: { paddingTop?: number; paddingBottom?: number };
       army?: { paddingTop?: number; paddingBottom?: number };
     }>()
     .default({}),
@@ -68,6 +70,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   projectsSectionTitle: true,
   languagesSectionTitle: true,
   armyService: true,
+  drivingLicense: true,
   skillsDisplayFormat: true,
   personalInfoDisplayFormat: true,
   pagesOrder: true,
@@ -86,6 +89,7 @@ export const updateCombinedSchema = z.object({
   projectsSectionTitle: createDocumentTableSchema.shape.projectsSectionTitle.optional(),
   languagesSectionTitle: createDocumentTableSchema.shape.languagesSectionTitle.optional(),
   armyService: createDocumentTableSchema.shape.armyService.optional(),
+  drivingLicense: createDocumentTableSchema.shape.drivingLicense.optional(),
   skillsDisplayFormat: createDocumentTableSchema.shape.skillsDisplayFormat.optional(),
   personalInfoDisplayFormat: createDocumentTableSchema.shape.personalInfoDisplayFormat.optional(),
   pagesOrder: z.array(z.string()).optional(),
@@ -130,6 +134,12 @@ export const updateCombinedSchema = z.object({
         })
         .optional(),
       languages: z
+        .object({
+          paddingTop: z.number().optional(),
+          paddingBottom: z.number().optional(),
+        })
+        .optional(),
+      drivingLicense: z
         .object({
           paddingTop: z.number().optional(),
           paddingBottom: z.number().optional(),

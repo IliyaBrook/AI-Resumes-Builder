@@ -47,6 +47,7 @@
       "skills": "Skills",
       "projects": "Projects",
       "languages": "Languages",
+      "drivingLicense": "Driving License",
       "army": "Military Service"
     },
     "fields": {
@@ -227,6 +228,15 @@
     "Add military service details": "Add military service details",
     "Enter military service details": "Enter military service details",
     "Enter target language": "Enter target language"
+  },
+  "DrivingLicense": {
+    "Driving License": "Driving License",
+    "Add driving license categories": "Add driving license categories",
+    "Add driving license": "Add driving license",
+    "Included in resume": "Included in resume",
+    "Categories": "Categories",
+    "A2, B, C1": "A2, B, C1",
+    "Separate categories with commas": "Separate categories with commas"
   },
   "Projects": {
     "Projects": "Projects",

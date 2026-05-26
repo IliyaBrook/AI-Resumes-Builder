@@ -86,7 +86,7 @@ const ThemeColor = () => {
         <Button
           disabled={resumeInfo?.status === 'archived'}
           variant="secondary"
-          className="gap-1 border bg-white !p-2 dark:bg-gray-800 lg:w-auto lg:p-4"
+          className="gap-1 border bg-white !p-2 lg:w-auto lg:p-4 dark:bg-gray-800"
         >
           <div className="flex items-center gap-1">
             <Palette size="17px" />

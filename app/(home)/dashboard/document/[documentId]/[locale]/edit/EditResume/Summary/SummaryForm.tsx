@@ -251,7 +251,7 @@ const SummaryForm = () => {
                   <Card
                     role="button"
                     key={index}
-                    className="my-4 border-primary/30 bg-primary/5 shadow-none"
+                    className="border-primary/30 bg-primary/5 my-4 shadow-none"
                     onClick={() => handleSelect(summary)}
                   >
                     <CardHeader className="py-2">

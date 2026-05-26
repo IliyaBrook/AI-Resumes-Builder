@@ -8,6 +8,7 @@ export * from './Skills';
 export * from './Summary';
 export * from './Education';
 export * from './Army';
+export * from './DrivingLicense';
 export * from './TopSection';
 export * from './ResumePreview';
 

@@ -28,7 +28,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
           {t('Skills')}
         </h5>
-        <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
+        <hr className="mt-2 mb-2 border-[1.5px]" style={{ borderColor: themeColor }} />
         <div>
           {sortedCategoryKeys.map(categoryName => (
             <div key={categoryName}>
@@ -58,12 +58,12 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
           {t('Skills')}
         </h5>
-        <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
+        <hr className="mt-2 mb-2 border-[1.5px]" style={{ borderColor: themeColor }} />
         <div className="grid grid-cols-4 gap-x-4">
           {columns.map((col, colIdx) => (
             <div key={colIdx} className="flex flex-col gap-2">
               {col.map((name, idx) => (
-                <span key={idx} className="max-w-full break-words text-[12px]" style={{ wordBreak: 'break-word' }}>
+                <span key={idx} className="max-w-full text-[12px] break-words" style={{ wordBreak: 'break-word' }}>
                   {name}
                 </span>
               ))}
@@ -82,7 +82,7 @@ const SkillPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
       <h5 className="text-center text-[18px] font-bold" style={{ color: themeColor }}>
         {t('Skills')}
       </h5>
-      <hr className="mb-2 mt-2 border-[1.5px]" style={{ borderColor: themeColor }} />
+      <hr className="mt-2 mb-2 border-[1.5px]" style={{ borderColor: themeColor }} />
       <div className="grid grid-cols-2 gap-x-8">
         {[leftSkills, rightSkills].map((col, colIdx) => (
           <div key={colIdx} className="flex flex-col gap-2">

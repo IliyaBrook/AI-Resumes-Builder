@@ -1,0 +1,36 @@
+
+> resume-builder@0.1.0 dev D:\codding\My_projects\AI-Resumes-Builder
+> next dev --turbopack
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.31.3:3000
+- Environments: .env
+✓ Ready in 246ms
+
+ GET /dashboard/document/doc-e2011df6167943c0/en/edit 200 in 650ms (next.js: 298ms, proxy.ts: 74ms, application-code: 279ms)
+<-- GET /api/document/doc-e2011df6167943c0
+--> GET /api/document/doc-e2011df6167943c0 [32m200[0m 19ms
+ GET /api/document/doc-e2011df6167943c0 200 in 809ms (next.js: 776ms, application-code: 34ms)
+<-- PATCH /api/document/update/doc-e2011df6167943c0
+<-- PATCH /api/document/update/doc-e2011df6167943c0
+--> PATCH /api/document/update/doc-e2011df6167943c0 [32m200[0m 13ms
+ PATCH /api/document/update/doc-e2011df6167943c0 200 in 27ms (next.js: 8ms, application-code: 19ms)
+<-- GET /api/document/doc-e2011df6167943c0
+--> PATCH /api/document/update/doc-e2011df6167943c0 [32m200[0m 18ms
+ PATCH /api/document/update/doc-e2011df6167943c0 200 in 37ms (next.js: 14ms, application-code: 23ms)
+--> GET /api/document/doc-e2011df6167943c0 [32m200[0m 3ms
+ GET /api/document/doc-e2011df6167943c0 200 in 8ms (next.js: 1323µs, application-code: 6ms)
+<-- GET /api/document/doc-e2011df6167943c0
+--> GET /api/document/doc-e2011df6167943c0 [32m200[0m 4ms
+ GET /api/document/doc-e2011df6167943c0 200 in 8ms (next.js: 1215µs, application-code: 6ms)
+ GET /dashboard/document/doc-e2011df6167943c0/en/edit 200 in 71ms (next.js: 10ms, proxy.ts: 4ms, application-code: 58ms)
+ GET /dashboard/document/doc-e2011df6167943c0/en/edit 200 in 73ms (next.js: 12ms, proxy.ts: 3ms, application-code: 58ms)
+<-- GET /api/document/doc-e2011df6167943c0
+--> GET /api/document/doc-e2011df6167943c0 [32m200[0m 16ms
+ GET /api/document/doc-e2011df6167943c0 200 in 30ms (next.js: 9ms, application-code: 21ms)
+ GET /dashboard/document/doc-e2011df6167943c0/en/edit 200 in 85ms (next.js: 10ms, proxy.ts: 3ms, application-code: 73ms)
+<-- GET /api/document/doc-e2011df6167943c0
+--> GET /api/document/doc-e2011df6167943c0 [32m200[0m 6ms
+ GET /api/document/doc-e2011df6167943c0 200 in 19ms (next.js: 9ms, application-code: 10ms)
+ ELIFECYCLE  Command failed with exit code 1.

@@ -47,6 +47,7 @@
       "skills": "כישורים",
       "projects": "פרויקטים",
       "languages": "שפות",
+      "drivingLicense": "רישיון נהיגה",
       "army": "שירות צבאי"
     },
     "fields": {
@@ -227,6 +228,15 @@
     "Add military service details": "הוסף פרטי שירות צבאי",
     "Enter military service details": "הזן פרטי שירות צבאי",
     "Enter target language": "הזן שפת יעד"
+  },
+  "DrivingLicense": {
+    "Driving License": "רישיון נהיגה",
+    "Add driving license categories": "הוסף קטגוריות רישיון נהיגה",
+    "Add driving license": "הוסף רישיון נהיגה",
+    "Included in resume": "מוצג בקורות החיים",
+    "Categories": "קטגוריות",
+    "A2, B, C1": "A2, B, C1",
+    "Separate categories with commas": "הפרד קטגוריות בפסיקים"
   },
   "Projects": {
     "Projects": "פרויקטים",

@@ -55,7 +55,7 @@ const ResumeItem: FC<PropType> = ({ documentId, title, themeColor, thumbnail, up
   return (
     <>
       <div
-        className="shadow-primary hover:border-primary h-[220px] w-full max-w-[220px] cursor-pointer rounded-lg border transition-all hover:shadow-md"
+        className="shadow-primary hover:border-primary h-55 w-full max-w-55 cursor-pointer rounded-lg border transition-all hover:shadow-md"
         onClick={gotoDoc}
         style={{ borderColor: themeColor || '' }}
       >
